@@ -18,6 +18,7 @@ zenvisage is designed as a lightweight web-based client application. It provides
 *  cd zenvisage
 *  sh build.sh  
 *  sh run.sh
+*  http://localhost:9991/
 
 # Architecture
 
