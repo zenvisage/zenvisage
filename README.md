@@ -3,7 +3,6 @@ zenvisage is designed as a lightweight web-based client application. It provides
 
 For more details, please refer to:
 * [Project Webpage] (http://zenvisage.github.io/)
-* [Technical Report] (https://arxiv.org/abs/1604.03583)
 
 # Compilation
 
