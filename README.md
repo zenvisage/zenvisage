@@ -9,6 +9,8 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 
 * Install [Apache Maven 3.0.5] (https://maven.apache.org/) 
 * * https://maven.apache.org/install.html
+* * For Linux: sudo apt-get install maven
+* * For Mac OS-X with Homebrew installed: brew install maven
 
 * Install Java 1.8
 
