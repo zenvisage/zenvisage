@@ -6,15 +6,19 @@ vides the analyst an intuitive graphical interface for exploring trends and insi
 
 ## Requirements
 
-* Install Apache Maven 3.0.5
+* Install [Apache Maven 3.0.5] (https://maven.apache.org/) 
+* * sudo apt-get install maven 
 
 * Install Java 1.8
 
-# Development
+* Install [eclipse J2EE] (http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/mars2) (Optional: for development) 
 
-## Requirements
-      *eclipse (J2EE)
+## Building Code and Deployment
 
+*  git clone https://github.com/zenvisage/zenvisage.git
+*  cd zenvisage
+*  sh build.sh  
+*  sh run.sh
 
 # Architecture
 
@@ -26,4 +30,3 @@ for the web server.
 
 
 ## Front-end
-
