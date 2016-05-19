@@ -31,9 +31,30 @@ The zenvisage front-end interacts with the back-end via a REST
 protocol. The back-end is implemented in Java and uses embedded Jetty
 for the web server. 
 
+The backe-end code is under src/main/java under the package edu.uiuc.zenvisage. 
+
+* server
+Contains the class for starting the webserver (embedded Jetty Server)
+
+* api
+Contains classes for REST Interface (registers request mappings).
+
+* model
+Contains the classes for key entitites in zenvisage
+
+* service
+Contains the classes for analysis (e.g., similarity, representative)
+
+* data
+Contains the classes for data storage and query execution
+
+* zql
+Contains the classes for zql query execution (currently replicates some of the functionalities of above packages).
+
+
 
 ## Front-end
-The front-end code is under src/main/webapp.
+The front-end code is under src/main/webapp. 
 
 * index.html. This is where all the static elements of the webpage are created. In addition, the dynamic elements are initialized in index.html, which are then populated through javscript. 
 
