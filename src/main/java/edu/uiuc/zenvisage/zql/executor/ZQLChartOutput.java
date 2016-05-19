@@ -12,10 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.service.distance.Distance;
-import edu.uiuc.zenvisage.service.utility.Chart;
-import edu.uiuc.zenvisage.service.utility.ChartOutput;
+import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.service.utility.Normalization;
-import edu.uiuc.zenvisage.service.utility.Result;
 
 
 /**

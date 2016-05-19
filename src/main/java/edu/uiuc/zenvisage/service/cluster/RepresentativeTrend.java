@@ -1,5 +1,8 @@
 package edu.uiuc.zenvisage.service.cluster;
-
+/**
+ * @author tarique
+ *
+ */
 public class RepresentativeTrend {
 	private double[] p;
 	private String key;

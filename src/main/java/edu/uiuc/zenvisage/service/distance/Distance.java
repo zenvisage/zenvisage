@@ -2,8 +2,8 @@
  * 
  */
 package edu.uiuc.zenvisage.service.distance;
-
 /**
+ * @author tarique
  *
  */
 public interface Distance {

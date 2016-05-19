@@ -13,8 +13,8 @@ import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.distance.Distance;
-
 /**
+ * @author tarique
  *
  */
 public abstract class Clustering {

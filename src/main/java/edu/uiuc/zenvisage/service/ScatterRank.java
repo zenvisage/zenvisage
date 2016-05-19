@@ -13,8 +13,7 @@ import edu.uiuc.zenvisage.data.ScatterResult;
 import edu.uiuc.zenvisage.data.ScatterResult.*;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery.*;
-import edu.uiuc.zenvisage.service.utility.Chart;
-import edu.uiuc.zenvisage.service.utility.Result;
+import edu.uiuc.zenvisage.model.*;
 
 /**
  * @author xiaofo

@@ -1,20 +1,17 @@
-/**
- * 
- */
+
 package edu.uiuc.zenvisage.service;
 
 import java.util.LinkedHashMap;
 
 import edu.uiuc.zenvisage.service.utility.*;
 
-import edu.uiuc.zenvisage.data.*;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.uiuc.zenvisage.service.distance.*;
-import edu.uiuc.zenvisage.service.utility.ChartOutput;
+import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.model.ZvQuery;
 
 /**

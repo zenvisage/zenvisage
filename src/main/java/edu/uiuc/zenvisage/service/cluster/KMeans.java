@@ -17,16 +17,10 @@ import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.distance.Distance;
 
 /**
+ * @author tarique
  *
  */
-/**
- * @author xiaofo
- *
- */
-/**
- * @author xiaofo
- *
- */
+ 
 public class KMeans extends Clustering {
 
 	/**

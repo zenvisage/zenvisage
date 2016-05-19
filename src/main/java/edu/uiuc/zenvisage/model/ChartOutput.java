@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.service.utility;
+package edu.uiuc.zenvisage.model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +10,6 @@ import edu.uiuc.zenvisage.service.Representative;
 import edu.uiuc.zenvisage.service.cluster.Clustering;
 import edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
 import edu.uiuc.zenvisage.service.distance.Distance;
-import edu.uiuc.zenvisage.service.utility.ChartOutput;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.BiMap;

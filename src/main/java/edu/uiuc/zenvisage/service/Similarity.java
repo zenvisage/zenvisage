@@ -2,7 +2,6 @@
  * 
  */
 package edu.uiuc.zenvisage.service;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,13 +22,12 @@ import edu.uiuc.zenvisage.data.roaringdb.executor.ExecutorResult;
 import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.distance.Distance;
-import edu.uiuc.zenvisage.service.utility.ChartOutput;
+import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
-
-
 /**
+ * @author tarique
  *
  */
 public class Similarity extends Analysis {

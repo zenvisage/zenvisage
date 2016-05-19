@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.service.utility;
+package edu.uiuc.zenvisage.model;
 
 import java.util.ArrayList;
 

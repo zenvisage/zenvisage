@@ -22,7 +22,7 @@ import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.Clustering;
 import edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
 import edu.uiuc.zenvisage.service.distance.Distance;
-import edu.uiuc.zenvisage.service.utility.ChartOutput;
+import edu.uiuc.zenvisage.model.*;
 
 
 /**

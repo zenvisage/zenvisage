@@ -1,12 +1,6 @@
 package edu.uiuc.zenvisage.server;
-
-import java.util.Collection;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-
-import edu.uiuc.zenvisage.service.ZvMain;
-
 
 public class ZvServer {
 
@@ -42,9 +36,6 @@ public class ZvServer {
 	public static void main(String[] args) throws Exception {
 		ZvServer zvServer = new ZvServer();
 		zvServer.start();	
-		
-	
-	
 	}
 
 }

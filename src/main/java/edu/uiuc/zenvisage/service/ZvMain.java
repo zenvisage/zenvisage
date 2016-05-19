@@ -34,19 +34,15 @@ import edu.uiuc.zenvisage.service.cluster.KMeans;
 import edu.uiuc.zenvisage.service.distance.DTWDistance;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.distance.Euclidean;
-import edu.uiuc.zenvisage.service.utility.Chart;
-import edu.uiuc.zenvisage.service.utility.ChartOutput;
+import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
-import edu.uiuc.zenvisage.service.utility.Result;
+
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
-
-
-
 
 /**
  * @author tarique

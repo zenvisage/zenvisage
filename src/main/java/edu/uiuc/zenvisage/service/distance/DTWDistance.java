@@ -6,8 +6,8 @@ package edu.uiuc.zenvisage.service.distance;
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
-
 /**
+ * @author tarique
  *
  */
 public class DTWDistance implements Distance {

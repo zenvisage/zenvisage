@@ -4,8 +4,8 @@
 package edu.uiuc.zenvisage.service.distance;
 
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
-
 /**
+ * @author tarique
  *
  */
 public class Euclidean implements Distance {
