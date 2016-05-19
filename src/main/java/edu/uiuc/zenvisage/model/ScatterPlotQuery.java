@@ -5,7 +5,7 @@ package edu.uiuc.zenvisage.model;
 
 import java.util.List;
 
-import edu.uiuc.zenvisage.data.ScatterResult.Tuple;
+import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 
 /**
  * @author xiaofo

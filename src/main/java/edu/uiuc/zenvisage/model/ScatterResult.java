@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.data;
+package edu.uiuc.zenvisage.model;
 
 import java.util.List;
 

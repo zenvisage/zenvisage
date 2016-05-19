@@ -24,11 +24,11 @@ import edu.uiuc.zenvisage.data.Query.CompositeFilter;
 import edu.uiuc.zenvisage.data.Query.CompositeFilterOperator;
 import edu.uiuc.zenvisage.data.Query.Filter;
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
-import edu.uiuc.zenvisage.data.ScatterResult;
-import edu.uiuc.zenvisage.data.ScatterResult.Tuple;
+import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
+import edu.uiuc.zenvisage.model.ScatterResult;
 
 
 

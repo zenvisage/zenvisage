@@ -2,8 +2,7 @@ package edu.uiuc.zenvisage.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import edu.uiuc.zenvisage.data.ScatterResult;
-import edu.uiuc.zenvisage.data.ScatterResult.*;
+import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.*;
 

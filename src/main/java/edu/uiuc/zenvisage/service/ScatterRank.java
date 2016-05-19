@@ -9,8 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import edu.uiuc.zenvisage.data.ScatterResult;
-import edu.uiuc.zenvisage.data.ScatterResult.*;
+import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery.*;
 import edu.uiuc.zenvisage.model.*;

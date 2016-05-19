@@ -3,13 +3,10 @@ package edu.uiuc.zenvisage.model;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-
 import edu.uiuc.zenvisage.model.BaselineQuery;
 import edu.uiuc.zenvisage.model.ZvQuery;
-import edu.uiuc.zenvisage.service.Representative;
-import edu.uiuc.zenvisage.service.cluster.Clustering;
 import edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
-import edu.uiuc.zenvisage.service.distance.Distance;
+
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.BiMap;
