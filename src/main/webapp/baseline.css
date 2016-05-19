@@ -1,0 +1,240 @@
+#zenvisage{
+  position:abosolute;
+  margin-top:5%;
+  text-align: center;
+  color:green;
+  font-size: 45px;
+}
+
+.operator {
+ width: 50px;
+}
+
+.cog {
+  padding-left: 60px;
+  font-size: 15px;
+}
+
+.cog:hover {
+  cursor: pointer;
+}
+
+.x-value {
+ width: 100px;
+}
+
+#everything {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  height: 100%;
+  max-height: 100%;
+}
+
+
+#trend-bar{
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #fff;
+  padding-left: 10px;
+  left: auto;
+  right: 0px;
+  width: 230px; /*Width of right frame div*/
+  overflow: hidden;
+  background-color: #fff;
+}
+
+#left-bar {
+  position: absolute;
+  z-index: 11;
+  top: 0;
+  left: 0;
+  width: 225px;
+  height: 100%;
+  background-color: #fff;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 30px 20px;
+  box-shadow: 0 0 20px #ccc;
+  -webkit-box-shadow: 0 0 20px #ccc;
+  -moz-box-shadow: 0 0 20px #ccc;
+}
+
+#top-table {
+  width: 400px;
+}
+
+#main-table {
+  width: 800px;
+  display: none;
+}
+
+#secondary-table {
+  width: 400px;
+  visibility: hidden;
+}
+
+#select-predicate {
+  width: 100px;
+}
+
+#predicate-op {
+  width: 100px;
+}
+#signs {
+  width: 50px;
+}
+
+#xvals {
+ float: right;
+}
+
+#middle-bar{
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  left: 225px; /*Set left value to WidthOfLeftFrameDiv*/
+  right: 0px; /*Set right value to WidthOfRightFrameDiv*/
+  bottom: 0px;
+  background: #fff;
+  min-width: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height:100%;
+}
+
+#for-padding {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+#main-graph-area {
+  padding-left: 15px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 15px;
+}
+
+
+ul > li.active {
+  font-weight: bold;
+  background-color: #E0E0E0;
+}
+
+div #toolbox {
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  clear: both;
+}
+
+ul.funky-menu > li > a:before {
+  content: " ";
+}
+
+ul.funky-menu > li > a.active:before {
+  content: "✓ ";
+}
+
+.examples {
+  margin-bottom: 5px;
+}
+
+.rect{
+	fill: "green";
+}
+
+div[id*="x-table-select-"] {
+  width: 115px !important;
+}
+div[id*="y-table-select-"] {
+  width: 115px !important;
+}
+div[id*="z-table-select-"] {
+  width: 115px !important;
+}
+div[id*="constraint-field-select-"] {
+  width: 115px !important;
+}
+div[id*="process-table-select-"] {
+  width: 220px !important;
+}
+
+.nav_before{
+	position:fixed;
+	margin:0;
+	paddding:0;
+	top:0;
+	z-index: 15;
+	background-color: white;
+	right:0%;
+	width: 100%;
+	height:100%;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+}
+
+.nav_before._after{
+	position: absolute;
+	right:100%;
+	width: 100%;
+	height:100%;
+	z-index: 15;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+}
+
+.textbox{
+	position:absolute;
+	margin: auto;
+    width: 20%;
+    top:20%;
+    left:40%;
+    border:3px solid #8AC007;
+    padding: 10px;
+}
+
+#buttons{
+  margin-top: 10px;
+  margin-left: 50px;
+  margin-bottom: 10px;
+}
+
+#views_table{
+  z-index: 1;
+}
+
+.axesInput{
+  visibility: hidden;
+}
+
+.secondDrawColumn{
+  background-color: #FAFAFA;
+}
+
+#search-value {
+  visibility: hidden;
+}
+
+.table-responsive-force {
+    width: 100%;
+    margin-bottom: 10px;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+}

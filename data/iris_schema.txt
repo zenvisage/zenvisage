@@ -1,0 +1,5 @@
+sepal length:float,unindexed,T,T,F,F,T,cm,Q
+sepal width:float,unindexed,T,T,F,F,T,cm,Q
+petal length:float,unindexed,T,T,F,F,T,cm,Q
+petal width:float,unindexed,T,T,F,F,T,cm,Q
+class:string,indexed,F,F,T,F,F,0,C

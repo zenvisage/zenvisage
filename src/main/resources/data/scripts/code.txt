@@ -1,0 +1,200 @@
+#!/usr/bin/python
+
+from __future__ import division;
+from collections import OrderedDict;
+import operator
+import math
+import sys
+import numpy as np
+import json
+import matplotlib.pyplot as plt
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import squareform
+from sklearn.cluster import DBSCAN
+from sklearn import metrics
+from sklearn.datasets.samples_generator import make_blobs
+from sklearn.preprocessing import StandardScaler
+import logging
+import extract
+import random
+import datetime
+
+logging.basicConfig(filename='example1.log',level=logging.DEBUG)
+
+def dict_to_list(dict):
+    alist = []
+    for key, value in dict.iteritems():
+        value = float(value)
+        alist.append([key, value])
+    return alist
+   
+def run_query(sql):
+ data = extract.exec_sql(sql, write_file=True)
+ print data
+ return data
+ 
+def reformatdata(data,datalist,keylist):
+ for d in data: 
+   keylist.append(d["x_type"]);
+   values=[];
+   for pt in d['data']:
+     values.append(pt[1])
+   #values=values/np.max(values);
+   datalist.append(values);
+ #datalist=np.array(datalist);
+ for item in datalist:
+   for i in xrange(len(item)):
+    item[i]= (item[i]-np.mean(item))/np.std(item);
+ keylist=np.array(keylist);
+  
+
+def calculateClusters(datalist,k=3,dmeasure='euclidean'):
+  S=squareform(pdist(datalist,'euclidean'));
+  mins=[];
+  for row in S:
+    mini=float("inf");
+    srow=sorted(row)
+    kth=srow[k-1]; 
+    mins.append(kth);
+  mind=np.median(mins);
+  db = DBSCAN(eps=mind, min_samples=k,metric='precomputed').fit(S)
+  core_samples = db.core_sample_indices_
+  labels = db.labels_
+  print labels;
+  return labels
+ 
+
+def computeRepresentativeTrends(sampleddatalist,sample=0.50,striding=0.05):
+  a = datetime.datetime.now()
+  labels=calculateClusters(sampleddatalist,k=3,dmeasure='euclidean');
+  n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+  #clusters = [S[labels == i] for i in xrange(n_clusters_)]
+  #outliers = S[labels == -1]
+  clusterlist=[]
+  labels=labels.astype(np.int);
+  print labels;
+  sampleddatalist=np.array(sampleddatalist);
+  
+  for i in xrange(n_clusters_):
+     clusterlist.append(list(sampleddatalist[labels==i]));
+  rep=[]
+  for i in xrange(len(clusterlist)):
+     a=np.array(clusterlist[i]);
+     m=np.median(a, axis=0)
+     rep.append(m);  
+  return rep;
+
+
+def computeDistancewithRepresentativeTrends():
+  import metrics;
+  from array import array
+  d=[];
+  for j in xrange(len(datalist)):
+    mini=float("inf");
+    r=0;
+    for i in xrange(len(rep)):   
+       a = rep[i]
+       b = datalist[j]
+       r = metrics.dtw(a,b,5);
+       if(r<mini):
+        mini=r;
+    d.append(r)
+  return d;
+
+import metrics
+def findoutliers(sql,outliers_count,sample=.25,striding=0.10):
+  datalist=[]
+  keylist=[] 
+  if sql is None:
+      sql='select make,Month(Sale_Date), sum(sale) from mining.car_sale group by make, Month(Sale_Date) order by Make, Month(Sale_Date)';
+  data=run_query(sql)
+  reformatdata(data,datalist,keylist)
+  sampleddatalistT=random.sample(datalist,int(len(datalist)*sample))
+  i=0.0
+  indices=[]
+  while i <  len(sampleddatalistT[0]):
+     i=i+striding*len(sampleddatalistT[0]);
+     if(i < len(sampleddatalistT[0])):
+       indices.append(int(i));
+      
+  sampleddatalist=[]
+  for item in sampleddatalistT:
+    l=[]
+    for i in indices:
+       l.append(item[i]);    
+    sampleddatalist.append(list(l));
+  rep=computeRepresentativeTrends(sampleddatalist)
+  sampleddatalistN=[]
+  for item in datalist:
+    l=[]
+    for i in indices:
+       l.append(item[i]);    
+    sampleddatalistN.append(l);
+  datalist=sampleddatalistN;
+  d=[];
+  p=-1;
+  import metrics
+  maxi=-float("inf");
+  for j in xrange(len(datalist)):
+   mini=float("inf");
+   r=0;
+   for i in xrange(len(rep)):   
+      a = rep[i]
+      b = datalist[j]
+      r = metrics.dtw(a,b);
+      if(r<mini):
+        mini=r;
+   d.append(mini);
+ 
+  
+  outdata=list(data)
+  for i in xrange(len(rep)):
+     k=i+1;
+     r=rep[i];
+     key="Representative trend (normalized) "+str(k);
+     dat=[]
+     for j in xrange(len(r)):      
+        dat.append([j,r[j]])
+        chartdata = {
+                'data': list(dat),
+                'x_type':key,
+                'y_type':"sum_sale",
+               }
+     outdata.append(dict(chartdata));
+  d=np.array(d);
+  outlier_indices=d.argsort()[-int(outliers_count):][::-1]
+  print len(outlier_indices)
+  for i in range(0,len(outlier_indices)):
+    out=[]
+    outlierkey="Outlier:"+str(i+1)+" "+ keylist[outlier_indices[i]] +" (Normalized)";
+    for j in xrange(len(datalist[i])):      
+       out.append([j,datalist[outlier_indices[i]][j]])
+    chartdata = {
+                'data': out,
+                'x_type':outlierkey,
+                'y_type':"sum_sale",
+               }
+    outdata.append(chartdata);
+     
+  print k,len(outlier_indices)
+  print >> sys.stderr, json.dumps(outdata)
+
+
+
+def main():
+ a = datetime.datetime.now()
+ if len(sys.argv) < 3:
+  	 sql='select make,Month(Sale_Date), sum(sale) from mining.car_sale group by make, Month(Sale_Date) order by Make, Month(Sale_Date)';
+   	 findoutliers(sql,1);
+ else: 
+   	 findoutliers(sys.argv[1],sys.argv[2]);
+ b = datetime.datetime.now()
+ c=b-a;
+ print c.microseconds;
+
+
+if __name__ == '__main__':
+  main()
+
+
+
