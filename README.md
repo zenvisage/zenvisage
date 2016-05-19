@@ -1,6 +1,7 @@
 # Overview
-zenvisage is designed as a lightweight web-based client application. It performs two major functions: First, it pro-
-vides the analyst an intuitive graphical interface for exploring trends and insights in data. Second, it takes the results of these queries from the back-end and encodes them into the most effective visualizations.
+zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
+
+For more details, please look at our [Project Webpage] (http://zenvisage.github.io/)
 
 # Compilation
 
@@ -19,6 +20,8 @@ vides the analyst an intuitive graphical interface for exploring trends and insi
 *  cd zenvisage
 *  sh build.sh  
 *  sh run.sh
+*  http://localhost:9991/
+
 
 # Architecture
 
