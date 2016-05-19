@@ -18,10 +18,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.uiuc.zenvisage.data.Query;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.data.roaringdb.executor.ExecutorResult;
@@ -89,17 +87,11 @@ public class ZvMain {
 		inMemoryDatabases.put("seed3", inMemoryDatabase);*/
 	}
 
-	 
-    public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
+  public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
     	Database database = new Database(name,schemafile,datafile);
     	return database;
  
     }
-
-    
-    public String test() {
-		return "Test successful:";	
-		}
 			
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
@@ -129,7 +121,7 @@ public class ZvMain {
 		return mapper.writeValueAsString(finalOutput);
 	}
 	
-	public String getData(String query) throws InterruptedException, IOException{
+	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 		// get data from database
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
@@ -160,14 +152,6 @@ public class ZvMain {
 			 normalization = new Original();
 		 }
 		 // generate the corresponding output normalization
-		 
-	/*	 if (args.outputNormalized) {
-			 outputNormalization = new Zscore();
-		 }
-		 else {
-			 outputNormalization = new Original();
-		 }
-		 */
 		 
 		 outputNormalization = new Original();
 		 // reformat database data

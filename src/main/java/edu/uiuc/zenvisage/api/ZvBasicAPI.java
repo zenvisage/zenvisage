@@ -33,7 +33,7 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public String getData(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
 		System.out.println(arg);
-		return zvMain.getData(arg);
+		return zvMain.runDragnDropInterfaceQuery(arg);
 	}
 
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)
