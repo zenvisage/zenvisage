@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="vdb">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Tarique,Lijin,Xiaofo,John,Edward">
+
+    <title>Visual Data Exploration</title>
+
+    <!-- CSS libs -->
+    <link href="dist/css/bootstrap.css" rel="stylesheet">
+    <link href="dist/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="dist/css/font-awesome.min.css" rel="stylesheet">
+    <link href="dist/css/bootstrap-theme.min.css" rel="stylesheet" >
+    <link href="assets/magicsuggest/magicsuggest-min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="baseline.css" rel="stylesheet">
+    <script src="js/globalvars.js"></script>
+
+    <!-- Liraries required to load -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="assets/js/jquery.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+    <!-- My External Files -->
+    <script src="js/vdb.js"></script>
+
+    <!-- Vega Files -->
+    <script src="vega-master/examples/lib/d3.v3.min.js"></script>
+    <script src="vega-master/vega.js"></script>
+  </head>
+
+  <body>
+
+  <div id="everything">
+    <div id="left-bar">
+      <div id="sidebar" class="interface">
+        <h4>
+          ZenVisage
+        </h4>
+        <hr>
+        <div>
+          <h5 id="dataset-header">Datasets <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
+          <ul id="dataset">
+            <li class="dataset" id="real_estate">Real Estate</li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div>
+          <h5 id="category-list-header">Category <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
+          <ul id="category-list">
+          </ul>
+        </div>
+
+        <hr>
+
+        <div>
+          <h5 id="x-axis-header">X-axis <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
+          <ul id="x-axis">
+          </ul>
+        </div>
+
+        <hr>
+
+        <div>
+          <h5 id="y-axis-header">Y-axis <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
+          <ul id="y-axis"></ul>
+        </div>
+        <hr>
+        <div class="info-text"><b>Aggregation Method</b></div>
+        <div class="radio">
+          <form>
+            <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
+            <input type="radio" name="aggregation-method" value="avg" checked><label>Average</label>
+          </form>
+        </div>
+
+        <!--
+        <div class="info-text"><b>Select Search Method</b></div>
+        <div class="radio">
+          <form id="search-method">
+            <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked><label>Similarity Search</label><br>
+            <input type="radio" name="search-method" value="Outlier"><label>Outlier Search</label>
+          </form>
+        </div>
+        -->
+
+        <hr>
+      </div> <!-- end side bar -->
+
+      </div>
+      <div class = "row"></div>
+    </div> <!-- end left bar -->
+
+    <div id="right-bar">
+      <br>
+      <div class = "checkbox">
+        <label><input type = "checkbox" id = "ignoreX" onclick=updateTrends()>Ignore X axis scale</label>
+      </div>
+      <div class = "checkbox">
+        <label><input type = "checkbox" id = "ignoreY" checked onclick=updateTrends()>Ignore Y axis scale</label>
+      </div>
+
+      <hr>
+      <div id="num-results">
+        <div class="info-text"><b>Number of Results</b></div>
+        <div>
+          <input class="num-results" type="text" name="number-of-results" value="5" onchange = "onSubmit()">
+        </div>
+      </div>
+
+    </div> <!-- end right bar -->
+
+    <div id="middle-bar">
+      <div id="for-padding">
+        <div class="row">
+
+          <div id="top-table" class="col-md-4">
+            <table class="table">
+              <thead>
+                <tr><h4>Select Axis</h4></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><h5 align="right">Z</h5></td>
+                  <td>
+                    <select id="top-z" class="form-control"></select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><h5 align="right">X</h5></td>
+                  <td>
+                    <select id="top-x" class="form-control"></select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><h5 align="right">Y1</h5></td>
+                  <td>
+                    <select id="top-y1" class="form-control"></select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><h5 align="right">Y2</h5></td>
+                  <td>
+                    <select id="top-y2" class="form-control"></select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <select id="select-predicate" class="form-control"></select>
+                  </td>
+                  <td>
+                    <select id="predicate-op" class="form-control">
+                      <option>=</option>
+                      <option>!=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="predicate-value" class="form-control x-value" type="text" size="10" name="x-value" value="">
+                  </td>
+                  <td>
+                    <div id="submit">
+                      <button type="button" class="btn btn-primary btn-sm" onclick=getBaseline()>Submit</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="main-table" class="col-md-8">
+            <h4>Constraints</h4>
+            <table class="table">
+              <thead>
+                <tr></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td scope="row"><h5>Year</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row1-x-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select class="form-control" id="row1-x-value">
+                      <option>2004</option>
+                      <option>2005</option>
+                      <option>2006</option>
+                      <option>2007</option>
+                      <option>2008</option>
+                      <option>2009</option>
+                      <option>2010</option>
+                      <option>2011</option>
+                      <option>2012</option>
+                      <option>2013</option>
+                      <option>2014</option>
+                    </select>
+                  </td>
+                  <td scope="row"><h5>Y1</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row1-y1-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="row1-y1-value" class="form-control y1-value" type="text" size = "10" name="y1-value" value="0">
+                  </td>
+                  <td scope="row"><h5>Y2</h5></td>
+                  <td>
+                    <select class="form-control" id="row1-y2-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="row1-y2-value" class="form-control y2-value" type="text" size = "10" name="y2-value" value="0">
+                  </td>
+                  <td>
+                    <input id="row1-check" type="checkbox" name="my-checkbox" data-label-width="5" data-off-text="Disabled" data-on-text="Enabled" >
+                  </td>
+                </tr>
+                 <tr>
+                  <td scope="row"><h5>Year</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row2-x-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select class="form-control" id="row2-x-value">
+                      <option>2004</option>
+                      <option>2005</option>
+                      <option>2006</option>
+                      <option>2007</option>
+                      <option>2008</option>
+                      <option>2009</option>
+                      <option>2010</option>
+                      <option>2011</option>
+                      <option>2012</option>
+                      <option>2013</option>
+                      <option>2014</option>
+                    </select>
+                  </td>
+                  <td scope="row"><h5>Y1</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row2-y1-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="row2-y1-value" class="form-control y1-value" type="text" size = "10" name="y1-value" value="0">
+                  </td>
+                  <td scope="row"><h5>Y2</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row2-y2-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="row2-y2-value" class="form-control y2-value" type="text" size = "10" name="y2-value" value="0">
+                  </td>
+                  <td>
+                    <input id="row2-check" type="checkbox" name="my-checkbox" data-label-width="5" data-off-text="Disabled" data-on-text="Enabled" >
+                  </td>
+                </tr>
+                 <tr>
+                  <td scope="row"><h5>Year</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row3-x-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select class="form-control" id="row2-x-value">
+                      <option>2004</option>
+                      <option>2005</option>
+                      <option>2006</option>
+                      <option>2007</option>
+                      <option>2008</option>
+                      <option>2009</option>
+                      <option>2010</option>
+                      <option>2011</option>
+                      <option>2012</option>
+                      <option>2013</option>
+                      <option>2014</option>
+                    </select>
+                  </td>
+                  <td scope="row"><h5>Y1</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row3-y1-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="row3-y1-value" class="form-control y1-value" type="text" size = "10" name="y1-value" value="0">
+                  </td>
+                  <td scope="row"><h5>Y2</h5></td>
+                  <td>
+                    <select class="form-control operator" id="row3-y2-op">
+                      <option>></option>
+                      <option><</option>
+                      <option>=</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="row3-y2-value" class="form-control y2-value" type="text" size = "10" name="y2-value" value="0">
+                  </td>
+                  <td>
+                    <input id="row3-check" type="checkbox" name="my-checkbox" data-label-width="5" data-off-text="Disabled" data-on-text="Enabled" >
+                  </td>
+
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div id="secondary-table">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td style="width:110px"><h5>Jump to page:</h5></td>
+                <td>
+                  <input style="width:50px" id="page-number" class="form-control page-number" type="text" name="page-number" value="1" onchange="getBaseline()">
+                </td>
+                <td style="width:10px"><h5>/</h5></td>
+                <td style="width:35px"><div id="total-pages"></div></td>
+                <td>
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button type="button" class="btn btn-default" onclick="previousPage()">Prev</button>
+                    <button type="button" class="btn btn-default" onclick="nextPage()">Next</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="views" class="view">
+        </div>
+
+        <div class = "scrollbar" id="scrollbar">
+          <div class="force-overflow">
+            <table id="views_table" class="table"></table>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end middle bar -->
+
+
+</div> <!-- end everything -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="js/baseline.js"></script>
+    <!-- <script src="js/rect.js"></script> -->
+    <!-- <script src="js/smartdraw.js"></script> -->
+    <script src="js/draganddrop.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
+    <script src="dist/js/bootstrap-switch.min.js"></script>
+
+    <script src="dist/js/tooltip.js"></script>
+    <script src="dist/js/underscore-min.js"></script>
+    <script src="dist/js/underscore.string.min.js"></script>
+    <script src="dist/js/backbone-min.js"></script>
+    <script src="assets/magicsuggest/magicsuggest-min.js"></script>
+    <script src="js/xdata.js"></script>
+
+    <script src="js/baseline-vega.js"></script>
+    <!-- <script src="js/histogram.js"></script> -->
+    <script>
+        $(document).ready(function() {
+            getInterfaceFormData('real_estate');
+            $("[name='my-checkbox']").bootstrapSwitch();
+        });
+    </script>
+    <script>
+      function isGraphVisible(suffix){
+        return $('#blankChart'+suffix).css('display') == 'block'
+      }
+    </script>
+  </body>
+</html>
