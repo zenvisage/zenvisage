@@ -1,6 +1,10 @@
 # Overview
 zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
 
+For more details, please refer to:
+* * [Project Webpage] (http://zenvisage.github.io/)
+* * [Technical Report] (https://arxiv.org/abs/1604.03583)
+
 # Compilation
 
 ## Requirements
