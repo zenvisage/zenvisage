@@ -33,21 +33,23 @@ for the web server.
 
 
 ## Front-end
-* Index.html. This is where all the static elements of the webpage are created. In addition, the dynamic elements are initialized in index.html, which are then populated through javscript. 
+The front-end code is under src/main/webapp.
 
-* /dist/
+* index.html. This is where all the static elements of the webpage are created. In addition, the dynamic elements are initialized in index.html, which are then populated through javscript. 
+
+* dis/
 This is the directory that contains the boostrap framework being used. 
 
-* /assets 
+* assets 
 Directory for more Bootstrap things, and magicsuggest. 
 
-* /magicsuggest/
+* magicsugges/
 The library used for making the comboboxes. 
 
 
-* /js Our own js files. 
+* js Our own js files. 
 
-* comboboxes.js: My js to dynamically fill the comboboxes and also to keep track of them (for later submit usage).
+* comboboxes.js: Our js to dynamically fill the comboboxes and also to keep track of them (for later submit usage).
 
 * utils.js: helper for xdata.js
 
@@ -65,6 +67,6 @@ schema2.json: A sample schema of the backend DB (not used currently).
 Other files in main directory are just for libraries to use. 
 
 
-* /vega-master (not used): Folder contains the code for the vega visualization library.
+* vega-master (not used): Folder contains the code for the vega visualization library.
 The examples directory could be useful for further vega work. 
 
