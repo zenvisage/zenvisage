@@ -20,7 +20,7 @@ import edu.uiuc.zenvisage.model.*;
  */
 public class ScatterRank {
 	
-	public static void generateAnalysis(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
+	public static void compute(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
 		List<ScatterResult> datas = new ArrayList<ScatterResult>(output.values());
 		for (ScatterResult data : datas) {
 			for (Tuple point : data.points) {

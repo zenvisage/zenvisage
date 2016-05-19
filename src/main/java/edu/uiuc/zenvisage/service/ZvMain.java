@@ -112,10 +112,10 @@ public class ZvMain {
 		Result finalOutput = new Result();
 		finalOutput.method = q.method;
 		if (q.method == "ScatterRep") {
-			ScatterRep.generateAnalysis(output, q, finalOutput);
+			ScatterRep.compute(output, q, finalOutput);
 		}
 		else {
-			ScatterRank.generateAnalysis(output, q, finalOutput);
+			ScatterRank.compute(output, q, finalOutput);
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(finalOutput);
@@ -176,7 +176,7 @@ public class ZvMain {
 			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
 			 ((Similarity) analysis).setDescending(true);
 		 }
-		 analysis.generateAnalysis(output, normalizedgroups);
+		 analysis.compute(output, normalizedgroups);
 		 ObjectMapper mapper = new ObjectMapper();
 		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 	}

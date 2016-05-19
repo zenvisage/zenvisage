@@ -12,7 +12,7 @@ import edu.uiuc.zenvisage.model.*;
  */
 public class ScatterRep {
 
-	public static void generateAnalysis(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
+	public static void compute(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
 		List<ScatterResult> datas = new ArrayList<ScatterResult>(output.values());
 		generateCharts(datas, q.numOfResults, q.yAxis, finalOutput);
 	}

@@ -54,7 +54,7 @@ public class Representative extends Analysis {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void generateAnalysis(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
+	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {

@@ -48,7 +48,7 @@ public class Similarity extends Analysis {
 	 * @see analyze.Analysis#getAnalysis()
 	 */
 	@Override
-	public void generateAnalysis(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
+	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		Sketch[] sketchPoints = args.getSketchPoints();
 		ArrayList<String> mappings = new ArrayList<String>();
