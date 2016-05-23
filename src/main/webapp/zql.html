@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>ZQLTable</title>
+		<link rel="stylesheet" type="text/css" href="zqltable.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	</head>
+
+	<body ng-app="myApp">
+		<div ng-controller="MyController">
+			<table class="table">
+				<caption>ZQL Query Table</caption>
+				<col width="5%">
+				<col width="10%">
+				<col width="10%">
+				<col width="10%">
+				<col width="20%">
+				<col width="20%">
+				<col width="25%">
+				<tr>
+					<th>Name</th>
+					<th>X</th>
+					<th>Y</th>
+					<th>Z</th>
+					<th>Constraints</th>					
+					<th>Viz</th>
+					<th>Process</th>
+
+				</tr>
+				<tr ng-repeat="query in queries['zqlRows']">
+					<td>{{query.name}}</td>
+					<td>{{query.x}}</td>
+					<td>{{query.y}}</td>
+					<td>{{query.z}}</td>
+					<td>{{query.constraints}}</td>
+					<td>{{query.viz}}</td>
+					<td>{{query.processe}}</td>
+				</tr>
+				<tr>
+					<td>
+						<input ng-model="input.name" type=text/>
+					</td>
+					<td>
+						<input ng-model="input.x" type=text/>
+					</td>
+					<td>
+						<input ng-model="input.y" type=text/>
+					</td>
+					<td>
+						<input ng-model="input.z" type=text/>
+					</td>
+					<td>
+						<input ng-model="input.constraints" type=text/>
+					</td>					
+					<td>
+						<input ng-model="input.viz" type=text/>
+					</td>
+					<td>
+						<input ng-model="input.processe" type=text/>
+					</td>					
+				</tr>
+			</table>
+			<button ng-click="addRow()">Add Row</button>
+			<button ng-click="submitZQL()">Submit</button>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.1/angular.min.js"></script>
+		<script src="zql/app.js"></script>
+		<script src="zql/parsertypes.js"></script>
+		<script src="zql/zqlparser.js"></script>
+	</body>
+</html>
