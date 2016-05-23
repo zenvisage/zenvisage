@@ -23,13 +23,25 @@ function getSuggestData(query)
   });
 }
 
+//This method only GENERATES SCATTER Trends
 function getScatterData(query){
 	$("#existing-trends").empty()
 	  $.get('/zv/getscatterplot','query='+ JSON.stringify(query), generateScatterTrends, 'json')
 	  .fail(function(){
 	    console.log("Failed")
-	    alert('Request failed: /getscatterplot');
+	    alert('Request failed: /getscatterTrends');
 	  });
+}
+//This method will get data for the OUTPUT charts
+//When a person presses the "search" button, this will get called down the path
+function getScatterPlot(query)
+{
+  console.log("sendquery", query)
+  $.get('/zv/getscatterplot', 'query='+ JSON.stringify(query), returnResults, 'json')
+      .fail(function(){
+        console.log("Failed")
+        alert('Request failed: /getscatterplot');
+      });
 }
 
 function getSuggestTrends(query){

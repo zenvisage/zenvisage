@@ -227,26 +227,16 @@ $("#search").click(function(){
 function createQuery(rectangles ,xlabel, ylabel, title, num){
 	
 
-	var query = new ScatterQuery(rectangles,xlabel,ylabel,title,num,"");
-//	var query = new ScatterQuery(xStart, xEnd, yStart,yEnd,"GPA","FamilyIncome","Major",num);
+	var query = new ScatterPlotQuery(rectangles,xlabel,ylabel,title,num,"");
+//	var query = new ScatterPlotQuery(xStart, xEnd, yStart,yEnd,"GPA","FamilyIncome","Major",num);
 
 	getScatterPlot(query);
 }
 
-
-function getScatterPlot(query)
-{
-  console.log("sendquery", query)
-  $.get('/getscatterplot', JSON.stringify(query), returnResults, 'json')
-  .fail(function(){
-    console.log("Failed")
-    alert('Request failed: /getscatterplot');
-  });
-}
 /*
 function initialquerycall(query)
 {
-  var query = new ScatterQuery(0,0,0,0, "","",50);
+  var query = new ScatterPlotQuery(0,0,0,0, "","",50);
   console.log("sendquery", query)
   $.get('/getscatterplot', JSON.stringify(query), showMainChart, 'json')
   .fail(function(){

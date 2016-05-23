@@ -69,7 +69,7 @@ function Query(method,Yaxis,Xaxis,groupBy,aggrFunc,aggrVar,outlierCount,dataX,da
 }
 
 /*
-function ScatterQuery(x1, x2, y1,  y2,  xAxis,  yAxis,  zAxis,
+function ScatterPlotQuery(x1, x2, y1,  y2,  xAxis,  yAxis,  zAxis,
 			 numOfResults) {
 		this.x1 = x1;
 		this.x2 = x2;
@@ -87,7 +87,7 @@ function Rectangle(x1,x2,y1,y2){
 	this.y1 = y1;
 	this.y2 = y2;
 }
-function ScatterQuery(rectangles, xAxis,yAxis, zAxis,numOfResults, method) {
+function ScatterPlotQuery(rectangles, xAxis,yAxis, zAxis,numOfResults, method) {
 	this.rectangles = rectangles;
 	this.xAxis = xAxis;
 	this.yAxis = yAxis;
@@ -934,7 +934,7 @@ function setupScatterView(){
 	var x = getXAxis();
 	var y = getYAxis();
 	var z = getCategory();
-    var scatterquery =new ScatterQuery([],x, y, z, numresults, "ScatterRep");
+    var scatterquery =new ScatterPlotQuery([],x, y, z, numresults, "ScatterRep");
 	getScatterData(scatterquery);
     generateScatterTrends(existingTrends[ExTrendindex]);
     //updateMainGraph
