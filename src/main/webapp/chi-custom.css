@@ -1,0 +1,178 @@
+html, body {
+  height:100%;
+  margin:0;
+}
+
+hr {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+#table-div {
+  height: 242px !important;
+  overflow-x: auto;
+}
+
+#tree-div {
+  height: 242px !important;
+  border: 0.5px solid #D9D9D9;
+  width: 98%;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+svg#treesvg {
+  overflow-x: auto;
+}
+
+#middle-left{
+  height: 360px !important;
+  overflow-x: auto;
+  -webkit-flex: 1;
+  flex:1;
+}
+
+#middle-right{
+  height: 360px !important;
+  -webkit-flex: 1;
+  flex:1;
+  position:relative;
+}
+
+#graph-buttons {
+  margin-left: 23px;
+  margin-top: 10px;
+}
+
+#graph-type{
+  width: 80px;
+}
+
+#everything {
+  height:100%;
+  width:100%;
+  overflow-x: hidden;
+  display:flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+  -webkit-align-content: stretch;
+  align-content: stretch;
+}
+
+#left-bar {
+  width: 200px;
+  background-color: #fff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 0 20px;
+  border-right: 1px solid #D9D9D9;
+}
+
+#settings {
+  padding-top: 3px;
+}
+
+#middle-left {
+  border-right: 1px solid #D9D9D9;
+}
+
+
+.info > td > div > .icon {
+  display: block;
+  margin-top: 3px;
+}
+
+.info > td > div > .number {
+  display: none;
+}
+
+.icon {
+  display: none;
+}
+
+.hide {
+  display: none;
+}
+
+#middle-bar{
+  -webkit-flex: 1;
+  flex:1;
+  position:relative;
+}
+
+.glyphicon.glyphicon-cog {
+    font-size: 17px;
+}
+
+#middle-under-nav {
+  height:100%;
+  margin: 0px;
+  display:flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+  -webkit-align-content: stretch;
+  align-content: stretch;
+}
+
+.nav > li > .btn-group {
+  padding-top: 7px;
+}
+
+.nav > li > #zql-table {
+  padding-top: 7px;
+  padding-left: 5px;
+}
+
+#graph-type {
+  padding-top: 7px;
+  padding-left: 5px;
+}
+.modal-body{
+  margin-left: 20px;
+}
+
+.radio {
+  margin-left: 20px;
+}
+
+.radio label {
+  padding-left: 0px !important;
+}
+
+.dropdown {
+ width: 150px
+}
+
+.list-item {
+  width: 145px;
+  border: 0.5px solid #D9D9D9;
+  border-radius: 5px;
+  padding-left: 5px;
+  margin-bottom: 2px;
+  margin-left: -40px;
+  background: #F0F0F0;
+  list-style-type:none;
+}
+
+.form-control {
+  padding: 1px 5px !important;
+  height: 22px !important;
+  line-height: 1.5 !important;
+  font: 12px !important;
+}
+.glyphicon.glyphicon-flash {
+    font-size: 10px;
+}
+
+.result-x {
+  width: 38px;
+}
+
+#left-button-group {
+  margin-right: 10px;
+}
+
