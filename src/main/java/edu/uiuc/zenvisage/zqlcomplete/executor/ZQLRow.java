@@ -1,13 +1,12 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import postgres.PSQLDatabase;
-import api.SketchPoints;
+import edu.uiuc.zenvisage.model.Sketch;
 
 /**
  * @author tarique
@@ -21,7 +20,7 @@ public class ZQLRow {
 	private List<Constraints> constraints;
 	private Processe processe;
 	private VizColumn viz;
-	public SketchPoints sketchPoints;
+	public Sketch sketchPoints;
 	
 	public ZQLRow() {
 		name = new Name();
@@ -111,11 +110,11 @@ public class ZQLRow {
 		this.name.setOutput(isOutput);
 	}
 	
-	public SketchPoints getSketchPoints() {
+	public Sketch getSketchPoints() {
 		return sketchPoints;
 	}
 
-	public void setSketchPoints(SketchPoints sketchPoints) {
+	public void setSketchPoints(Sketch sketchPoints) {
 		this.sketchPoints = sketchPoints;
 	}
 	public VizColumn getViz() {

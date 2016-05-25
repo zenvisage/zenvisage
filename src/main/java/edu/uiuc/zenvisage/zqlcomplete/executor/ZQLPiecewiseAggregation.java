@@ -1,20 +1,24 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.vde.database.refactor.ColumnMetadata;
-import org.vde.database.refactor.Database;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-import api.Args;
-import api.Point;
-import api.SketchPoints;
-import normalization.Normalization;
+import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
+import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
+import edu.uiuc.zenvisage.model.Point;
+import edu.uiuc.zenvisage.model.Sketch;
+import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.model.*;
+import edu.uiuc.zenvisage.service.utility.Normalization;
+
 
 /**
  * @author xiaofo
@@ -107,7 +111,7 @@ public class ZQLPiecewiseAggregation {
 	
 	
 	
-	public double[] applyPAAonQuery(Set<Float> ignore, SketchPoints sketchPoint){
+	public double[] applyPAAonQuery(Set<Float> ignore, Sketch sketchPoint){
 		
 		ColumnMetadata xcolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.xAxis);
 		float pAAWidth = xcolumnMetadata.pAAWidth;

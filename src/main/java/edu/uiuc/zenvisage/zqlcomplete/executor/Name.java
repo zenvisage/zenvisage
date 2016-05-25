@@ -1,4 +1,4 @@
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 public class Name {
 	

@@ -1,4 +1,4 @@
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,17 +7,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import visual.Chart;
-import visual.Result;
-import api.Args;
-import api.BaselineQuery;
-import cluster.RepresentativeTrend;
-import normalization.Normalization;
-import normalization.Original;
+import edu.uiuc.zenvisage.model.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import analysis.utility.DataReformation;
 
 /**
  *

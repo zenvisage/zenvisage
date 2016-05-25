@@ -1,19 +1,19 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import api.SketchPoints;
+import edu.uiuc.zenvisage.model.Sketch;
 
 /**
  * @author tarique
  *
  */
 public class ZQLRowResult {
-	private SketchPoints sketchPoints;
+	private Sketch sketchPoints;
 	private boolean isSketch=false; 
 	private List<ZQLRowVizResult> zqlRowVizResults;
 	private ZQLRowProcessResult zqlProcessResult;
@@ -22,12 +22,12 @@ public class ZQLRowResult {
 		zqlRowVizResults=new ArrayList<ZQLRowVizResult>();
 	}
 	
-	public SketchPoints getSketchPoints() {
+	public Sketch getSketchPoints() {
 		return sketchPoints;
 	}
 
 
-	public void setSketchPoints(SketchPoints sketchPoints) {
+	public void setSketchPoints(Sketch sketchPoints) {
 		this.sketchPoints = sketchPoints;
 	}
 

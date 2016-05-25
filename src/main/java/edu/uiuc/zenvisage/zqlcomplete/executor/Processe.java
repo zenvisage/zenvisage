@@ -1,12 +1,11 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author tarique

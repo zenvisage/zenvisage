@@ -1,19 +1,15 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
-import java.util.LinkedHashMap;
-
-import normalization.Normalization;
-
-import org.vde.database.refactor.*;
-
+import edu.uiuc.zenvisage.service.utility.Normalization;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import distance.Distance;
-import analysis.utility.ChartOutput;
-import api.Args;
+import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
+import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.model.*;
 
 /**
  * Super class of all data analysis subclasses.

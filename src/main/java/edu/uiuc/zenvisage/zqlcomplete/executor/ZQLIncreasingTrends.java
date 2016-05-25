@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,16 +11,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import normalization.Normalization;
-
 import org.apache.commons.collections.map.MultiValueMap;
-import org.vde.database.refactor.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import piecewiseaggregation.PiecewiseAggregation;
-import distance.Distance;
-import analysis.utility.ChartOutput;
+import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.service.utility.Normalization;
 
 /**
  *

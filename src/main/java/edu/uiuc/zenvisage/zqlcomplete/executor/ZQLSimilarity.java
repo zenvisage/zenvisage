@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,15 +11,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import normalization.Normalization;
-
 import org.apache.commons.collections.map.MultiValueMap;
-import org.vde.database.refactor.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import api.SketchPoints;
-import distance.Distance;
+import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
+import edu.uiuc.zenvisage.model.Sketch;
+import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.model.*;
+import edu.uiuc.zenvisage.service.utility.Normalization;
 
 /**
  *
@@ -55,7 +56,7 @@ public class ZQLSimilarity extends ZQLAnalysis {
 		
 		ZQLRowVizResult queryViz=null;
 		ZQLRowVizResult dataViz=null;
-		SketchPoints sketchPoints=null;
+		Sketch sketchPoints=null;
 		
 		
 		// get the first visualization type xyz from the corresponding row

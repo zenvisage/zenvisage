@@ -1,12 +1,12 @@
 /**
  * 
  */
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import api.SketchPoints;
+import edu.uiuc.zenvisage.model.Sketch;
 
 /**
  * @author tarique

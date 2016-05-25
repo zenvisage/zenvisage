@@ -1,4 +1,4 @@
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +10,15 @@ public class ZColumn {
 	private List<String> values;
 	private String expression;
 	
-	// after excuting expression
-	private List<String> parsedValues;
+	// after executing expression, implement after set operation is implemented
+	// private List<String> parsedValues;
 	
 	public ZColumn() {
 		variable = "";
 		column = "";
 		values = new ArrayList<String>();
 		expression = "";
-		parsedValues = new ArrayList<String>();
+		// parsedValues = new ArrayList<String>();
 	}
 	
 	public String getVariable() {

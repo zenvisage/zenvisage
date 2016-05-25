@@ -1,4 +1,4 @@
-package org.vde.zql;
+package edu.uiuc.zenvisage.zqlcomplete.executor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,19 +7,18 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.vde.database.refactor.Database;
-import org.vde.database.refactor.Executor;
-
-import postgres.PSQLDatabase;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import api.Query;
-import distance.Distance;
-import distance.Euclidean;
-import normalization.Normalization;
-import normalization.Zscore;
-import visual.Result;
+import edu.uiuc.zenvisage.data.Query;
+import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
+import edu.uiuc.zenvisage.data.roaringdb.executor.ExecutorResult;
+import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.service.distance.Euclidean;
+import edu.uiuc.zenvisage.model.*;
+import edu.uiuc.zenvisage.service.utility.Normalization;
+
+import edu.uiuc.zenvisage.service.utility.Zscore;
 
 /**
  * @author tarique
@@ -120,7 +119,7 @@ public class ZQLExecutor {
 
 				// get data points with a in memory query
 				LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executor
-						.getData(q);
+						.getData(q).output;
 
 				if (zvalues.size() > 0) {
 					LinkedHashMap<String, LinkedHashMap<Float, Float>> newoutput = new LinkedHashMap<String, LinkedHashMap<Float, Float>>();
