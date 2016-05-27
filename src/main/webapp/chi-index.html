@@ -4,62 +4,68 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visual Data Exploration</title>
-
-    <link href="chi-custom.css" rel="stylesheet">
-    <link href="chi-graph.css" rel="stylesheet">
+    <link href="chi-css/custom.css" rel="stylesheet">
+    <link href="chi-css/graph.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="js/chi-main.js"></script>
-    <script src="js/chi-graph.js"></script>
+    <script src="chi-js/main.js"></script>
+    <script src="chi-js/graph.js"></script>
+    <script src="chi-js/raphael.sketchpad.js"></script>
   </head>
   <body>
+
+    <!-- this div contains everything in the body -->
     <div id="everything">
-          <div class="modal fade" id="modal-content" role="dialog">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Settings</h4>
+
+      <!-- this div contains the popup for settings -->
+      <div class="modal fade" id="modal-content" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Settings</h4>
+            </div>
+            <div class="modal-body">
+              <div class="info-text"><b>Select Search Method</b></div>
+              <div class="radio">
+                <form id="search-method">
+                  <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>Similarity Search</label><br>
+                  <input type="radio" name="search-method" value="Outlier" ><label> Dissimilar Search</label>
+                </form>
               </div>
-              <div class="modal-body">
-                <div class="info-text"><b>Select Search Method</b></div>
-                <div class="radio">
-                  <form id="search-method">
-                    <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>Similarity Search</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label> Dissimilar Search</label>
-                  </form>
-                </div>
-                <hr>
-                <div class="info-text"><b>Aggregation Method</b></div>
-                <div class="radio">
-                  <form>
-                    <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
-                    <input type="radio" name="aggregation-method" value="avg" checked><label>Average</label>
-                  </form>
-                </div>
-                <hr>
-                <div class = "checkbox">
-                  <label><input type = "checkbox" id = "ignoreX" >Ignore X axis scale</label>
-                </div>
-                <div class = "checkbox">
-                  <label><input type = "checkbox" id = "ignoreY" checked>Ignore Y axis scale</label>
-                </div>
-                <hr>
-                <div id="num-results">
-                  <div class="info-text"><b>Number of Results</b></div>
-                  <div>
-                    <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
-                  </div>
+              <hr>
+              <div class="info-text"><b>Aggregation Method</b></div>
+              <div class="radio">
+                <form>
+                  <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
+                  <input type="radio" name="aggregation-method" value="avg" checked><label>Average</label>
+                </form>
+              </div>
+              <hr>
+              <div class = "checkbox">
+                <label><input type = "checkbox" id = "ignoreX" >Ignore X axis scale</label>
+              </div>
+              <div class = "checkbox">
+                <label><input type = "checkbox" id = "ignoreY" checked>Ignore Y axis scale</label>
+              </div>
+              <hr>
+              <div id="num-results">
+                <div class="info-text"><b>Number of Results</b></div>
+                <div>
+                  <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
         <div id="sidebar" class="interface">
           <h4>
@@ -105,6 +111,8 @@
 
         </div> <!-- end side bar -->
       </div> <!-- end left bar -->
+
+
       <div id="middle-bar">
         <div class="row" id="top-middle-bar">
           <div class="col-md-4">
