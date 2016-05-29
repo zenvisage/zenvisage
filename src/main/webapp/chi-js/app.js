@@ -1,3 +1,46 @@
+var app = angular.module('zenvisage', []);
+
+app.controller('categoryController', [
+  '$scope', '$http',
+  function($scope, $http){
+    var q = new formQuery('real_estate');
+    var params = {
+      "query": q,
+    };
+    var config = {
+      params: params,
+    };
+    $http.get('/zv/getformdata', config).
+      success(function(response) {
+        console.log("success: ", response);
+        $scope.categories = [];
+        angular.forEach(response.zAxisColumns, function(value, key) {
+         $scope.categories.push(key);
+        });
+      }).
+      error(function(response) {
+        console.log("Failed: ", response)
+        alert('Request failed: /getformdata');
+      });
+}]);
+
+function formQuery(databasename){
+  this.databasename = databasename;
+}
+
+app.controller('xAxisController', [
+'$scope',
+function($scope){
+  $scope.xAxisItems = [
+      '1',
+      '2',
+      '3',
+      '15'
+    ];
+}]);
+
+
+
 $("a.tooltip-question").tooltip();
 
 $(function () {

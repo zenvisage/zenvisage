@@ -104,12 +104,11 @@ function getData(query, xAxisType, yAxisType) {
 
 
   function formQuery(databasename){
-	  this.databasename=databasename;
+	  this.databasename = databasename;
   }
 
   function getInterfaceFormData(query){
 	  var q = new formQuery(query);
-    console.log(q)
 	 //$.get('/getformdata',JSON.stringify(q),processFormData,'json')
     $.get('/zv/getformdata', 'query='+JSON.stringify(q) , processDatasetChange, 'json')
       .fail(function() {

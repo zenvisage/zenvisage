@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="vdb">
+<html lang="en" ng-app="zenvisage">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="chi-js/main.js"></script>
+    <script src="chi-js/app.js"></script>
     <script src="chi-js/graph.js"></script>
     <script src="chi-js/raphael.sketchpad.js"></script>
   </head>
@@ -79,22 +80,16 @@
               <option>Income</option>
             </select>
           </div>
-          <div>
-            <h5><b>Category</b></h5>
-            <ul>
-              <li class="list-item">City</li>
-              <li class="list-item">County</li>
-              <li class="list-item">State</li>
-              <li class="list-item">Zipcode</li>
+          <div ng-controller="categoryController">
+            <h5><b>Category3</b></h5>
+            <ul >
+              <li ng-repeat="category in categories" class="list-item">{{category}}</li>
             </ul>
           </div>
-          <div>
+          <div ng-controller="xAxisController">
             <h5><b>X-axis</b></h5>
             <ul>
-              <li class="list-item">Week</li>
-              <li class="list-item">Month</li>
-              <li class="list-item">Quarter</li>
-              <li class="list-item">Year</li>
+              <li ng-repeat="xAxisItem in xAxisItems" class="list-item">{{xAxisItem}}</li>
             </ul>
           </div>
           <div>
