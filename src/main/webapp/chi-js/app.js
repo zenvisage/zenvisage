@@ -1,6 +1,8 @@
 var app = angular.module('zenvisage', []);
 
-app.controller('categoryController', [
+
+// populates the dataset attributes on the left-bar
+app.controller('datasetController', [
   '$scope', '$http',
   function($scope, $http){
     var q = new formQuery('real_estate');
@@ -12,14 +14,20 @@ app.controller('categoryController', [
     };
     $http.get('/zv/getformdata', config).
       success(function(response) {
-        console.log("success: ", response);
         $scope.categories = [];
+        $scope.xAxisItems = [];
+        $scope.yAxisItems = [];
         angular.forEach(response.zAxisColumns, function(value, key) {
          $scope.categories.push(key);
         });
+        angular.forEach(response.xAxisColumns, function(value, key) {
+         $scope.xAxisItems.push(key);
+        });
+        angular.forEach(response.yAxisColumns, function(value, key) {
+         $scope.yAxisItems.push(key);
+        });
       }).
       error(function(response) {
-        console.log("Failed: ", response)
         alert('Request failed: /getformdata');
       });
 }]);
@@ -27,19 +35,6 @@ app.controller('categoryController', [
 function formQuery(databasename){
   this.databasename = databasename;
 }
-
-app.controller('xAxisController', [
-'$scope',
-function($scope){
-  $scope.xAxisItems = [
-      '1',
-      '2',
-      '3',
-      '15'
-    ];
-}]);
-
-
 
 $("a.tooltip-question").tooltip();
 

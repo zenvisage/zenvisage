@@ -68,7 +68,7 @@
 
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
-        <div id="sidebar" class="interface">
+        <div id="sidebar" class="interface" ng-controller="datasetController">
           <h4>
             <a><span id="settings" data-toggle="modal" data-target="#modal-content" class="glyphicon glyphicon-cog"></span></a>  ZenVisage
           </h4>
@@ -80,13 +80,13 @@
               <option>Income</option>
             </select>
           </div>
-          <div ng-controller="categoryController">
+          <div>
             <h5><b>Category3</b></h5>
             <ul >
               <li ng-repeat="category in categories" class="list-item">{{category}}</li>
             </ul>
           </div>
-          <div ng-controller="xAxisController">
+          <div>
             <h5><b>X-axis</b></h5>
             <ul>
               <li ng-repeat="xAxisItem in xAxisItems" class="list-item">{{xAxisItem}}</li>
@@ -95,12 +95,7 @@
           <div>
             <h5><b>Y-axis</b></h5>
             <ul>
-              <li class="list-item">Sold Price</li>
-              <li class="list-item">Listing Price</li>
-              <li class="list-item">Mortgage Rate</li>
-              <li class="list-item">Foreclosure Rate</li>
-              <li class="list-item">Renting Cost</li>
-              <li class="list-item">Property Tax Rate</li>
+              <li ng-repeat="yAxisItem in yAxisItems" class="list-item">{{yAxisItem}}</li>
             </ul>
           </div>
 
