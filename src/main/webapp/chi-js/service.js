@@ -102,11 +102,6 @@ function getData(query, xAxisType, yAxisType) {
     });
 }
 
-
-  function formQuery(databasename){
-	  this.databasename = databasename;
-  }
-
   function getInterfaceFormData(query){
 	  var q = new formQuery(query);
 	 //$.get('/getformdata',JSON.stringify(q),processFormData,'json')

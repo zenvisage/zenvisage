@@ -10,10 +10,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="chi-js/app.js"></script>
     <script src="chi-js/graph.js"></script>
     <script src="chi-js/raphael.sketchpad.js"></script>
+    <script src="chi-js/draw.js"></script>
   </head>
   <body>
 
@@ -102,9 +104,13 @@
         </div> <!-- end side bar -->
       </div> <!-- end left bar -->
 
-
+      <!-- this div contains the everything in the middle (aside from the left nav bar) -->
       <div id="middle-bar">
+
+        <!-- this div contains the drawng interface and the zql table -->
         <div class="row" id="top-middle-bar">
+
+          <!-- drawing interface -->
           <div class="col-md-4">
             <div class="input-group" id="graph-buttons" >
               <div class="btn-group" id="left-button-group">
@@ -124,8 +130,11 @@
               </div>
 
             </div>
-            <img src="img/blank.png" height="210" width="350">
+            <div id="draw_div" style="width: 350px; height: 210px;"></div>
           </div>
+          <!-- drawing interface END-->
+
+          <!-- zql table -->
           <div class="col-md-8" id="table-div">
             <table id="zql-table" class="table zql-table">
               <thead>
@@ -187,7 +196,10 @@
               </tfoot>
             </table>
           </div>
+          <!-- zql table END-->
         </div>
+        <!-- drawng interface + zql table END-->
+
         <hr>
         <div id="bottom-middle-bar">
           <div class="col-md-12" id="tree-div">

@@ -1,13 +1,13 @@
 var app = angular.module('zenvisage', []);
 
-
 // populates the dataset attributes on the left-bar
 app.controller('datasetController', [
   '$scope', '$http',
   function($scope, $http){
-    var q = new formQuery('real_estate');
+
+    // TODO: params will need to be dynamic later
     var params = {
-      "query": q,
+      "query": {"databasename": "real_estate"},
     };
     var config = {
       params: params,
@@ -31,10 +31,6 @@ app.controller('datasetController', [
         alert('Request failed: /getformdata');
       });
 }]);
-
-function formQuery(databasename){
-  this.databasename = databasename;
-}
 
 $("a.tooltip-question").tooltip();
 
