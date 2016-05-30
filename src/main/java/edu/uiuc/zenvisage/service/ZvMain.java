@@ -6,6 +6,7 @@ package edu.uiuc.zenvisage.service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,7 +38,6 @@ import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
-
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
@@ -93,12 +93,22 @@ public class ZvMain {
  
     }
 			
+   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
+		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
+		  executor = new Executor(inMemoryDatabase);
+		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
+		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+     	  return new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
+//		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
+			
+		}
+   
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 		  executor = new Executor(inMemoryDatabase);
 		  ZQLExecutor.executor=executor;
 		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
-     	  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
+  	  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
 			
 		}
