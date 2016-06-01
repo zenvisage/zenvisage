@@ -92,7 +92,7 @@ function parseX(input) {
     try {
         var x = {
             variable: found[2] || found[4],
-            values: found[1] || parseList(found[3] || found[5])
+            values: parseList(found[1] || found[3] || found[5])
         };
     }
     catch(err) {
@@ -116,7 +116,7 @@ function parseY(input) {
     try {
         var y = {
             variable: found[2] || found[4],
-            values: found[1] || parseList(found[3] || found[5])
+            values: parseList(found[1] || found[3] || found[5])
         };
     }
     catch(err) {
