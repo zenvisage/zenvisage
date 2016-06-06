@@ -43,9 +43,11 @@ public class SQLQuery {
 		select(zQLRow.getZ().getColumn().replace("'",""));
 		
 		from("realestate");
-		// assume 1 constraint for now
+		
+		
 		if (zQLRow.getConstraint().size() > 0) {
-			where(zQLRow.getConstraint().get(0).toString());
+			for (int i = 0; i < zQLRow.getConstraint().size(); i++)
+				where(zQLRow.getConstraint().get(i).toString());
 		}
 		
 		groupBy(zQLRow.getZ().getColumn().replace("'", ""));
@@ -113,7 +115,7 @@ public class SQLQuery {
 			query = query + " WHERE ";
 			query = query + whereClause.get(0);
 			for (int i = 1; i < whereClause.size(); i++) {
-				query = query +" AND " + whereClause.get(i);
+				query = query +" OR " + whereClause.get(i);
 			}
 		}
 		

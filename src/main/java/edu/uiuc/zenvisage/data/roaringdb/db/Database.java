@@ -164,7 +164,10 @@ public class Database {
 
    
     public ColumnMetadata getColumnMetaData(String columnName){
-		Column column = columns.get(columnName);
+    	
+    	//columnName format incorrect... discovered during zql parser process column test
+    	//Column column = columns.get(columnName);
+    	Column column = columns.get(columnName.substring(0,1).toUpperCase()+columnName.substring(1));
 		return column.columnMetadata;
 			
      }
