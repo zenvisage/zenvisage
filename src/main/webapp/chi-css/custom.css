@@ -20,6 +20,7 @@ hr {
   border-radius: 5px;
   margin-top: 5px;
   margin-left: 10px;
+  display: none;
 }
 
 svg#treesvg {
@@ -139,8 +140,9 @@ svg#treesvg {
   margin-left: 20px;
 }
 
-.radio label {
+label {
   padding-left: 0px !important;
+  font-weight: 400; !important;
 }
 
 .dropdown {

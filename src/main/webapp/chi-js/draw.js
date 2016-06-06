@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+  // need to initialize with real data
   var start_date = new Date("2002/12/29").getTime();
   var end_date = new Date().getTime();
   var data = [];
@@ -10,6 +11,7 @@ $(document).ready(function () {
 
   var isDrawing = false;
   var lastDrawRow = null, lastDrawValue = null;
+  // value range will be different
   var valueRange = [0, 100];
 
   function setPoint(event, g, context) {
@@ -59,10 +61,14 @@ $(document).ready(function () {
     isDrawing = false;
     lastDrawRow = null;
     lastDrawValue = null;
-
+    //c.rawData_
+    //angular.element($("#sidebar")).scope().updateEverything();
   }
 
-  c = new Dygraph(document.getElementById("draw_div"), data,
+  // sketchObject is global
+  // x and y is not always date and value
+  // TODO: need to initialize dynamically
+  sketchObject = new Dygraph(document.getElementById("draw_div"), data,
       {
         valueRange: valueRange,
         labels: [ 'Date', 'Value' ],
@@ -88,7 +94,8 @@ $(document).ready(function () {
           //restore to original size
           dblclick: function(event, g, context) {
             Dygraph.defaultInteractionModel.dblclick(event, g, context);
-          },
+          }
+          /*
           mousewheel: function(event, g, context) {
             var normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
             var percentage = normal / 50;
@@ -108,11 +115,13 @@ $(document).ready(function () {
             });
             Dygraph.cancelEvent(event);
           }
-        },
+          */
+        }/*,
         strokeWidth: 1.5,
         gridLineColor: 'rgb(196, 196, 196)',
         drawYGrid: false,
-        drawYAxis: false
+        drawYAxis: false,
+        drawXAxis: false*/
       });
       window.onmouseup = finishDraw;
   }

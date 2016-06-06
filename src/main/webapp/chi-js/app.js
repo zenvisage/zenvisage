@@ -1,42 +1,87 @@
 var app = angular.module('zenvisage', []);
 
-// populates the dataset attributes on the left-bar
+
+// responsible for generating the query
+app.controller('queryInputController', [
+  '$scope', '$http',
+  function($scope, $http){
+
+    $scope.onDatasetChange = function () {
+      updateEverything();
+    };
+
+    function updateEverything()
+    {
+      var q = constructDimensionChangeQuery();
+      var params = {
+        "query": q
+      };
+      var config = {
+        params: params
+      };
+
+      console.log(config);
+
+      $http.get('/zv/getdata', config).
+      success(function(response) {
+        console.log("success");
+      }).
+      error(function(response) {
+        console.log("fail");
+      });
+    }
+}]);
+
+
+// populates and controls the dataset attributes on the left-bar
 app.controller('datasetController', [
   '$scope', '$http',
   function($scope, $http){
 
     // TODO: params will need to be dynamic later
+    var q = constructDatasetChangeQuery("real_estate");
+
     var params = {
-      "query": {"databasename": "real_estate"},
+      "query": q,
     };
     var config = {
       params: params,
     };
+
     $http.get('/zv/getformdata', config).
       success(function(response) {
         $scope.categories = [];
         $scope.xAxisItems = [];
         $scope.yAxisItems = [];
+        $scope.selectedCategory;
+        $scope.selectedXAxis;
+        $scope.selectedYAxis;
         angular.forEach(response.zAxisColumns, function(value, key) {
          $scope.categories.push(key);
         });
+        $scope.selectedCategory = $scope.categories[0];
         angular.forEach(response.xAxisColumns, function(value, key) {
          $scope.xAxisItems.push(key);
         });
+        $scope.selectedXAxis = $scope.xAxisItems[0];
         angular.forEach(response.yAxisColumns, function(value, key) {
          $scope.yAxisItems.push(key);
         });
+        $scope.selectedYAxis = $scope.yAxisItems[0];
       }).
       error(function(response) {
         alert('Request failed: /getformdata');
       });
 }]);
 
+
+// need to make angular
 $("a.tooltip-question").tooltip();
 
 $(function () {
   $('[data-toggle="popover"]').popover()
 })
+
 
 $(document).ready(function() {
   $( ".tabler" ).click(function() {

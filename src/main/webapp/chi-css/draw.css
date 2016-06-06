@@ -1,3 +1,4 @@
 #draw_div {
-  border:1px solid black;
+  border-style:1px solid black;
+  border-width: 1px;
 }

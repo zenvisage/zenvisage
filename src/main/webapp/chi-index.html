@@ -14,13 +14,13 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="chi-js/app.js"></script>
     <script src="chi-js/graph.js"></script>
-    <script src="chi-js/raphael.sketchpad.js"></script>
     <script src="chi-js/draw.js"></script>
+    <script src="chi-js/query.js"></script>
   </head>
   <body>
 
     <!-- this div contains everything in the body -->
-    <div id="everything">
+    <div id="everything" ng-controller="queryInputController">
 
       <!-- this div contains the popup for settings -->
       <div class="modal fade" id="modal-content" role="dialog">
@@ -75,7 +75,7 @@
             <a><span id="settings" data-toggle="modal" data-target="#modal-content" class="glyphicon glyphicon-cog"></span></a>  ZenVisage
           </h4>
           <div class="dropdown" id="dataset">
-            <label for="dataset">Dataset</label>
+            <h5><b>Dataset</b></h5>
             <select class="form-control" id="dataset-form-control">
               <option>Real Estate</option>
               <option>Students</option>
@@ -83,24 +83,29 @@
             </select>
           </div>
           <div>
-            <h5><b>Category3</b></h5>
-            <ul >
-              <li ng-repeat="category in categories" class="list-item">{{category}}</li>
-            </ul>
+            <h5><b>Category</b></h5>
+            <div ng-repeat="category in categories">
+              <label>
+                  <input type="radio" ng-change="onDatasetChange()" value={{category}} ng-model="$parent.selectedCategory"/>  {{category}}
+              </label>
+            </div>
           </div>
           <div>
             <h5><b>X-axis</b></h5>
-            <ul>
-              <li ng-repeat="xAxisItem in xAxisItems" class="list-item">{{xAxisItem}}</li>
-            </ul>
+            <div ng-repeat="xAxisItem in xAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDatasetChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/>  {{xAxisItem}}
+              </label>
+            </div>
           </div>
           <div>
             <h5><b>Y-axis</b></h5>
-            <ul>
-              <li ng-repeat="yAxisItem in yAxisItems" class="list-item">{{yAxisItem}}</li>
-            </ul>
+            <div ng-repeat="yAxisItem in yAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDatasetChange()" value={{yAxisItem}} ng-model="$parent.selectedYAxis"/>  {{yAxisItem}}
+              </label>
+            </div>
           </div>
-
         </div> <!-- end side bar -->
       </div> <!-- end left bar -->
 
