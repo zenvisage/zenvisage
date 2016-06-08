@@ -33,8 +33,8 @@ else
 
     if [ -f $LOCATION ]
     then
-        psql -U $1 -d $2 -c "COPY realestate FROM '"$LOCATION"' DELIMITER ',' CSV;"
+        psql -U $1 -d $2 -c "\COPY realestate FROM '"$LOCATION"' HEADER DELIMITER ',' CSV;"
     else
         echo "real_estate.csv not found in current directory."
     fi
-fi
+fi 
