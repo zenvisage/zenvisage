@@ -64,9 +64,16 @@
 			<button ng-click="addRow()">Add Row</button>
 			<button ng-click="submitZQL()">Submit</button>
 		</div>
+		 <div class="scrollbar" id="scrollbar">
+    	 <div class="force-overflow">
+         <table id="views_table" class="table"></table>
+        	</div>
+      	</div> <!-- end scroll bar-->
+		  
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.1/angular.min.js"></script>
 		<script src="zql/app.js"></script>
 		<script src="zql/parsertypes.js"></script>
 		<script src="zql/zqlparser.js"></script>
+		<script src="zql/generate-vega.js"></script>
 	</body>
 </html>

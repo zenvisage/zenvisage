@@ -94,11 +94,14 @@ public class ZvMain {
     }
 			
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
-		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
+		  System.out.println(zqlQuery);
+	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 		  executor = new Executor(inMemoryDatabase);
 		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
 		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
-     	  return new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
+     	  String result=new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
+     	  System.out.println(result);
+     	  return result;
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
 			
 		}

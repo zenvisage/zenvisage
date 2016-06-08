@@ -16,10 +16,10 @@ public class PSQLDatabase {
 	/**
 	 * Settings specific to local PSQL database, need to change this!!!!
 	 */
-	private String database = "zenvisage";
+	private String database = "postgres";
 	private String host = "jdbc:postgresql://localhost:5432/"+database;
 	private String username = "postgres";
-	private String password = "gary1993";
+	private String password = "";
 	Connection c = null;
 	
 	// Initialize connection
