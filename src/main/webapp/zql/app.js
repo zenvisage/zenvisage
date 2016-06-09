@@ -32,7 +32,7 @@ app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
             function (response) {
                 console.log("success: ", response);
                 console.log(response);
-                processBackEndData(response);
+                processBackEndData(response.data);
                 $scope.queries = {};
                 $scope.queries['zqlRows'] = [];
                 $scope.parsed = {};
