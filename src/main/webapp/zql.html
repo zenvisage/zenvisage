@@ -70,6 +70,19 @@
         	</div>
       	</div> <!-- end scroll bar-->
 		  
+  	        <select id="sel">
+              <option id ="auto" value="Auto">Recommended</option>
+  	          <option id ="lineChart" value="Line Chart">Line Chart</option>
+  	          <option id="barChart" value="Bar Chart">Bar Chart</option>
+  	          <option id ="scatter" value= "Scatter">Scatter Plot</option>
+  	        </select>
+
+  	    <script>
+  	    function getDataset() {return "real_estate";};
+  	    function getXAxis() {return "Year";};
+  	    function getDistanceMethod() {return "dtw";};
+  	    </script>
+
 		<script src="zql/angular.min.js"></script>
 		<script src="zql/app.js"></script>
 		<script src="zql/parsertypes.js"></script>
