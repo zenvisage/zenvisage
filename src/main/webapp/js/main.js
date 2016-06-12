@@ -110,6 +110,7 @@ function updateTrends(){
 	updateOneTrend("");
 	updateOneTrend("1");
 }
+
 function updateOneTrend(index){
 	setPredicateValue();
 	var query = new Query(
@@ -122,50 +123,25 @@ function updateOneTrend(index){
 		    3,
 		    [],
 		    [],
-			getOperator(),
-			getPredicate(),
-			getPredicateValue());
-	query.sketchPoints = [new SketchPoints()];
-    var xAxisType = getAxisType(xAxisSelect0.getValue()[0], "xAxisColumns");
-    var yAxisType = getAxisType(yAxisSelect0.getValue()[0], "yAxisColumns");
-/*
-    if(xAxisType == 'C' && yAxisType == 'Q'){
-        setupBarView();
-    }
-    else if(xAxisType =='O' && yAxisType == 'Q'){
-        setupLineView();
-    }
-    else if(xAxisType =='Q' && yAxisType == 'Q'){
-        //should be createScatterPlot, not implemented hyet
-  	
-        setupScatterView();
-        return;
-        //drawScatterTrend()
-    }
-    else{ //unknown data types selected
-        setupLineView();
-    }
-*/
-    if(xAxisType == 'Q' && yAxisType == 'Q'){
-    	setupScatterView();
-    	  $("#views").empty(); //remove existing views
-    	  $("#views_table").empty();
-    	return;
-    }
+  			getOperator(),
+  			getPredicate(),
+  			getPredicateValue()
+      );
+  query.sketchPoints = [new SketchPoints()];
+  var xAxisType = getAxisType(xAxisSelect0.getValue()[0], "xAxisColumns");
+  var yAxisType = getAxisType(yAxisSelect0.getValue()[0], "yAxisColumns");
+  if(xAxisType == 'Q' && yAxisType == 'Q'){
+  	setupScatterView();
+  	  $("#views").empty(); //remove existing views
+  	  $("#views_table").empty();
+  	return;
+  }
 	getSuggestData(query);
 	var numresults = $('#num-results input').val()
 	var x = getXAxis();
 	var y = getYAxis();
 	var z = getCategory();
-	
-	
-	
-	//blankChart();
-	//clearBlankChart();
 
-	//console.log(ExTrendindex);
-	//alert(getYAxis());
-    //console.log("y",getYAxis());
 	document.getElementById(ExTrendindex).disabled = true;
 	var num = 1-ExTrendindex;
 	document.getElementById(num).disabled = false;
@@ -202,7 +178,6 @@ function updateOneTrend(index){
             changeScaleBlankChart(min_X,max_X,min_Y,max_Y,chartData, "1");
         }*/
         changeScaleBlankChart(min_X,max_X,min_Y,max_Y,chartData, index);
-
 	}
 	else{
 		setNoDataBlankChartAxes(getXAxis(),getYAxis(), index);
@@ -432,7 +407,7 @@ function processDatasetChange( data ){
   ymax = ymetadata.max;
   //changeScaleBlankChart(xmin,xmax,ymin,ymax);
   $('#outlier_count_combobox').show();
-  
+
 //  var option = document.getElementById("sel").value;
 //  if(option =="Scatter")
 //	  setupScatterView();
@@ -929,7 +904,7 @@ function setupScatterView(){
     $("#tools_sketch").css("display","none");
     $("#draganddrop").css("display","none");
     $("#visualisation").css("display","none");
-    
+
     var numresults = $('#num-results input').val()
 	var x = getXAxis();
 	var y = getYAxis();

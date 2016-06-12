@@ -1,0 +1,30 @@
+table {
+	width: 100%;
+	table-layout: fixed;
+
+}
+
+caption {
+	text-indent: 50px;
+	text-align: left;
+	color: green;
+	padding: 15px;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+	height: 30px;
+	word-wrap: break-word;
+}
+
+input {
+	width: 90%;
+}

@@ -12,4 +12,13 @@
 hs_err_pid*
 /target/
 
+# Intellij
 /.idea/
+
+# Mac
+.DS_Store
+
+# Eclipse
+.project
+.classpath
+

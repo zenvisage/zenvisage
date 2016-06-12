@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zenvisage">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Data Exploration</title>
+    <link href="chi-css/custom.css" rel="stylesheet">
+    <link href="chi-css/graph.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="chi-js/app.js"></script>
+    <script src="chi-js/graph.js"></script>
+    <script src="chi-js/draw.js"></script>
+    <script src="chi-js/query.js"></script>
+  </head>
+  <body>
+
+    <!-- this div contains everything in the body -->
+    <div id="everything" ng-controller="queryInputController">
+
+      <!-- this div contains the popup for settings -->
+      <div class="modal fade" id="modal-content" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Settings</h4>
+            </div>
+            <div class="modal-body">
+              <div class="info-text"><b>Select Search Method</b></div>
+              <div class="radio">
+                <form id="search-method">
+                  <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>Similarity Search</label><br>
+                  <input type="radio" name="search-method" value="Outlier" ><label> Dissimilar Search</label>
+                </form>
+              </div>
+              <hr>
+              <div class="info-text"><b>Aggregation Method</b></div>
+              <div class="radio">
+                <form>
+                  <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
+                  <input type="radio" name="aggregation-method" value="avg" checked><label>Average</label>
+                </form>
+              </div>
+              <hr>
+              <div class = "checkbox">
+                <label><input type = "checkbox" id = "ignoreX" >Ignore X axis scale</label>
+              </div>
+              <div class = "checkbox">
+                <label><input type = "checkbox" id = "ignoreY" checked>Ignore Y axis scale</label>
+              </div>
+              <hr>
+              <div id="num-results">
+                <div class="info-text"><b>Number of Results</b></div>
+                <div>
+                  <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- this div contains the left-bar with the data information -->
+      <div id="left-bar">
+        <div id="sidebar" class="interface" ng-controller="datasetController">
+          <h4>
+            <a><span id="settings" data-toggle="modal" data-target="#modal-content" class="glyphicon glyphicon-cog"></span></a>  ZenVisage
+          </h4>
+          <div class="dropdown" id="dataset">
+            <h5><b>Dataset</b></h5>
+            <select class="form-control" id="dataset-form-control">
+              <option>Real Estate</option>
+              <option>Students</option>
+              <option>Income</option>
+            </select>
+          </div>
+          <div>
+            <h5><b>Category</b></h5>
+            <div ng-repeat="category in categories">
+              <label>
+                  <input type="radio" ng-change="onDatasetChange()" value={{category}} ng-model="$parent.selectedCategory"/>  {{category}}
+              </label>
+            </div>
+          </div>
+          <div>
+            <h5><b>X-axis</b></h5>
+            <div ng-repeat="xAxisItem in xAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDatasetChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/>  {{xAxisItem}}
+              </label>
+            </div>
+          </div>
+          <div>
+            <h5><b>Y-axis</b></h5>
+            <div ng-repeat="yAxisItem in yAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDatasetChange()" value={{yAxisItem}} ng-model="$parent.selectedYAxis"/>  {{yAxisItem}}
+              </label>
+            </div>
+          </div>
+        </div> <!-- end side bar -->
+      </div> <!-- end left bar -->
+
+      <!-- this div contains the everything in the middle (aside from the left nav bar) -->
+      <div id="middle-bar">
+
+        <!-- this div contains the drawng interface and the zql table -->
+        <div class="row" id="top-middle-bar">
+
+          <!-- drawing interface -->
+          <div class="col-md-4">
+            <div class="input-group" id="graph-buttons" >
+              <div class="btn-group" id="left-button-group">
+                <button type="button" class="btn btn-default btn-xs">Draw</button>
+                <button type="button" class="btn btn-default btn-xs">Modify</button>
+                <button type="button" class="btn btn-default btn-xs">Clear</button>
+                <select class="form-control" id="graph-type">
+                  <option>Line</option>
+                  <option>Scatter</option>
+                  <option>Bar</option>
+                </select>
+              </div>
+
+              <div class="btn-group" data-toggle="buttons" id="options">
+                <button type="button" name="options" id="list-option" class="btn btn-default btn-xs active"><span class="glyphicon glyphicon-th-list" ></span></button>
+                <button type="button" name="options" id="tree-option" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-tree-conifer" ></span></button>
+              </div>
+
+            </div>
+            <div id="draw_div" style="width: 350px; height: 210px;"></div>
+          </div>
+          <!-- drawing interface END-->
+
+          <!-- zql table -->
+          <div class="col-md-8" id="table-div">
+            <table id="zql-table" class="table zql-table">
+              <thead>
+                <tr>
+                  <td>
+                  </td>
+                  <td><b>X</td>
+                  <td><b>Y</b></td>
+                  <td><b>Z</b></td>
+                  <td><b>Constraints</b></td>
+                  <td><b>Process</b></td>
+                  <td></td>
+                  <td><b>#</b></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="row-1" class="tabler info">
+                  <td>
+                    <div>
+                      <div class="icon"><span class="glyphicon glyphicon-triangle-left"></span></div>
+                      <div class="number">1</div>
+                    </div>
+                  </td>
+                  <td>
+                    <input class="form-control zql-table" type="text" size="10" value=" ">
+                  </td>
+                  <td>
+                    <input class="form-control zql-table" type="text" size="10" value=" ">
+                  </td>
+                  <td>
+                    <input class="form-control zql-table" type="text" size="10" value=" ">
+                  </td>
+                  <td>
+                    <input class="form-control zql-table" type="text" size="20" value=" ">
+                  </td>
+                  <td>
+                    <input class="form-control zql-table" type="text" size="25" value=" ">
+                  </td>
+                  <td>
+                    <div>
+                      <button id="first-flash" type="button" class="btn btn-default btn-xs" data="R1"><span class="glyphicon glyphicon glyphicon-flash" ></span></button>
+                    </div>
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <a id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <!-- zql table END-->
+        </div>
+        <!-- drawng interface + zql table END-->
+
+        <hr>
+        <div id="bottom-middle-bar">
+          <div class="col-md-12" id="tree-div">
+          </div>
+          <div id="middle-left" class="col-md-6">
+            <h5><b>Results</b></h5>
+            <div>
+              <table style="width:100%">
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div id="middle-right" class="col-md-6">
+            <div>
+              <table style="width:100%;">
+                <tr>
+                  <td><h5><b>Representative patterns <span data-toggle="modal"class="glyphicon glyphicon-question-sign"></b></h5>
+                  </td>
+                  <td><h5><b>Outliers <span data-toggle="modal"class="glyphicon glyphicon-question-sign"></b></h5></td>
+                </tr>
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+                <tr>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                  <td><img src="img/blank.png" height="85" width="200"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var tree = tree();
+    </script>
+  </body>
+</html>

@@ -65,8 +65,6 @@ function updateGraphOnDblClick(){
 }
 
 function drag(item, ev) {
-	console.log("dragstart");
-	console.log(item)
 	//init();
 	//document.getElementById("svgLayer").style.display = "none";
 	//document.getElementById("tools_sketch").style.display = "none";
@@ -77,7 +75,6 @@ function drag(item, ev) {
 	//document.getElementById("visualisation").style.display = "none";
 	//console.log(ev.srcElement.id);
 	tempItemId = ev.srcElement.id; //use temp because user may not actually drop chart in
-  console.log(ev.srcElement.id);
 	//if(dragEnable){
 	//	enableDragAndDrop();
 	//}
@@ -105,7 +102,6 @@ function droppable(itemId, drawGraphIndex){
 }
 
 function drop(ev) {
-	console.log("drop")
     ev.preventDefault();
     $("#tools_sketch").css("display","none");
     $("#draganddrop").css("display","none");
@@ -118,18 +114,16 @@ function drop(ev) {
     }
 
     itemId = tempItemId; // If we actually do drop graph in, update itemId
-	if(!histogram){
-	    clickmodify = true; //?correct??
-		drawTrend();	//should not update list yet
-		onSubmit();
-		updatelist("");	//need to update the list so once you click modify, you are using new list.
-		console.log("!histogram")
-	}
-	else{
-		drawBarsAfterDragDrop();
-		console.log("bar config")
-		onSubmit();
-	}
+    if(!histogram){
+        clickmodify = true; //?correct??
+    	drawTrend();	//should not update list yet
+    	onSubmit();
+    	updatelist("");	//need to update the list so once you click modify, you are using new list.
+    }
+    else{
+    	drawBarsAfterDragDrop();
+    	onSubmit();
+    }
 }
 
 function drop1(ev){

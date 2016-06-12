@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.api;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -18,12 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import edu.uiuc.zenvisage.service.ZvMain;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 
 @Controller
 public class ZvBasicAPI {
 
 	@Autowired
 	private ZvMain zvMain;
+	
+   
 	
     public ZvBasicAPI(){
     	
@@ -60,6 +64,13 @@ public class ZvBasicAPI {
 	public String executeZQL(@RequestParam(value="query") String arg) throws IOException, InterruptedException {
 		return zvMain.runZQLQuery(arg);
 	}
+
+	@RequestMapping(value = "/executeZQLComplete", method = RequestMethod.GET)
+	@ResponseBody
+	public String executeZQLComplete(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
+		return zvMain.runZQLCompleteQuery(arg);
+	}
+
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody

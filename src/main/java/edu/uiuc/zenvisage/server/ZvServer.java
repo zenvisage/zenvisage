@@ -10,9 +10,10 @@ public class ZvServer {
 	public void setPort(int port) {
 		this.port = port;
 	}
- 
-	public void start() throws Exception {
+
+	public void start() throws Exception {	
 		server = new Server(port);
+		
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setContextPath("/");
 		webAppContext.setWar("zenvisage.war");
