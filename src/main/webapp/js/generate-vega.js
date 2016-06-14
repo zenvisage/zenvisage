@@ -1,6 +1,8 @@
 
 
 // input is data["outputCharts"][index];
+
+var option= "Line Chart";
 function createJSON(data, width, height, xUnit, yUnit, existingTrend) {
   if (typeof existingTrend === 'undefined') { existingTrend = false; }
 
@@ -86,10 +88,10 @@ function createreal_estateAxesJSON( data, xUnit, yUnit,existingTrend, json )
     {"type": "y", "scale": "y", "title": yTitle, "titleOffset":55, "ticks": tickCount, "tickSizeEnd": 0,"properties": {"title": {
         "fontSize": {"value": 11}}}}
   ];
-  var Xparameter = getDistanceMethod();  // ignore x means DTW.
-  if(Xparameter == "dtw"){
-	  axes[0] = {"type": "x", "scale": "x", "title": xTitle, "titleOffset": 45, "values":[]}
-  }
+ // var Xparameter = getDistanceMethod();  // ignore x means DTW.
+ //  if(Xparameter == "dtw"){
+//	  axes[0] = {"type": "x", "scale": "x", "title": xTitle, "titleOffset": 45, "values":[]}
+ //  }
   return axes
 }
 
@@ -553,7 +555,7 @@ function addGraph(data, index, xUnit, yUnit, xAxisType, yAxisType){
     graphWidth = graphHeight*2;
     }
 
-    var option = document.getElementById("sel").value;
+    var option = docume;nt.getElementById("sel").value;
     if(option == "Bar Chart"){
         vegaInput = createBarGraph(data, graphWidth, graphHeight, xUnit, yUnit);
 	}

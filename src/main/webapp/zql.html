@@ -5,13 +5,19 @@
 		<title>ZQLTable</title>
 		<link rel="stylesheet" type="text/css" href="zqltable.css">
 		<script src="zql/jquery.min.js"></script>
- <script src="js/vdb.js"></script>
+   <!--      <script src="js/vdb.js"></script>-->
 ​
     <!-- Vega Files -->
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="assets/js/jquery.js"></script>
     <!--<script src="vega-master/examples/lib/d3.v3.min.js"></script>-->
     <script src="vega-master/vega.js"></script>
+    
+		<script src="zql/angular.min.js"></script>
+		<script src="zql/app.js"></script>
+		<script src="zql/parsertypes.js"></script>
+		<script src="zql/zqlparser.js"></script>
+		<script src="zql/generate-vega.js"></script>
 	</head>
 
 	<body ng-app="myApp">
@@ -87,14 +93,9 @@
   	    <script>
   	    function getDataset() {return "real_estate";};
   	    function getXAxis() {return "Year";};
-  	    function getDistanceMethod() {return "dtw";};
+  	    function getDistanceMethod() {return "euclidean";};
   	    </script>
 
 
-		<script src="zql/angular.min.js"></script>
-		<script src="zql/app.js"></script>
-		<script src="zql/parsertypes.js"></script>
-		<script src="zql/zqlparser.js"></script>
-		<script src="zql/generate-vega.js"></script>
 	</body>
 </html>
