@@ -5,7 +5,7 @@ To use the ZQL parser, follow the guideline below:
 	A. To load the “real_estate.csv” data into postgres database, follow the below guidelines:
 	B. add "real_estate.csv" data file into this folder
 	C. run command "sh load_realestate.sh $db_username $db_name" to create table schema "realestate" and load data into it
-		where db_username is "postgres" in most cases and db_name should be the name of the database where the realestate table should be created, should be “zenvisage” in this case.
+		where db_username is "postgres" in most cases and db_name should be the default database “postgres” in this case.
 	D. if reading real_estate.csv permission denied, copy real_estate.csv to a location that is accessible by postgres (google for exact location most likely in /Library/PostgresSQL/9.3/) 
 
 1. change the postgres db parameters (db name, db username, db password) accordingly in code "edu.uiuc.zenvisage.zqlcomplete.execute.PSQLDatabase"
