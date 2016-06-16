@@ -101,6 +101,7 @@ function droppable(itemId, drawGraphIndex){
     return true
 }
 
+// drop event listener on main chart 1
 function drop(ev) {
     ev.preventDefault();
     $("#tools_sketch").css("display","none");
@@ -126,12 +127,42 @@ function drop(ev) {
     }
 }
 
+// processed the drop request for the specified chart number suffix
+// TODO: refactor drawTrend and drawTrend1 into drawTrend("") and drawTrend("1")
+function processDrop(ev, chartNum) {
+    ev.preventDefault();
+    $("#tools_sketch" + chartNum).css("display", "none");
+    $("#draganddrop").css("display","none");
+    $("#draganddrop1").css("display","none");
+    if (!histogram) {
+    	$("#visualisation" + chartNum).css("display","none");
+    }
+
+    if (!droppable(tempItemId, 1)) {
+        $("#visualisation").css("display","none");
+    }
+
+    if(!histogram){
+        clickmodify = true; //?correct??
+    	drawTrend();	//should not update list yet
+    	onSubmit();
+    	updatelist("");	//need to update the list so once you click modify, you are using new list.
+    }
+    else{
+    	drawBarsAfterDragDrop();
+    	onSubmit();
+    }
+}
+
+// drop event listener on main chart 1
 function drop1(ev){
     ev.preventDefault();
     $("#tools_sketch1").css("display","none");
     $("#draganddrop").css("display","none");
     $("#draganddrop1").css("display","none");
-    $("#visualisation1").css("display","none");
+    if (!histogram) {
+        $("#visualisation1").css("display", "none");
+    }
     if(!droppable(tempItemId, 1)){
         return
     }
