@@ -21571,4 +21571,3 @@ dl.extend(u, require('./format'));
 module.exports = dl.extend(u, dl);
 },{"./format":147,"datalib":26}]},{},[1])(1)
 });
-//# sourceMappingURL=vega.js.map
