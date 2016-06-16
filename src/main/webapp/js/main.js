@@ -779,34 +779,6 @@ function getSearchMethod()
   return $('input[name = search-method]:checked').val()
 }
 
-
-//seems unused, will keep commented for now 1/19/2016
-/*
-function loadTrend(){
-	  if(ms_method.getValue()=='Outlier' || ms_method.getValue()=='RepresentativeTrends'){
-		  getRepresentativeTrend();
-	  }
-}
-
-function getRepresentativeTrend(){
-	  var query = "select ";
-	    var aggregate = "";
-	    if(y_aggr_ms.getValue()=='avg'){
-	      aggregate = "avg(" + y_ms.getValue() + ")";
-	    }
-	    //query += ms_z_axis.getValue() + "," + x_ms.getValue() + "," + aggregate + " from db.ontime group by " + ms_z_axis.getValue() + "," + x_ms.getValue();
-	    //console.log(ms_method.getValue(),ms_method.getValue()[0]);
-	    var query = new Query(ms_method.getValue()[0],y_ms.getValue()[0],x_ms.getValue()[0],ms_z_axis.getValue()[0],y_aggr_ms.getValue()[0],y_ms.getValue()[0],parseInt(ms_outlier.getValue()),[],[]);
-	    query = setCommonQueryParams(query);
-
-	    // var outlier_count = parseInt(ms_outlier.getValue());
-	    //var method="2phase";
-	    //alert(query);
-	    getRepresentativeData(query);
-}
-*/
-
-
 function fillPredicateDropdown(){
     var xaxis = getXAxis();
     var yaxis = getYAxis();

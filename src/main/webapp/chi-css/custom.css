@@ -23,6 +23,26 @@ hr {
   display: none;
 }
 
+#sidebar input{
+  display: none;
+}
+#sidebar label{
+  width: 145px;
+  border: 0.5px solid #D9D9D9;
+  border-radius: 5px;
+  padding-left: 5px;
+  margin-bottom: 2px;
+  background: #F0F0F0;
+  list-style-type:none;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+#sidebar input:checked + span{
+  font-weight: bold;
+}
+
+
 svg#treesvg {
   overflow-x: auto;
 }
@@ -79,7 +99,6 @@ svg#treesvg {
 #middle-left {
   border-right: 1px solid #D9D9D9;
 }
-
 
 .info > td > div > .icon {
   display: block;
@@ -140,24 +159,8 @@ svg#treesvg {
   margin-left: 20px;
 }
 
-label {
-  padding-left: 0px !important;
-  font-weight: 400; !important;
-}
-
 .dropdown {
  width: 150px
-}
-
-.list-item {
-  width: 145px;
-  border: 0.5px solid #D9D9D9;
-  border-radius: 5px;
-  padding-left: 5px;
-  margin-bottom: 2px;
-  margin-left: -40px;
-  background: #F0F0F0;
-  list-style-type:none;
 }
 
 .form-control {
