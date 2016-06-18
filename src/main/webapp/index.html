@@ -207,7 +207,7 @@
                         hideSecondChartElement();
                     }
                     if(tableHasSketch){
-                        setNoDataBlankChartAxes(tableX,tableY, "");
+                        setNoDataMainChartAxes(tableX,tableY, "");
                     }
                 }
                 else{
@@ -219,7 +219,7 @@
                     if(graphChanger.attr("adder") == "false"){
                         showSecondChartElement();
                     }
-                    setNoDataBlankChartAxes(getXAxis(),getYAxis(), "");
+                    setNoDataMainChartAxes(getXAxis(),getYAxis(), "");
                 }
               })
               </script>
@@ -267,7 +267,7 @@
             <td id="firstDrawChartColumn">
               <div id = "scatter"><svg id="scatterplot" style = "width:400; height: 302; z-index:6; display:none; position: absolute;margin-top:6px;"></svg></div>
 
-              <div class="col-md-4" id = "blankChart" style="z-index:6; position:relative;">
+              <div class="col-md-4" id = "mainChart" style="z-index:6; position:relative;">
                 <div id = "draganddrop" ondrop="drop(event)" ondragover="allowDrop(event)" style="display:none;position: absolute;margin-top:6px;margin-left:60px;z-index:40 ;"></div>
                 <canvas id="tools_sketch" style="display:block;position: absolute; margin-top:6px;margin-left:60px; z-index:1; "></canvas>
                 <!--<div class = "scrollbar-x" id="scrollbar-x">
@@ -332,7 +332,7 @@
 
                   </svg>
                 </div>
-              </div> <!-- blankchart -->
+              </div> <!-- mainChart -->
 
               </td>
               <td style="vertical-align: middle">
@@ -341,7 +341,7 @@
                 </button>
               </td>
               <td id="secondDrawChartColumn" class="secondDrawColumn">
-                <div id = "blankChart1" ></div>
+                <div id = "mainChart1" ></div>
               <td >
               <td id="extraSpace">
               </td>
@@ -415,18 +415,18 @@ function saveRowData(index){
     var zComboBox = $('#z-table-select-'+index).magicSuggest({allowFreeEntries:true, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput", placeholder: 'Pick Z' });
     $(xComboBox).on('selectionchange', function(e,m){
         if(zComboBox.getValue() == "sketch"){
-            setNoDataBlankChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
+            setNoDataMainChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
         }
         tableX = xComboBox.getValue();
     });
     $(yComboBox).on('selectionchange', function(e,m){
         if(zComboBox.getValue() == "sketch"){
-            setNoDataBlankChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
+            setNoDataMainChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
         }
         tableY = yComboBox.getValue();
     });
     $(zComboBox).on('selectionchange', function(e,m){
-        setNoDataBlankChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
+        setNoDataMainChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
         if(zComboBox.getValue() =="sketch"){
             tableHasSketch = true;
         }
@@ -807,19 +807,19 @@ function submitTable(){
 
       <script> // REMEMBER TO MAKE ID DYNAMIC (EG 1,2,3)...
         //do vega
-        var div = $("#blankChart1")
+        var div = $("#mainChart1")
         //div.hide();
         //var dragAndDrop = $("<div>", {id: "dragAndDrop1", width: div.width(), height: div.height()  })
         var dragAndDrop = $("<div id = 'draganddrop1' ondrop='drop1(event)' ondragover='allowDrop(event)' style='display:none;position: absolute;margin-top:6px;margin-left:60px;z-index:4'></div>")
         dragAndDrop.width(div.width())
         dragAndDrop.height(div.height())
-        $("#blankChart1").append(dragAndDrop)
+        $("#mainChart1").append(dragAndDrop)
         var canvas = $('<canvas id="tools_sketch1" style="display:block;position: absolute; margin-top:6px;margin-left:60px; z-index:1; "></canvas>')
         //canvas.attr("width", div.width())
         //canvas.attr("height", div.height())
-        $("#blankChart1").append(canvas)
+        $("#mainChart1").append(canvas)
         var barGraph = $('<div id = "bar1"><svg id="visualisation1" width="' + div.width() + '" height=" ' + div.height() + '" style = "z-index:5; display:none; position: absolute;margin-top:6px;margin-left:60px;"></svg></div>')
-        $("#blankChart1").append(barGraph)
+        $("#mainChart1").append(barGraph)
 
         var svgLayer = $('<div id ="svgLayer1" style="display:none;position: absolute;margin-top:6px; margin-left:60px; z-index:2;">')
           var mySvg =  $('<svg id="mySvg1" style="display:block" width="' + div.width() + '" height="' + div.height() + '" viewBox="0 0 ' + div.width() + ' ' + div.height() + '">')
@@ -830,7 +830,7 @@ function submitTable(){
               mySvg.append(point)
             }
           svgLayer.append(mySvg)
-        $("#blankChart1").append(svgLayer)
+        $("#mainChart1").append(svgLayer)
 
         $("#mySvg1").html($("#mySvg1").html()); //http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
       </script>
@@ -854,7 +854,7 @@ function submitTable(){
     <script src="js/main.js"></script>
     <script src="js/scattersearch.js"></script>
     <script src="js/rect.js"></script>
-	
+
     <script src="js/smartdraw.js"></script>
     <script src="js/draganddrop.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
@@ -897,10 +897,10 @@ function submitTable(){
 
       $("#firstDrawChartColumn").width(drawGraphWidth+100); //to support axis title (try to make this not fixed)
       $("#firstDrawChartColumn").height(drawGraphHeight+50); //to support the axis title
-      $("#blankChart").width(drawGraphWidth);
+      $("#mainChart").width(drawGraphWidth);
       $("#scatterplot").width(drawGraphWidth);
       $("#scatterplot").height(drawGraphHeight);
-      $("#blankChart").height(drawGraphHeight);
+      $("#mainChart").height(drawGraphHeight);
       $("#draganddrop").width(drawGraphWidth);
       $("#draganddrop").height(drawGraphHeight);
       $("#tools_sketch").width(drawGraphWidth);
@@ -920,8 +920,8 @@ function submitTable(){
 
       $("#secondDrawChartColumn").width(drawGraphWidth+100);
       $("secondDrawChartColumn").height(drawGraphHeight+50);
-      $("#blankChart1").width(drawGraphWidth);
-      $("#blankChart1").height(drawGraphHeight);
+      $("#mainChart1").width(drawGraphWidth);
+      $("#mainChart1").height(drawGraphHeight);
       $("#draganddrop1").width(drawGraphWidth);
       $("#draganddrop1").height(drawGraphHeight);
       $("#tools_sketch1").width(drawGraphWidth);
@@ -948,14 +948,14 @@ function submitTable(){
         //
     }
     function resizePointsAndPath(newHeight, newWidth){
-        //Resize blankChart
-        var currHeight = $("#blankChart").height();
-        var currWidth = $("#blankChart").width();
+        //Resize mainChart
+        var currHeight = $("#mainChart").height();
+        var currWidth = $("#mainChart").width();
         //want map from 0 -> currHeight => 0 -> newHeight
         //eg 0 -> 10 => 0 -> 20. So 1(curr) -> 2 (new) = newHeight/currHeight
         var heightRatio = newHeight/currHeight;
         var widthRatio = newWidth/currWidth;
-        //list contains the points of blankChart that form element myPath
+        //list contains the points of mainChart that form element myPath
         if(clickmodify){
             //drawTrend();
             if(chart0Information[4] == null){
@@ -966,8 +966,8 @@ function submitTable(){
             }
             updatelist("");
         }
-        if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
-            //list1 contains the points of blankChart1 that form element myPath
+        if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
+            //list1 contains the points of mainChart1 that form element myPath
             if(clickmodify){
                 //drawTrend1();
                 if(chart1Information[4] == 0){
@@ -1029,7 +1029,7 @@ function submitTable(){
             graphChanger = $("#graphChanger");
             updateSizes();
             updateDefaultModify();
-            asyncronousVegaBlankCharts().done(function(){
+            asyncronousVegaMainCharts().done(function(){
                 resizeResultsTable();
                 resizeMargins();
             }); //needs to be resized after vega charts added
@@ -1040,7 +1040,7 @@ function submitTable(){
 
             $("#secondDrawChartColumn").hide();
             $("#axesChart1").hide();
-            $("#blankChart1").hide();
+            $("#mainChart1").hide();
 
             //$("#axesChart0").hide();
             //$("#graphChanger").hide();
@@ -1057,7 +1057,7 @@ function submitTable(){
               }
               updateSizes();
               //updateDefaultModify(); do we need this?? it zero all the points so after pressing the adder, our old list of points are gone!:(
-              asyncronousVegaBlankCharts().done(function(){
+              asyncronousVegaMainCharts().done(function(){
                   resizeResultsTable();
                   resizeMargins();
               });
@@ -1066,12 +1066,12 @@ function submitTable(){
               //updateOneTrend("");
               //updateTrends();
             });
-            
+
         });
       $(window).resize(function(){
           updateSizes()
           //updateDefaultModify();
-          asyncronousVegaBlankCharts().done(function(){
+          asyncronousVegaMainCharts().done(function(){
               resizeResultsTable();
               resizeMargins();
           });
@@ -1098,7 +1098,7 @@ function submitTable(){
         child.attr("class", "glyphicon glyphicon-minus")
         $("#secondDrawChartColumn").show();
         $("#axesChart1").show();
-        $("#blankChart1").show();
+        $("#mainChart1").show();
         //document.getElementById("changeButtons").style.visibility="visible";
         //document.getElementById("drawing-tool2").style.visibility="visible";
         $("#changeButtons").show();
@@ -1124,7 +1124,7 @@ function submitTable(){
           child.attr("class", "glyphicon glyphicon-plus")
           $("#secondDrawChartColumn").hide();
           $("#axesChart1").hide();
-          $("#blankChart1").hide();
+          $("#mainChart1").hide();
           //document.getElementById("changeButtons").style.visibility="hidden";
           //document.getElementById("drawing-tool2").style.visibility="hidden";
           $("#changeButtons").hide();
@@ -1133,20 +1133,20 @@ function submitTable(){
 
       }
       //Calls vega to update the blank charts. Only returns as DONE if both blank charts are done being created by vega
-      function asyncronousVegaBlankCharts(){
+      function asyncronousVegaMainCharts(){
           var dfrd1 = $.Deferred();
           var dfrd2 = $.Deferred();
 
-        blankChartAsync(" ","").done(function(){
+        mainChartAsync(" ","").done(function(){
             if(chart0Information != null && chart0Information[4]!= null){
-            changeScaleBlankChart( chart0Information[0] , chart0Information[1] , chart0Information[2] ,
+            changeScaleMainChart( chart0Information[0] , chart0Information[1] , chart0Information[2] ,
                  chart0Information[3], chart0Information[4], "");
              }
             dfrd1.resolve();
         });
-        blankChartAsync(" ","1").done(function(){
+        mainChartAsync(" ","1").done(function(){
             if(chart1Information != null && chart1Information[4] != null){
-            changeScaleBlankChart( chart1Information[0] , chart1Information[1] , chart1Information[2] ,
+            changeScaleMainChart( chart1Information[0] , chart1Information[1] , chart1Information[2] ,
                  chart1Information[3], chart1Information[4], "1");
              }
             dfrd2.resolve();
@@ -1157,7 +1157,7 @@ function submitTable(){
     </script>
     <script>
       function isGraphVisible(suffix){
-        return $('#blankChart'+suffix).css('display') == 'block'
+        return $('#mainChart'+suffix).css('display') == 'block'
       }
     </script>
 

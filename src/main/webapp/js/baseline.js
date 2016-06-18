@@ -106,7 +106,7 @@ function processDatasetChange( data ){
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-  //changeScaleBlankChart(xmin,xmax,ymin,ymax);
+  //changeScaleMainChart(xmin,xmax,ymin,ymax);
   $('#outlier_count_combobox').show();
 
   updateTrends();

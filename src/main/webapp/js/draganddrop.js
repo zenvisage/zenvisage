@@ -223,7 +223,7 @@ function updatelist(suffix){
 	min_Y = Math.min.apply(Math,y);
 	//console.log(existingTrends["outputCharts"]);
 	//console.log(chartData);
-	changeScaleBlankChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
+	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
     if(suffix == ""){
     chart0Information[0] = min_X
     chart0Information[1] = max_X
@@ -415,8 +415,8 @@ function drawData(suffix, chartInformation, globalList, globalmyPath){
         var x = chartData.xData
         var y = chartData.yData
 
-    	changeScaleBlankChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
-        //changeScaleBlankChart( chartInformation[0] , chartInformation[1]
+    	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
+        //changeScaleMainChart( chartInformation[0] , chartInformation[1]
             //, chartInformation[2] , chartInformation[3], chartInformation[4], suffix);
 
         //var distance = bl.offsetLeft - bl.scrollLeft + bl.clientLeft;

@@ -492,7 +492,7 @@ function processBackEndData(data, xAxisType, yAxisType) {
     //current_td.attr('id', "table_view"+index)
     current_row.append(current_td)
     current_td.append("<div class=\"graph\" ondragstart = \"drag(this,event)\" draggable = \"true\" class='mod' id='table_view" + index + "'></div>")
-    if(index % charts_per_row == 1 && $("#blankChart1").is(':visible')){     //hightlight for second column
+    if(index % charts_per_row == 1 && $("#mainChart1").is(':visible')){     //hightlight for second column
       current_td.addClass("secondDrawColumn")
     }
     addGraph(outputCharts[index], index, xUnit, yUnit, xAxisType, yAxisType);
@@ -511,7 +511,7 @@ function processBackEndData(data, xAxisType, yAxisType) {
       }
       else if(xAxisType =='Q' && yAxisType == 'Q'){
           //should be createScatterPlot, not implemented hyet
-    	
+
           setupScatterView();
           //drawScatterTrend()
       }
@@ -555,7 +555,7 @@ function addGraph(data, index, xUnit, yUnit, xAxisType, yAxisType){
     graphWidth = graphHeight*2;
     }
 
-    var option = docume;nt.getElementById("sel").value;
+    var option = document.getElementById("sel").value;
     if(option == "Bar Chart"){
         vegaInput = createBarGraph(data, graphWidth, graphHeight, xUnit, yUnit);
 	}
@@ -626,7 +626,7 @@ function createExistingTrendsScatterGraph(backend_data, width, height, xUnit, yU
 	  json["scales"] = createScaleScatterJSON( minmax["xmin"], minmax["xmax"], minmax["ymin"], minmax["ymax"] );
 	  json["axes"]=createAxesExistingTrendBar(backend_data,existingTrends[ExTrendindex]["xUnit"], existingTrends[ExTrendindex]["yUnit"], false);
 	  json["marks"] = createScatterChartMarksJSON();
-   
+
 	  return json;
 }
 
@@ -1171,11 +1171,11 @@ function createBlank(xmin,xmax,ymin,ymax,chartData, chartType){
 
 //Creates the Blank Chart displayed center of front end, to help users visualize
 //what they are inputting
-function blankChart(xtitle, ytitle, suffix){
+function mainChart(xtitle, ytitle, suffix){
   var spec1 = createBlankNoScale(xtitle, ytitle);
   vg.parse.spec(spec1, function(chart) {
   self.view1 = chart({
-    el: "#blankChart"+suffix,
+    el: "#mainChart"+suffix,
     hover: false
   }).update();
 });
@@ -1183,15 +1183,15 @@ function blankChart(xtitle, ytitle, suffix){
 
 /*A function that returns DONE only when update() is complete
  note returning DONE is different than returning (function still returns as usual).
- (but the blankChartAsync.done() depends on whether this returned DONE or not)
+ (but the mainChartAsync.done() depends on whether this returned DONE or not)
   */
-function blankChartAsync(ytitle, suffix){
+function mainChartAsync(ytitle, suffix){
     var dfrd1 = $.Deferred();
     var spec1 = createBlankNoScale(" ", ytitle);
     //This function below is ran asyncronous. This function will wait until this is done to return.
     vg.parse.spec(spec1, function(chart) {
     self.view1 = chart({
-      el: "#blankChart"+suffix,
+      el: "#mainChart"+suffix,
       hover: false
     }).update();
     //console.log("Updated blank chart")
@@ -1204,7 +1204,7 @@ function blankChartAsync(ytitle, suffix){
 }
 
 //optional chartType param
-function changeScaleBlankChart(xmin,xmax,ymin,ymax,chartData, suffix, chartType){
+function changeScaleMainChart(xmin,xmax,ymin,ymax,chartData, suffix, chartType){
     var spec1 = createBlank(xmin,xmax,ymin,ymax,chartData, chartType);
     yMin = ymin;
     yMax = ymax;

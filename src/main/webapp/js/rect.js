@@ -380,7 +380,7 @@ function Draw(x, y, isDown, ctxA, drawGraphIndex){ //add ctx parameter (for the 
 
 init();
 
-function clearBlankChart(suffix) {
+function clearMainChart(suffix) {
 	//histogram=false;
 	clickmodify = false;
   sketchPointsList = [new SketchPoints(), new SketchPoints()];
@@ -533,7 +533,7 @@ function trendAnalysis(){	//use list and list1 to update
 		}
     listOfSketchPoints.push(sketchPoints)
 
-    if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
+    if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
       var sketchPoints1 = new SketchPoints();
       sketchPoints1.maxX = drawGraphWidth;
       sketchPoints1.maxY = drawGraphHeight;
@@ -566,7 +566,7 @@ function trendAnalysis(){	//use list and list1 to update
     listOfSketchPoints = sketchPointsList; //use the drawing sketchPoints
     //console.log(sketchPointsList.length)
   }
-  if($("#blankChart1").is(':hidden')){ //If we are NOT using the second drawing graph
+  if($("#mainChart1").is(':hidden')){ //If we are NOT using the second drawing graph
       if(listOfSketchPoints.length>0)
         listOfSketchPoints = [listOfSketchPoints[0]]
     //console.log(listOfSketchPoints.length)
@@ -604,9 +604,9 @@ function trendAnalysis(){	//use list and list1 to update
     	getScatterData(query);
     }
     else{
-    	getData(query, xAxisType, yAxisType); //back end call    	
+    	getData(query, xAxisType, yAxisType); //back end call
     }
-	
+
 	/*
   if(listOfSketchPoints.length > 0){
 	  console.log(listOfSketchPoints[0].points);
