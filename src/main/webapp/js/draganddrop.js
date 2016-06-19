@@ -11,8 +11,7 @@ var min_Y;
 /*  the id of an item dragged by a user, but before being dropped on graph
     if user drops item in graph we set itemId = tempItemId
 */
-var chart0Information = [0,0,0,0,null]; //[ min_X , max_X , min_Y , max_Y, chartData]
-var chart1Information = [0,0,0,0,null]; //
+
 var tempItemId;
 function allowDrop(ev) {
     ev.preventDefault();
@@ -101,6 +100,7 @@ function droppable(itemId, drawGraphIndex){
     return true
 }
 
+// drop event listener on main chart 1
 function drop(ev) {
     ev.preventDefault();
     $("#tools_sketch").css("display","none");
@@ -126,12 +126,42 @@ function drop(ev) {
     }
 }
 
+// processed the drop request for the specified chart number suffix
+// TODO: refactor drawTrend and drawTrend1 into drawTrend("") and drawTrend("1")
+function processDrop(ev, chartNum) {
+    ev.preventDefault();
+    $("#tools_sketch" + chartNum).css("display", "none");
+    $("#draganddrop").css("display","none");
+    $("#draganddrop1").css("display","none");
+    if (!histogram) {
+    	$("#visualisation" + chartNum).css("display","none");
+    }
+
+    if (!droppable(tempItemId, 1)) {
+        $("#visualisation").css("display","none");
+    }
+
+    if(!histogram){
+        clickmodify = true; //?correct??
+    	drawTrend();	//should not update list yet
+    	onSubmit();
+    	updatelist("");	//need to update the list so once you click modify, you are using new list.
+    }
+    else{
+    	drawBarsAfterDragDrop();
+    	onSubmit();
+    }
+}
+
+// drop event listener on main chart 1
 function drop1(ev){
     ev.preventDefault();
     $("#tools_sketch1").css("display","none");
     $("#draganddrop").css("display","none");
     $("#draganddrop1").css("display","none");
-    $("#visualisation1").css("display","none");
+    if (!histogram) {
+        $("#visualisation1").css("display", "none");
+    }
     if(!droppable(tempItemId, 1)){
         return
     }
@@ -192,20 +222,20 @@ function updatelist(suffix){
 	min_Y = Math.min.apply(Math,y);
 	//console.log(existingTrends["outputCharts"]);
 	//console.log(chartData);
-	changeScaleBlankChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
+	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
     if(suffix == ""){
-    chart0Information[0] = min_X
-    chart0Information[1] = max_X
-    chart0Information[2] = min_Y
-    chart0Information[3] = max_Y
-    chart0Information[4] = chartData
+    chart0Information['min_X'] = min_X
+    chart0Information['max_X'] = max_X
+    chart0Information['min_Y'] = min_Y
+    chart0Information['max_Y'] = max_Y
+    chart0Information['chartData'] = chartData
   }
   else if(suffix == "1"){
-    chart1Information[0] = min_X
-    chart1Information[1] = max_X
-    chart1Information[2] = min_Y
-    chart1Information[3] = max_Y
-    chart1Information[4] = chartData
+    chart1Information['min_X'] = min_X
+    chart1Information['max_X'] = max_X
+    chart1Information['min_Y'] = min_Y
+    chart1Information['max_Y'] = max_Y
+    chart1Information['chartData'] = chartData
   }
 
 	var range_X = max_X - min_X;
@@ -359,11 +389,11 @@ function updateChart(suffix, chartInformation, chartNum){
     min_X = Math.min.apply(Math,x);
     max_Y = Math.max.apply(Math,y);
     min_Y = Math.min.apply(Math,y);
-    chartInformation[0] = min_X
-    chartInformation[1] = max_X
-    chartInformation[2] = min_Y
-    chartInformation[3] = max_Y
-    chartInformation[4] = chartData
+    chartInformation['min_X'] = min_X
+    chartInformation['max_X'] = max_X
+    chartInformation['min_Y'] = min_Y
+    chartInformation['max_Y'] = max_Y
+    chartInformation['chartData'] = chartData
     return true;
 }
 
@@ -373,20 +403,20 @@ function updateChart(suffix, chartInformation, chartNum){
 function drawData(suffix, chartInformation, globalList, globalmyPath){
     	//list = [[9,206],[27,194],[51,184],[71,174],[92,163],[112,151],[119,145],[152,129],[172,119],[194,107],[214,97],[234,86],[253,76],[276,64],[296,56],[317,46],[337,30],[357,20],[379,9],[395,5],[399,0]];
     	//for(var b = 0; b< 41; b++){
-        if(chartInformation[4] == null){
+        if(chartInformation['chartData'] == null){
             return
         }
-        min_X = chartInformation[0]
-        max_X = chartInformation[1]
-        min_Y = chartInformation[2]
-        max_Y = chartInformation[3]
-        var chartData = chartInformation[4]
+        min_X = chartInformation['min_X']
+        max_X = chartInformation['max_X']
+        min_Y = chartInformation['min_Y']
+        max_Y = chartInformation['max_Y']
+        var chartData = chartInformation['chartData']
         var x = chartData.xData
         var y = chartData.yData
 
-    	changeScaleBlankChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
-        //changeScaleBlankChart( chartInformation[0] , chartInformation[1]
-            //, chartInformation[2] , chartInformation[3], chartInformation[4], suffix);
+    	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
+        //changeScaleMainChart( chartInformation['min_X'] , chartInformation['max_X']
+            //, chartInformation['min_Y'] , chartInformation['max_Y'], chartInformation['chartData'], suffix);
 
         //var distance = bl.offsetLeft - bl.scrollLeft + bl.clientLeft;
     	var range_X= max_X-min_X;

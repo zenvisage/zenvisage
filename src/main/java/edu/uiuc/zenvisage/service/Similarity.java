@@ -37,7 +37,7 @@ public class Similarity extends Analysis {
 	public DataReformation dataReformatter;
 
 	public Similarity(Executor executor, Database inMemoryDatabase,
-			ChartOutput chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter) {
+			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter) {
 		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.paa = paa;

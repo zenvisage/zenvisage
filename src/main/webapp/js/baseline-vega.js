@@ -421,7 +421,7 @@ function processBackEndData(data) {
     var current_td = $('<td>') //new column element
     current_row.append(current_td)
     current_td.append("<div class=\"graph\" class='mod' id='table_view" + index + "'></div>")
-    if(index % charts_per_row == 1 && $("#blankChart1").is(':visible')){     //hightlight for second column
+    if(index % charts_per_row == 1 && $("#mainChart1").is(':visible')){     //hightlight for second column
       current_td.addClass("secondDrawColumn")
     }
     addGraph(outputCharts[index], index, xUnit, yUnit);
@@ -608,5 +608,3 @@ function createBlank(xmin,xmax,ymin,ymax,chartData){
     return json;
   }
 }
-
-

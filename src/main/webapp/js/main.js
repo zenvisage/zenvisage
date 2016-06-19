@@ -155,7 +155,7 @@ function updateOneTrend(index){
 		}
     listOfSketchPoints.push(sketchPoints)
 
-    if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
+    if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
       var sketchPoints1 = new SketchPoints();
   		for(var i =0; i<list1.length; i++){
   			var tempPoint = new Point(list1[i][0], sketchPoints1.maxY-list1[i][1]);
@@ -173,28 +173,28 @@ function updateOneTrend(index){
 		string = string.concat(yaxis);
 		string = string.concat(')');
 		chartData["yType"] = string;
-        /*if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
-            changeScaleBlankChart(min_X,max_X,min_Y,max_Y,chartData, "1");
+        /*if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
+            changeScaleMainChart(min_X,max_X,min_Y,max_Y,chartData, "1");
         }*/
-        changeScaleBlankChart(min_X,max_X,min_Y,max_Y,chartData, index);
+        changeScaleMainChart(min_X,max_X,min_Y,max_Y,chartData, index);
 	}
 	else{
-		setNoDataBlankChartAxes(getXAxis(),getYAxis(), index);
+		setNoDataMainChartAxes(getXAxis(),getYAxis(), index);
 		// var aggrM = getAggregationMethod();
 		// var yaxis = getYAxis();
 		// var string = aggrM.concat('(');
 		// string = string.concat(yaxis);
 		// string = string.concat(')');
 		// /*
-        // if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
-        //     blankChart(string, "1")
+        // if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
+        //     mainChart(string, "1")
         // }*/
-        // blankChart(string, index);
+        // mainChart(string, index);
 
 	}
 }
 
-function setNoDataBlankChartAxes(xaxisVal, yaxisVal, index){
+function setNoDataMainChartAxes(xaxisVal, yaxisVal, index){
 	var aggrM = getAggregationMethod();
 	var yaxis = yaxisVal;
 	var xaxis = xaxisVal;
@@ -202,10 +202,10 @@ function setNoDataBlankChartAxes(xaxisVal, yaxisVal, index){
 	string = string.concat(yaxis);
 	string = string.concat(')');
 	/*
-	if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
-		blankChart(string, "1")
+	if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
+		mainChart(string, "1")
 	}*/
-	blankChart(xaxis, string, index);
+	mainChart(xaxis, string, index);
 }
 
 
@@ -291,7 +291,7 @@ $('#x-axis').on( 'click', '.x-axis', function(){
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-  //changeScaleBlankChart( xmin , xmax , ymin , ymax );
+  //changeScaleMainChart( xmin , xmax , ymin , ymax );
   updateTrends();
 });
 
@@ -402,7 +402,7 @@ function processDatasetChange( data ){
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-  //changeScaleBlankChart(xmin,xmax,ymin,ymax);
+  //changeScaleMainChart(xmin,xmax,ymin,ymax);
   $('#outlier_count_combobox').show();
 
 //  var option = document.getElementById("sel").value;
@@ -709,7 +709,7 @@ function getAggregationMethod()
 function getScaleOption()
 {
   if($("#ignoreY").is(':checked')){
-	  //changeScaleBlankChart(min_X,max_X,min_Y,max_Y, chartData);
+	  //changeScaleMainChart(min_X,max_X,min_Y,max_Y, chartData);
 	  //var yselected = $("#y-axis .active").text();
 	  //changeYScale(yselected);
 	 return "ignore-scale";
@@ -829,7 +829,7 @@ function setupLineView(){
     $("#tools_sketch").css("display","block");
     $("#draganddrop").css("display","none");
     $("#visualisation").css("display","none");
-    $("#blankChart").css("display", "block");
+    $("#mainChart").css("display", "block");
     $("#scatterplot").css("display","none");
 
     generateExistingTrends(existingTrends[ExTrendindex]);
@@ -845,7 +845,7 @@ function setupBarView(){
     $("#tools_sketch").css("display","none");
     $("#draganddrop").css("display","none");
     $("#visualisation").css("display","block");
-    $("#blankChart").css("display", "block");
+    $("#mainChart").css("display", "block");
 
     barConfig();
     generateExistingTrends(existingTrends[ExTrendindex]);
@@ -863,7 +863,7 @@ function setupScatterView(){
     clickmodify = false;
 
     $("#scatterplot").css("display","block");
-    $("#blankChart").css("display", "none");
+    $("#mainChart").css("display", "none");
     $("#svgLayer").css("display","none");
     $("#tools_sketch").css("display","none");
     $("#draganddrop").css("display","none");

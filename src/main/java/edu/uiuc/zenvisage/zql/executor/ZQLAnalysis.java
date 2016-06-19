@@ -23,7 +23,7 @@ public abstract class ZQLAnalysis {
 	 */
 	public Executor executor;
 	public Database inMemoryDatabase;
-	public ChartOutput chartOutput;
+	public ChartOutputUtil chartOutput;
 	public Distance distance;
 	public Normalization normalization;
 
@@ -80,14 +80,14 @@ public abstract class ZQLAnalysis {
 	/**
 	 * @return the chartOutput
 	 */
-	public ChartOutput getChartOutput() {
+	public ChartOutputUtil getChartOutput() {
 		return chartOutput;
 	}
 
 	/**
 	 * @param chartOutput the chartOutput to set
 	 */
-	public void setChartOutput(ChartOutput chartOutput) {
+	public void setChartOutput(ChartOutputUtil chartOutput) {
 		this.chartOutput = chartOutput;
 	}
 

@@ -14,7 +14,7 @@ import com.google.common.collect.BiMap;
 /**
  *
  */
-public class ChartOutput {
+public class ChartOutputUtil {
 	public Result finalOutput;
 	public ZvQuery args;
 	public BiMap<Float, String> xMap;
@@ -23,7 +23,7 @@ public class ChartOutput {
 	 * @param finalOutput
 	 * @param args
 	 */
-	public ChartOutput(Result finalOutput, ZvQuery args, BiMap<String, Float> xMap) {
+	public ChartOutputUtil(Result finalOutput, ZvQuery args, BiMap<String, Float> xMap) {
 		this.finalOutput = finalOutput;
 		this.args = args;
 		this.xMap = xMap.inverse();

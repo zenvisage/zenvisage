@@ -149,7 +149,7 @@ public class ZvMain {
 		 //finalOutput.xUnit = inMemoryDatabase.getColumnMetaData(args.xAxis).unit;
 		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
 		 // generate new result for query
-		 ChartOutput chartOutput = new ChartOutput(finalOutput, args, executorResult.xMap);
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
@@ -219,7 +219,7 @@ public class ZvMain {
 			}
 			Result finalOutput = new Result();
 			finalOutput.method = "Basic search";
-			ChartOutput chartOutput = new ChartOutput(finalOutput, null, null);
+			ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, null, null);
 			chartOutput.baselineOutput(output, bq, finalOutput);
 			cachedResult = finalOutput;
 		}

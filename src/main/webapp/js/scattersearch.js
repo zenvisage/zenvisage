@@ -7,7 +7,7 @@ var xStart;
         var yEnd;
         var xlabel; var ylabel; var title;
         var rects = [];
-        
+
 function drawScatter(options) {
 	console.log("drawscatter");
     var container, brushable, data,  brush;
@@ -20,36 +20,36 @@ function drawScatter(options) {
         console.log("Tried to render chart to an unknown or missing element!");
         return;
     }
- 
+
     if ('brush' in options) {
         brushable = options['brush'];
     }
     else
         brushable = false;
- 
+
     if ('data' in options) {
         data = options['data'];
     }
     else
         data = {};
- 
+
     title = options['title'];
     xlabel = options['x-label'];
     ylabel = options['y-label'];
- 
+
     // finding actual dimensions of div
     var heightOfDiv = container.innerHeight();
     var widthOfDiv = container.innerWidth();
- 
+
     // finding relative point radius
     var radius = 4;
- 
+
     // Setting margins as percentages
     var topMargin = heightOfDiv * 0.14;
     var bottomMargin = heightOfDiv * 0.1;
     var rightMargin = widthOfDiv * 0.08;
     var leftMargin = widthOfDiv * 0.09;
- 
+
     var margin = {
             top: Math.ceil(topMargin),
             right: Math.ceil(rightMargin),
@@ -58,13 +58,13 @@ function drawScatter(options) {
         },
         width = widthOfDiv - margin.left - margin.right,
         height = heightOfDiv - margin.top - margin.bottom;
- 
- 
+
+
     //function to get x Value from data
     var xVals = function (d) {
         return d['x'];
     }
- 
+
     //function to get y Value from data
     var yVals = function (d) {
         return d['y'];
@@ -75,28 +75,28 @@ function drawScatter(options) {
     	.domain([0,domain[3]])
         //.domain([0, d3.max(data, yVals)])
         .range([height, 0]);
- 
+
     //setting x-scale to fit in the svg window
     var xScale = d3.scale.linear()
     	.domain([0,domain[1]])
         //.domain([0, d3.max(data, xVals)])
         .range([0, width]);
- 
+
     // AXES:
     // to change tick-sizes: .ticksize(inner, outer) where inner are the normal ticks and outer are the end ticks
     // here we are keeping the inner ticks to the default value of 6 and the outer to negative extremes to form a box
- 
+
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom");
     //.tickSize(6, -height);
- 
- 
+
+
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .orient("left");
     //.tickSize(6, -width);
-    
+
     var svg = d3.select(options['renderTo'])
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -125,7 +125,7 @@ function drawScatter(options) {
     	i= i+1;
     }
     newBrush();
-    
+
     function brushend(){
     	console.log("brushend")
     	console.log(brushes)
@@ -146,19 +146,19 @@ function drawScatter(options) {
         console.log(rects);
     	newBrush();
     }
-    
-    
+
+
  // adding the brush
-    
+
            // .call(brush.event);
 
     function brushed() {
 //    	console.log("brushed");
-    	
+
        //what is this for? $("#brush-region").text(("(" + xStart + ", " + yStart + ") to (" + xEnd + ", " + yEnd + ")"));
 //       	brush();
     }
-    
+
     /**
      * MAIN SCATTERPLOT
      */
@@ -174,45 +174,45 @@ function drawScatter(options) {
             return yScale(d['y'])
         })
         ;
- 
+
     // load the points animatedly
     // reference url for ease: https://github.com/mbostock/d3/wiki/Transitions#d3_ease
     scatterPlot.transition()
         .attr('r', radius)
         .duration(1000)
         .ease('elastic');
- 
- 
+
+
     // adding the axes
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
- 
+
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
- 
+
     // adding the axes labels
     svg.append("text")
         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
         .attr("transform", "translate(" + (-leftMargin / 2) + "," + (height / 2) + ")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
         .text(ylabel);
- 
+
     svg.append("text")
         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
         .attr("transform", "translate(" + (width / 2) + "," + (height + 6 + (bottomMargin / 2)) + ")")  // centre below axis
         .text(xlabel);
- 
+
     // title
     svg.append("text")
         .attr("class", "chart-title")
         .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
         .attr("transform", "translate(" + (width / 2) + "," + ( -20 + ")"))  // text is drawn off the screen top left, move down and out and rotate
         .text(title);
- 
-    
- 
+
+
+
 }
 
 $("#search").click(function(){
@@ -225,7 +225,7 @@ $("#search").click(function(){
 });
 
 function createQuery(rectangles ,xlabel, ylabel, title, num){
-	
+
 
 	var query = new ScatterPlotQuery(rectangles,xlabel,ylabel,title,num,"");
 //	var query = new ScatterPlotQuery(xStart, xEnd, yStart,yEnd,"GPA","FamilyIncome","Major",num);
@@ -264,7 +264,7 @@ function returnResults(data){
 	    //current_td.attr('id', "table_view"+index)
 	    current_row.append(current_td)
 	    current_td.append("<div class=\"graph\" ondragstart = \"drag(this,event)\" draggable = \"true\" class='mod' id='table_view" + index + "'></div>")
-	    if(index % charts_per_row == 1 && $("#blankChart1").is(':visible')){     //hightlight for second column
+	    if(index % charts_per_row == 1 && $("#mainChart1").is(':visible')){     //hightlight for second column
 	      current_td.addClass("secondDrawColumn")
 	    }
 	    addScatterGraph(data, index, "", "")
@@ -274,7 +274,7 @@ function returnResults(data){
 	  $('html, body').animate({
 	    scrollTop: $("#views").offset().top
 	  }, 1600);
-	
+
 	console.log("nice!")
 	console.log(data)
 }
@@ -323,5 +323,5 @@ function drawRandomChart() {
         //'title': ""
     };
     drawScatter(options);
- 
+
 }

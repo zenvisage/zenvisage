@@ -43,7 +43,7 @@ public class Representative extends Analysis {
 	 * @param cluster
 	 */
 	public Representative(Executor executor, Database inMemoryDatabase,
-			ChartOutput chartOutput, Distance distance, Normalization normalization, Clustering cluster, ZvQuery args) {
+			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, Clustering cluster, ZvQuery args) {
 		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.cluster = cluster;
