@@ -543,7 +543,6 @@ function addDropDownData(){
   	  row.x.setData(schemax)
   	  //row.x.setValue([xvalues[0]])
   	  //row.constraints[0].setData(schemax)
-    console.log("hi", currentFormData);
     for(yAxis in currentFormData.yAxisColumns){
       schemay.push(yAxis);
     }
@@ -579,8 +578,8 @@ function submitTable(){
     $("#views_table").empty();
     var json = {};
     json["zqlRows"] = []
-    console.log(json)
-    console.log("len",magicSuggestRows.length)
+    //console.log(json)
+    //console.log("len",magicSuggestRows.length)
     for(var i = 0; i < magicSuggestRows.length; i++){
         var curr_row = magicSuggestRows[i];
         var row = {};
@@ -854,7 +853,7 @@ function submitTable(){
     <script src="js/main.js"></script>
     <script src="js/scattersearch.js"></script>
     <script src="js/rect.js"></script>
-	
+
     <script src="js/smartdraw.js"></script>
     <script src="js/draganddrop.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
@@ -1066,7 +1065,7 @@ function submitTable(){
               //updateOneTrend("");
               //updateTrends();
             });
-            
+
         });
       $(window).resize(function(){
           updateSizes()

@@ -5,7 +5,7 @@ $.ajaxSetup({
 });
 
 function getBaselineData(query) {
-	console.log(JSON.stringify(query));
+	console.log("getBaselineData: ",JSON.stringify(query));
 	$.get('/zv/getbaseline','query='+ JSON.stringify(query), processBackEndData, 'json')
 	.fail(function(){
 		console.log("Failed")
@@ -15,10 +15,11 @@ function getBaselineData(query) {
 
 function getSuggestData(query)
 {
+  console.log("getSuggestData: ", query);
   $("#existing-trends").empty()
   $.get('/zv/getdata', 'query='+JSON.stringify(query), generateExistingTrends, 'json')
   .fail(function(){
-    console.log("Failed")
+    console.log("getSuggestData: Failed")
     alert('Request failed: /getdata');
   });
 }
@@ -28,7 +29,7 @@ function getScatterData(query){
 	$("#existing-trends").empty()
 	  $.get('/zv/getscatterplot','query='+ JSON.stringify(query), generateScatterTrends, 'json')
 	  .fail(function(){
-	    console.log("Failed")
+	    console.log("getScatterData: Failed")
 	    alert('Request failed: /getscatterTrends');
 	  });
 }
@@ -39,16 +40,17 @@ function getScatterPlot(query)
   console.log("sendquery", query)
   $.get('/zv/getscatterplot', 'query='+ JSON.stringify(query), returnResults, 'json')
       .fail(function(){
-        console.log("Failed")
+        console.log("getScatterPlot: Failed")
         alert('Request failed: /getscatterplot');
       });
 }
 
 function getSuggestTrends(query){
+    console.log("getSuggestTrends: ", query)
 	  $("#existing-trends").empty()
 	  $.get('/zv/getdata', JSON.stringify(query), generatingExistingTrending, 'json')
 	  .fail(function(){
-	    console.log("Failed")
+	    console.log("getSuggestTrends: Failed")
 	    alert('Request failed: /getdata');
 	  });
 }
@@ -57,10 +59,10 @@ function getZQLData(query) {
   $('div#container').empty();
   $('#compare-menu').html('<li><a href="#" class="active" data-id="-1">Show All</a></li>');
 
-  console.log(JSON.stringify(query));
+  console.log("getZQLData: ", JSON.stringify(query));
   $.get('/zv/executeZQL', 'query='+JSON.stringify(query), processBackEndData, 'json')
     .fail(function() {
-      console.log("Failed")
+      console.log("getZQLData: Failed")
       alert('Request failed: /executeZQL');
     });
 }
@@ -70,7 +72,6 @@ function getData(query, xAxisType, yAxisType) {
   $('#compare-menu').html('<li><a href="#" class="active" data-id="-1">Show All</a></li>');
   if (query.sketchPoints.length >0 && query.sketchPoints[0].points.length > 0 && query.method == "Outlier") {
 	  query.method = "DissimilaritySearch";
-	  console.log("Changed");
   }
   if (query.sketchPoints != []) {
 	  for (var i = 0; i < 2; i++) {
@@ -84,6 +85,7 @@ function getData(query, xAxisType, yAxisType) {
 		  }
 	  }
   }
+  console.log("getData: ", query)
   $.get('/zv/getdata', 'query='+JSON.stringify(query),
    function(data){
        /*function is the callback function. data is what server gives us.
@@ -97,7 +99,7 @@ function getData(query, xAxisType, yAxisType) {
       //update existing trends
   }, 'json')
     .fail(function() {
-      console.log("Failed")
+      console.log("getData: Failed")
       alert('Request failed: /getdata');
     });
 }
@@ -109,23 +111,23 @@ function getData(query, xAxisType, yAxisType) {
 
   function getInterfaceFormData(query){
 	  var q = new formQuery(query);
-    console.log(q)
+    console.log("getInterfaceFormData", q)
 	 //$.get('/getformdata',JSON.stringify(q),processFormData,'json')
     $.get('/zv/getformdata', 'query='+JSON.stringify(q) , processDatasetChange, 'json')
       .fail(function() {
-        console.log("Failed")
+        console.log("getInterfaceFormData: Failed")
         alert('Request failed: /getformdata');
       });
   }
 
   function getRepresentativeData(query){
-	  //console.log(query);
+      console.log("getRepresentativeData: ", query)
 	    $('div#container').empty();
 	    $('#compare-menu').html('<li><a href="#" class="active" data-id="-1">Show All</a></li>');
 	 //   console.log(JSON.stringify(query));
 	    $.get('/zv/getdata','query='+JSON.stringify(query), processRepresentativeData, 'json')
 	      .fail(function() {
-	        console.log("Failed");
+	        console.log("getRepresentativeData: Failed");
 	        alert('Request failed: /getdata');
 	      });
   }

@@ -83,7 +83,6 @@ function getClientxy1(e){
 	 }
 	 var str = "point" + i;
 	str = str + "-1"; //suffix is -1 to denote the point is on draw graph 1
-	//console.log(i);
 	//var myPointSec = str.concat((i+1).toString());
 	if(Drag){
 	 var myCir = document.getElementById(str);
@@ -190,7 +189,6 @@ function drawPath(){
 
 function drawPath1(){
 	var front,sub='',laststr='',flag= true,flag2=true;
-	//console.log(i);
 	if(i< list1.length){
 	list1[i][0]= nx1;
 	list1[i][1]= ny1;

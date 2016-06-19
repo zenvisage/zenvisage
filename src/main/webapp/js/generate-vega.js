@@ -55,7 +55,6 @@ function createreal_estateAxesJSON( data, xUnit, yUnit,existingTrend, json )
   if (data["count"] != "0") {
 	  xTitle += " (Count=" + data["count"] + ")"
   }
-  //console.log(yUnit);
   if (yUnit != "K")
 	  yUnit = "";
   var yTitle = data["yType"] + " " + yUnit;
@@ -111,7 +110,6 @@ function createreal_estateDataJSON(data, existingTrend) {
   if(windowWidth <= 1452){
     tickCount = 6;
   }  if (getXAxis() == "Year") {
-    //console.log("Year", xData)
     if(existingTrend){
       tickCount = 6;
     }
@@ -129,7 +127,6 @@ function createreal_estateDataJSON(data, existingTrend) {
     if(existingTrend){
       tickCount = 4;
     }
-      //console.log("Quarter", xData)
       var interval = 0
       for(i = 0; i < Object.keys(xData).length; i++){
         year = (base + parseInt((xData[i]-1)/4)).toString(); //Data is given as quarters (1,2,3,4,5,...) so we need to convert that to years
@@ -146,7 +143,6 @@ function createreal_estateDataJSON(data, existingTrend) {
       }
 	}
 	else if (getXAxis() == "Month") {
-    console.log("Month",xData)
     if(existingTrend){
       tickCount = 4;
     }
@@ -166,7 +162,6 @@ function createreal_estateDataJSON(data, existingTrend) {
 
 		}
 	}
-  //console.log("xValues = " + xValues);
 	for(i = 0; i < Object.keys(xData).length; i++) {
 		table_data_values.push({"x":xData[i], "y": yData[i]});
 	}
@@ -187,8 +182,6 @@ function createreal_estateDataJSON(data, existingTrend) {
   }
   table2_data["values"] = table2_data_values;
   jsonData.push(table2_data)
-  //console.log(JSON.stringify(jsonData));
-
 	return jsonData;
 }
 
@@ -233,7 +226,6 @@ function createreal_estateScaleJSON( xmin, xmax, ymin, ymax ){
 // input is data["outputCharts"][index];
 function getMinMaxValues( data )
 {
-  //console.log("min_max", data)
   var minmax = {};
   minmax["xmin"] = Math.min.apply(null, data["xData"])
   minmax["xmax"] = Math.max.apply(null, data["xData"])
@@ -377,7 +369,6 @@ function createScaleJSON( xmin, xmax, ymin, ymax ){
 }
 
 function createScaleScatterJSON( xmin, xmax, ymin, ymax ){
-	console.log("createScaleScatter")
 	  //end data-----
 	  var domain = getXYmaxmin();
 	  var scales = [
@@ -427,7 +418,7 @@ function createDataJSON( data ){
 
 // takes in full data
 function generateExistingTrends( data ){
-	console.log("data",data)
+	console.log("RESPONSE existingTrendData: ",data)
   var outputCharts = data["outputCharts"];
   var count = Object.keys(data).length
   var xUnit = data["xUnit"];
@@ -443,11 +434,9 @@ function generateExistingTrends( data ){
 function addExistingTrendGraph( data, i, xUnit, yUnit ){
   var vegaInput = createJSON(data, 120, 60, xUnit, yUnit, true) //last one is for existingTrend
   if(histogram){
-	  console.log("addexisting bar")
 	 vegaInput = createExistingTrendsBarGraph(data, 120, 60, xUnit, yUnit)
   }
   if(scatter){
-	  console.log("addexisting scatter")
 	  vegaInput = createExistingTrendsScatterGraph(data, 120, 60, xUnit, yUnit)
   }
   vg.parse.spec(vegaInput, function(chart) {
@@ -473,6 +462,7 @@ function generateScatterTrends(data){
 // full data (Callback function of getQuery)
 //Function is called after server gets data
 function processBackEndData(data, xAxisType, yAxisType) {
+  console.log("RESPONSE processBackEndData: ", data)
   outputData = data;
   //generateSuggestTrends(data)
   var xUnit = data["xUnit"];
@@ -511,7 +501,7 @@ function processBackEndData(data, xAxisType, yAxisType) {
       }
       else if(xAxisType =='Q' && yAxisType == 'Q'){
           //should be createScatterPlot, not implemented hyet
-    	
+
           setupScatterView();
           //drawScatterTrend()
       }
@@ -555,7 +545,7 @@ function addGraph(data, index, xUnit, yUnit, xAxisType, yAxisType){
     graphWidth = graphHeight*2;
     }
 
-    var option = docume;nt.getElementById("sel").value;
+    var option = document.getElementById("sel").value;
     if(option == "Bar Chart"){
         vegaInput = createBarGraph(data, graphWidth, graphHeight, xUnit, yUnit);
 	}
@@ -626,7 +616,7 @@ function createExistingTrendsScatterGraph(backend_data, width, height, xUnit, yU
 	  json["scales"] = createScaleScatterJSON( minmax["xmin"], minmax["xmax"], minmax["ymin"], minmax["ymax"] );
 	  json["axes"]=createAxesExistingTrendBar(backend_data,existingTrends[ExTrendindex]["xUnit"], existingTrends[ExTrendindex]["yUnit"], false);
 	  json["marks"] = createScatterChartMarksJSON();
-   
+
 	  return json;
 }
 
@@ -1194,12 +1184,10 @@ function blankChartAsync(ytitle, suffix){
       el: "#blankChart"+suffix,
       hover: false
     }).update();
-    //console.log("Updated blank chart")
     dfrd1.resolve();
 
   });
   return $.when(dfrd1).done(function(){
-     // console.log("Return blank chart")
    }).promise();
 }
 

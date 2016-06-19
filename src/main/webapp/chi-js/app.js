@@ -1,18 +1,104 @@
+
+
 var app = angular.module('zenvisage', []);
 
 
+var globalDatasetInfo; //remove after fixing sketchpad controller
+/*
+sketchpad should be a controller
+app.factory('sketchpadState', function() {
+
+  var isDrawing = false;
+  var lastDrawRow = null;
+  var lastDrawValue = null;
+  var sketchpadService = {};
+
+  sketchpadService.setLastDrawRow = function( item ) {
+      items.push(item);
+  };
+  sketchpadService.setLastDrawRow = function( item ) {
+      items.push(item);
+  };
+
+  return sketchpadService;
+});
+*/
+
+app.factory('datasetInfo', function() {
+  var categoryData;
+  var xAxisData;
+  var yAxisData;
+  var datasetService = {};
+
+  datasetService.store = function( response ) {
+    categoryData = response.zAxisColumns;
+    xAxisData = response.xAxisColumns;
+    yAxisData = response.yAxisColumns;
+  };
+  datasetService.getCategoryData = function()
+  {
+    return categoryData;
+  }
+  datasetService.getXAxisData = function()
+  {
+    return xAxisData;
+  }
+  datasetService.getYAxisData = function()
+  {
+    return yAxisData;
+  }
+  return datasetService;
+});
+
 // responsible for generating the query
 app.controller('queryInputController', [
-  '$scope', '$http',
-  function($scope, $http){
-
-    $scope.onDatasetChange = function () {
-      updateEverything();
-    };
-
+  '$scope', '$http', 'datasetInfo',
+  function($scope, $http, datasetInfo){
     function updateEverything()
     {
-      var q = constructDimensionChangeQuery();
+      var q = constructDimensionChangeQuery(); //goes to query.js
+      var params = {
+        "query": q
+      };
+      var config = {
+        params: params
+      };
+      console.log(config);
+      $http.get('/zv/getdata', config).
+      success(function(response) {
+        console.log("success");
+      }).
+      error(function(response) {
+        console.log("fail");
+      });
+    }
+}]);
+
+
+
+app.controller('settingsController', [
+  '$scope', '$http',
+  function($scope, $http){
+}]);
+
+// populates and controls the dataset attributes on the left-bar
+// does not dynamically adjust to change in dataset yet
+app.controller('datasetController', [
+  '$scope', '$http', 'datasetInfo',
+  function($scope, $http, datasetInfo){
+    //goes to draw.js
+    function initializeSketchpadOnDatasetChange( xdata, ydata, zdata )
+    {
+      initializeSketchpad(
+        xdata["min"],xdata["max"],ydata["min"],ydata["max"],
+        xdata["name"],ydata["name"],zdata["name"]
+       );
+    }
+
+    // for all other normal queries
+    function getUserQueryResults()
+    {
+      var q = constructUserQuery(); //goes to query.js
       var params = {
         "query": q
       };
@@ -30,13 +116,28 @@ app.controller('queryInputController', [
         console.log("fail");
       });
     }
-}]);
 
+    // for representative trends
+    function getRepresentativeTrends()
+    {
+      var q = constructRepresentativeTrendQuery(); //goes to query.js
+      var params = {
+        "query": q
+      };
+      var config = {
+        params: params
+      };
 
-// populates and controls the dataset attributes on the left-bar
-app.controller('datasetController', [
-  '$scope', '$http',
-  function($scope, $http){
+      console.log(config);
+
+      $http.get('/zv/getdata', config).
+      success(function(response) {
+        console.log("success");
+      }).
+      error(function(response) {
+        console.log("fail");
+      });
+    }
 
     // TODO: params will need to be dynamic later
     var q = constructDatasetChangeQuery("real_estate");
@@ -48,8 +149,21 @@ app.controller('datasetController', [
       params: params,
     };
 
+    // when the data selection is changed, the graphs needs to be re-initialized
+    // and the rest of the graphs have to be fetched
+    $scope.onDataAttributeChange = function() {
+      var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
+      var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
+      var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      initializeSketchpadOnDatasetChange(xData, yData, categoryData); //only x and y values?
+      getRepresentativeTrends();
+    };
+
+    // when the page first loads, initialize and then set default values
     $http.get('/zv/getformdata', config).
       success(function(response) {
+        globalDatasetInfo = response;
+        datasetInfo.store(response); //saves form data to datasetInfo
         $scope.categories = [];
         $scope.xAxisItems = [];
         $scope.yAxisItems = [];
@@ -68,12 +182,22 @@ app.controller('datasetController', [
          $scope.yAxisItems.push(key);
         });
         $scope.selectedYAxis = $scope.yAxisItems[0];
+        //send in first item info
+        initializeSketchpadOnDatasetChange(
+              response.xAxisColumns[$scope.xAxisItems[0]],
+              response.yAxisColumns[$scope.yAxisItems[0]],
+              response.zAxisColumns[$scope.categories[0]]
+            );
       }).
       error(function(response) {
         alert('Request failed: /getformdata');
       });
 }]);
 
+
+
+
+/* -- old stuff -- */
 
 // need to make angular
 $("a.tooltip-question").tooltip();
@@ -83,6 +207,8 @@ $(function () {
 })
 
 
+
+// OLD CODE
 $(document).ready(function() {
   $( ".tabler" ).click(function() {
     $( ".tabler" ).removeClass("info");

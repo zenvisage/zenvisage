@@ -172,7 +172,6 @@ function updateOneTrend(index){
 		var string = aggrM.concat('(');
 		string = string.concat(yaxis);
 		string = string.concat(')');
-		console.log(string);
 		chartData["yType"] = string;
         /*if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
             changeScaleBlankChart(min_X,max_X,min_Y,max_Y,chartData, "1");
@@ -186,7 +185,6 @@ function updateOneTrend(index){
 		// var string = aggrM.concat('(');
 		// string = string.concat(yaxis);
 		// string = string.concat(')');
-		// console.log("string", string);
 		// /*
         // if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
         //     blankChart(string, "1")
@@ -203,7 +201,6 @@ function setNoDataBlankChartAxes(xaxisVal, yaxisVal, index){
 	var string = aggrM.concat('(');
 	string = string.concat(yaxis);
 	string = string.concat(')');
-	console.log("string", string);
 	/*
 	if($("#blankChart1").is(':visible')){ //If we are using the second drawing graph
 		blankChart(string, "1")
@@ -677,7 +674,6 @@ function getXOperator(index) {
 
 function getXValue(index) {
 	str = '#x-value'+JSON.stringify(index)+' input';
-	console.log(str)
 	return $(str).val()
 }
 
@@ -755,7 +751,6 @@ function getPageNumber()
 
 function getPredicateValue()
 {
-  //console.log(capitalizeFirstLetter($('#predicate-value input').val().toLowerCase()));
   return $('#predicate-value input').val()
 }
 
@@ -857,11 +852,8 @@ function setupBarView(){
     //updateMainGraph();
 
 }
-//function testing(a){
-//	console.log("AAAA",a)
-//}
+
 function setupScatterView(){
-    console.log("setupScatterView")
     //d3.selectAll("g .brush").remove()
 	d3.selectAll("g").remove()
     drawRandomChart();
@@ -891,9 +883,6 @@ function setupScatterView(){
   getAxisType("Major", "xAxisColumns") -> "C"
 */
 function getAxisType(axisNameToFind, axisColumns){
-    console.log("form", currentFormData)
-    console.log("form", currentFormData[axisColumns])
-    console.log(axisColumns)
     for( axisName in currentFormData[axisColumns]){
         if(axisName == axisNameToFind){
             return currentFormData[axisColumns][axisName]["columnType"];
@@ -924,7 +913,6 @@ function getBaseline() {
 }
 
 function addConstraints(index) {
-	console.log(index);
 	if (getXValue(index) == "" || getY1Value(index) == "") {
 		alert("missing value");
 		return;
