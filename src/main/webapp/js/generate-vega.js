@@ -1218,7 +1218,7 @@ function changeScaleMainChart(xmin,xmax,ymin,ymax,chartData, suffix, chartType){
     spec1["axes"][0]["title"] = "";
     vg.parse.spec(spec1, function(chart) {
     self.view1 = chart({
-      el: "#blankChart"+suffix,
+      el: "#mainChart"+suffix,
       hover: false
     }).update();
   });

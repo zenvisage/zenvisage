@@ -21,6 +21,7 @@ var osetx = 305;
 var numOfBar = 6;
 
 
+
 // from index.html, height and width of 2nd chart
 var drawGraphWidth = 409;
 var drawGraphHeight = 210;
@@ -54,8 +55,6 @@ var magicSuggestStruct = makeStruct("id x y z constraints process");
 var magicSuggestRows = [] //where we store a list of the above struct
 
 // baseline constraints clear when submit
-
-
 var vqlTablerows = 0;
 
 var customQuery = false;
@@ -63,3 +62,37 @@ var customQuery = false;
 var tableHasSketch = false;
 var tableX = "";
 var tableY = "";
+
+// Model containing all relevant information for mainChart0
+var chart0Information = {
+    'min_X' : 0,
+    'max_X' : 0,
+    'min_Y' : 0,
+    'max_Y' : 0,
+    'chartData' : null,
+    'chartName' : "mainChart", // later to be mainChart0
+    'dragAndDropObject' : null, // jQuery object that wraps the DOM element
+    'tools_sketchObject' : null,
+    'scatterName' : "scatterplot", //
+    'visualisationObject' : null,
+    'svgLayerObject' : null,
+    'mySvgObject' : null,
+    'pathObjct' : null
+}
+
+// Model containing all relevant information for mainChart1
+var chart1Information = {
+    'min_X' : 0,
+    'max_X' : 0,
+    'min_Y' : 0,
+    'max_Y' : 0,
+    'chartData' : null,
+    'chartName' : "mainChart1",
+    'dragAndDropObject' : null, // jQuery object that wraps the DOM element
+    'tools_sketchObject' : null,
+    'scatterName' : "scatterplot1", // not supported by pairwise search (yet)
+    'visualisationObject' : null,
+    'svgLayerObject' : null,
+    'mySvgObject' : null,
+    'pathObjct' : null
+}

@@ -80,11 +80,11 @@ function drawBarsAfterDragDrop(){
 	}
 	numOfBar = existingTrends[ExTrendindex]["outputCharts"][0].xData.length; //numOfBar is a global
 	updateChart("",chart0Information, 0)
-	var chartdata = chart0Information[4]["yData"]
+	var chartdata = chart0Information['chartData']["yData"]
 	console.log("YDATA",chartdata)
 	console.log("chart0", chart0Information)
 	//alert(JSON.stringify(chart0Information))
-	changeScaleMainChart(  chart0Information[0], chart0Information[1] , chart0Information[2] , chart0Information[3], chart0Information[4], "", "histogram");
+	changeScaleMainChart(  chart0Information['min_X'], chart0Information['max_X'] , chart0Information['min_Y'] , chart0Information['max_Y'], chart0Information['chartData'], "", "histogram");
 //	for(var i=0; i< numOfBar; i++){
 //		listOfBarPoints.push([i, 210]);
 //	}
@@ -96,7 +96,7 @@ function drawBarsAfterDragDrop(){
 	var obj= document.createElementNS("http://www.w3.org/2000/svg", "rect");
 	obj.id = name;
 	obj.setAttribute("style", "stroke-width:0.5;stroke:rgb(0,0,0);fill:rgb(22,149,163)");
-	var height = (chartdata[i]/chart0Information[3])*drawGraphHeight
+	var height = (chartdata[i]/chart0Information['max_Y'])*drawGraphHeight
 	obj.setAttribute("y", drawGraphHeight - height);
 	obj.setAttribute("height", height);
 	var divide = drawGraphWidth/numOfBar;

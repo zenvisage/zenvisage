@@ -958,7 +958,7 @@ function submitTable(){
         //list contains the points of mainChart that form element myPath
         if(clickmodify){
             //drawTrend();
-            if(chart0Information[4] == null){
+            if(chart0Information['chartData'] == null){
                 drawTrend(); //update chart1Information and drawData
             }
             else{
@@ -970,7 +970,7 @@ function submitTable(){
             //list1 contains the points of mainChart1 that form element myPath
             if(clickmodify){
                 //drawTrend1();
-                if(chart1Information[4] == 0){
+                if(chart1Information['chartData'] == 0){
                     drawTrend1(); //update chart1Information and drawData
                 }
                 else{
@@ -1138,16 +1138,16 @@ function submitTable(){
           var dfrd2 = $.Deferred();
 
         mainChartAsync(" ","").done(function(){
-            if(chart0Information != null && chart0Information[4]!= null){
-            changeScaleMainChart( chart0Information[0] , chart0Information[1] , chart0Information[2] ,
-                 chart0Information[3], chart0Information[4], "");
+            if(chart0Information != null && chart0Information['chartData']!= null){
+            changeScaleMainChart( chart0Information['min_X'] , chart0Information['max_X'] , chart0Information['min_Y'] ,
+                 chart0Information['max_Y'], chart0Information['chartData'], "");
              }
             dfrd1.resolve();
         });
         mainChartAsync(" ","1").done(function(){
-            if(chart1Information != null && chart1Information[4] != null){
-            changeScaleMainChart( chart1Information[0] , chart1Information[1] , chart1Information[2] ,
-                 chart1Information[3], chart1Information[4], "1");
+            if(chart1Information != null && chart1Information['chartData'] != null){
+            changeScaleMainChart( chart1Information['min_X'] , chart1Information['max_X'] , chart1Information['min_Y'] ,
+                 chart1Information['max_Y'], chart1Information['chartData'], "1");
              }
             dfrd2.resolve();
         });
