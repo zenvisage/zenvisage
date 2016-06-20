@@ -5,6 +5,57 @@ var isDrawing = false;
 var lastDrawRow = null;
 var lastDrawValue = null;
 
+
+function plotGraph( data )
+{
+  var data = []
+  for (var d = xmin; d < xmax; d += 1 ) {
+    data.push( [ d, (ymin+ymax)/2 ] );
+  }
+
+  var valueRange = [ymin, ymax];
+  sketchpad = new Dygraph(document.getElementById("draw_div"), data,
+      {
+        valueRange: valueRange,
+        labels: [ xlabel, ylabel ],
+        //xlabel: xlabel,
+        //ylabel: ylabel,
+        title: category,
+        interactionModel: {
+          mousedown: function (event, g, context) {
+            // prevents mouse drags from selecting page text.
+            if (event.preventDefault) {
+              event.preventDefault();  // Firefox, Chrome, etc.
+            } else {
+              event.returnValue = false;  // IE
+              event.cancelBubble = true;
+            }
+            isDrawing = true;
+            setPoint(event, g, context, data, valueRange);
+          },
+          mousemove: function (event, g, context) {
+            if (!isDrawing) return;
+            setPoint(event, g, context, data, valueRange);
+          },
+          mouseup: function(event, g, context) {
+            finishDraw(event, g, context);
+          },
+          mouseout: function(event, g, context) {
+            if (isDrawing)
+            {
+              finishDraw(event, g, context);
+            }
+          },
+          //restore to original size
+          dblclick: function(event, g, context) {
+            Dygraph.defaultInteractionModel.dblclick(event, g, context);
+          }
+        },
+      });
+}
+
+
+
 function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
 {
   if (sketchpad != null) {
@@ -44,7 +95,10 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
             finishDraw(event, g, context);
           },
           mouseout: function(event, g, context) {
-            finishDraw(event, g, context);
+            if (isDrawing)
+            {
+              finishDraw(event, g, context);
+            }
           },
           //restore to original size
           dblclick: function(event, g, context) {
@@ -58,8 +112,7 @@ function finishDraw(event, g, context) {
   isDrawing = false;
   lastDrawRow = null;
   lastDrawValue = null;
-  //c.rawData_
-  //angular.element($("#sidebar")).scope().updateEverything();
+  angular.element($("#sidebar")).scope().getUserQueryResults();
 }
 
 function setPoint(event, g, context, data, valueRange) {

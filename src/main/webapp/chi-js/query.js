@@ -16,6 +16,12 @@ function constructRepresentativeTrendQuery()
   return new Query( "RepresentativeTrends" );
 }
 
+function constructOutlierTrendQuery()
+{
+  return new Query( "Outlier" );
+}
+
+
 function Query( searchMethod ) {
   this.method = searchMethod; // fix to dynamically fetch
   this.xAxis = getSelectedXAxis();

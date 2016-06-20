@@ -16,14 +16,15 @@
     <script src="chi-js/graph.js"></script>
     <script src="chi-js/draw.js"></script>
     <script src="chi-js/query.js"></script>
+    <script src="chi-js/helper.js"></script>
   </head>
   <body>
 
     <!-- this div contains everything in the body -->
-    <div id="everything" ng-controller="queryInputController">
+    <div id="everything">
 
       <!-- this div contains the popup for settings -->
-      <div class="modal fade" id="modal-content" role="dialog" ng-controller="settingsController">
+      <div class="modal fade" id="modal-content" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -212,45 +213,16 @@
           <div id="middle-left" class="col-md-6">
             <h5><b>Results</b></h5>
             <div>
-              <table style="width:100%">
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                </tr>
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                </tr>
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                </tr>
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                </tr>
-              </table>
+              <table style="width:100%" id="results-table"></table>
             </div>
           </div>
           <div id="middle-right" class="col-md-6">
             <div>
-              <table style="width:100%;">
-                <tr>
+              <table style="width:100%;" id="representative-outlier-table">
+                <tr id="middle-right-headers">
                   <td><h5><b>Representative patterns <span data-toggle="modal"class="glyphicon glyphicon-question-sign"></b></h5>
                   </td>
                   <td><h5><b>Outliers <span data-toggle="modal"class="glyphicon glyphicon-question-sign"></b></h5></td>
-                </tr>
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                </tr>
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                </tr>
-                <tr>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
-                  <td><img src="img/blank.png" height="85" width="200"></td>
                 </tr>
               </table>
             </div>

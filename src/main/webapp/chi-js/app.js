@@ -50,43 +50,31 @@ app.factory('datasetInfo', function() {
   return datasetService;
 });
 
-// responsible for generating the query
-app.controller('queryInputController', [
-  '$scope', '$http', 'datasetInfo',
-  function($scope, $http, datasetInfo){
-    function updateEverything()
+app.factory('plotResults', function() {
+
+    var plottingService = {};
+    plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults )
     {
-      var q = constructDimensionChangeQuery(); //goes to query.js
-      var params = {
-        "query": q
-      };
-      var config = {
-        params: params
-      };
-      console.log(config);
-      $http.get('/zv/getdata', config).
-      success(function(response) {
-        console.log("success");
-      }).
-      error(function(response) {
-        console.log("fail");
-      });
+      displayUserQueryResultsHelper( userQueryResults );
+
     }
-}]);
 
+    plottingService.displayRepresentativeAndOutlierResults = function displayRepresentativeAndOutlierResults( representativePatternResults, outlierResults )
+    {
+      displayRepresentativeAndOutlierResultsHelper( representativePatternResults, outlierResults )
+    }
 
+    return plottingService;
+});
 
-app.controller('settingsController', [
-  '$scope', '$http',
-  function($scope, $http){
-}]);
 
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
-  '$scope', '$http', 'datasetInfo',
-  function($scope, $http, datasetInfo){
+  '$scope', '$http', 'datasetInfo', 'plotResults',
+  function($scope, $http, datasetInfo, plotResults){
     //goes to draw.js
+
     function initializeSketchpadOnDatasetChange( xdata, ydata, zdata )
     {
       initializeSketchpad(
@@ -96,7 +84,7 @@ app.controller('datasetController', [
     }
 
     // for all other normal queries
-    function getUserQueryResults()
+    $scope.getUserQueryResults = function getUserQueryResults()
     {
       var q = constructUserQuery(); //goes to query.js
       var params = {
@@ -106,19 +94,18 @@ app.controller('datasetController', [
         params: params
       };
 
-      console.log(config);
-
       $http.get('/zv/getdata', config).
       success(function(response) {
-        console.log("success");
+        console.log("getUserQueryResults: success");
+        plotResults.displayUserQueryResults(response.outputCharts);
       }).
       error(function(response) {
-        console.log("fail");
+        console.log("getUserQueryResults: fail");
       });
     }
 
     // for representative trends
-    function getRepresentativeTrends()
+    function getRepresentativeTrends( getOutlierTrends )
     {
       var q = constructRepresentativeTrendQuery(); //goes to query.js
       var params = {
@@ -128,14 +115,33 @@ app.controller('datasetController', [
         params: params
       };
 
-      console.log(config);
+      $http.get('/zv/getdata', config).
+      success(function(response) {
+        console.log("getRepresentativeTrends: success");
+        getOutlierTrends( response.outputCharts );
+      }).
+      error(function(response) {
+        console.log("getRepresentativeTrends: fail");
+      });
+    }
+
+    function getOutlierTrends( representativeResponse )
+    {
+      var q = constructOutlierTrendQuery(); //goes to query.js
+      var params = {
+        "query": q
+      };
+      var config = {
+        params: params
+      };
 
       $http.get('/zv/getdata', config).
       success(function(response) {
-        console.log("success");
+        console.log("getOutlierTrends: success");
+        plotResults.displayRepresentativeAndOutlierResults(response.outputCharts , representativeResponse);
       }).
       error(function(response) {
-        console.log("fail");
+        console.log("getOutlierTrends: fail");
       });
     }
 
@@ -156,7 +162,8 @@ app.controller('datasetController', [
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
       initializeSketchpadOnDatasetChange(xData, yData, categoryData); //only x and y values?
-      getRepresentativeTrends();
+      getRepresentativeTrends( getOutlierTrends );
+      //plotResults.displayRepresentativeAndOutlierResults();
     };
 
     // when the page first loads, initialize and then set default values
@@ -188,6 +195,7 @@ app.controller('datasetController', [
               response.yAxisColumns[$scope.yAxisItems[0]],
               response.zAxisColumns[$scope.categories[0]]
             );
+        getRepresentativeTrends( getOutlierTrends );
       }).
       error(function(response) {
         alert('Request failed: /getformdata');
