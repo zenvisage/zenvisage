@@ -98,7 +98,7 @@ function ScatterPlotQuery(rectangles, xAxis,yAxis, zAxis,numOfResults, method) {
 
 function showCanvas(){
   document.getElementById("buttons").style.display = "block";
-  document.getElementById("tools_sketch").style.display = "block";
+  chart0Information['tools_sketchObject'].css("display", "block");
 }
 
 function hideCanvas(){
@@ -853,15 +853,16 @@ select.onchange = function() {
 	}
 }
 
+// currently works for mainchart0 only
 function setupLineView(){
     histogram = false;
     scatter = false;
     clickmodify = false;
 
-    $("#svgLayer").css("display","none");
-    $("#tools_sketch").css("display","block");
-    $("#draganddrop").css("display","none");
-    $("#visualisation").css("display","none");
+    chart0Information['svgLayerObject'].css("display","none");
+    chart0Information['tools_sketchObject'].css("display","block");
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart0Information['visualisationObject'].css("display","none");
     $("#mainChart").css("display", "block");
     $("#scatterplot").css("display","none");
 
@@ -874,10 +875,10 @@ function setupBarView(){
     clickmodify = false;
 
     $("#scatterplot").css("display","none");
-    $("#svgLayer").css("display","none");
-    $("#tools_sketch").css("display","none");
-    $("#draganddrop").css("display","none");
-    $("#visualisation").css("display","block");
+    chart0Information['svgLayerObject'].css("display","none");
+    chart0Information['tools_sketchObject'].css("display","none");
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart0Information['visualisationObject'].css("display","block");
     $("#mainChart").css("display", "block");
 
     barConfig();
@@ -900,10 +901,10 @@ function setupScatterView(){
 
     $("#scatterplot").css("display","block");
     $("#mainChart").css("display", "none");
-    $("#svgLayer").css("display","none");
-    $("#tools_sketch").css("display","none");
-    $("#draganddrop").css("display","none");
-    $("#visualisation").css("display","none");
+    chart0Information['svgLayerObject'].css("display","none");
+    chart0Information['tools_sketchObject'].css("display","none");
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart0Information['visualisationObject'].css("display","none");
 
     var numresults = $('#num-results input').val()
 	var x = getXAxis();

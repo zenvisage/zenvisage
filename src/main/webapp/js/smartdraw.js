@@ -19,10 +19,10 @@ initialize_smartdraw();
 
 $("#modify-1").click(function(){
 	drawInitialPath(list, myPath);
-	$("#svgLayer").css("display","block");
-	$("#tools_sketch").css("display","none");
-	$("#draganddrop").css("display","none");
-	$("#visualisation").css("display","none");
+	chart0Information['svgLayerObject'].css("display","block");
+	chart0Information['tools_sketchObject'].css("display","none");
+	chart0Information['dragAndDropObject'].css("display","none");
+	chart0Information['visualisationObject'].css("display","none");
 	clickmodify = true;
 	histogram = false;
 });
@@ -30,10 +30,10 @@ $("#modify-1").click(function(){
 $("#modify-2").click(function(){
 	clickmodify = true;
 	histogram = false;
-	$("#svgLayer1").css("display","block");
-	$("#tools_sketch1").css("display","none");
-	$("#draganddrop1").css("display","none");
-	$("#visualisation1").css("display","none");
+	chart1Information['svgLayerObject'].css("display","block");
+	chart1Information['tools_sketchObject'].css("display","none");
+	chart1Information['dragAndDropObject'].css("display","none");
+	chart1Information['visualisationObject'].css("display","none");
 	drawInitialPath(list1, myPath1);
 });
 

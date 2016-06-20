@@ -380,19 +380,24 @@ function Draw(x, y, isDown, ctxA, drawGraphIndex){ //add ctx parameter (for the 
 
 init();
 
-function clearMainChart(suffix) {
+// unused it seems
+function clearMainChart(chartInformation) {
 	//histogram=false;
 	clickmodify = false;
   sketchPointsList = [new SketchPoints(), new SketchPoints()];
 	 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	 	document.getElementById("svgLayer"+suffix).style.display = "none";
+        chartInformation['svgLayerObject'].css("display", "none");
 	 	if(!histogram){
-			document.getElementById("tools_sketch"+suffix).style.display = "block";
-			document.getElementById("visualisation"+suffix).style.display = "none";
+            chartInformation['tools_sketchObject'].css("display", "block");
+            chartInformation['visualisationObject'].css("display", "none");
+			//document.getElementById("tools_sketch"+suffix).style.display = "block";
+			//document.getElementById("visualisation"+suffix).style.display = "none";
 	 	}
 	 	else{
-	 		document.getElementById("tools_sketch"+suffix).style.display = "none";
-			document.getElementById("visualisation"+suffix).style.display = "block";
+            chartInformation['tools_sketchObject'].css("display", "none");
+            chartInformation['visualisationObject'].css("display", "block");
+	 		//document.getElementById("tools_sketch"+suffix).style.display = "none";
+			//document.getElementById("visualisation"+suffix).style.display = "block";
 			barConfig();
 	 	}
 		clickmodify = false;
@@ -410,15 +415,15 @@ document.getElementById("clear-1").onclick = function () {
  //   sketchPointsList = [new SketchPoints(), new SketchPoints()];
     	sketchPointsList = [];
 	 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	 	document.getElementById("svgLayer").style.display = "none";
+	 	chart0Information['svgLayerObject'].css("display", "none");
 	 	if(!histogram){
-			document.getElementById("tools_sketch").style.display = "block";
-			document.getElementById("visualisation").style.display = "none";
+            chart0Information['tools_sketchObject'].css("display", "block");
+			chart0Information['visualisationObject'].css("display", "none");
 
 	 	}
 	 	else{
-	 		document.getElementById("tools_sketch").style.display = "none";
-			document.getElementById("visualisation").style.display = "block";
+            chart0Information['tools_sketchObject'].css("display", "none");
+			chart0Information['visualisationObject'].css("display", "block");
 			barConfig();
 	 	}
 		clickmodify = false;
@@ -435,9 +440,9 @@ document.getElementById("line-1").onclick = function(){
 	   singleC = false;
 	  // console.log("stop drawing circle")
 	   ctx.clearRect(0, 0, canvas.width, canvas.height);
-	   document.getElementById("svgLayer").style.display = "none";
-	   document.getElementById("tools_sketch").style.display = "block";
-	   document.getElementById("visualisation").style.display = "none";
+       chart0Information['svgLayerObject'].css("display", "none");
+       chart0Information['tools_sketchObject'].css("display", "block");
+	   chart0Information['visualisationObject'].css("display", "none");
 	   //disableDragAndDrop();
 	   clickmodify = false;
 }
@@ -451,9 +456,9 @@ document.getElementById("line-2").onclick = function(){
 	   clickmodify1 = false;
 
      ctx1.clearRect(0,0, canvas1.width, canvas1.height);
-     document.getElementById("svgLayer1").style.display = "none";
-     document.getElementById("tools_sketch1").style.display = "block";
-     document.getElementById("visualisation1").style.display = "none";
+     chart1Information['svgLayerObject'].css("display", "none");
+     chart1Information['tools_sketchObject'].css("display", "block");
+     chart1Information['visualisationObject'].css("display", "block");
 
 }
 
@@ -462,14 +467,14 @@ document.getElementById("circle").onclick = function(){
 	   drawline =false;
 	   singleC = false;
 	   ctx.clearRect(0, 0, canvas.width, canvas.height);
-	   document.getElementById("svgLayer").style.display = "none";
-	   document.getElementById("tools_sketch").style.display = "block";
+       chart0Information['svgLayerObject'].css("display", "none");
+       chart0Information['tools_sketchObject'].css("display", "block");
 	   //disableDragAndDrop();
 	   clickmodify = false;
 
 	   ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-	   document.getElementById("svgLayer1").style.display = "none";
-	   document.getElementById("tools_sketch1").style.display = "block";
+       chart1Information['svgLayerObject'].css("display", "none");
+       chart1Information['tools_sketchObject'].css("display", "block");
 }
 
 /*

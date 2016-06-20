@@ -77,7 +77,7 @@ var chart0Information = {
     'visualisationObject' : null,
     'svgLayerObject' : null,
     'mySvgObject' : null,
-    'pathObjct' : null
+    'pathObject' : null
 }
 
 // Model containing all relevant information for mainChart1
@@ -94,5 +94,5 @@ var chart1Information = {
     'visualisationObject' : null,
     'svgLayerObject' : null,
     'mySvgObject' : null,
-    'pathObjct' : null
+    'pathObject' : null
 }

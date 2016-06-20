@@ -901,15 +901,15 @@ function submitTable(){
       $("#scatterplot").width(drawGraphWidth);
       $("#scatterplot").height(drawGraphHeight);
       $("#mainChart").height(drawGraphHeight);
-      $("#draganddrop").width(drawGraphWidth);
-      $("#draganddrop").height(drawGraphHeight);
-      $("#tools_sketch").width(drawGraphWidth);
-      $("#tools_sketch").height(drawGraphHeight);
-      $("#visualisation").width(drawGraphWidth); //for bar charts
-      $("#visualisation").height(drawGraphHeight);
-      $("#mySvg").width(drawGraphWidth);
-      $("#mySvg").height(drawGraphHeight);
-      $("#mySvg").attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
+      chart0Information['dragAndDropObject'].width(drawGraphWidth);
+      chart0Information['dragAndDropObject'].height(drawGraphHeight);
+      chart0Information['tools_sketchObject'].width(drawGraphWidth);
+      chart0Information['tools_sketchObject'].height(drawGraphHeight);
+      chart0Information['visualisationObject'].width(drawGraphWidth); //for bar charts
+      chart0Information['visualisationObject'].height(drawGraphHeight);
+      chart0Information['mySvgObject'].width(drawGraphWidth);
+      chart0Information['mySvgObject'].height(drawGraphHeight);
+      chart0Information['mySvgObject'].attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
       $("#x-axis-select-0").width(drawGraphWidth);
       $("#x-axis-select-0").height($("#x-axis-select-0").height());
       xAxisSelect0.input.width(0);
@@ -922,15 +922,15 @@ function submitTable(){
       $("secondDrawChartColumn").height(drawGraphHeight+50);
       $("#mainChart1").width(drawGraphWidth);
       $("#mainChart1").height(drawGraphHeight);
-      $("#draganddrop1").width(drawGraphWidth);
-      $("#draganddrop1").height(drawGraphHeight);
-      $("#tools_sketch1").width(drawGraphWidth);
-      $("#tools_sketch1").height(drawGraphHeight);
-      $("#visualisation1").width(drawGraphWidth);
-      $("#visualisation1").height(drawGraphHeight);
-      $("#mySvg1").width(drawGraphWidth);
-      $("#mySvg1").height(drawGraphHeight);
-      $("#mySvg1").attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
+      chart1Information['dragAndDropObject'].width(drawGraphWidth);
+      chart1Information['dragAndDropObject'].height(drawGraphHeight);
+      chart1Information['tools_sketchObject'].width(drawGraphWidth);
+      chart1Information['tools_sketchObject'].height(drawGraphHeight);
+      chart1Information['visualisationObject'].width(drawGraphWidth);
+      chart1Information['visualisationObject'].height(drawGraphHeight);
+      chart1Information['mySvgObject'].width(drawGraphWidth);
+      chart1Information['mySvgObject'].height(drawGraphHeight);
+      chart1Information['mySvgObject'].attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
       $("#x-axis-select-1").width(drawGraphWidth);
       $("#x-axis-select-1").height($("#x-axis-select-1").height());
 
@@ -1003,9 +1003,9 @@ function submitTable(){
 	    var fontsize = spec["axes"][1]["properties"]["title"]["fontSize"]["value"];
 	    var titletochart = spec["axes"][1]["titleOffset"];
 	    var result = fontsize+titletochart;
-	    $("#tools_sketch").css( { "margin-left" : result} );
-	    $("#visualisation").css( { "margin-left" : result} );
-	    $("#svgLayer").css( { "margin-left" : result} );
+	    chart0Information['tools_sketchObject'].css( { "margin-left" : result} );
+	    chart0Information['visualisationObject'].css( { "margin-left" : result} );
+	    chart0Information['svgLayerObject'].css( { "margin-left" : result} );
 	    $("#draganddrop").css( { "margin-left" : result} );
 
 
@@ -1015,14 +1015,34 @@ function submitTable(){
         // marginLeft = vegaRealWidth - vegaWidth;
         //$("#tools_sketch1").css("margin-left", marginLeft);
         //$("#svgLayer1").css("margin-left", marginLeft);
-        $("#tools_sketch1").css( { "margin-left" : result} );
-	    $("#svgLayer1").css( { "margin-left" : result} );
+        chart1Information['tools_sketchObject'].css( { "margin-left" : result} );
+	    chart0Information['svgLayerObject'].css( { "margin-left" : result} );
 	    //$("#draganddrop").css( { "margin-left" : result} );
     }
+
+    function populateChartInformation() {
+        chart0Information['dragAndDropObject'] = $("#draganddrop");
+        chart0Information['tools_sketchObject'] = $('#tools_sketch');
+        chart0Information['visualisationObject'] = $('#visualisation');
+        chart0Information['svgLayerObject'] = $('#svgLayer');
+        chart0Information['mySvgObject'] = $('#mySvg');
+        chart0Information['pathObject'] = $('#myPath');
+
+        chart1Information['dragAndDropObject'] = $("#draganddrop1");
+        chart1Information['tools_sketchObject'] = $('#tools_sketch1');
+        chart1Information['visualisationObject'] = $('#visualisation1');
+        chart1Information['svgLayerObject'] = $('#svgLayer1');
+        chart1Information['mySvgObject'] = $('#mySvg1');
+        chart1Information['pathObject'] = $('#myPath1');
+    }
+
     </script>
     <script>
         var graphChanger;
         $(document).ready(function() {
+            populateChartInformation(); // on document load, grab all the jquery objects
+            console.log("chartinfo", chart0Information)
+            console.log(chart0Information['svgLayerObject'].width())
             saveRowData(vqlTablerows); //for the first row data
             vqlTablerows ++
 

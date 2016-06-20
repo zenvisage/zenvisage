@@ -68,8 +68,8 @@ function drag(item, ev) {
 	//document.getElementById("svgLayer").style.display = "none";
 	//document.getElementById("tools_sketch").style.display = "none";
 	//document.getElementById("draganddrop").style.zIndex = 0;
-    $("#draganddrop").css("display","block");
-    $("#draganddrop1").css("display","block");
+    chart0Information['dragAndDropObject'].css("display","block");
+    chart1Information['dragAndDropObject'].css("display","block");
 
 	//document.getElementById("visualisation").style.display = "none";
 	//console.log(ev.srcElement.id);
@@ -103,11 +103,11 @@ function droppable(itemId, drawGraphIndex){
 // drop event listener on main chart 1
 function drop(ev) {
     ev.preventDefault();
-    $("#tools_sketch").css("display","none");
-    $("#draganddrop").css("display","none");
-    $("#draganddrop1").css("display","none");
+    chart0Information['tools_sketchObject'].css("display","none");
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart1Information['dragAndDropObject'].css("display","none");
     if(!histogram){
-    	$("#visualisation").css("display","none");
+    	chart0Information['visualisationObject'].css("display","none");
     }
     if(!droppable(tempItemId, 0)){
         return
@@ -128,17 +128,17 @@ function drop(ev) {
 
 // processed the drop request for the specified chart number suffix
 // TODO: refactor drawTrend and drawTrend1 into drawTrend("") and drawTrend("1")
-function processDrop(ev, chartNum) {
+function processDrop(ev, chartInformation) {
     ev.preventDefault();
-    $("#tools_sketch" + chartNum).css("display", "none");
-    $("#draganddrop").css("display","none");
-    $("#draganddrop1").css("display","none");
+    chartInformation['tools_sketchObject'].css("display", "none");
+    chartInformation['dragAndDropObject'].css("display","none");
+    //chart1Information['dragAndDropObject'].css("display","none");
     if (!histogram) {
-    	$("#visualisation" + chartNum).css("display","none");
+    	chart0Information['visualisationObject'].css("display","none");
     }
 
     if (!droppable(tempItemId, 1)) {
-        $("#visualisation").css("display","none");
+        return
     }
 
     if(!histogram){
@@ -156,11 +156,11 @@ function processDrop(ev, chartNum) {
 // drop event listener on main chart 1
 function drop1(ev){
     ev.preventDefault();
-    $("#tools_sketch1").css("display","none");
-    $("#draganddrop").css("display","none");
-    $("#draganddrop1").css("display","none");
+    chart1Information['tools_sketchObject'].css("display","none");
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart1Information['dragAndDropObject'].css("display","none");
     if (!histogram) {
-        $("#visualisation1").css("display", "none");
+        chart1Information['visualisationObject'].css("display", "none");
     }
     if(!droppable(tempItemId, 1)){
         return
@@ -436,8 +436,10 @@ function drawData(suffix, chartInformation, globalList, globalmyPath){
     	//globalList = myList; //This acutally just points globalList to the myList array
       //So this loses the reference to list and list1
 
-    	document.getElementById("svgLayer"+suffix).style.display = "block";
-    	document.getElementById("tools_sketch"+suffix).style.display = "none";
+    	//document.getElementById("svgLayer"+suffix).style.display = "block";
+    	//document.getElementById("tools_sketch"+suffix).style.display = "none";
+        chartInformation['svgLayerObject'].css("display","block")
+        chartInformation['tools_sketchObject'].css("display","none");
 
     	drawInitialPath(globalList, globalmyPath);
 }
