@@ -172,7 +172,6 @@ function updateOneTrend(index){
 		var string = aggrM.concat('(');
 		string = string.concat(yaxis);
 		string = string.concat(')');
-		console.log(string);
 		chartData["yType"] = string;
         /*if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
             changeScaleMainChart(min_X,max_X,min_Y,max_Y,chartData, "1");
@@ -186,7 +185,6 @@ function updateOneTrend(index){
 		// var string = aggrM.concat('(');
 		// string = string.concat(yaxis);
 		// string = string.concat(')');
-		// console.log("string", string);
 		// /*
         // if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
         //     mainChart(string, "1")
@@ -203,7 +201,6 @@ function setNoDataMainChartAxes(xaxisVal, yaxisVal, index){
 	var string = aggrM.concat('(');
 	string = string.concat(yaxis);
 	string = string.concat(')');
-	console.log("string", string);
 	/*
 	if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
 		mainChart(string, "1")
@@ -677,7 +674,6 @@ function getXOperator(index) {
 
 function getXValue(index) {
 	str = '#x-value'+JSON.stringify(index)+' input';
-	console.log(str)
 	return $(str).val()
 }
 
@@ -755,7 +751,6 @@ function getPageNumber()
 
 function getPredicateValue()
 {
-  //console.log(capitalizeFirstLetter($('#predicate-value input').val().toLowerCase()));
   return $('#predicate-value input').val()
 }
 
@@ -778,34 +773,6 @@ function getSearchMethod()
 {
   return $('input[name = search-method]:checked').val()
 }
-
-
-//seems unused, will keep commented for now 1/19/2016
-/*
-function loadTrend(){
-	  if(ms_method.getValue()=='Outlier' || ms_method.getValue()=='RepresentativeTrends'){
-		  getRepresentativeTrend();
-	  }
-}
-
-function getRepresentativeTrend(){
-	  var query = "select ";
-	    var aggregate = "";
-	    if(y_aggr_ms.getValue()=='avg'){
-	      aggregate = "avg(" + y_ms.getValue() + ")";
-	    }
-	    //query += ms_z_axis.getValue() + "," + x_ms.getValue() + "," + aggregate + " from db.ontime group by " + ms_z_axis.getValue() + "," + x_ms.getValue();
-	    //console.log(ms_method.getValue(),ms_method.getValue()[0]);
-	    var query = new Query(ms_method.getValue()[0],y_ms.getValue()[0],x_ms.getValue()[0],ms_z_axis.getValue()[0],y_aggr_ms.getValue()[0],y_ms.getValue()[0],parseInt(ms_outlier.getValue()),[],[]);
-	    query = setCommonQueryParams(query);
-
-	    // var outlier_count = parseInt(ms_outlier.getValue());
-	    //var method="2phase";
-	    //alert(query);
-	    getRepresentativeData(query);
-}
-*/
-
 
 function fillPredicateDropdown(){
     var xaxis = getXAxis();
@@ -886,11 +853,8 @@ function setupBarView(){
     //updateMainGraph();
 
 }
-//function testing(a){
-//	console.log("AAAA",a)
-//}
+
 function setupScatterView(){
-    console.log("setupScatterView")
     //d3.selectAll("g .brush").remove()
 	d3.selectAll("g").remove()
     drawRandomChart();
@@ -920,9 +884,6 @@ function setupScatterView(){
   getAxisType("Major", "xAxisColumns") -> "C"
 */
 function getAxisType(axisNameToFind, axisColumns){
-    console.log("form", currentFormData)
-    console.log("form", currentFormData[axisColumns])
-    console.log(axisColumns)
     for( axisName in currentFormData[axisColumns]){
         if(axisName == axisNameToFind){
             return currentFormData[axisColumns][axisName]["columnType"];
@@ -953,7 +914,6 @@ function getBaseline() {
 }
 
 function addConstraints(index) {
-	console.log(index);
 	if (getXValue(index) == "" || getY1Value(index) == "") {
 		alert("missing value");
 		return;
