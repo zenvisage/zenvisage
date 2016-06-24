@@ -8,6 +8,19 @@ hr {
   margin-bottom: 5px !important;
 }
 
+#representative-table, #outlier-table{
+  width : 50%;
+  float: left;
+}
+
+.representative-results, .outlier-results{
+ width: 200px;
+ height: 85px;
+}
+
+#results-table{
+width: 100%;
+}
 #table-div {
   height: 242px !important;
   overflow-x: auto;

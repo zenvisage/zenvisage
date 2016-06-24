@@ -17,10 +17,13 @@ function plotGraph( data )
   sketchpad = new Dygraph(document.getElementById("draw_div"), data,
       {
         valueRange: valueRange,
-        labels: [ xlabel, ylabel ],
+        //labels: [ xlabel, ylabel ],
         //xlabel: xlabel,
         //ylabel: ylabel,
         title: category,
+        axisLabelFontSize: 9,
+        xLabelHeight: 9,
+        titleHeight: 9,
         interactionModel: {
           mousedown: function (event, g, context) {
             // prevents mouse drags from selecting page text.
@@ -74,7 +77,10 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
         labels: [ xlabel, ylabel ],
         //xlabel: xlabel,
         //ylabel: ylabel,
+        axisLabelFontSize: 9,
+        xLabelHeight: 9,
         title: category,
+        titleHeight: 9,
         interactionModel: {
           mousedown: function (event, g, context) {
             // prevents mouse drags from selecting page text.

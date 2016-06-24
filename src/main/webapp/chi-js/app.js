@@ -59,9 +59,14 @@ app.factory('plotResults', function() {
 
     }
 
-    plottingService.displayRepresentativeAndOutlierResults = function displayRepresentativeAndOutlierResults( representativePatternResults, outlierResults )
+    plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
     {
-      displayRepresentativeAndOutlierResultsHelper( representativePatternResults, outlierResults )
+      displayRepresentativeResultsHelper( representativePatternResults )
+    }
+
+    plottingService.displayOutlierResults = function displayOutlierResults( outlierResults )
+    {
+      displayOutlierResultsHelper( outlierResults )
     }
 
     return plottingService;
@@ -105,7 +110,7 @@ app.controller('datasetController', [
     }
 
     // for representative trends
-    function getRepresentativeTrends( getOutlierTrends )
+    function getRepresentativeTrends()
     {
       var q = constructRepresentativeTrendQuery(); //goes to query.js
       var params = {
@@ -118,14 +123,14 @@ app.controller('datasetController', [
       $http.get('/zv/getdata', config).
       success(function(response) {
         console.log("getRepresentativeTrends: success");
-        getOutlierTrends( response.outputCharts );
+        plotResults.displayRepresentativeResults( response.outputCharts );
       }).
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
       });
     }
 
-    function getOutlierTrends( representativeResponse )
+    function getOutlierTrends()
     {
       var q = constructOutlierTrendQuery(); //goes to query.js
       var params = {
@@ -138,7 +143,7 @@ app.controller('datasetController', [
       $http.get('/zv/getdata', config).
       success(function(response) {
         console.log("getOutlierTrends: success");
-        plotResults.displayRepresentativeAndOutlierResults(response.outputCharts , representativeResponse);
+        plotResults.displayOutlierResults( response.outputCharts );
       }).
       error(function(response) {
         console.log("getOutlierTrends: fail");
@@ -162,8 +167,8 @@ app.controller('datasetController', [
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
       initializeSketchpadOnDatasetChange(xData, yData, categoryData); //only x and y values?
-      getRepresentativeTrends( getOutlierTrends );
-      //plotResults.displayRepresentativeAndOutlierResults();
+      getRepresentativeTrends();
+      getOutlierTrends();
     };
 
     // when the page first loads, initialize and then set default values
@@ -195,7 +200,8 @@ app.controller('datasetController', [
               response.yAxisColumns[$scope.yAxisItems[0]],
               response.zAxisColumns[$scope.categories[0]]
             );
-        getRepresentativeTrends( getOutlierTrends );
+        getRepresentativeTrends();
+        getOutlierTrends();
       }).
       error(function(response) {
         alert('Request failed: /getformdata');
