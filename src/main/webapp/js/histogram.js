@@ -84,7 +84,7 @@ function drawBarsAfterDragDrop(){
 	console.log("YDATA",chartdata)
 	console.log("chart0", chart0Information)
 	//alert(JSON.stringify(chart0Information))
-	changeScaleMainChart(  chart0Information['min_X'], chart0Information['max_X'] , chart0Information['min_Y'] , chart0Information['max_Y'], chart0Information['chartData'], "", "histogram");
+	changeScaleMainChart(chart0Information, "histogram");
 //	for(var i=0; i< numOfBar; i++){
 //		listOfBarPoints.push([i, 210]);
 //	}

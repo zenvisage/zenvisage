@@ -33,13 +33,13 @@ function updateGraphOnDblClick(){
             //even ids should be with drawGraphIndex 0
             drawTrend();
             onSubmit();
-            updatelist("");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
         }
         else{
             //odd ids
             drawTrend1();
             onSubmit();
-            updatelist("1");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart1Information);	//need to update the list so once you click modify, you are using new list.
         }
     }
     else if(isGraphVisible("1") && itemId.indexOf("existing-trend")>=0){
@@ -47,19 +47,19 @@ function updateGraphOnDblClick(){
         if(ExTrendindex == 0){
             drawTrend();
             onSubmit();
-            updatelist("");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
         }
         else if(ExTrendindex == 1){
             drawTrend1();
             onSubmit();
-            updatelist("1");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart1Information);	//need to update the list so once you click modify, you are using new list.
         }
     }
     else{
         //single chart case
         drawTrend();
         onSubmit();
-        updatelist("");	//need to update the list so once you click modify, you are using new list.
+        updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
     }
 }
 
@@ -118,7 +118,7 @@ function drop(ev) {
         clickmodify = true; //?correct??
     	drawTrend();	//should not update list yet
     	onSubmit();
-    	updatelist("");	//need to update the list so once you click modify, you are using new list.
+    	updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
     }
     else{
     	drawBarsAfterDragDrop();
@@ -126,7 +126,7 @@ function drop(ev) {
     }
 }
 
-// processed the drop request for the specified chart number suffix
+// processed the drop request for the specified chart number
 // TODO: refactor drawTrend and drawTrend1 into drawTrend("") and drawTrend("1")
 function processDrop(ev, chartInformation) {
     ev.preventDefault();
@@ -145,7 +145,7 @@ function processDrop(ev, chartInformation) {
         clickmodify = true; //?correct??
     	drawTrend();	//should not update list yet
     	onSubmit();
-    	updatelist("");	//need to update the list so once you click modify, you are using new list.
+    	updatelist(chartInformation);	//need to update the list so once you click modify, you are using new list.
     }
     else{
     	drawBarsAfterDragDrop();
@@ -170,12 +170,12 @@ function drop1(ev){
     clickmodify = true;
     drawTrend1();
     onSubmit();
-    updatelist("1");	//need to update the list so once you click modify, you are using new list.
+    updatelist(chart1Information);	//need to update the list so once you click modify, you are using new list.
 
 }
 
 
-function updatelist(suffix){
+function updatelist(chartInformation){
 	for(var b = 0; b< 30; b++){
 		var str = "point";
 		var myP = str.concat(b.toString());
@@ -222,21 +222,14 @@ function updatelist(suffix){
 	min_Y = Math.min.apply(Math,y);
 	//console.log(existingTrends["outputCharts"]);
 	//console.log(chartData);
-	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
-    if(suffix == ""){
-    chart0Information['min_X'] = min_X
-    chart0Information['max_X'] = max_X
-    chart0Information['min_Y'] = min_Y
-    chart0Information['max_Y'] = max_Y
-    chart0Information['chartData'] = chartData
-  }
-  else if(suffix == "1"){
-    chart1Information['min_X'] = min_X
-    chart1Information['max_X'] = max_X
-    chart1Information['min_Y'] = min_Y
-    chart1Information['max_Y'] = max_Y
-    chart1Information['chartData'] = chartData
-  }
+	changeScaleMainChart(chartInformation);
+
+    chartInformation['min_X'] = min_X
+    chartInformation['max_X'] = max_X
+    chartInformation['min_Y'] = min_Y
+    chartInformation['max_Y'] = max_Y
+    chartInformation['chartData'] = chartData
+
 
 	var range_X = max_X - min_X;
 	var range_Y = max_Y - min_Y;
@@ -276,7 +269,8 @@ function updatelist(suffix){
 
 	}
 
-	if(suffix == "")
+    // TODO clean up this implementation once list and list1 are refactored
+	if(chartInformation['chartName'] == "mainChart")
 		list = myList;
 	else
 		list1 = myList;
@@ -330,14 +324,14 @@ function canDrop(itemId, drawGraphIndex){
 function drawTrend(){
     if(updateChart("", chart0Information, 0)){
         //if we have successfully updated our chartData
-        drawData("", chart0Information, list, myPath)
+        drawData(chart0Information, list, myPath)
     }
 }
 
 function drawTrend1(){
     if(updateChart("-1", chart1Information, 1)){
         //if we have successfully updated our chartData
-        drawData("1", chart1Information, list1, myPath1)
+        drawData(chart1Information, list1, myPath1)
     }
 }
 
@@ -400,7 +394,7 @@ function updateChart(suffix, chartInformation, chartNum){
 /*
  * Draw the output charts from chartData
 */
-function drawData(suffix, chartInformation, globalList, globalmyPath){
+function drawData(chartInformation, globalList, globalmyPath){
     	//list = [[9,206],[27,194],[51,184],[71,174],[92,163],[112,151],[119,145],[152,129],[172,119],[194,107],[214,97],[234,86],[253,76],[276,64],[296,56],[317,46],[337,30],[357,20],[379,9],[395,5],[399,0]];
     	//for(var b = 0; b< 41; b++){
         if(chartInformation['chartData'] == null){
@@ -414,9 +408,7 @@ function drawData(suffix, chartInformation, globalList, globalmyPath){
         var x = chartData.xData
         var y = chartData.yData
 
-    	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
-        //changeScaleMainChart( chartInformation['min_X'] , chartInformation['max_X']
-            //, chartInformation['min_Y'] , chartInformation['max_Y'], chartInformation['chartData'], suffix);
+    	changeScaleMainChart(chartInformation);
 
         //var distance = bl.offsetLeft - bl.scrollLeft + bl.clientLeft;
     	var range_X= max_X-min_X;
@@ -436,8 +428,6 @@ function drawData(suffix, chartInformation, globalList, globalmyPath){
     	//globalList = myList; //This acutally just points globalList to the myList array
       //So this loses the reference to list and list1
 
-    	//document.getElementById("svgLayer"+suffix).style.display = "block";
-    	//document.getElementById("tools_sketch"+suffix).style.display = "none";
         chartInformation['svgLayerObject'].css("display","block")
         chartInformation['tools_sketchObject'].css("display","none");
 

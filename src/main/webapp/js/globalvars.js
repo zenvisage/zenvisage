@@ -64,6 +64,7 @@ var tableX = "";
 var tableY = "";
 
 // Model containing all relevant information for mainChart0
+// TODO ADD 'list' variable to the data structure
 var chart0Information = {
     'min_X' : 0,
     'max_X' : 0,

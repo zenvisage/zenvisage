@@ -176,7 +176,7 @@ function updateOneTrend(index){
         /*if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
             changeScaleMainChart(min_X,max_X,min_Y,max_Y,chartData, "1");
         }*/
-        changeScaleMainChart(min_X,max_X,min_Y,max_Y,chartData, index);
+        changeScaleMainChart(chart0Information);
 	}
 	else{
 		setNoDataMainChartAxes(getXAxis(),getYAxis(), index);
@@ -291,7 +291,6 @@ $('#x-axis').on( 'click', '.x-axis', function(){
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-  //changeScaleMainChart( xmin , xmax , ymin , ymax );
   updateTrends();
 });
 

@@ -390,14 +390,10 @@ function clearMainChart(chartInformation) {
 	 	if(!histogram){
             chartInformation['tools_sketchObject'].css("display", "block");
             chartInformation['visualisationObject'].css("display", "none");
-			//document.getElementById("tools_sketch"+suffix).style.display = "block";
-			//document.getElementById("visualisation"+suffix).style.display = "none";
 	 	}
 	 	else{
             chartInformation['tools_sketchObject'].css("display", "none");
             chartInformation['visualisationObject'].css("display", "block");
-	 		//document.getElementById("tools_sketch"+suffix).style.display = "none";
-			//document.getElementById("visualisation"+suffix).style.display = "block";
 			barConfig();
 	 	}
 		clickmodify = false;

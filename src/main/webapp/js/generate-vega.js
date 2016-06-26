@@ -1192,7 +1192,13 @@ function mainChartAsync(ytitle, suffix){
 }
 
 //optional chartType param
-function changeScaleMainChart(xmin,xmax,ymin,ymax,chartData, suffix, chartType){
+function changeScaleMainChart(chartInformation, chartType){
+    xmin = chartInformation['min_X'];
+    xmax = chartInformation['max_X'];
+    ymin = chartInformation['min_Y'];
+    ymax = chartInformation['max_Y'];
+    chartData = chartInformation['chartData'];
+
     var spec1 = createBlank(xmin,xmax,ymin,ymax,chartData, chartType);
     yMin = ymin;
     yMax = ymax;
@@ -1206,7 +1212,7 @@ function changeScaleMainChart(xmin,xmax,ymin,ymax,chartData, suffix, chartType){
     spec1["axes"][0]["title"] = "";
     vg.parse.spec(spec1, function(chart) {
     self.view1 = chart({
-      el: "#mainChart"+suffix,
+      el: "#" + chartInformation['chartName'],
       hover: false
     }).update();
   });
