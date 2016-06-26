@@ -66,7 +66,7 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
   }
 
   var data = []
-  for (var d = xmin; d < xmax; d += 1 ) {
+  for (var d = xmin; d < xmax + 1; d += 1 ) {
     data.push( [ d, (ymin+ymax)/2 ] );
   }
 

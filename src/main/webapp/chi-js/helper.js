@@ -29,7 +29,7 @@ function displayUserQueryResultsHelper( userQueryResults )
     var data = [];
     var arrayLength = xData.length;
     for (var i = 0; i < arrayLength; i++ ) {
-      data.push( [ xData[i], yData[i] ] );
+      data.push( [ xData[i], yData[i], sketchpad.rawData_[i][1] ]);
     }
     var valueRange = [ymin, ymax];
     new Dygraph(document.getElementById("result-" + count.toString()), data,
@@ -43,6 +43,8 @@ function displayUserQueryResultsHelper( userQueryResults )
         showLabelsOnHighlight: false,
         highlightCircleSize: 0,
         interactionModel: {},
+        drawGrid: false,
+        colors: [ "0E3340", "#90C3D4" ],
       });
   }
 }
@@ -89,6 +91,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
         showLabelsOnHighlight: false,
         highlightCircleSize: 0,
         interactionModel: {},
+        drawGrid: false,
       });
   }
 }
@@ -135,6 +138,7 @@ function displayOutlierResultsHelper( outlierResults )
         showLabelsOnHighlight: false,
         highlightCircleSize: 0,
         interactionModel: {},
+        drawGrid: false,
       });
   }
 }
