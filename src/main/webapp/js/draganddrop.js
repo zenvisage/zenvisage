@@ -79,6 +79,7 @@ function drag(item, ev) {
 	//}
 }
 
+
 function droppable(itemId, drawGraphIndex){
     if(!isGraphVisible("1")){
         return true;
@@ -102,44 +103,28 @@ function droppable(itemId, drawGraphIndex){
 
 // drop event listener on main chart 1
 function drop(ev) {
-    ev.preventDefault();
-    chart0Information['tools_sketchObject'].css("display","none");
-    chart0Information['dragAndDropObject'].css("display","none");
-    chart1Information['dragAndDropObject'].css("display","none");
-    if(!histogram){
-    	chart0Information['visualisationObject'].css("display","none");
-    }
-    if(!droppable(tempItemId, 0)){
-        return
-    }
-
-    itemId = tempItemId; // If we actually do drop graph in, update itemId
-    if(!histogram){
-        clickmodify = true; //?correct??
-    	drawTrend();	//should not update list yet
-    	onSubmit();
-    	updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
-    }
-    else{
-    	drawBarsAfterDragDrop();
-    	onSubmit();
-    }
+    processDrop(ev, chart0Information, 0);
+}
+// drop event listener on main chart 1
+function drop1(ev) {
+    processDrop(ev, chart1Information, 1);
 }
 
 // processed the drop request for the specified chart number
-// TODO: refactor drawTrend and drawTrend1 into drawTrend("") and drawTrend("1")
-function processDrop(ev, chartInformation) {
+function processDrop(ev, chartInformation, index) {
     ev.preventDefault();
     chartInformation['tools_sketchObject'].css("display", "none");
-    chartInformation['dragAndDropObject'].css("display","none");
-    //chart1Information['dragAndDropObject'].css("display","none");
+    //hide both drop-on layers
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart1Information['dragAndDropObject'].css("display","none");
     if (!histogram) {
-    	chart0Information['visualisationObject'].css("display","none");
+    	chartInformation['visualisationObject'].css("display","none");
     }
 
-    if (!droppable(tempItemId, 1)) {
+    if (!droppable(tempItemId, index)) {
         return
     }
+    itemId = tempItemId;
 
     if(!histogram){
         clickmodify = true; //?correct??
@@ -152,28 +137,6 @@ function processDrop(ev, chartInformation) {
     	onSubmit();
     }
 }
-
-// drop event listener on main chart 1
-function drop1(ev){
-    ev.preventDefault();
-    chart1Information['tools_sketchObject'].css("display","none");
-    chart0Information['dragAndDropObject'].css("display","none");
-    chart1Information['dragAndDropObject'].css("display","none");
-    if (!histogram) {
-        chart1Information['visualisationObject'].css("display", "none");
-    }
-    if(!droppable(tempItemId, 1)){
-        return
-    }
-
-    itemId = tempItemId;
-    clickmodify = true;
-    drawTrend1();
-    onSubmit();
-    updatelist(chart1Information);	//need to update the list so once you click modify, you are using new list.
-
-}
-
 
 function updatelist(chartInformation){
 	for(var b = 0; b< 30; b++){
