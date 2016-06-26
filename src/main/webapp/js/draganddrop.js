@@ -185,7 +185,6 @@ function updatelist(chartInformation){
 	min_Y = Math.min.apply(Math,y);
 	//console.log(existingTrends["outputCharts"]);
 	//console.log(chartData);
-	changeScaleMainChart(chartInformation);
 
     chartInformation['min_X'] = min_X
     chartInformation['max_X'] = max_X
@@ -193,6 +192,7 @@ function updatelist(chartInformation){
     chartInformation['max_Y'] = max_Y
     chartInformation['chartData'] = chartData
 
+    changeScaleMainChart(chartInformation);
 
 	var range_X = max_X - min_X;
 	var range_Y = max_Y - min_Y;
