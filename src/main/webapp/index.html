@@ -956,24 +956,24 @@ function submitTable(){
         if(clickmodify){
             //drawTrend();
             if(chart0Information['chartData'] == null){
-                drawTrend(); //update chart1Information and drawData
+                drawTrend(chart0Information); //update chart1Information and drawData
             }
             else{
-                drawData("", chart0Information, list, myPath);
+                drawData(chart0Information, chart0Information['list'], chart0Information['pathObject']);
             }
-            updatelist("");
+            updatelist(chart0Information);
         }
         if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
             //list1 contains the points of mainChart1 that form element myPath
             if(clickmodify){
                 //drawTrend1();
                 if(chart1Information['chartData'] == 0){
-                    drawTrend1(); //update chart1Information and drawData
+                    drawTrend(chart1Information); //update chart1Information and drawData
                 }
                 else{
-                    drawData("1", chart1Information, list1, myPath1);
+                    drawData(chart1Information, chart1Information['list'], chart1Information['pathObject']);
                 }
-                updatelist("1");
+                updatelist(chart1Information);
             }
         }
     }
@@ -1024,6 +1024,12 @@ function submitTable(){
         chart0Information['svgLayerObject'] = $('#svgLayer');
         chart0Information['mySvgObject'] = $('#mySvg');
         chart0Information['pathObject'] = $('#myPath');
+        // probably should be a global point parameter
+        for(var i = 0; i < 30; i++) {
+          var point = $('#point' + i);
+          chart0Information['points'].push(point);
+        }
+
 
         chart1Information['dragAndDropObject'] = $("#draganddrop1");
         chart1Information['tools_sketchObject'] = $('#tools_sketch1');
@@ -1031,6 +1037,10 @@ function submitTable(){
         chart1Information['svgLayerObject'] = $('#svgLayer1');
         chart1Information['mySvgObject'] = $('#mySvg1');
         chart1Information['pathObject'] = $('#myPath1');
+        for (var i = 0; i < 30; i++) {
+          var point = $('#point' + i + '-1')
+          chart1Information['points'].push(point);
+        }
     }
 
     </script>

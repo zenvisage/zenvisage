@@ -814,7 +814,10 @@ select.onchange = function() {
 	}
 	else{
         setupLineView();
-        drawTrend();
+        drawTrend(chart0Information);
+		// Todo: support pairwise search-- maybe just add
+		//drawTrend(chart1Information);
+		// but needs testing
         onSubmit();
 	}
 }

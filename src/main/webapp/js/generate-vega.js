@@ -490,6 +490,7 @@ function processBackEndData(data, xAxisType, yAxisType) {
   itemid = "existing-trend-0" //allows drawTrend() or drawBarsAfterDragDrop() to draw on the main graph with the correct new existing trend
   var option = document.getElementById("sel").value;
 //  alert(xAxisType);
+  // TODO: recommendation system to support pairwise search
   if(option == "Auto"){
       if(xAxisType == 'C' && yAxisType == 'Q'){
           setupBarView();
@@ -497,7 +498,8 @@ function processBackEndData(data, xAxisType, yAxisType) {
       }
       else if(xAxisType =='O' && yAxisType == 'Q'){
           setupLineView();
-          drawTrend();
+          drawTrend(chart0Information);
+          //drawTrend(chart1Information);
       }
       else if(xAxisType =='Q' && yAxisType == 'Q'){
           //should be createScatterPlot, not implemented hyet
@@ -507,7 +509,8 @@ function processBackEndData(data, xAxisType, yAxisType) {
       }
       else{ //unknown data types selected
           setupLineView();
-          drawTrend();
+          drawTrend(chart0Information);
+          //drawTrend(chart1Information);
       }
   }
   //Scroll to graphs automatically! (After stuff loads)
@@ -1193,6 +1196,7 @@ function mainChartAsync(ytitle, suffix){
 
 //optional chartType param
 function changeScaleMainChart(chartInformation, chartType){
+    console.log(chartInformation)
     xmin = chartInformation['min_X'];
     xmax = chartInformation['max_X'];
     ymin = chartInformation['min_Y'];

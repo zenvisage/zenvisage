@@ -79,7 +79,7 @@ function drawBarsAfterDragDrop(){
 		chart.removeChild(chart.firstChild);
 	}
 	numOfBar = existingTrends[ExTrendindex]["outputCharts"][0].xData.length; //numOfBar is a global
-	updateChart("",chart0Information, 0)
+	updateChart(chart0Information)
 	var chartdata = chart0Information['chartData']["yData"]
 	console.log("YDATA",chartdata)
 	console.log("chart0", chart0Information)

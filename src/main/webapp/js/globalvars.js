@@ -78,7 +78,9 @@ var chart0Information = {
     'visualisationObject' : null,
     'svgLayerObject' : null,
     'mySvgObject' : null,
-    'pathObject' : null
+    'pathObject' : null,
+    'list' : [[]], // list of points, [x][y], storing what the user drew
+    'points' : [] // actual svg points
 }
 
 // Model containing all relevant information for mainChart1
@@ -95,5 +97,7 @@ var chart1Information = {
     'visualisationObject' : null,
     'svgLayerObject' : null,
     'mySvgObject' : null,
-    'pathObject' : null
+    'pathObject' : null,
+    'list' : [[]],
+    'points' : []
 }
