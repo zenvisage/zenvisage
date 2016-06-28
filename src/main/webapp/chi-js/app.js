@@ -110,7 +110,7 @@ app.controller('datasetController', [
     }
 
     // for representative trends
-    function getRepresentativeTrends()
+    function getRepresentativeTrends( outlierCallback )
     {
       var q = constructRepresentativeTrendQuery(); //goes to query.js
       var params = {
@@ -124,6 +124,7 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getRepresentativeTrends: success");
         plotResults.displayRepresentativeResults( response.outputCharts );
+        outlierCallback();
       }).
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
@@ -200,8 +201,7 @@ app.controller('datasetController', [
               response.yAxisColumns[$scope.yAxisItems[0]],
               response.zAxisColumns[$scope.categories[0]]
             );
-        getRepresentativeTrends();
-        getOutlierTrends();
+        getRepresentativeTrends( getOutlierTrends );
       }).
       error(function(response) {
         alert('Request failed: /getformdata');
