@@ -2,14 +2,14 @@
 // would like to remove these if possible.. or make them more descriptive
 var clickmodify = false;
 var clickmodify1 = false; // clickmodify for second chart
-var list = [[]]; //Javascript list of points for chart 0
-var list1 = [[]]; //javasript list of points for draw chart 1
+var list = chart0Information['list']; //Javascript list of points for chart 0
+var list1 = chart1Information['list']; //javasript list of points for draw chart 1
 
 var Drag = false;
 var i = 0;
-var myPath = document.getElementById("myPath");
+var myPath = chart0Information['pathObject'];
 var sm_scale = false;
-var myPath1 = document.getElementById("myPath1");
+var myPath1 = chart1Information['pathObject'];
 
 //var y = drawGraphHeight/2;
 var dx = Math.round(drawGraphWidth/30);
@@ -183,7 +183,7 @@ function drawPath(){
 	var whole = front.concat(sub);
 	if( flag2 )
 	{
-		myPath.setAttribute('d', whole);
+		myPath.attr('d', whole);
 	}
 }
 
@@ -219,7 +219,7 @@ function drawPath1(){
 	}
 	var whole = front.concat(sub);
 	if(flag2)
-		myPath1.setAttribute('d', whole);
+		myPath1.attr('d', whole);
 }
 
 function drawInitialPath(list, myPath){
@@ -250,7 +250,7 @@ function drawInitialPath(list, myPath){
 	}
 	var whole = front.concat(sub);
 	if(flag2)
-		myPath.setAttribute('d', whole);
+		myPath.attr('d', whole);
 }
 
 /* commented out 1/23/16

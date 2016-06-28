@@ -30,36 +30,36 @@ function updateGraphOnDblClick(){
         var IdStr = itemId.replace("table_view", "");
         var IdNum = parseInt(IdStr)
         if(IdNum % 2 == 0){
-            //even ids should be with drawGraphIndex 0
-            drawTrend();
+            //even iwds should be with drawGraphIndex 0
+            drawTrend(chart0Information);
             onSubmit();
-            updatelist("");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
         }
         else{
             //odd ids
-            drawTrend1();
+            drawTrend(chart1Information);
             onSubmit();
-            updatelist("1");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart1Information);	//need to update the list so once you click modify, you are using new list.
         }
     }
     else if(isGraphVisible("1") && itemId.indexOf("existing-trend")>=0){
         //if both charts visible and we dbl clicked an existing trend
         if(ExTrendindex == 0){
-            drawTrend();
+            drawTrend(chart0Information);
             onSubmit();
-            updatelist("");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
         }
         else if(ExTrendindex == 1){
-            drawTrend1();
+            drawTrend(chart1Information);
             onSubmit();
-            updatelist("1");	//need to update the list so once you click modify, you are using new list.
+            updatelist(chart1Information);	//need to update the list so once you click modify, you are using new list.
         }
     }
     else{
         //single chart case
-        drawTrend();
+        drawTrend(chart0Information);
         onSubmit();
-        updatelist("");	//need to update the list so once you click modify, you are using new list.
+        updatelist(chart0Information);	//need to update the list so once you click modify, you are using new list.
     }
 }
 
@@ -78,6 +78,7 @@ function drag(item, ev) {
 	//	enableDragAndDrop();
 	//}
 }
+
 
 function droppable(itemId, drawGraphIndex){
     if(!isGraphVisible("1")){
@@ -102,50 +103,34 @@ function droppable(itemId, drawGraphIndex){
 
 // drop event listener on main chart 1
 function drop(ev) {
-    ev.preventDefault();
-    chart0Information['tools_sketchObject'].css("display","none");
-    chart0Information['dragAndDropObject'].css("display","none");
-    chart1Information['dragAndDropObject'].css("display","none");
-    if(!histogram){
-    	chart0Information['visualisationObject'].css("display","none");
-    }
-    if(!droppable(tempItemId, 0)){
-        return
-    }
-
-    itemId = tempItemId; // If we actually do drop graph in, update itemId
-    if(!histogram){
-        clickmodify = true; //?correct??
-    	drawTrend();	//should not update list yet
-    	onSubmit();
-    	updatelist("");	//need to update the list so once you click modify, you are using new list.
-    }
-    else{
-    	drawBarsAfterDragDrop();
-    	onSubmit();
-    }
+    processDrop(ev, chart0Information, 0);
+}
+// drop event listener on main chart 1
+function drop1(ev) {
+    processDrop(ev, chart1Information, 1);
 }
 
-// processed the drop request for the specified chart number suffix
-// TODO: refactor drawTrend and drawTrend1 into drawTrend("") and drawTrend("1")
-function processDrop(ev, chartInformation) {
+// processed the drop request for the specified chart number
+function processDrop(ev, chartInformation, index) {
     ev.preventDefault();
     chartInformation['tools_sketchObject'].css("display", "none");
-    chartInformation['dragAndDropObject'].css("display","none");
-    //chart1Information['dragAndDropObject'].css("display","none");
+    //hide both drop-on layers
+    chart0Information['dragAndDropObject'].css("display","none");
+    chart1Information['dragAndDropObject'].css("display","none");
     if (!histogram) {
-    	chart0Information['visualisationObject'].css("display","none");
+    	chartInformation['visualisationObject'].css("display","none");
     }
 
-    if (!droppable(tempItemId, 1)) {
+    if (!droppable(tempItemId, index)) {
         return
     }
+    itemId = tempItemId;
 
     if(!histogram){
         clickmodify = true; //?correct??
-    	drawTrend();	//should not update list yet
+    	drawTrend(chartInformation);	//should not update list yet
     	onSubmit();
-    	updatelist("");	//need to update the list so once you click modify, you are using new list.
+    	updatelist(chartInformation);	//need to update the list so once you click modify, you are using new list.
     }
     else{
     	drawBarsAfterDragDrop();
@@ -153,29 +138,7 @@ function processDrop(ev, chartInformation) {
     }
 }
 
-// drop event listener on main chart 1
-function drop1(ev){
-    ev.preventDefault();
-    chart1Information['tools_sketchObject'].css("display","none");
-    chart0Information['dragAndDropObject'].css("display","none");
-    chart1Information['dragAndDropObject'].css("display","none");
-    if (!histogram) {
-        chart1Information['visualisationObject'].css("display", "none");
-    }
-    if(!droppable(tempItemId, 1)){
-        return
-    }
-
-    itemId = tempItemId;
-    clickmodify = true;
-    drawTrend1();
-    onSubmit();
-    updatelist("1");	//need to update the list so once you click modify, you are using new list.
-
-}
-
-
-function updatelist(suffix){
+function updatelist(chartInformation){
 	for(var b = 0; b< 30; b++){
 		var str = "point";
 		var myP = str.concat(b.toString());
@@ -205,11 +168,11 @@ function updatelist(suffix){
 		y = existingTrends[ExTrendindex]["outputCharts"][2].yData;
 		chartData = existingTrends[ExTrendindex]["outputCharts"][2];
 	 }
-	else if(checkOutputCharts(itemId,0)!=null){
+	else if(checkOutputCharts(itemId)!=null){
 		//console.log("inside drag data", outputData);
-		x = checkOutputCharts(itemId,0).xData;
-		y = checkOutputCharts(itemId,0).yData;
-		chartData = checkOutputCharts(itemId,0);
+		x = checkOutputCharts(itemId).xData;
+		y = checkOutputCharts(itemId).yData;
+		chartData = checkOutputCharts(itemId);
 	}
     else{
         return;
@@ -222,21 +185,14 @@ function updatelist(suffix){
 	min_Y = Math.min.apply(Math,y);
 	//console.log(existingTrends["outputCharts"]);
 	//console.log(chartData);
-	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
-    if(suffix == ""){
-    chart0Information['min_X'] = min_X
-    chart0Information['max_X'] = max_X
-    chart0Information['min_Y'] = min_Y
-    chart0Information['max_Y'] = max_Y
-    chart0Information['chartData'] = chartData
-  }
-  else if(suffix == "1"){
-    chart1Information['min_X'] = min_X
-    chart1Information['max_X'] = max_X
-    chart1Information['min_Y'] = min_Y
-    chart1Information['max_Y'] = max_Y
-    chart1Information['chartData'] = chartData
-  }
+
+    chartInformation['min_X'] = min_X
+    chartInformation['max_X'] = max_X
+    chartInformation['min_Y'] = min_Y
+    chartInformation['max_Y'] = max_Y
+    chartInformation['chartData'] = chartData
+
+    changeScaleMainChart(chartInformation);
 
 	var range_X = max_X - min_X;
 	var range_Y = max_Y - min_Y;
@@ -276,21 +232,21 @@ function updatelist(suffix){
 
 	}
 
-	if(suffix == "")
+    // TODO clean up this implementation once list and list1 are refactored
+	if(chartInformation['chartName'] == "mainChart")
 		list = myList;
 	else
 		list1 = myList;
 }
 
-function checkOutputCharts(itemId, drawGraphIndex){
+function checkOutputCharts(itemId){
     if(outputData == null){
         return null
     }
     if(itemId == null){
         return null
     }
-    if(drawGraphIndex === undefined)
-        return null
+
 	//var temp = outputData["outputCharts"];
 	var numOfCharts = outputData["outputCharts"].length;
 	for(var i = 0; i< numOfCharts; i++){
@@ -327,34 +283,39 @@ function canDrop(itemId, drawGraphIndex){
     return true
 }
 
-function drawTrend(){
-    if(updateChart("", chart0Information, 0)){
-        //if we have successfully updated our chartData
-        drawData("", chart0Information, list, myPath)
-    }
-}
-
-function drawTrend1(){
-    if(updateChart("-1", chart1Information, 1)){
-        //if we have successfully updated our chartData
-        drawData("1", chart1Information, list1, myPath1)
+function drawTrend(chartInformation) {
+    if (updateChart(chartInformation)) {
+        // if we have successfully updated our chartData
+        drawData(chartInformation, chartInformation['list'], chartInformation['pathObject'])
     }
 }
 
 /*
+function drawTrend(){
+    if(updateChart(chart0Information, 0)){
+        //if we have successfully updated our chartData
+        drawData(chart0Information, list, myPath)
+    }
+}
+
+function drawTrend1(){
+    if(updateChart(chart1Information, 1)){
+        //if we have successfully updated our chartData
+        drawData(chart1Information, list1, myPath1)
+    }
+}
+*/
+
+/*
  * Updates the global chartData datastructure that holds our chart data
 */
-function updateChart(suffix, chartInformation, chartNum){
-//	console.log("chartNum", chartNum)
+function updateChart(chartInformation){
 	console.log("itemId", itemId)
     for(var b = 0; b< 30; b++){
-		//var str = "point";
-		//var myP = str.concat(b.toString());
-    var myP = "point" + b + suffix
-		var myDots = document.getElementById(myP);
-		if(myDots != null ){
-			myDots.setAttribute("cx", 0);
-			myDots.setAttribute("cy", 0);
+        var currPoint = chartInformation['points'][b];
+		if(currPoint != null ){
+			currPoint.attr("cx", 0);
+			currPoint.attr("cy", 0);
 		}
 	}
 	clickmodify = true;
@@ -376,13 +337,13 @@ function updateChart(suffix, chartInformation, chartNum){
 		y = existingTrends[ExTrendindex]["outputCharts"][2].yData;
 		chartData = existingTrends[ExTrendindex]["outputCharts"][2];
 	 }
-	else if(checkOutputCharts(itemId,chartNum)!=null){
+	else if(checkOutputCharts(itemId)!=null){
 		//console.log("inside drag data", outputData);
-		x = checkOutputCharts(itemId,chartNum).xData;
-		y = checkOutputCharts(itemId,chartNum).yData;
-		chartData = checkOutputCharts(itemId,chartNum);
+		x = checkOutputCharts(itemId).xData;
+		y = checkOutputCharts(itemId).yData;
+		chartData = checkOutputCharts(itemId);
 	}
-    else{
+    else {
         return false;
     }
     max_X = Math.max.apply(Math,x);
@@ -400,9 +361,10 @@ function updateChart(suffix, chartInformation, chartNum){
 /*
  * Draw the output charts from chartData
 */
-function drawData(suffix, chartInformation, globalList, globalmyPath){
+function drawData(chartInformation, globalList, globalmyPath){
     	//list = [[9,206],[27,194],[51,184],[71,174],[92,163],[112,151],[119,145],[152,129],[172,119],[194,107],[214,97],[234,86],[253,76],[276,64],[296,56],[317,46],[337,30],[357,20],[379,9],[395,5],[399,0]];
     	//for(var b = 0; b< 41; b++){
+        console.log("yayaya",chartInformation);
         if(chartInformation['chartData'] == null){
             return
         }
@@ -414,9 +376,7 @@ function drawData(suffix, chartInformation, globalList, globalmyPath){
         var x = chartData.xData
         var y = chartData.yData
 
-    	changeScaleMainChart( min_X , max_X , min_Y , max_Y, chartData, suffix);
-        //changeScaleMainChart( chartInformation['min_X'] , chartInformation['max_X']
-            //, chartInformation['min_Y'] , chartInformation['max_Y'], chartInformation['chartData'], suffix);
+    	changeScaleMainChart(chartInformation);
 
         //var distance = bl.offsetLeft - bl.scrollLeft + bl.clientLeft;
     	var range_X= max_X-min_X;
@@ -436,8 +396,6 @@ function drawData(suffix, chartInformation, globalList, globalmyPath){
     	//globalList = myList; //This acutally just points globalList to the myList array
       //So this loses the reference to list and list1
 
-    	//document.getElementById("svgLayer"+suffix).style.display = "block";
-    	//document.getElementById("tools_sketch"+suffix).style.display = "none";
         chartInformation['svgLayerObject'].css("display","block")
         chartInformation['tools_sketchObject'].css("display","none");
 

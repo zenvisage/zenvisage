@@ -64,6 +64,7 @@ var tableX = "";
 var tableY = "";
 
 // Model containing all relevant information for mainChart0
+// TODO ADD 'list' variable to the data structure
 var chart0Information = {
     'min_X' : 0,
     'max_X' : 0,
@@ -77,7 +78,9 @@ var chart0Information = {
     'visualisationObject' : null,
     'svgLayerObject' : null,
     'mySvgObject' : null,
-    'pathObject' : null
+    'pathObject' : null,
+    'list' : [[]], // list of points, [x][y], storing what the user drew
+    'points' : [] // actual svg points
 }
 
 // Model containing all relevant information for mainChart1
@@ -94,5 +97,7 @@ var chart1Information = {
     'visualisationObject' : null,
     'svgLayerObject' : null,
     'mySvgObject' : null,
-    'pathObject' : null
+    'pathObject' : null,
+    'list' : [[]],
+    'points' : []
 }
