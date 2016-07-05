@@ -92,6 +92,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
         highlightCircleSize: 0,
         interactionModel: {},
         drawGrid: false,
+        colors: [ "0E3340" ],
       });
   }
 }
@@ -139,6 +140,7 @@ function displayOutlierResultsHelper( outlierResults )
         highlightCircleSize: 0,
         interactionModel: {},
         drawGrid: false,
+        colors: [ "0E3340" ],
       });
   }
 }
