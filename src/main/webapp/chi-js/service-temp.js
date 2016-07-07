@@ -205,7 +205,7 @@ $(document).ready(function () {
   // sketchObject is global
   // x and y is not always date and value
   // TODO: need to initialize dynamically
-  sketchpad = new Dygraph(document.getElementById("draw_div"), data,
+  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
       {
         valueRange: valueRange,
         labels: [ 'Date', 'Value' ],

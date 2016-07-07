@@ -13,7 +13,7 @@ hr {
   float: left;
 }
 
-.representative-results, .outlier-results{
+.user-query-results, .representative-results, .outlier-results{
  width: 200px;
  height: 85px;
 }

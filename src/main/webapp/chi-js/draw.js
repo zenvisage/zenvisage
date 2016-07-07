@@ -5,24 +5,27 @@ var isDrawing = false;
 var lastDrawRow = null;
 var lastDrawValue = null;
 
-
-function plotGraph( data )
+// when drag dropped
+function plotSketchpad( dygraphObject )
 {
-  var data = []
-  for (var d = xmin; d < xmax; d += 1 ) {
-    data.push( [ d, (ymin+ymax)/2 ] );
+  if (sketchpad != null) {
+    sketchpad.destroy()
   }
 
-  var valueRange = [ymin, ymax];
-  sketchpad = new Dygraph(document.getElementById("draw_div"), data,
+  var data = [];
+  for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
+    data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
+  }
+
+  var labels = [ dygraphObject.attrs_["labels"][0], dygraphObject.attrs_["labels"][1] ];
+  var valueRange = dygraphObject.axes_[0]["valueRange"]
+  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
       {
         valueRange: valueRange,
-        //labels: [ xlabel, ylabel ],
-        //xlabel: xlabel,
-        //ylabel: ylabel,
-        title: category,
+        labels: labels,
         axisLabelFontSize: 9,
         xLabelHeight: 9,
+        title: getSelectedCategory(),
         titleHeight: 9,
         interactionModel: {
           mousedown: function (event, g, context) {
@@ -55,8 +58,8 @@ function plotGraph( data )
           }
         },
       });
+  angular.element($("#sidebar")).scope().getUserQueryResults();
 }
-
 
 
 function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
@@ -71,7 +74,7 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
   }
 
   var valueRange = [ymin, ymax];
-  sketchpad = new Dygraph(document.getElementById("draw_div"), data,
+  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
       {
         valueRange: valueRange,
         labels: [ xlabel, ylabel ],
