@@ -215,13 +215,16 @@ function drawScatter(options) {
 
 }
 
-$("#search").click(function(){
-	var numresults = $('#num-results input').val()
-	var x = getXAxis();
-	var y = getYAxis();
-	var z = getCategory();
-	createQuery(rects,x, y, z, numresults);
+function setupScatterQuery() {
+    var numresults = $('#num-results input').val()
+    var x = getXAxis();
+    var y = getYAxis();
+    var z = getCategory();
+    createQuery(rects,x, y, z, numresults);
+}
 
+$("#search").click(function(){
+    setupScatterQuery()
 });
 
 function createQuery(rectangles ,xlabel, ylabel, title, num){
