@@ -602,7 +602,9 @@ function trendAnalysis(){	//use list and list1 to update
 	//myQuery.rectangles=rectangles;
 	//myQuery.circles=circles;
     if(xAxisType == 'Q' && yAxisType == 'Q'){
-    	getScatterData(query);
+        // TODO: Properly fix the chain
+    	//getScatterData(query);
+        setupScatterQuery();
     }
     else{
     	getData(query, xAxisType, yAxisType); //back end call
