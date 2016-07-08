@@ -201,7 +201,7 @@ function uploadToSketchpad( draggableId, graphType )
     default: //userQuery
       draggedGraph = userQueryDygraphs[draggableId];
   }
-  plotSketchpad(draggedGraph);
+  plotSketchpad( draggedGraph );
 }
 
 /*
