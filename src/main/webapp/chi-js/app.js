@@ -168,8 +168,7 @@ app.controller('datasetController', [
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
       initializeSketchpadOnDatasetChange(xData, yData, categoryData); //only x and y values?
-      getRepresentativeTrends();
-      getOutlierTrends();
+      getRepresentativeTrends(getOutlierTrends);
     };
 
     // when the page first loads, initialize and then set default values
