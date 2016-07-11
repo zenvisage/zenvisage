@@ -106,66 +106,76 @@ function hideCanvas(){
   //document.getElementById("tools_sketch").style.display = "none";
 }
 
-function updateTrends(){
-	updateOneTrend("");
-	updateOneTrend("1");
-}
-
-function updateOneTrend(index){
+function generateDefaultQuery() {
 	setPredicateValue();
 	var query = new Query(
 			'RepresentativeTrends',
-		    getYAxis(),
-		    getXAxis(),
-		    getCategory(),
-		    getAggregationMethod(),
-		    getYAxis(),	//hey you called this again!
-		    3,
-		    [],
-		    [],
-  			getOperator(),
-  			getPredicate(),
-  			getPredicateValue()
-      );
-  query.sketchPoints = [new SketchPoints()];
-  var xAxisType = getAxisType(xAxisSelect0.getValue()[0], "xAxisColumns");
-  var yAxisType = getAxisType(yAxisSelect0.getValue()[0], "yAxisColumns");
-  if(xAxisType == 'Q' && yAxisType == 'Q'){
-  	setupScatterView();
-  	  $("#views").empty(); //remove existing views
-  	  $("#views_table").empty();
-  	return;
-  }
-	getSuggestData(query);
-	var numresults = $('#num-results input').val()
-	var x = getXAxis();
-	var y = getYAxis();
-	var z = getCategory();
+			getYAxis(),
+			getXAxis(),
+			getCategory(),
+			getAggregationMethod(),
+			getYAxis(),	//hey you called this again!
+			3,
+			[],
+			[],
+			getOperator(),
+			getPredicate(),
+			getPredicateValue()
+	  );
+	query.sketchPoints = [new SketchPoints()];
 
+	listOfSketchPoints = []
+	// Creating default points
+	if (clickmodify) {
+	  sketchPoints = new SketchPoints();
+	  for(var i =0; i<list.length; i++){
+		  //tempPoint = new Point(list[i][0],list[i][1]);
+		  var tempPoint = new Point(list[i][0], sketchPoints.maxY-list[i][1]);
+		  sketchPoints.points.push(tempPoint);
+	  }
+	  listOfSketchPoints.push(sketchPoints)
+
+	  if ($("#mainChart1").is(':visible')) { //If we are using the second drawing graph
+		var sketchPoints1 = new SketchPoints();
+			  for(var i =0; i<list1.length; i++){
+				  var tempPoint = new Point(list1[i][0], sketchPoints1.maxY-list1[i][1]);
+				  sketchPoints1.points.push(tempPoint);
+			  }
+		listOfSketchPoints.push(sketchPoints1)
+	  }
+	}
+	query.sketchPoints = listOfSketchPoints
+	return query
+}
+
+// public
+function updateBothTrends(shouldSubmit){
+	// If we are updating both trends and we want to submit (generate output charts), it should be after both
+	// Otherwise, we might be generating output twice if we have both params as shouldSubmit
+	updateOneTrend(chart0Information, "", false);
+	updateOneTrend(chart1Information, "1", shouldSubmit);
+}
+
+function updateOneTrend(chartInformation, index, shouldSubmit){
+	query = generateDefaultQuery();
+	var xAxisType = getAxisType(xAxisSelect0.getValue()[0], "xAxisColumns");
+	var yAxisType = getAxisType(yAxisSelect0.getValue()[0], "yAxisColumns");
+	if(xAxisType == 'Q' && yAxisType == 'Q'){
+		setupScatterView();
+		$("#views").empty(); //remove existing views
+		$("#views_table").empty();
+		return;
+	}
+	// Update trend, storing data into the existingTrends[ExTrendindex] = data;
+	// (aka trends for current mainChart)
+	getSuggestData(query, shouldSubmit);
+
+	// Disables the button for the existing trend we are NOT on
+	// EG if we click on Column-B (ExTrendindex=1), then Column-A (ExTrendindex=0) gets disabled
 	document.getElementById(ExTrendindex).disabled = true;
 	var num = 1-ExTrendindex;
 	document.getElementById(num).disabled = false;
-  listOfSketchPoints = []
-  if(clickmodify){
-		sketchPoints = new SketchPoints();
-		for(var i =0; i<list.length; i++){
-			//tempPoint = new Point(list[i][0],list[i][1]);
-			var tempPoint = new Point(list[i][0], sketchPoints.maxY-list[i][1]);
-			sketchPoints.points.push(tempPoint);
-		}
-    listOfSketchPoints.push(sketchPoints)
 
-    if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
-      var sketchPoints1 = new SketchPoints();
-  		for(var i =0; i<list1.length; i++){
-  			var tempPoint = new Point(list1[i][0], sketchPoints1.maxY-list1[i][1]);
-  			sketchPoints1.points.push(tempPoint);
-  		}
-      listOfSketchPoints.push(sketchPoints1)
-    }
-	}
-  query.sketchPoints = listOfSketchPoints
-	onSubmit();
 	if(typeof chartData != "undefined"){
 		var aggrM = getAggregationMethod();
 		var yaxis = getYAxis();
@@ -176,21 +186,10 @@ function updateOneTrend(index){
         /*if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
             changeScaleMainChart(min_X,max_X,min_Y,max_Y,chartData, "1");
         }*/
-        changeScaleMainChart(chart0Information);
+        changeScaleMainChart(chartInformation);
 	}
 	else{
 		setNoDataMainChartAxes(getXAxis(),getYAxis(), index);
-		// var aggrM = getAggregationMethod();
-		// var yaxis = getYAxis();
-		// var string = aggrM.concat('(');
-		// string = string.concat(yaxis);
-		// string = string.concat(')');
-		// /*
-        // if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
-        //     mainChart(string, "1")
-        // }*/
-        // mainChart(string, index);
-
 	}
 }
 
@@ -263,14 +262,14 @@ $('#category-list').on( 'click', '.category-list', function(){
   var clicked = $(this);
   $("#category-list li").removeClass("active");
   clicked.addClass("active");
-  updateTrends();
+  updateBothTrends(true);
 });
 
 $('#predicate-column').on( 'click', '.predicate-column', function(){
 	  var clicked = $(this);
 	  $("#predicate-column li").removeClass("active");
 	  clicked.addClass("active");
-	  updateTrends();
+	  updateBothTrends(true);
 	});
 
 $('#x-axis').on( 'click', '.x-axis', function(){
@@ -291,7 +290,7 @@ $('#x-axis').on( 'click', '.x-axis', function(){
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-  updateTrends();
+  updateBothTrends(true);
 });
 
 $("#x-axis-select").on('change', function() {
@@ -311,8 +310,8 @@ $("#x-axis-select").on('change', function() {
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-
-  updateTrends();
+  alert("hi");
+  updateBothTrends(true);
 });
 
 $('#y-axis').on( 'click', '.y-axis', function(){
@@ -332,7 +331,7 @@ $('#y-axis').on( 'click', '.y-axis', function(){
   ymin = ymetadata.min
   ymax = ymetadata.max;
   //changeYScale( min_X , max_X , min_Y , max_Y ,chartData, yselected);
-  updateTrends();
+  updateBothTrends(true);
   //changeYScale(yselected);
 
 });
@@ -354,8 +353,8 @@ $("#y-axis-select").on('change', function() {
   var xmax = xmetadata.max;
   ymin = ymetadata.min;
   ymax = ymetadata.max;
-
-  updateTrends();
+  alert("hi")
+  updateBothTrends(true);
 
 });
 
@@ -409,9 +408,10 @@ function processDatasetChange( data ){
 //	  setupScatterView();
 //  else{
 //  //get sidebar trends
-//	  updateTrends();
+//	  updateBothTrends();
 //  }
-  updateTrends();
+  // update trends, but don't onSubmit()
+  updateBothTrends(false);
 }
 
 function setXValues( xvalues ){
@@ -818,6 +818,7 @@ select.onchange = function() {
 		// Todo: support pairwise search-- maybe just add
 		//drawTrend(chart1Information);
 		// but needs testing
+		alert("hi");
         onSubmit();
 	}
 }

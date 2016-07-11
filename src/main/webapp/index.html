@@ -161,16 +161,16 @@
             <div class="info-text"><b>Select Search Method</b></div>
             <div class="radio">
               <form id="search-method">
-                <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked onclick=updateTrends()><label>Similarity Search</label><br>
-                <input type="radio" name="search-method" value="Outlier" onclick=updateTrends()><label> Dissimilar Search</label>
+                <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked onclick=updateBothTrends(true)><label>Similarity Search</label><br>
+                <input type="radio" name="search-method" value="Outlier" onclick=updateBothTrends(true)><label> Dissimilar Search</label>
               </form>
             </div>
             <hr>
             <div class = "checkbox">
-              <label><input type = "checkbox" id = "ignoreX" onclick=updateTrends()>Ignore X axis scale</label>
+              <label><input type = "checkbox" id = "ignoreX" onclick=updateBothTrends()>Ignore X axis scale</label>
             </div>
             <div class = "checkbox">
-              <label><input type = "checkbox" id = "ignoreY" checked onclick=updateTrends()>Ignore Y axis scale</label>
+              <label><input type = "checkbox" id = "ignoreY" checked onclick=updateBothTrends(true)>Ignore Y axis scale</label>
             </div>
             <hr>
             <div id="num-results">
@@ -1089,9 +1089,9 @@ function submitTable(){
                   resizeMargins();
               });
               existingTrends[1] = existingTrends[0];
-              console.log("updateTrends");
+              //console.log("updateTrends");
               //updateOneTrend("");
-              //updateTrends();
+              //updateBothTrends();
             });
 
         });
@@ -1104,7 +1104,7 @@ function submitTable(){
           });
 
           existingTrends[1] = existingTrends[0];
-          //updateTrends();
+          //updateBothTrends();
       });
 
       function showSecondChartElement(){
@@ -1212,7 +1212,7 @@ function submitTable(){
             var y0Value = JSON.stringify(yAxisSelect0.getValue());
             var y1Value = JSON.stringify(yAxisSelect1.getValue());
         	  if (x0Value != x1Value || y0Value != y1Value) {
-     				     updateOneTrend("1");
+     				     updateOneTrend(chart1Information, "1", true);
         	  }
         	  else { // copy existing trend and change
       		      existingTrends[1] = existingTrends[0];
@@ -1238,7 +1238,7 @@ function submitTable(){
             var y0Value = JSON.stringify(yAxisSelect0.getValue());
             var y1Value = JSON.stringify(yAxisSelect1.getValue());
         	  if (x0Value != x1Value || y0Value != y1Value) {
-        		  updateOneTrend("1");
+        		  updateOneTrend(chart1Information, "1", true);
         	  }
         	  else { // copy existing trend and change
         		  existingTrends[1] = existingTrends[0];
@@ -1250,65 +1250,60 @@ function submitTable(){
     	  //  }, 0)
       });
 
-      $(xAxisSelect0).on('selectionchange', function(e,m){
-      	ExTrendindex = 0;
-          if(!scriptChangedX0){
-            if(xAxisSelect0.getValue().length == 1) {//exactly one value in combobox
-            	 var x0Value = JSON.stringify(xAxisSelect0.getValue());
-                 var x1Value = JSON.stringify(xAxisSelect1.getValue());
-                 var y0Value = JSON.stringify(yAxisSelect0.getValue());
-                 var y1Value = JSON.stringify(yAxisSelect1.getValue());
-                 console.log(x0Value, x1Value, y0Value, y1Value)
-             	  if (x0Value != x1Value || y0Value != y1Value) {
-             		 updateOneTrend("");
-             	  }
-             	 else { // copy existing trend and change
-                 //only in 2 graph case do this!
-                 if(isGraphVisible("1")){
-                   existingTrends[0] = existingTrends[1];
-                   changeExistingTrends(0);
+$(xAxisSelect0).on('selectionchange', function(e,m){
+    ExTrendindex = 0;
+    // if someone manually changed combobox
+    if (!scriptChangedX0) {
+        if (xAxisSelect0.getValue().length == 1) {//exactly one value in combobox
+            var x0Value = JSON.stringify(xAxisSelect0.getValue());
+            var x1Value = JSON.stringify(xAxisSelect1.getValue());
+            var y0Value = JSON.stringify(yAxisSelect0.getValue());
+            var y1Value = JSON.stringify(yAxisSelect1.getValue());
+            console.log(x0Value, x1Value, y0Value, y1Value)
+            if (x0Value != x1Value || y0Value != y1Value) {
+                updateOneTrend(chart0Information, "", true);
+            } else { // copy existing trend and change
+                //only in 2 graph case do this!
+                if (isGraphVisible("1")) {
+                    existingTrends[0] = existingTrends[1];
+                    changeExistingTrends(0);
+                } else {
+                    updateOneTrend(chart0Information, "", true);
                 }
-                else{
-                  updateOneTrend("");
-                }
-           	  }
-
             }
-          }
-          scriptChangedX0 = false;
-        });
 
-      $(yAxisSelect0).on('selectionchange', function(e,m){
-    	  console.log("def");
-    	//$("#scatterplot").children().remove();
-    	//drawRandomChart();
-    	  //console.log("y0 selection change");
-    	ExTrendindex = 0;
-        if(!scriptChangedY0){
-          if(yAxisSelect0.getValue().length == 1) {
-        	  var x0Value = JSON.stringify(xAxisSelect0.getValue());
-              var x1Value = JSON.stringify(xAxisSelect1.getValue());
-              var y0Value = JSON.stringify(yAxisSelect0.getValue());
-              var y1Value = JSON.stringify(yAxisSelect1.getValue());
-          	  if (x0Value != x1Value || y0Value != y1Value) {
-          		updateOneTrend("");
-          	  }
-          	else { // copy existing trend and change
-              //only in 2 graph case do this!
-              if(isGraphVisible("1")){
-                existingTrends[0] = existingTrends[1];
-                changeExistingTrends(0);
-              }
-              else{
-                updateOneTrend("");
-              }
-      	  }
         }
-      }
-        scriptChangedY0 = false;
-      });
+    }
+    scriptChangedX0 = false;
+});
 
-
+$(yAxisSelect0).on('selectionchange', function(e,m){
+    console.log("def");
+    //$("#scatterplot").children().remove();
+    //drawRandomChart();
+    //console.log("y0 selection change");
+    ExTrendindex = 0;
+    if (!scriptChangedY0) {
+        if (yAxisSelect0.getValue().length == 1) {
+        var x0Value = JSON.stringify(xAxisSelect0.getValue());
+        var x1Value = JSON.stringify(xAxisSelect1.getValue());
+        var y0Value = JSON.stringify(yAxisSelect0.getValue());
+        var y1Value = JSON.stringify(yAxisSelect1.getValue());
+            if (x0Value != x1Value || y0Value != y1Value) {
+                updateOneTrend(chart0Information, "", true);
+            } else { // copy existing trend and change
+                //only in 2 graph case do this!
+                if (isGraphVisible("1")) {
+                    existingTrends[0] = existingTrends[1];
+                    changeExistingTrends(0);
+                } else {
+                    updateOneTrend(chart0Information, "", true);
+                }
+            }
+        }
+    }
+    scriptChangedY0 = false;
+});
     </script>
   </body>
 </html>
