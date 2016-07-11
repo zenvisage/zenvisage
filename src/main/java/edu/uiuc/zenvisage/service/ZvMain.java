@@ -33,6 +33,7 @@ import edu.uiuc.zenvisage.service.cluster.KMeans;
 import edu.uiuc.zenvisage.service.distance.DTWDistance;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.distance.Euclidean;
+import edu.uiuc.zenvisage.service.distance.SegmentationDistance;
 import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
@@ -145,6 +146,7 @@ public class ZvMain {
 	/* Will be obsolete when the new separated query method is utilized */
 	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 		// get data from database
+		System.out.println(query);
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (args.method.equals("SimilaritySearch"))
@@ -162,6 +164,7 @@ public class ZvMain {
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
+//			 distance = new SegmentationDistance();
 		 }
 		 else {
 			 distance = new DTWDistance();
@@ -169,6 +172,7 @@ public class ZvMain {
 		 // generate the corresponding data normalization metric
 		 if (args.distanceNormalized) {
 			 normalization = new Zscore();
+//			 normalization = new Original();
 		 }
 		 else {
 			 normalization = new Original();
