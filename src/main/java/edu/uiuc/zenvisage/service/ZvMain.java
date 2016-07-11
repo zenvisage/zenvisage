@@ -201,14 +201,14 @@ public class ZvMain {
 		// get data from database
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
-		 if (args.method.equals("SimilaritySearch"))
+		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
 		 ExecutorResult executorResult = executor.getData(q);
 		 if (executorResult == null) return "";
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
 		 // setup result format
 		 Result finalOutput = new Result();
-		 finalOutput.method = args.method;
+		 finalOutput.method = method;
 		 //finalOutput.xUnit = inMemoryDatabase.getColumnMetaData(args.xAxis).unit;
 		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
 		 // generate new result for query
@@ -247,7 +247,7 @@ public class ZvMain {
 			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
 			 ((Similarity) analysis).setDescending(false);
 		 }
-		 else if (args.method.equals("DissimilaritySearch")) {
+		 else if (method.equals("DissimilaritySearch")) {
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
 			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
 			 ((Similarity) analysis).setDescending(true);
