@@ -51,6 +51,8 @@ public class Similarity extends Analysis {
 	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		Sketch[] sketchPoints = args.getSketchPoints();
+		
+		
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {
 			mappings.add(key);
@@ -59,6 +61,7 @@ public class Similarity extends Analysis {
 		List<double[][]> data = new ArrayList<double[][]>();
 		List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> outputs = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
 		List<BiMap<Float,String>> xMaps = new ArrayList<BiMap<Float,String>>();
+		
 		for (int i = 0; i < sketchPoints.length; i++) {
 			if (sketchPoints[i].points.isEmpty()) {
 				if (i < sketchPoints.length - 1) {
@@ -79,13 +82,21 @@ public class Similarity extends Analysis {
 				e.printStackTrace();
 			}
 			
+			
 			Set<Float> ignore = new HashSet<Float>();
 			paa.setPAAwidth(output,sketchPoints[i]);
-			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
+//			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
 			double[][] normalgroup = this.dataReformatter.reformatData(output);
 			data.add(normalgroup);
-			double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
-			List<Integer> order = computeOrders(normalizedgroup,queryTrend,mappings);
+//			double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
+			
+			ArrayList<Point> sPoints = sketchPoints[i].points;
+			double[] qT = new double[sketchPoints[i].points.size()];
+			for (int x = 0; x < qT.length; x++) {
+				qT[x] = sPoints.get(x).getY();
+			}			
+			
+			List<Integer> order = computeOrders(normalizedgroups,qT,mappings);
 			orders.add(order);
 		}
 		List<Integer> ranks = computeWeightedRanks(orders);
