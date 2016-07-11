@@ -1,5 +1,4 @@
 
-
 var app = angular.module('zenvisage', []);
 
 
@@ -56,7 +55,6 @@ app.factory('plotResults', function() {
     plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults )
     {
       displayUserQueryResultsHelper( userQueryResults );
-
     }
 
     plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
@@ -71,6 +69,26 @@ app.factory('plotResults', function() {
 
     return plottingService;
 });
+
+
+
+app.controller('buttonsController', [
+  '$scope',
+  function($scope){
+    $scope.sketchpadSetting = "draw";
+    $scope.onSketchpadSettingChange = function ( value )
+    {
+      if ( value == "zoom" )
+      {
+        initializeZoomOptionSketchpad( sketchpad )
+      }
+      else // draw
+      {
+        initializeDrawOptionSketchpad( sketchpad )
+      }
+    };
+}]);
+
 
 
 // populates and controls the dataset attributes on the left-bar
