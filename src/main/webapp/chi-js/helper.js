@@ -1,3 +1,8 @@
+//stores dygraphs
+var userQueryDygraphs = {};
+var representativeDygraphs = {};
+var outlierDygraphs = {};
+
 //displays user results
 function displayUserQueryResultsHelper( userQueryResults )
 {
@@ -11,7 +16,7 @@ function displayUserQueryResultsHelper( userQueryResults )
       var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
       current = count;
     }
-    $("#row-" + current.toString()).append("<td><div id=\"result-" + count.toString() + "\" style=\"width: 200px; height: 85px;\"></div></td>");
+    $("#row-" + current.toString()).append("<td><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></td>");
   }
   for (var count = 0; count < userQueryResults.length; count++)
   {
@@ -29,10 +34,10 @@ function displayUserQueryResultsHelper( userQueryResults )
     var data = [];
     var arrayLength = xData.length;
     for (var i = 0; i < arrayLength; i++ ) {
-      data.push( [ xData[i], yData[i], sketchpad.rawData_[i][1] ]);
+      data.push( [ Number(xData[i]), Number(yData[i]), Number(sketchpad.rawData_[i][1]) ]);
     }
     var valueRange = [ymin, ymax];
-    new Dygraph(document.getElementById("result-" + count.toString()), data,
+    userQueryDygraphs["result-" + count.toString()] = new Dygraph(document.getElementById("result-" + count.toString()), data,
       {
         valueRange: valueRange,
         xlabel: xlabel,
@@ -47,6 +52,18 @@ function displayUserQueryResultsHelper( userQueryResults )
         colors: [ "0E3340", "#90C3D4" ],
       });
   }
+
+  $(".draggable-graph").draggable({
+    opacity: 0.5,
+    helper: function() {
+      return $(this).clone().css({
+        width: $(event.target).width(),
+        'border-style': "solid",
+        'border-width': 1
+      });
+    }
+  });
+
 }
 
 function displayRepresentativeResultsHelper( representativePatternResults )
@@ -57,7 +74,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
   for(var count = 0; count < 4; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"representative-row-" + count.toString() + "\"></tr>")
-    $("#representative-row-" + count.toString()).append("<td><div class=\"representative-results\" id=\"representative-result-" + count.toString() + "\"></div></td>");
+    $("#representative-row-" + count.toString()).append("<td><div class=\"representative-results draggable-graph\" data-graph-type=\"representativeQuery\" id=\"representative-result-" + count.toString() + "\"></div></td>");
     varFinalArray.push(representativePatternResults[count]);
   }
 
@@ -77,10 +94,10 @@ function displayRepresentativeResultsHelper( representativePatternResults )
     var data = [];
     var arrayLength = xData.length;
     for (var i = 0; i < arrayLength; i++ ) {
-      data.push( [ xData[i], yData[i] ] );
+      data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    new Dygraph(document.getElementById("representative-result-" + count.toString()), data,
+    representativeDygraphs["representative-result-" + count.toString()] = new Dygraph(document.getElementById("representative-result-" + count.toString()), data,
       {
         valueRange: valueRange,
         xlabel: xlabel,
@@ -92,8 +109,20 @@ function displayRepresentativeResultsHelper( representativePatternResults )
         highlightCircleSize: 0,
         interactionModel: {},
         drawGrid: false,
+        colors: [ "0E3340" ],
       });
   }
+
+  $(".draggable-graph").draggable({
+    opacity: 0.5,
+    helper: function() {
+      return $(this).clone().css({
+        width: $(event.target).width(),
+        'border-style': "solid",
+        'border-width': 1
+      });
+    }
+  });
 }
 
 function displayOutlierResultsHelper( outlierResults )
@@ -104,7 +133,7 @@ function displayOutlierResultsHelper( outlierResults )
   for(var count = 0; count < 4; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
-    $("#outlier-row-" + count.toString()).append("<td><div class=\"outlier-results\" id=\"outlier-result-" + count.toString() + "\"></div></td>");
+    $("#outlier-row-" + count.toString()).append("<td><div class=\"outlier-results draggable-graph\" data-graph-type=\"outlierQuery\" id=\"outlier-result-" + count.toString() + "\"></div></td>");
     varFinalArray.push(outlierResults[count]);
   }
 
@@ -124,10 +153,10 @@ function displayOutlierResultsHelper( outlierResults )
     var data = [];
     var arrayLength = xData.length;
     for (var i = 0; i < arrayLength; i++ ) {
-      data.push( [ xData[i], yData[i] ] );
+      data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    new Dygraph(document.getElementById("outlier-result-" + count.toString()), data,
+    outlierDygraphs["outlier-result-" + count.toString()] = new Dygraph(document.getElementById("outlier-result-" + count.toString()), data,
       {
         valueRange: valueRange,
         xlabel: xlabel,
@@ -139,9 +168,57 @@ function displayOutlierResultsHelper( outlierResults )
         highlightCircleSize: 0,
         interactionModel: {},
         drawGrid: false,
+        colors: [ "0E3340" ],
       });
   }
+
+  $(".draggable-graph").draggable({
+    opacity: 0.5,
+    helper: function() {
+      return $(this).clone().css({
+        width: $(event.target).width(),
+        'border-style': "solid",
+        'border-width': 1
+      });
+    }
+  });
 }
 
+var userQueryDygraphs = {};
+var representativeDygraphs = {};
+var outlierDygraphs = {};
+
+function uploadToSketchpad( draggableId, graphType )
+{
+  var draggedGraph;
+  switch( graphType ) {
+    case "representativeQuery":
+      draggedGraph = representativeDygraphs[draggableId];
+      break;
+    case "outlierQuery":
+      draggedGraph = outlierDygraphs[draggableId];
+      break;
+    default: //userQuery
+      draggedGraph = userQueryDygraphs[draggableId];
+  }
+  plotSketchpad( draggedGraph );
+}
+
+/*
+$( "#list" ).on( "click", "a", function( event ) {
+    event.preventDefault();
+    console.log( $( this ).text() );
+});
+*/
+
+$(document).ready(function(){
+  $("#draw-div").droppable({
+    accept: ".draggable-graph",
+    drop: function( event, ui )
+    {
+      uploadToSketchpad($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
+    }
+  });
+});
 
 

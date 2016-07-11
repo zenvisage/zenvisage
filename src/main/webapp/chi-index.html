@@ -8,6 +8,9 @@
     <link href="chi-css/graph.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
@@ -121,22 +124,26 @@
             <div class="input-group" id="graph-buttons" >
               <div class="btn-group" id="left-button-group">
                 <button type="button" class="btn btn-default btn-xs">Draw</button>
-                <button type="button" class="btn btn-default btn-xs">Modify</button>
+                <button type="button" class="btn btn-default btn-xs">Zoom</button>
+                <!--
                 <button type="button" class="btn btn-default btn-xs">Clear</button>
                 <select class="form-control" id="graph-type">
                   <option>Line</option>
                   <option>Scatter</option>
                   <option>Bar</option>
                 </select>
+                -->
               </div>
 
+              <!--
               <div class="btn-group" data-toggle="buttons" id="options">
                 <button type="button" name="options" id="list-option" class="btn btn-default btn-xs active"><span class="glyphicon glyphicon-th-list" ></span></button>
                 <button type="button" name="options" id="tree-option" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-tree-conifer" ></span></button>
               </div>
+              -->
 
             </div>
-            <div id="draw_div" style="width: 350px; height: 210px;"></div>
+            <div id="draw-div" style="width: 350px; height: 210px;"></div>
           </div>
           <!-- drawing interface END-->
 
@@ -220,7 +227,7 @@
             <div>
               <table id="representative-table">
                 <tr class="middle-right-headers">
-                  <td><h5><b>Representative patterns <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></b></h5>
+                  <td><h5><b>Representative patterns<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></b></h5>
                   </td>
                 </tr>
               </table>
