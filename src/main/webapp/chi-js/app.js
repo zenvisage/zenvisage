@@ -117,7 +117,7 @@ app.controller('datasetController', [
         params: params
       };
 
-      $http.get('/zv/getdata', config).
+      $http.get('/zv/getSimilarity', config).
       success(function(response) {
         console.log("getUserQueryResults: success");
         plotResults.displayUserQueryResults(response.outputCharts);
@@ -138,7 +138,7 @@ app.controller('datasetController', [
         params: params
       };
 
-      $http.get('/zv/getdata', config).
+      $http.get('/zv/getRepresentative', config).
       success(function(response) {
         console.log("getRepresentativeTrends: success");
         plotResults.displayRepresentativeResults( response.outputCharts );
@@ -159,7 +159,7 @@ app.controller('datasetController', [
         params: params
       };
 
-      $http.get('/zv/getdata', config).
+      $http.get('/zv/getOutlier', config).
       success(function(response) {
         console.log("getOutlierTrends: success");
         plotResults.displayOutlierResults( response.outputCharts );
