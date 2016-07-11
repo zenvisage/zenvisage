@@ -1095,7 +1095,7 @@ function submitTable(){
             });
 
         });
-      $(window).resize(function(){
+      $(window).resize(function() {
           updateSizes()
           //updateDefaultModify();
           asyncronousVegaMainCharts().done(function(){
@@ -1107,20 +1107,20 @@ function submitTable(){
           //updateBothTrends();
       });
 
-      function showSecondChartElement(){
-          for(var i = 0; i< 30; i++){		//these following lines hides the points
-               var id = "point"+i;
-           var myCir = document.getElementById(id);
-           id = "point"+i +"-1";
-           var myCir1 = document.getElementById(id);
-           if(myCir != null ){
-              myCir.setAttribute("r", 0);
-              //$("#id").setAttribute("r", 0);
-           }
-           if(myCir1 != null){
-              myCir1.setAttribute("r", 0);
-           }
-          }
+    function showSecondChartElement() {
+        for(var i = 0; i< 30; i++){		//these following lines hides the points
+            var id = "point"+i;
+            var myCir = document.getElementById(id);
+            id = "point"+i +"-1";
+            var myCir1 = document.getElementById(id);
+            if(myCir != null ){
+                myCir.setAttribute("r", 0);
+                //$("#id").setAttribute("r", 0);
+            }
+            if(myCir1 != null){
+                myCir1.setAttribute("r", 0);
+            }
+        }
         var child = graphChanger.children(":first")
         child.attr("class", "glyphicon glyphicon-minus")
         $("#secondDrawChartColumn").show();
@@ -1130,57 +1130,53 @@ function submitTable(){
         //document.getElementById("drawing-tool2").style.visibility="visible";
         $("#changeButtons").show();
         $("#drawing-tool2").show();
-      }
+    }
 
-      function hideSecondChartElement(){
-          for(var i = 0; i< 30; i++){		//this following lines hides the points
-                 var id = "point"+i;
-             var myCir = document.getElementById(id);
-                 id = "point"+i +"-1";
-                 var myCir1 = document.getElementById(id);
-                 if(myCir != null ){
-                    myCir.setAttribute("r", 0);
-                    //$("#id").setAttribute("r", 0);
-                 }
-                 if(myCir1 != null){
-                    myCir1.setAttribute("r", 0);
-                 }
-            }
-
-          var child = graphChanger.children(":first")
-          child.attr("class", "glyphicon glyphicon-plus")
-          $("#secondDrawChartColumn").hide();
-          $("#axesChart1").hide();
-          $("#mainChart1").hide();
-          //document.getElementById("changeButtons").style.visibility="hidden";
-          //document.getElementById("drawing-tool2").style.visibility="hidden";
-          $("#changeButtons").hide();
-          $("#drawing-tool2").hide();
-          changeExistingTrends(0);
-
-      }
-      //Calls vega to update the blank charts. Only returns as DONE if both blank charts are done being created by vega
-      function asyncronousVegaMainCharts(){
-          var dfrd1 = $.Deferred();
-          var dfrd2 = $.Deferred();
-
-        mainChartAsync(" ","").done(function(){
-            if(chart0Information != null && chart0Information['chartData']!= null){
-            changeScaleMainChart( chart0Information['min_X'] , chart0Information['max_X'] , chart0Information['min_Y'] ,
-                 chart0Information['max_Y'], chart0Information['chartData'], "");
+    function hideSecondChartElement() {
+        for(var i = 0; i< 30; i++){		//this following lines hides the points
+            var id = "point"+i;
+            var myCir = document.getElementById(id);
+            id = "point"+i +"-1";
+             var myCir1 = document.getElementById(id);
+             if(myCir != null ){
+                 myCir.setAttribute("r", 0);
+                 //$("#id").setAttribute("r", 0);
              }
+             if(myCir1 != null){
+                 myCir1.setAttribute("r", 0);
+             }
+        }
+        var child = graphChanger.children(":first")
+        child.attr("class", "glyphicon glyphicon-plus")
+        $("#secondDrawChartColumn").hide();
+        $("#axesChart1").hide();
+        $("#mainChart1").hide();
+        //document.getElementById("changeButtons").style.visibility="hidden";
+        //document.getElementById("drawing-tool2").style.visibility="hidden";
+        $("#changeButtons").hide();
+        $("#drawing-tool2").hide();
+        changeExistingTrends(0);
+
+    }
+  //Calls vega to update the blank charts. Only returns as DONE if both blank charts are done being created by vega
+    function asyncronousVegaMainCharts() {
+        var dfrd1 = $.Deferred();
+        var dfrd2 = $.Deferred();
+
+        mainChartAsync(" ","").done(function() {
+            if(chart0Information != null && chart0Information['chartData']!= null){
+                changeScaleMainChart(chart0Information);
+            }
             dfrd1.resolve();
         });
         mainChartAsync(" ","1").done(function(){
             if(chart1Information != null && chart1Information['chartData'] != null){
-            changeScaleMainChart( chart1Information['min_X'] , chart1Information['max_X'] , chart1Information['min_Y'] ,
-                 chart1Information['max_Y'], chart1Information['chartData'], "1");
-             }
+                changeScaleMainChart(chart1Information);
+            }
             dfrd2.resolve();
         });
-         return $.when(dfrd1, dfrd2).done(function(){
-            }).promise();
-    }
+         return $.when(dfrd1, dfrd2).done(function(){}).promise();
+     }
     </script>
     <script>
       function isGraphVisible(suffix){
