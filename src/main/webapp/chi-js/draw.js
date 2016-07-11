@@ -5,6 +5,64 @@ var isDrawing = false;
 var lastDrawRow = null;
 var lastDrawValue = null;
 
+function getZoomOptionSketchpadDygraphObject( data, valueRange )
+{
+  return new Dygraph(document.getElementById("draw-div"), data,
+    {
+      valueRange: valueRange,
+      axisLabelFontSize: 9,
+      xLabelHeight: 9,
+      title: getSelectedCategory(),
+      titleHeight: 9,
+      showRangeSelector: true,
+      rangeSelectorHeight: 25,
+      rangeSelectorPlotFillColor: "",
+    });
+}
+
+
+function getDrawOptionSketchpadDygraphObject( data, valueRange )
+{
+  return new Dygraph(document.getElementById("draw-div"), data,
+    {
+      valueRange: valueRange,
+      axisLabelFontSize: 9,
+      xLabelHeight: 9,
+      title: getSelectedCategory(),
+      titleHeight: 9,
+      interactionModel: {
+        mousedown: function (event, g, context) {
+          // prevents mouse drags from selecting page text.
+          if (event.preventDefault) {
+            event.preventDefault();  // Firefox, Chrome, etc.
+          } else {
+            event.returnValue = false;  // IE
+            event.cancelBubble = true;
+          }
+          isDrawing = true;
+          setPoint(event, g, context, data, valueRange);
+        },
+        mousemove: function (event, g, context) {
+          if (!isDrawing) return;
+          setPoint(event, g, context, data, valueRange);
+        },
+        mouseup: function(event, g, context) {
+          finishDraw(event, g, context);
+        },
+        mouseout: function(event, g, context) {
+          if (isDrawing)
+          {
+            finishDraw(event, g, context);
+          }
+        },
+        //restore to original size
+        dblclick: function(event, g, context) {
+          Dygraph.defaultInteractionModel.dblclick(event, g, context);
+        }
+      },
+    });
+}
+
 // when drag dropped
 function plotSketchpad( dygraphObject )
 {
@@ -21,59 +79,11 @@ function plotSketchpad( dygraphObject )
 
   if ( angular.element($("#left-button-group")).scope().sketchpadSetting == "draw" )
   {
-    sketchpad = new Dygraph(document.getElementById("draw-div"), data,
-      {
-        valueRange: valueRange,
-        //labels: labels,
-        axisLabelFontSize: 9,
-        xLabelHeight: 9,
-        title: getSelectedCategory(),
-        titleHeight: 9,
-        interactionModel: {
-          mousedown: function (event, g, context) {
-            // prevents mouse drags from selecting page text.
-            if (event.preventDefault) {
-              event.preventDefault();  // Firefox, Chrome, etc.
-            } else {
-              event.returnValue = false;  // IE
-              event.cancelBubble = true;
-            }
-            isDrawing = true;
-            setPoint(event, g, context, data, valueRange);
-          },
-          mousemove: function (event, g, context) {
-            if (!isDrawing) return;
-            setPoint(event, g, context, data, valueRange);
-          },
-          mouseup: function(event, g, context) {
-            finishDraw(event, g, context);
-          },
-          mouseout: function(event, g, context) {
-            if (isDrawing)
-            {
-              finishDraw(event, g, context);
-            }
-          },
-          //restore to original size
-          dblclick: function(event, g, context) {
-            Dygraph.defaultInteractionModel.dblclick(event, g, context);
-          }
-        },
-      });
+    sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange );
   }
   else //is zoom
   {
-    sketchpad = new Dygraph(document.getElementById("draw-div"), data,
-      {
-        valueRange: valueRange,
-        //labels: labels,
-        axisLabelFontSize: 9,
-        xLabelHeight: 9,
-        title: getSelectedCategory(),
-        titleHeight: 9,
-        showRangeSelector: true,
-        rangeSelectorHeight: 25,
-      });
+    sketchpad = getZoomOptionSketchpadDygraphObject( data, valueRange )
   }
   angular.element($("#sidebar")).scope().getUserQueryResults();
 }
@@ -93,17 +103,7 @@ function initializeZoomOptionSketchpad( dygraphObject )
     sketchpad.destroy()
   }
 
-  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
-      {
-        valueRange: valueRange,
-        //labels: labels,
-        axisLabelFontSize: 9,
-        xLabelHeight: 9,
-        title: getSelectedCategory(),
-        titleHeight: 9,
-        showRangeSelector: true,
-        rangeSelectorHeight: 25,
-      });
+  sketchpad = getZoomOptionSketchpadDygraphObject( data, valueRange )
 }
 
 function initializeDrawOptionSketchpad( dygraphObject )
@@ -118,75 +118,7 @@ function initializeDrawOptionSketchpad( dygraphObject )
   if (sketchpad != null) {
     sketchpad.destroy()
   }
-
-  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
-      {
-        valueRange: valueRange,
-        //labels: labels,
-        axisLabelFontSize: 9,
-        xLabelHeight: 9,
-        title: getSelectedCategory(),
-        titleHeight: 9,
-        interactionModel: {
-          mousedown: function (event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom') {
-                Dygraph.defaultInteractionModel.mousedown(event, g, context);
-            }
-            else {
-              if (event.preventDefault) {
-                event.preventDefault();  // Firefox, Chrome, etc.
-              } else {
-                event.returnValue = false;  // IE
-                event.cancelBubble = true;
-              }
-              isDrawing = true;
-              setPoint(event, g, context, data, valueRange);
-            }
-          },
-          mousemove: function (event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom')
-            {
-              Dygraph.defaultInteractionModel.mousemove;//(event, g, context);
-            }
-            else
-            {
-              if (!isDrawing) return;
-              setPoint(event, g, context, data, valueRange);
-            }
-          },
-          mouseup: function(event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom')
-            {
-              Dygraph.defaultInteractionModel.mouseup;//(event, g, context);
-            }
-            else
-            {
-            finishDraw(event, g, context);
-            }
-          },
-          mouseout: function(event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom')
-            {
-              Dygraph.defaultInteractionModel.mouseout;//(event, g, context);
-            }
-            else
-            {
-              if (isDrawing)
-              {
-                finishDraw(event, g, context);
-              }
-            }
-          },
-          //restore to original size
-          dblclick: function(event, g, context) {
-            Dygraph.defaultInteractionModel.dblclick(event, g, context);
-          }
-        },
-      });
+  sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange );
 }
 
 function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
@@ -194,83 +126,12 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
   if (sketchpad != null) {
     sketchpad.destroy()
   }
-
   var data = []
   for (var d = xmin; d < xmax + 1; d += 1 ) {
     data.push( [ d, (ymin+ymax)/2 ] );
   }
-
   var valueRange = [ymin, ymax];
-  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
-      {
-        valueRange: valueRange,
-        labels: [ xlabel, ylabel ],
-        //xlabel: xlabel,
-        //ylabel: ylabel,
-        axisLabelFontSize: 9,
-        xLabelHeight: 9,
-        title: category,
-        titleHeight: 9,
-        interactionModel: {
-          mousedown: function (event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom') {
-                Dygraph.defaultInteractionModel.mousedown(event, g, context);
-            }
-            else {
-              if (event.preventDefault) {
-                event.preventDefault();  // Firefox, Chrome, etc.
-              } else {
-                event.returnValue = false;  // IE
-                event.cancelBubble = true;
-              }
-              isDrawing = true;
-              setPoint(event, g, context, data, valueRange);
-            }
-          },
-          mousemove: function (event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom')
-            {
-              Dygraph.defaultInteractionModel.mousemove;//(event, g, context);
-            }
-            else
-            {
-              if (!isDrawing) return;
-              setPoint(event, g, context, data, valueRange);
-            }
-          },
-          mouseup: function(event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom')
-            {
-              Dygraph.defaultInteractionModel.mouseup;//(event, g, context);
-            }
-            else
-            {
-            finishDraw(event, g, context);
-            }
-          },
-          mouseout: function(event, g, context) {
-            var sketchpadSetting = angular.element($("#left-button-group")).scope().sketchpadSetting;
-            if (sketchpadSetting == 'zoom')
-            {
-              Dygraph.defaultInteractionModel.mouseout;//(event, g, context);
-            }
-            else
-            {
-              if (isDrawing)
-              {
-                finishDraw(event, g, context);
-              }
-            }
-          },
-          //restore to original size
-          dblclick: function(event, g, context) {
-            Dygraph.defaultInteractionModel.dblclick(event, g, context);
-          }
-        },
-      });
+  sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange );
 }
 
 function finishDraw(event, g, context) {

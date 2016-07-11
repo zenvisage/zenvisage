@@ -75,9 +75,16 @@ public class ZvMain {
 		inMemoryDatabases.put("income", inMemoryDatabase);
 		inMemoryDatabase = createDatabase("real_estate","zenvisage/WEB-INF/classes/data/real_estate.txt","zenvisage/WEB-INF/classes/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-		inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
-		inMemoryDatabases.put("iris", inMemoryDatabase);
+		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
+		//inMemoryDatabases.put("iris", inMemoryDatabase);
+		
+		//inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+		//inMemoryDatabases.put("seed2", inMemoryDatabase);
+		
 		System.out.println("Done loading data");
+		
+		//inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+		//inMemoryDatabases.put("seed2", inMemoryDatabase);
 		
 	/*	inMemoryDatabase = DataLoader.createDatabase("seed", "src/data/seed_schema.txt", "src/data/seed.csv");
 		inMemoryDatabases.put("seed", inMemoryDatabase);
