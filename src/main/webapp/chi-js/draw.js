@@ -20,7 +20,6 @@ function getZoomOptionSketchpadDygraphObject( data, valueRange )
     });
 }
 
-
 function getDrawOptionSketchpadDygraphObject( data, valueRange )
 {
   return new Dygraph(document.getElementById("draw-div"), data,
