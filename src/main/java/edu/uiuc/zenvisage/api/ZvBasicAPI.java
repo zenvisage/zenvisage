@@ -33,11 +33,47 @@ public class ZvBasicAPI {
     	
 		}
 	
+    /* Will be obsolete after separated calls*/
 	@RequestMapping(value = "/getdata", method = RequestMethod.GET)
 	@ResponseBody
 	public String getData(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-		System.out.println(arg);
+		//System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuery(arg);
+	}
+	
+	/* New Separated API calls
+	 * Representative
+	 * 	-Distance(Euc/DTW)
+	 * Outlier
+	 * 	-Distance(Euc/DTW)
+	 * Similarity
+	 *	-Distance(Euc/DTW)
+	 *  -Similarity/Dis-similarity (true/false)
+	 */
+	@RequestMapping(value = "/getRepresentative", method = RequestMethod.GET)
+	@ResponseBody
+	public String getRepresentative(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "RepresentativeTrends");
+	}
+	
+	@RequestMapping(value = "/getOutlier", method = RequestMethod.GET)
+	@ResponseBody
+	public String getOutlier(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "Outlier");
+	}
+	
+	@RequestMapping(value = "/getSimilarity", method = RequestMethod.GET)
+	@ResponseBody
+	public String getSimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		System.out.println(arg);
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "SimilaritySearch");
+	}
+	
+	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		System.out.println(arg);
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}
 
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)
