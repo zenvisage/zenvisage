@@ -53,6 +53,7 @@ public class ChartOutputUtil {
 				/*Separate this call to rank and x axix and return separately*/
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
 				chartOutput.setxType(mappings.get(orders.get(i)));
+				chartOutput.setRank(i+1);
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
@@ -82,6 +83,7 @@ public class ChartOutputUtil {
 			/*Separate this call to rank and x axix and return separately*/
 			//chartOutput.setxType((i+1)+" : "+repTrend.getKey());
 			chartOutput.setxType(repTrend.getKey());
+			chartOutput.setRank(i+1);
 			
 			chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
 			// fill in chart data
