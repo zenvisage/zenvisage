@@ -50,7 +50,10 @@ public class ChartOutputUtil {
 			int j = 0;
 			for (double[][] result : output) {
 				Chart chartOutput = new Chart();
-				chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
+				/*Separate this call to rank and x axix and return separately*/
+				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
+				chartOutput.setxType(mappings.get(orders.get(i)));
+				chartOutput.setRank(i+1);
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
@@ -77,7 +80,11 @@ public class ChartOutputUtil {
 			// initialize a new chart
 			Chart chartOutput = new Chart();
 			RepresentativeTrend repTrend = representativeTrends.get(i);
-			chartOutput.setxType((i+1)+" : "+repTrend.getKey());
+			/*Separate this call to rank and x axix and return separately*/
+			//chartOutput.setxType((i+1)+" : "+repTrend.getKey());
+			chartOutput.setxType(repTrend.getKey());
+			chartOutput.setRank(i+1);
+			
 			chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
 			// fill in chart data
 			LinkedHashMap<Float,Float> points = orig.get(repTrend.getKey());
