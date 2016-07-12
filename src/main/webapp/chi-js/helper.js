@@ -97,20 +97,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
       data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    representativeDygraphs["representative-result-" + count.toString()] = new Dygraph(document.getElementById("representative-result-" + count.toString()), data,
-      {
-        valueRange: valueRange,
-        xlabel: xlabel,
-        xLabelHeight: 11,
-        axisLabelWidth: (0,0),
-        axisLabelFontSize: 0,
-        ylabel: null,
-        showLabelsOnHighlight: false,
-        highlightCircleSize: 0,
-        interactionModel: {},
-        drawGrid: false,
-        colors: [ "0E3340" ],
-      });
+    representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, valueRange, count, "representative-result-" );
   }
 
   $(".draggable-graph").draggable({
@@ -156,20 +143,7 @@ function displayOutlierResultsHelper( outlierResults )
       data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    outlierDygraphs["outlier-result-" + count.toString()] = new Dygraph(document.getElementById("outlier-result-" + count.toString()), data,
-      {
-        valueRange: valueRange,
-        xlabel: xlabel,
-        xLabelHeight: 11,
-        axisLabelWidth: (0,0),
-        axisLabelFontSize: 0,
-        ylabel: null,
-        showLabelsOnHighlight: false,
-        highlightCircleSize: 0,
-        interactionModel: {},
-        drawGrid: false,
-        colors: [ "0E3340" ],
-      });
+    outlierDygraphs["outlier-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, valueRange, count, "outlier-result-" )
   }
 
   $(".draggable-graph").draggable({
@@ -184,9 +158,22 @@ function displayOutlierResultsHelper( outlierResults )
   });
 }
 
-var userQueryDygraphs = {};
-var representativeDygraphs = {};
-var outlierDygraphs = {};
+function getRepresentativeAndOutlierDygraphObject( data, valueRange, count, id )
+{
+  return new Dygraph(document.getElementById(id + count.toString()), data,
+    {
+      valueRange: valueRange,
+      xLabelHeight: 11,
+      axisLabelWidth: (0,0),
+      axisLabelFontSize: 0,
+      ylabel: null,
+      showLabelsOnHighlight: false,
+      highlightCircleSize: 0,
+      interactionModel: {},
+      drawGrid: false,
+      colors: [ "0E3340" ],
+    });
+}
 
 function uploadToSketchpad( draggableId, graphType )
 {
@@ -204,12 +191,6 @@ function uploadToSketchpad( draggableId, graphType )
   plotSketchpad( draggedGraph );
 }
 
-/*
-$( "#list" ).on( "click", "a", function( event ) {
-    event.preventDefault();
-    console.log( $( this ).text() );
-});
-*/
 
 $(document).ready(function(){
   $("#draw-div").droppable({
@@ -220,5 +201,3 @@ $(document).ready(function(){
     }
   });
 });
-
-

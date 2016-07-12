@@ -5,8 +5,7 @@ var isDrawing = false;
 var lastDrawRow = null;
 var lastDrawValue = null;
 
-
-function getZoomOptionSketchpadDygraphObject( data, valueRange, xRange = null )
+function getSketchpadDygraphObject( data, valueRange, xRange = null )
 {
   return new Dygraph(document.getElementById("draw-div"), data,
     {
@@ -15,23 +14,10 @@ function getZoomOptionSketchpadDygraphObject( data, valueRange, xRange = null )
       xLabelHeight: 9,
       title: getSelectedCategory(),
       titleHeight: 9,
+      dateWindow: xRange,
       showRangeSelector: true,
       rangeSelectorHeight: 25,
-      dateWindow: xRange,
       rangeSelectorPlotFillColor: "",
-    });
-}
-
-function getDrawOptionSketchpadDygraphObject( data, valueRange, xRange = null )
-{
-  return new Dygraph(document.getElementById("draw-div"), data,
-    {
-      valueRange: valueRange,
-      axisLabelFontSize: 9,
-      xLabelHeight: 9,
-      title: getSelectedCategory(),
-      titleHeight: 9,
-      dateWindow: xRange,
       interactionModel: {
         mousedown: function (event, g, context) {
           // prevents mouse drags from selecting page text.
@@ -57,7 +43,6 @@ function getDrawOptionSketchpadDygraphObject( data, valueRange, xRange = null )
             finishDraw(event, g, context);
           }
         },
-        //restore to original size
         dblclick: function(event, g, context) {
           Dygraph.defaultInteractionModel.dblclick(event, g, context);
         }
@@ -78,44 +63,8 @@ function plotSketchpad( dygraphObject )
   if (sketchpad != null) {
     sketchpad.destroy()
   }
-  if ( angular.element($("#left-button-group")).scope().sketchpadSetting == "draw" )
-  {
-    sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange, xRange );
-  }
-  else //is zoom
-  {
-    sketchpad = getZoomOptionSketchpadDygraphObject( data, valueRange, xRange )
-  }
+  sketchpad = getSketchpadDygraphObject( data, valueRange, xRange )
   angular.element($("#sidebar")).scope().getUserQueryResults();
-}
-
-
-function initializeZoomOptionSketchpad( dygraphObject )
-{
-  var data = [];
-  for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
-    data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
-  }
-  var valueRange = dygraphObject.axes_[0]["valueRange"]
-  var xRange = dygraphObject.xAxisRange()
-  if (sketchpad != null) {
-    sketchpad.destroy()
-  }
-  sketchpad = getZoomOptionSketchpadDygraphObject( data, valueRange, xRange )
-}
-
-function initializeDrawOptionSketchpad( dygraphObject )
-{
-  var data = [];
-  for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
-    data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
-  }
-  var valueRange = dygraphObject.axes_[0]["valueRange"]
-  var xRange = dygraphObject.xAxisRange()
-  if (sketchpad != null) {
-    sketchpad.destroy()
-  }
-  sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange, xRange );
 }
 
 function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
@@ -128,7 +77,7 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
     data.push( [ d, (ymin+ymax)/2 ] );
   }
   var valueRange = [ymin, ymax];
-  sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange );
+  sketchpad = getSketchpadDygraphObject( data, valueRange );
 }
 
 function finishDraw(event, g, context) {

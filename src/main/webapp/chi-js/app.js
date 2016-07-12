@@ -70,27 +70,6 @@ app.factory('plotResults', function() {
     return plottingService;
 });
 
-
-
-app.controller('buttonsController', [
-  '$scope',
-  function($scope){
-    $scope.sketchpadSetting = "draw";
-    $scope.onSketchpadSettingChange = function ( value )
-    {
-      if ( value == "zoom" )
-      {
-        initializeZoomOptionSketchpad( sketchpad )
-      }
-      else // draw
-      {
-        initializeDrawOptionSketchpad( sketchpad )
-      }
-    };
-}]);
-
-
-
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
