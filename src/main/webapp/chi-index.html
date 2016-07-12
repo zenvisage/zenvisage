@@ -21,9 +21,9 @@
   </head>
   <body>
     <!-- this div contains everything in the body -->
-    
+
     <div id="everything">
-    
+
       <!-- this div contains the popup for settings -->
       <div class="modal fade" id="modal-content" role="dialog">
         <div class="modal-dialog">
@@ -127,92 +127,11 @@
                 <label class="btn btn-default">
                   <input type="radio" ng-model="sketchpadSetting" ng-change="onSketchpadSettingChange( sketchpadSetting )" value="zoom"/><span>Zoom</span>
                 </label>
-
-                <!-- LINE SCATTER BAR
-                <button type="button" class="btn btn-default btn-xs">Clear</button>
-                <select class="form-control" id="graph-type">
-                  <option>Line</option>
-                  <option>Scatter</option>
-                  <option>Bar</option>
-                </select>
-                -->
               </div>
-
-              <!-- ZQL TABLE AND TREE
-              <div class="btn-group" data-toggle="buttons" id="options">
-                <button type="button" name="options" id="list-option" class="btn btn-default btn-xs active"><span class="glyphicon glyphicon-th-list" ></span></button>
-                <button type="button" name="options" id="tree-option" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-tree-conifer" ></span></button>
-              </div>
-              -->
-
             </div>
             <div id="draw-div" style="width: 350px; height: 210px;"></div>
           </div>
           <!-- drawing interface END-->
-
-          <!-- zql table -->
-          <div class="col-md-8" id="table-div">
-            <table id="zql-table" class="table zql-table">
-              <thead>
-                <tr>
-                  <td>
-                  </td>
-                  <td><b>X</b></td>
-                  <td><b>Y</b></td>
-                  <td><b>Z</b></td>
-                  <td><b>Constraints</b></td>
-                  <td><b>Process</b></td>
-                  <td></td>
-                  <td><b>#</b></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr id="row-1" class="tabler info">
-                  <td>
-                    <div>
-                      <div class="icon"><span class="glyphicon glyphicon-triangle-left"></span></div>
-                      <div class="number">1</div>
-                    </div>
-                  </td>
-                  <td>
-                    <input class="form-control zql-table" type="text" size="10" value=" ">
-                  </td>
-                  <td>
-                    <input class="form-control zql-table" type="text" size="10" value=" ">
-                  </td>
-                  <td>
-                    <input class="form-control zql-table" type="text" size="10" value=" ">
-                  </td>
-                  <td>
-                    <input class="form-control zql-table" type="text" size="20" value=" ">
-                  </td>
-                  <td>
-                    <input class="form-control zql-table" type="text" size="25" value=" ">
-                  </td>
-                  <td>
-                    <div>
-                      <button id="first-flash" type="button" class="btn btn-default btn-xs" data="R1"><span class="glyphicon glyphicon glyphicon-flash" ></span></button>
-                    </div>
-                  </td>
-                  <td></td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>
-                    <a id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
-                  </td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <!-- zql table END-->
         </div>
         <!-- drawng interface + zql table END-->
 

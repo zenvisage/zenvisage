@@ -137,7 +137,6 @@ app.controller('datasetController', [
       var config = {
         params: params
       };
-
       $http.get('/zv/getRepresentative', config).
       success(function(response) {
         console.log("getRepresentativeTrends: success");

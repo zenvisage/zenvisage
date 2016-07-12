@@ -69,13 +69,10 @@ function plotSketchpad( dygraphObject )
   for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
     data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
   }
-
   var valueRange = dygraphObject.axes_[0]["valueRange"]
-
   if (sketchpad != null) {
     sketchpad.destroy()
   }
-
   if ( angular.element($("#left-button-group")).scope().sketchpadSetting == "draw" )
   {
     sketchpad = getDrawOptionSketchpadDygraphObject( data, valueRange );
@@ -94,14 +91,10 @@ function initializeZoomOptionSketchpad( dygraphObject )
   for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
     data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
   }
-
-  //var labels = [ dygraphObject.attrs_["labels"][0], dygraphObject.attrs_["labels"][1] ];
   var valueRange = dygraphObject.axes_[0]["valueRange"]
-
   if (sketchpad != null) {
     sketchpad.destroy()
   }
-
   sketchpad = getZoomOptionSketchpadDygraphObject( data, valueRange )
 }
 
@@ -111,9 +104,7 @@ function initializeDrawOptionSketchpad( dygraphObject )
   for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
     data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
   }
-
   var valueRange = dygraphObject.axes_[0]["valueRange"]
-
   if (sketchpad != null) {
     sketchpad.destroy()
   }
