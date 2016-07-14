@@ -38,7 +38,7 @@ public class ChartOutputUtil {
 	 * @param finalOutput
 	 * @throws JsonProcessingException
 	 */
-	public void chartOutput(List<double[][]> output,List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> orig,List<Integer> orders,ArrayList<String> mappings, List<BiMap<Float,String>> xMaps, ZvQuery args, Result finalOutput) throws JsonProcessingException{
+	public void chartOutput(List<double[][]> output,List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> orig,List<Integer> orders, List<Double> orderedDistances, ArrayList<String> mappings, List<BiMap<Float,String>> xMaps, ZvQuery args, Result finalOutput) throws JsonProcessingException{
 		if (args.outlierCount==0)
 			args.setOutlierCount(4);
 		int outputLength = args.outlierCount;
@@ -55,6 +55,7 @@ public class ChartOutputUtil {
 				chartOutput.setxType(mappings.get(orders.get(i)));
 				chartOutput.setRank(i+1);
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
+				chartOutput.setDistance(orderedDistances.get(i));
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
 				LinkedHashMap<Float,Float> points = orig.get(j).get(key);

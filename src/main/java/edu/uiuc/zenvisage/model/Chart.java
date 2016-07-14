@@ -11,6 +11,7 @@ public class Chart {
 	public ArrayList<String> yData = new ArrayList<String>();
 	public int count;
 	public int rank;
+	public double distance;
 	
 	// default constructor
 	public Chart() {
@@ -53,5 +54,12 @@ public class Chart {
 		return this.rank;
 	}
 	
+	
+	public void setDistance(double d) {
+		this.distance = d;
+	}
+	public double getDistance() {
+		return this.distance;
+	}
 	
 }

@@ -50,14 +50,16 @@ public class Similarity extends Analysis {
 	@Override
 	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
 		// TODO Auto-generated method stub
-		Sketch[] sketchPoints = args.getSketchPoints();
-		
+		Sketch[] sketchPoints = args.getSketchPoints();		
 		
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {
 			mappings.add(key);
 		}
 		List<List<Integer>> orders = new ArrayList<List<Integer>>();
+		
+		List<List<Double>> orderedDistances = new ArrayList<List<Double>>();
+		
 		List<double[][]> data = new ArrayList<double[][]>();
 		List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> outputs = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
 		List<BiMap<Float,String>> xMaps = new ArrayList<BiMap<Float,String>>();
@@ -96,12 +98,29 @@ public class Similarity extends Analysis {
 				qT[x] = sPoints.get(x).getY();
 			}			
 			
-			List<Integer> order = computeOrders(normalizedgroups,qT,mappings);
-			orders.add(order);
+			ListPair lp = computeOrders(normalizedgroups,qT,mappings);
+			orders.add(lp.order);
+			orderedDistances.add(lp.distances);
 		}
-		List<Integer> ranks = computeWeightedRanks(orders);
-		chartOutput.chartOutput(data, outputs, ranks, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
+		
+		ListPair lp = computeWeightedRanks(orders, orderedDistances);
+		
+//		System.out.println(lp.order.size() + "\t" + lp.distances.size());
+//		for (int i = 0; i < lp.order.size(); i++) {
+//			System.out.println(lp.order.get(i) + "\t" + lp.distances.get(i));
+//		}
+		
+		chartOutput.chartOutput(data, outputs, lp.order, lp.distances, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
 		return;
+	}
+	
+	public class ListPair {
+		List<Integer> order;
+		List<Double> distances;
+		ListPair(List<Integer> order, List<Double> distances) {
+			this.order = order;
+			this.distances = distances;
+		}
 	}
 	
 	/**
@@ -110,8 +129,11 @@ public class Similarity extends Analysis {
 	 * @param mappings
 	 * @return
 	 */
-	public List<Integer> computeOrders(double[][] normalizedgroups, double[] queryTrend, ArrayList<String> mappings) {
+	public ListPair computeOrders(double[][] normalizedgroups, double[] queryTrend, ArrayList<String> mappings) {
 		List<Integer> orders = new ArrayList<Integer>();
+		
+		List<Double> orderedDistances = new ArrayList<Double>();
+				
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>(); 
     	for(int i = 0;i < normalizedgroups.length;i++) {
@@ -121,7 +143,6 @@ public class Similarity extends Analysis {
     	}   
 	  
     	Collections.sort(distances);
-    	//System.out.println(distances.size());
     	if (descending)
     		Collections.reverse(distances);
     	for(Double d : distances){
@@ -129,28 +150,36 @@ public class Similarity extends Analysis {
 			ArrayList values = (ArrayList)indexOrder.get(d);
 		    Integer val = (Integer) values.get(0);
 			orders.add((val));
+			orderedDistances.add(d);
 			indexOrder.remove(d,val);
 			 
 		 }
-    	//System.out.println(orders.size());
-    	return orders;		
+    	ListPair lp = new ListPair(orders, orderedDistances);
+    	return lp;		
 	}
+	
+	
 	
 	/**
 	 * @param orders
 	 * @return
 	 */
-	private List<Integer> computeWeightedRanks(List<List<Integer>> orders) {
+	private ListPair computeWeightedRanks(List<List<Integer>> orders, List<List<Double>> orderedDistances) {
 		if (orders.size() == 0) return null;
 
 		HashMap<Integer, Integer> indexOrder = new HashMap<Integer, Integer>();
 		List<Integer> totalOrder = new ArrayList<Integer>(orders.get(0));
+		List<Double> totalDistances = new ArrayList<Double>(orderedDistances.get(0));
 		for (int i = 1; i < orders.size(); i++) {
 			List<Integer> order = orders.get(i);
+			List<Double> totalD = orderedDistances.get(i);
 			for (int j = 0; j < order.size(); j++) {
 				int c = totalOrder.get(j);
+				double d = totalDistances.get(j);
 				c += order.get(j);
+				d += totalD.get(j);
 				totalOrder.set(j, c);
+				totalDistances.set(j, d);
 			}
 		}
 		List<Integer> ranks = new ArrayList<Integer>(totalOrder);
@@ -163,7 +192,8 @@ public class Similarity extends Analysis {
 			int val = indexOrder.get(c);
 			ranks.set(i, val);
 		}
-		return ranks;
+		ListPair lp = new ListPair(ranks, totalDistances);
+		return lp;
 	}
 
 	/**

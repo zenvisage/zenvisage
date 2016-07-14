@@ -13,10 +13,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
@@ -39,6 +43,7 @@ import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
+import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
@@ -95,11 +100,16 @@ public class ZvMain {
 		inMemoryDatabases.put("seed3", inMemoryDatabase);*/
 	}
 
-  public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
+	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
     	Database database = new Database(name,schemafile,datafile);
     	return database;
  
     }
+	
+	public static void uploadFiles(MultipartHttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		UploadHandleServlet uploadHandler = new UploadHandleServlet();
+		uploadHandler.doPost(request, response);	
+	}
 			
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);
@@ -164,7 +174,6 @@ public class ZvMain {
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
-//			 distance = new SegmentationDistance();
 		 }
 		 else {
 			 distance = new DTWDistance();
@@ -210,13 +219,16 @@ public class ZvMain {
 	
 	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
 		// get data from database
+//		System.out.println(query);
+		
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
 		 ExecutorResult executorResult = executor.getData(q);
 		 if (executorResult == null) return "";
-		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;		 
+		 
 		 // setup result format
 		 Result finalOutput = new Result();
 		 finalOutput.method = method;
@@ -227,6 +239,7 @@ public class ZvMain {
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
+//			 distance = new SegmentationDistance();
 		 }
 		 else {
 			 distance = new DTWDistance();
@@ -265,7 +278,11 @@ public class ZvMain {
 		 }
 		 analysis.compute(output, normalizedgroups);
 		 ObjectMapper mapper = new ObjectMapper();
-		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+		 
+		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+//		 System.out.println(str);
+		 
+		 return str;
 	}
 
 
@@ -349,6 +366,8 @@ public class ZvMain {
 	        br.close();
 	    }
 	}
+	
+
 
 	
 	
