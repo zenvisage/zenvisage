@@ -43,7 +43,7 @@ import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
-import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
+//import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
@@ -106,10 +106,10 @@ public class ZvMain {
  
     }
 	
-	public static void uploadFiles(MultipartHttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UploadHandleServlet uploadHandler = new UploadHandleServlet();
-		uploadHandler.doPost(request, response);	
-	}
+//	public static void uploadFiles(MultipartHttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		UploadHandleServlet uploadHandler = new UploadHandleServlet();
+//		uploadHandler.doPost(request, response);	
+//	}
 			
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);

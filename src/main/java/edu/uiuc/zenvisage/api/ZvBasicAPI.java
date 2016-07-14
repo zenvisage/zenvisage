@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import edu.uiuc.zenvisage.service.ZvMain;
-import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
+//import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 
 @Controller
