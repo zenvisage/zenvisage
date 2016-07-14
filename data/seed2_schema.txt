@@ -1,4 +1,4 @@
-data_class:string,indexed,F,F,T,F,F
-homo_ev:float,unindexed,T,T,F,F,F
-homolumogap_ev:float,unindexed,T,T,F,F,F
-melting_point:float,unindexed,T,T,F,F,F
+data_class:string,indexed,F,F,T,T,F,F,Q
+homo_ev:float,unindexed,T,T,F,F,F,F,Q
+homolumogap_ev:float,unindexed,T,T,F,F,F,F,Q
+melting_point:float,unindexed,T,T,F,F,F,F,C

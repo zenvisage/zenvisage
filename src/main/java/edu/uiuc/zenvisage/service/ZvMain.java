@@ -79,8 +79,8 @@ public class ZvMain {
 		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
 		//inMemoryDatabases.put("iris", inMemoryDatabase);
 		
-		//inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
-		//inMemoryDatabases.put("seed2", inMemoryDatabase);
+		inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+		inMemoryDatabases.put("seed2", inMemoryDatabase);
 		
 		System.out.println("Done loading data");
 		
