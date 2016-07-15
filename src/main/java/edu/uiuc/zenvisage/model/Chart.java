@@ -10,6 +10,9 @@ public class Chart {
 	public ArrayList<String> xData = new ArrayList<String>();
 	public ArrayList<String> yData = new ArrayList<String>();
 	public int count;
+	public int rank;
+	public double distance;
+	
 	// default constructor
 	public Chart() {
 		
@@ -43,6 +46,20 @@ public class Chart {
 	}
 	public void setyData(ArrayList<String> yData) {
 		this.yData = yData;
+	}
+	public void setRank(int rank){
+		this.rank = rank;
+	}
+	public int getRank(){
+		return this.rank;
+	}
+	
+	
+	public void setDistance(double d) {
+		this.distance = d;
+	}
+	public double getDistance() {
+		return this.distance;
 	}
 	
 }

@@ -1,5 +1,4 @@
 
-
 var app = angular.module('zenvisage', []);
 
 
@@ -56,7 +55,6 @@ app.factory('plotResults', function() {
     plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults )
     {
       displayUserQueryResultsHelper( userQueryResults );
-
     }
 
     plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
@@ -71,7 +69,6 @@ app.factory('plotResults', function() {
 
     return plottingService;
 });
-
 
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
@@ -99,7 +96,7 @@ app.controller('datasetController', [
         params: params
       };
 
-      $http.get('/zv/getdata', config).
+      $http.get('/zv/getSimilarity', config).
       success(function(response) {
         console.log("getUserQueryResults: success");
         plotResults.displayUserQueryResults(response.outputCharts);
@@ -119,8 +116,7 @@ app.controller('datasetController', [
       var config = {
         params: params
       };
-
-      $http.get('/zv/getdata', config).
+      $http.get('/zv/getRepresentative', config).
       success(function(response) {
         console.log("getRepresentativeTrends: success");
         plotResults.displayRepresentativeResults( response.outputCharts );
@@ -141,7 +137,7 @@ app.controller('datasetController', [
         params: params
       };
 
-      $http.get('/zv/getdata', config).
+      $http.get('/zv/getOutlier', config).
       success(function(response) {
         console.log("getOutlierTrends: success");
         plotResults.displayOutlierResults( response.outputCharts );
@@ -153,6 +149,7 @@ app.controller('datasetController', [
 
     // TODO: params will need to be dynamic later
     var q = constructDatasetChangeQuery("real_estate");
+    //var q = constructDatasetChangeQuery("seed2");
 
     var params = {
       "query": q,

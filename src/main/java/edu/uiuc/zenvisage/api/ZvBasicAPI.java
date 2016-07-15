@@ -3,6 +3,10 @@ package edu.uiuc.zenvisage.api;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
 import edu.uiuc.zenvisage.service.ZvMain;
+//import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 
 @Controller
@@ -31,13 +37,56 @@ public class ZvBasicAPI {
 	
     public ZvBasicAPI(){
     	
-		}
-	
+	}
+    
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	@ResponseBody
+	public void uploadFile(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException {
+		//zvMain.uploadFiles(request, response);
+	}
+		
+		
+    /* Will be obsolete after separated calls*/
 	@RequestMapping(value = "/getdata", method = RequestMethod.GET)
 	@ResponseBody
 	public String getData(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-		System.out.println(arg);
+		//System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuery(arg);
+	}
+	
+	/* New Separated API calls
+	 * Representative
+	 * 	-Distance(Euc/DTW)
+	 * Outlier
+	 * 	-Distance(Euc/DTW)
+	 * Similarity
+	 *	-Distance(Euc/DTW)
+	 *  -Similarity/Dis-similarity (true/false)
+	 */
+	@RequestMapping(value = "/getRepresentative", method = RequestMethod.GET)
+	@ResponseBody
+	public String getRepresentative(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "RepresentativeTrends");
+	}
+	
+	@RequestMapping(value = "/getOutlier", method = RequestMethod.GET)
+	@ResponseBody
+	public String getOutlier(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "Outlier");
+	}
+	
+	@RequestMapping(value = "/getSimilarity", method = RequestMethod.GET)
+	@ResponseBody
+	public String getSimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		System.out.println(arg);
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "SimilaritySearch");
+	}
+	
+	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+		System.out.println(arg);
+		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}
 
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)

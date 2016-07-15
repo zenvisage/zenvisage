@@ -38,7 +38,7 @@ public class ChartOutputUtil {
 	 * @param finalOutput
 	 * @throws JsonProcessingException
 	 */
-	public void chartOutput(List<double[][]> output,List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> orig,List<Integer> orders,ArrayList<String> mappings, List<BiMap<Float,String>> xMaps, ZvQuery args, Result finalOutput) throws JsonProcessingException{
+	public void chartOutput(List<double[][]> output,List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> orig,List<Integer> orders, List<Double> orderedDistances, ArrayList<String> mappings, List<BiMap<Float,String>> xMaps, ZvQuery args, Result finalOutput) throws JsonProcessingException{
 		if (args.outlierCount==0)
 			args.setOutlierCount(4);
 		int outputLength = args.outlierCount;
@@ -50,8 +50,12 @@ public class ChartOutputUtil {
 			int j = 0;
 			for (double[][] result : output) {
 				Chart chartOutput = new Chart();
-				chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
+				/*Separate this call to rank and x axix and return separately*/
+				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
+				chartOutput.setxType(mappings.get(orders.get(i)));
+				chartOutput.setRank(i+1);
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
+				chartOutput.setDistance(orderedDistances.get(i));
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
 				LinkedHashMap<Float,Float> points = orig.get(j).get(key);
@@ -77,7 +81,11 @@ public class ChartOutputUtil {
 			// initialize a new chart
 			Chart chartOutput = new Chart();
 			RepresentativeTrend repTrend = representativeTrends.get(i);
-			chartOutput.setxType((i+1)+" : "+repTrend.getKey());
+			/*Separate this call to rank and x axix and return separately*/
+			//chartOutput.setxType((i+1)+" : "+repTrend.getKey());
+			chartOutput.setxType(repTrend.getKey());
+			chartOutput.setRank(i+1);
+			
 			chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
 			// fill in chart data
 			LinkedHashMap<Float,Float> points = orig.get(repTrend.getKey());

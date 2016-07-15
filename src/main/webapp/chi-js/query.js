@@ -21,7 +21,6 @@ function constructOutlierTrendQuery()
   return new Query( "Outlier" );
 }
 
-
 function Query( searchMethod ) {
   this.method = searchMethod; // fix to dynamically fetch
   this.xAxis = getSelectedXAxis();
@@ -78,6 +77,10 @@ function getSelectedCategory()
   return angular.element($("#sidebar")).scope().selectedCategory;
 }
 
+function getXRange() //when zoomed in
+{
+  return sketchpad.xAxisRange()
+}
 
 /* need to angularize */
 function getAggregationMethod()

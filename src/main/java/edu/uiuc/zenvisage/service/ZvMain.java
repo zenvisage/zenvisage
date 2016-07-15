@@ -13,10 +13,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
@@ -33,11 +37,13 @@ import edu.uiuc.zenvisage.service.cluster.KMeans;
 import edu.uiuc.zenvisage.service.distance.DTWDistance;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.distance.Euclidean;
+import edu.uiuc.zenvisage.service.distance.SegmentationDistance;
 import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
+//import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
@@ -75,9 +81,16 @@ public class ZvMain {
 		inMemoryDatabases.put("income", inMemoryDatabase);
 		inMemoryDatabase = createDatabase("real_estate","zenvisage/WEB-INF/classes/data/real_estate.txt","zenvisage/WEB-INF/classes/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-		inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
-		inMemoryDatabases.put("iris", inMemoryDatabase);
+		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
+		//inMemoryDatabases.put("iris", inMemoryDatabase);
+		
+		inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+		inMemoryDatabases.put("seed2", inMemoryDatabase);
+		
 		System.out.println("Done loading data");
+		
+		//inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+		//inMemoryDatabases.put("seed2", inMemoryDatabase);
 		
 	/*	inMemoryDatabase = DataLoader.createDatabase("seed", "src/data/seed_schema.txt", "src/data/seed.csv");
 		inMemoryDatabases.put("seed", inMemoryDatabase);
@@ -87,11 +100,16 @@ public class ZvMain {
 		inMemoryDatabases.put("seed3", inMemoryDatabase);*/
 	}
 
-  public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
+	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
     	Database database = new Database(name,schemafile,datafile);
     	return database;
  
     }
+	
+//	public static void uploadFiles(MultipartHttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		UploadHandleServlet uploadHandler = new UploadHandleServlet();
+//		uploadHandler.doPost(request, response);	
+//	}
 			
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);
@@ -134,8 +152,11 @@ public class ZvMain {
 		return mapper.writeValueAsString(finalOutput);
 	}
 	
+	
+	/* Will be obsolete when the new separated query method is utilized */
 	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 		// get data from database
+		System.out.println(query);
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (args.method.equals("SimilaritySearch"))
@@ -160,6 +181,7 @@ public class ZvMain {
 		 // generate the corresponding data normalization metric
 		 if (args.distanceNormalized) {
 			 normalization = new Zscore();
+//			 normalization = new Original();
 		 }
 		 else {
 			 normalization = new Original();
@@ -192,6 +214,75 @@ public class ZvMain {
 		 analysis.compute(output, normalizedgroups);
 		 ObjectMapper mapper = new ObjectMapper();
 		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+	}
+	
+	
+	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
+		// get data from database
+//		System.out.println(query);
+		
+		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
+		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
+		 if (method.equals("SimilaritySearch"))
+			 setFilter(q, args);
+		 ExecutorResult executorResult = executor.getData(q);
+		 if (executorResult == null) return "";
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;		 
+		 
+		 // setup result format
+		 Result finalOutput = new Result();
+		 finalOutput.method = method;
+		 //finalOutput.xUnit = inMemoryDatabase.getColumnMetaData(args.xAxis).unit;
+		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
+		 // generate new result for query
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+		 // generate the corresponding distance metric
+		 if (args.distance_metric.equals("Euclidean")) {
+			 distance = new Euclidean();
+//			 distance = new SegmentationDistance();
+		 }
+		 else {
+			 distance = new DTWDistance();
+		 }
+		 // generate the corresponding data normalization metric
+		 if (args.distanceNormalized) {
+			 normalization = new Zscore();
+		 }
+		 else {
+			 normalization = new Original();
+		 }
+		 // generate the corresponding output normalization
+		 
+		 outputNormalization = new Original();
+		 // reformat database data
+		 DataReformation dataReformatter = new DataReformation(outputNormalization);
+		 double[][] normalizedgroups = dataReformatter.reformatData(output);
+		 // generate the corresponding analysis method
+		 if (method.equals("Outlier")) {
+			 Clustering cluster = new KMeans(distance, normalization, args);
+			 analysis = new Outlier(executor,inMemoryDatabase,chartOutput,distance,normalization,cluster,args);
+		 }
+		 else if (method.equals("RepresentativeTrends")) {
+			 Clustering cluster = new KMeans(distance, normalization, args);
+			 analysis = new Representative(executor,inMemoryDatabase,chartOutput,distance,normalization,cluster,args);
+		 }
+		 else if (method.equals("SimilaritySearch")) {
+			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
+			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
+			 ((Similarity) analysis).setDescending(false);
+		 }
+		 else if (method.equals("DissimilaritySearch")) {
+			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
+			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
+			 ((Similarity) analysis).setDescending(true);
+		 }
+		 analysis.compute(output, normalizedgroups);
+		 ObjectMapper mapper = new ObjectMapper();
+		 
+		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+//		 System.out.println(str);
+		 
+		 return str;
 	}
 
 
@@ -275,6 +366,8 @@ public class ZvMain {
 	        br.close();
 	    }
 	}
+	
+
 
 	
 	
