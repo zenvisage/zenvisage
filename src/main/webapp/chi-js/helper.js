@@ -202,3 +202,24 @@ $(document).ready(function(){
     }
   });
 });
+
+
+// custom event handler which triggers when zoom range is adjusted
+var xrange;
+function refreshZoomEventHandler() {
+  $("#draw-div").off();
+  $(".dygraph-rangesel-fgcanvas").off();
+  $(".dygraph-rangesel-zoomhandle").off();
+  $("#draw-div").on('mousedown', '.dygraph-rangesel-fgcanvas, .dygraph-rangesel-zoomhandle', function(){
+    xrange = sketchpad.xAxisRange();
+  });
+  $("#draw-div").on('mouseup', '.dygraph-rangesel-fgcanvas, .dygraph-rangesel-zoomhandle', function() {
+    var xr = sketchpad.xAxisRange();
+    if (xrange[0] !== xr[0] || xrange[1] !== xr[1])
+    {
+      angular.element($("#sidebar")).scope().getUserQueryResults();
+    }
+  });
+}
+
+
