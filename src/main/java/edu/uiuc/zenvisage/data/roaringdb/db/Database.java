@@ -3,6 +3,8 @@ package edu.uiuc.zenvisage.data.roaringdb.db;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +45,13 @@ public class Database {
 		column.add(row, value);
  	}
 	
-	
 	private void readSchema(String schemafilename) throws IOException, InterruptedException{
-   	 BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
+//   	 BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
+//   	 String in = getClass().getClassLoader().getResource(schemafilename).getPath();
+//     BufferedReader bufferedReader = new BufferedReader(new FileReader(in));
+   	 
+   	InputStream is = getClass().getResourceAsStream(schemafilename);
+   	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
 	 String line;
 	 while ((line = bufferedReader.readLine()) != null){
 			 ColumnMetadata columnMetadata= new ColumnMetadata();
@@ -90,7 +96,10 @@ public class Database {
 	
 
     private void loadData(String datafilename) throws IOException{
-      	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
+//      	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
+      	
+       	InputStream is = getClass().getResourceAsStream(datafilename);
+       	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
 		String line;
 		line = bufferedReader.readLine();
 		String[] header=line.split(",");
