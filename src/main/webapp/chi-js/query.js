@@ -45,6 +45,7 @@ function Query( searchMethod ) {
   this.predicateOperator = "="; // fix to dynamically fetch
   this.predicateColumn = getSelectedCategory();
   this.predicateValue = ""; // fix to dynamically fetch
+  //this.xRange = getXRange();
 }
 
 function SketchPoints(xAxisName, yAxisName, points){

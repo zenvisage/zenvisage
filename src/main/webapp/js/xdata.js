@@ -13,11 +13,15 @@ function getBaselineData(query) {
 	});
 }
 
-function getSuggestData(query)
+function getSuggestData(query, shouldSubmit)
 {
   console.log("getSuggestData: ", query);
   $("#existing-trends").empty()
-  $.get('/zv/getdata', 'query='+JSON.stringify(query), generateExistingTrends, 'json')
+  $.get('/zv/getdata', 'query='+JSON.stringify(query),
+  function(query) {
+      // callback function with additional shouldSubmit parameter
+      generateExistingTrends(query, shouldSubmit);
+  }, 'json')
   .fail(function(){
     console.log("getSuggestData: Failed")
     alert('Request failed: /getdata');

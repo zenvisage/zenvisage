@@ -50,6 +50,7 @@ function getSketchpadDygraphObject( data, valueRange, xRange = null )
     });
 }
 
+
 // when drag dropped
 function plotSketchpad( dygraphObject )
 {
@@ -65,6 +66,7 @@ function plotSketchpad( dygraphObject )
   }
   sketchpad = getSketchpadDygraphObject( data, valueRange, xRange )
   angular.element($("#sidebar")).scope().getUserQueryResults();
+  refreshZoomEventHandler();
 }
 
 function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
@@ -78,6 +80,7 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
   }
   var valueRange = [ymin, ymax];
   sketchpad = getSketchpadDygraphObject( data, valueRange );
+  refreshZoomEventHandler();
 }
 
 function finishDraw(event, g, context) {

@@ -417,8 +417,11 @@ function createDataJSON( data ){
 
 
 // takes in full data
-function generateExistingTrends( data ){
+function generateExistingTrends( data , shouldSubmit){
 	console.log("RESPONSE existingTrendData: ",data)
+  if (data == undefined) {
+      return;
+  }
   var outputCharts = data["outputCharts"];
   var count = Object.keys(data).length
   var xUnit = data["xUnit"];
@@ -428,6 +431,9 @@ function generateExistingTrends( data ){
     addExistingTrendGraph( outputCharts[i], i, xUnit, yUnit)
   }
   existingTrends[ExTrendindex] = data;
+  if( shouldSubmit) {
+      onSubmit();
+  }
   //barConfig();
 }
 
