@@ -53,8 +53,6 @@ public class Chart {
 	public int getRank(){
 		return this.rank;
 	}
-	
-	
 	public void setDistance(double d) {
 		this.distance = d;
 	}

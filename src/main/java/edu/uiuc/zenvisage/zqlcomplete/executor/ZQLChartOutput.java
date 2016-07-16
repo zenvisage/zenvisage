@@ -6,10 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import edu.uiuc.zenvisage.model.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import edu.uiuc.zenvisage.model.Chart;
+import edu.uiuc.zenvisage.model.Result;
 
 /**
  *

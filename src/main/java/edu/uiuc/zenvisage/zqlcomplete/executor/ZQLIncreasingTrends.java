@@ -19,6 +19,7 @@ import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 
+
 /**
  *
  */
