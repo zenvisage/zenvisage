@@ -5,10 +5,7 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.roaringbitmap.RoaringBitmap;
-import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
-
 import edu.uiuc.zenvisage.data.Query.FilterOperator;
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
 

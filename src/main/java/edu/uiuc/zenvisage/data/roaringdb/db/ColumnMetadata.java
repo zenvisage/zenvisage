@@ -7,6 +7,6 @@ public class ColumnMetadata {
   public float max=-1000;
   public String unit;
   public float pAAWidth = (float) 0.1;
-  public int numberOfSegments = 30;
+  public int numberOfSegments = 3000;
   public String columnType;
 }
