@@ -77,15 +77,49 @@ public class ZvMain {
 	
 	public  void loadData() throws IOException, InterruptedException{
 		
-		inMemoryDatabase = createDatabase("income","zenvisage/WEB-INF/classes/data/census_test_schema.txt","zenvisage/WEB-INF/classes/data/census-income-test.csv");
+//		inMemoryDatabase = createDatabase("income","zenvisage/WEB-INF/classes/data/census_test_schema.txt","zenvisage/WEB-INF/classes/data/census-income-test.csv");
+//		inMemoryDatabases.put("income", inMemoryDatabase);
+//		inMemoryDatabase = createDatabase("real_estate","zenvisage/WEB-INF/classes/data/real_estate.txt","zenvisage/WEB-INF/classes/data/real_estate.csv");
+//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
+//		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
+//		//inMemoryDatabases.put("iris", inMemoryDatabase);
+//		
+//		inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+//		inMemoryDatabases.put("seed2", inMemoryDatabase);
+		
+		
+		
+//		inMemoryDatabase = createDatabase("income","WEB-INF/classes/data/census_test_schema.txt","WEB-INF/classes/data/census-income-test.csv");
+//		inMemoryDatabases.put("income", inMemoryDatabase);
+//		inMemoryDatabase = createDatabase("real_estate","WEB-INF/classes/data/real_estate.txt","WEB-INF/classes/data/real_estate.csv");
+//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
+//		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
+//		//inMemoryDatabases.put("iris", inMemoryDatabase);
+//		
+//		inMemoryDatabase = createDatabase("seed2", "WEB-INF/classes/data/seed2_schema.txt", "WEB-INF/classes/data/seed2.csv");
+//		inMemoryDatabases.put("seed2", inMemoryDatabase);
+		
+		
+//		inMemoryDatabase = createDatabase("income","src/main/resources/data/census_test_schema.txt","src/main/resources/data/census-income-test.csv");
+//		inMemoryDatabases.put("income", inMemoryDatabase);
+//		inMemoryDatabase = createDatabase("real_estate","src/main/resources/data/real_estate.txt","src/main/resources/data/real_estate.csv");
+//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
+//		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
+//		//inMemoryDatabases.put("iris", inMemoryDatabase);
+//		
+//		inMemoryDatabase = createDatabase("seed2", "src/main/resources/data/seed2_schema.txt", "src/main/resources/data/seed2.csv");
+//		inMemoryDatabases.put("seed2", inMemoryDatabase);
+		
+		inMemoryDatabase = createDatabase("income","/data/census_test_schema.txt","/data/census-income-test.csv");
 		inMemoryDatabases.put("income", inMemoryDatabase);
-		inMemoryDatabase = createDatabase("real_estate","zenvisage/WEB-INF/classes/data/real_estate.txt","zenvisage/WEB-INF/classes/data/real_estate.csv");
+		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
 		//inMemoryDatabases.put("iris", inMemoryDatabase);
 		
-		inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
+		inMemoryDatabase = createDatabase("seed2", "/data/seed2_schema.txt", "/data/seed2.csv");
 		inMemoryDatabases.put("seed2", inMemoryDatabase);
+		
 		
 		System.out.println("Done loading data");
 		
