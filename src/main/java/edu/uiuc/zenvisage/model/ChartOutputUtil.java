@@ -55,7 +55,7 @@ public class ChartOutputUtil {
 				Chart chartOutput = new Chart();
 				/*Separate this call to rank and x axix and return separately*/
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
-				chartOutput.setxType(mappings.get(orders.get(i)));
+				chartOutput.setxType(orderedDistances.get(i) + mappings.get(orders.get(i)));
 				chartOutput.setRank(i+1);
 				chartOutput.setNormalizedDistance(normalize(orderedDistances, range, i));
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
