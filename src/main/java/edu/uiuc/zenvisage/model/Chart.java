@@ -12,6 +12,7 @@ public class Chart {
 	public int count;
 	public int rank;
 	public double distance;
+	public double normalizedDistance;
 	
 	// default constructor
 	public Chart() {
@@ -58,6 +59,12 @@ public class Chart {
 	}
 	public double getDistance() {
 		return this.distance;
+	}
+	public void setNormalizedDistance(double normalizedDistance){
+		this.normalizedDistance = normalizedDistance;
+	}
+	public double getNormalizedDistance(){
+		return normalizedDistance;
 	}
 	
 }
