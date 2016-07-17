@@ -18,6 +18,10 @@ hr {
  height: 85px;
 }
 
+.radio input[type=radio]{
+  margin-left: 0px; !important
+}
+
 #results-table{
 width: 100%;
 }
@@ -177,8 +181,8 @@ svg#treesvg {
   margin-left: 20px;
 }
 
-.radio {
-  margin-left: 20px;
+.radio input[type=radio]{
+  margin-left: 0px;
 }
 
 .dropdown {
