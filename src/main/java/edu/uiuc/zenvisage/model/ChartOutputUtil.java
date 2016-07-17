@@ -45,6 +45,9 @@ public class ChartOutputUtil {
 		if(output != null && !output.isEmpty()){
 			outputLength = output.get(0).length;
 		}
+		
+		Double range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+		
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
 			// initialize a new chart
 			int j = 0;
@@ -54,8 +57,10 @@ public class ChartOutputUtil {
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
 				chartOutput.setxType(orderedDistances.get(i) + mappings.get(orders.get(i)));
 				chartOutput.setRank(i+1);
+				chartOutput.setNormalizedDistance(normalize(orderedDistances, range, i));
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				chartOutput.setDistance(orderedDistances.get(i));
+				
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
 				LinkedHashMap<Float,Float> points = orig.get(j).get(key);
@@ -74,6 +79,10 @@ public class ChartOutputUtil {
 		return;	
 	}
 	
+	/*z= (xi-min(x)) /(max(x)-min(x))*/
+	public double normalize(List<Double> orderedDistances, double range, int i){
+		return (orderedDistances.get(i) - orderedDistances.get(orderedDistances.size()-1)) / range;
+	}
 	
 	public void chartOutput(List<RepresentativeTrend> representativeTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput) throws JsonProcessingException{
 			
