@@ -23,8 +23,11 @@ public class Euclidean implements Distance {
 	@Override
 	public double calculateDistance(double[] src, double[] tar) {
 		// TODO Auto-generated method stub
-		assert src.length == tar.length;
-		return ed.compute(src, tar);
+		if(src.length>tar.length){
+			return ed.compute(tar, src);
+		} else {
+			return ed.compute(src, tar);
+		}
 	}
 
 }
