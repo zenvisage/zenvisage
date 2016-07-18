@@ -137,7 +137,9 @@ public class Similarity extends Analysis {
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>(); 
     	for(int i = 0;i < normalizedgroups.length;i++) {
+    		System.out.println(normalizedgroups[i].length+":"+queryTrend.length);
     		double dist = distance.calculateDistance(normalizedgroups[i], queryTrend);
+    		
     	    distances.add(dist);	
     		indexOrder.put(dist,i);
     	}   
