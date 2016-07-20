@@ -4,6 +4,7 @@
 package edu.uiuc.zenvisage.service.distance;
 
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
+import org.apache.commons.math3.util.FastMath;
 /**
  * @author tarique
  *
@@ -32,6 +33,10 @@ public class Euclidean implements Distance {
 	@Override
 	public double calculateDistance(double[] src, double[] tar) {		
 		// TODO Auto-generated method stub
+<<<<<<< HEAD
+		//assert src.length == tar.length;
+=======
+>>>>>>> 084bf3d0a56c051394a7e0aaaa6cc4bf532c5000
 		if(src.length>tar.length){
 			return ed.compute(tar, src);
 		} else {
