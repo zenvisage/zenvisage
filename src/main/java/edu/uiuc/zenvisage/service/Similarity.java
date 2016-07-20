@@ -3,6 +3,7 @@
  */
 package edu.uiuc.zenvisage.service;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,7 +49,7 @@ public class Similarity extends Analysis {
 	 * @see analyze.Analysis#getAnalysis()
 	 */
 	@Override
-	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
+	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		Sketch[] sketchPoints = args.getSketchPoints();		
 		
@@ -98,7 +99,7 @@ public class Similarity extends Analysis {
 				qT[x] = sPoints.get(x).getY();
 			}			
 			
-			ListPair lp = computeOrders(normalizedgroups,qT,mappings);
+			ListPair lp = computeOrders(normalizedgroups,qT,mappings, args);
 			orders.add(lp.order);
 			orderedDistances.add(lp.distances);
 		}
@@ -129,16 +130,17 @@ public class Similarity extends Analysis {
 	 * @param mappings
 	 * @return
 	 */
-	public ListPair computeOrders(double[][] normalizedgroups, double[] queryTrend, ArrayList<String> mappings) {
-		List<Integer> orders = new ArrayList<Integer>();
-		
+	public ListPair computeOrders(double[][] normalizedgroups, double[] queryTrend, ArrayList<String> mappings, ZvQuery args) {
+		List<Integer> orders = new ArrayList<Integer>();		
 		List<Double> orderedDistances = new ArrayList<Double>();
+		
+		int[] xRange = {(int) Math.floor(args.xRange[0])-1, (int) Math.ceil(args.xRange[1])};
 				
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>(); 
     	for(int i = 0;i < normalizedgroups.length;i++) {
     		//System.out.println(normalizedgroups[i].length+":"+queryTrend.length);
-    		double dist = distance.calculateDistance(normalizedgroups[i], queryTrend);
+    		double dist = distance.calculateDistance(Arrays.copyOfRange(normalizedgroups[i], xRange[0], xRange[1]), Arrays.copyOfRange(queryTrend, xRange[0], xRange[1]));
     		
     	    distances.add(dist);	
     		indexOrder.put(dist,i);

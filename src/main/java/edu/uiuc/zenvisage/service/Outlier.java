@@ -53,7 +53,7 @@ public class Outlier extends Analysis {
 	 * @see analysis.Analysis#generateAnalysis(java.util.LinkedHashMap, double[][])
 	 */
 	@Override
-	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException {
+	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {

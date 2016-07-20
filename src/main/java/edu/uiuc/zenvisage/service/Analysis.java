@@ -52,7 +52,7 @@ public abstract class Analysis {
 	 * @param normalizedgroups TODO
 	 * @throws JsonProcessingException 
 	 */
-	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups) throws JsonProcessingException;
+	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException;
 
 	/**
 	 * @return the executor

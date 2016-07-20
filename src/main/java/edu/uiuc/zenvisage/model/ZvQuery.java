@@ -10,6 +10,7 @@ public class ZvQuery {
 	public int outlierCount;
 	public double[] dataX;
 	public double[] dataY;
+	public double[] xRange;
 	public double yMax;
 	public double yMin;
 	public Sketch[] sketchPoints;
