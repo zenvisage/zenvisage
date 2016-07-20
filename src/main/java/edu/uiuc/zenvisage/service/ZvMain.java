@@ -246,6 +246,7 @@ public class ZvMain {
 			 ((Similarity) analysis).setDescending(true);
 		 }
 		 analysis.compute(output, normalizedgroups, args);
+		 
 		 ObjectMapper mapper = new ObjectMapper();
 		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 	}
