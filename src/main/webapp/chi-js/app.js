@@ -25,14 +25,22 @@ app.factory('sketchpadState', function() {
 
 $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
+    var formData = new FormData(this);
+    if (formData.get("csv").name == "" || formData.get("schema").name == "" ) {
+      alert("Please select corresponding files!");
+      return;
+    }
     $.ajax({
         url : $(this).attr('action'),
         type: $(this).attr('method'),
-        data: new FormData(this),
+        data: formData,
         processData: false,
         contentType: false,
         success: function (data) {
-            alert("success");
+            $('#dataset-form-control').append($("<option></option>")
+                          .attr("value", formData.get("datasetName"))
+                          .text( formData.get("datasetName"))); 
+            alert("Uploaded");
         },
         error: function (jXHR, textStatus, errorThrown) {
             alert(errorThrown);
@@ -89,7 +97,6 @@ app.factory('plotResults', function() {
 
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
-
 app.controller('datasetController', [
   '$scope', '$http', 'datasetInfo', 'plotResults',
   function($scope, $http, datasetInfo, plotResults){

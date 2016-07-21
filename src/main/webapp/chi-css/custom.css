@@ -207,6 +207,33 @@ svg#treesvg {
   margin-right: 10px;
 }
 
-#uploadModal {
-    width: 150px; /* respsonsive width */
+.modal-dialog {
+  width: 450px; /* respsonsive width */
+}
+
+#submitButton {
+  display: block;
+  margin: auto;
+}
+
+#datasetNameInput {
+  width: 295px;
+}
+
+.filestyle {
+  display: block;
+  margin: auto;
+}
+
+.modal-body {
+  padding-left: 0px;
+}
+
+.textButton {
+    background:none;
+    border:none;
+    margin:0;
+    margin-left: 10px;
+    padding:0;
+    color:#999999;
 }

@@ -12,40 +12,36 @@
     <!-- this div contains everything in the body -->
 
     <div id="everything">
-
-
-
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"  data-target=".bd-example-modal-sm">
-        Launch demo modal
-      </button>
-
       <!-- Modal -->
-      <div class="modal fade bd-example-modal-sm" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
+        <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+              </div>
+              <div class="modal-body">
+                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                <div class="row">
+                  <div class="col-md-5">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
+                  </div>
+                  <div class="col-md-5 col-md-offset-1">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema">
+                  </div>
+                </div>
+              </div>
+                <div class="modal-footer">
+                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                </div>
             </div>
-            <div class="modal-body">
-
-                <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
-                    Dataset name <input type="text" name="username"><br/><br/>
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv"><br/>
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema"><br/>
-                    <input type="submit" class="btn btn-primary" value="Upload">
-                </form>
-
-            </div>
-
           </div>
         </div>
-      </div>
-
-
+      </form>
+      
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController">
@@ -53,7 +49,9 @@
             ZenVisage
           </h4>
           <div class="dropdown" id="dataset">
-            <h5><b>Dataset</b></h5>
+            <h5><b>Dataset</b><button type="button" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><b>+</b></button></h5>
+            <!-- Button trigger modal -->
+
             <select class="form-control" id="dataset-form-control">
               <option>Real Estate</option>
               <option>Seed2</option>
@@ -110,25 +108,26 @@
           </div>
           <!-- drawing interface END-->
 
-          <div class="col-md-8">
+          <div class="col-md-8" id="table-div">
             <div class="row">
               <div class="col-md-3">
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
-                    <input class="active" type="radio" name="distance-method" value="Euclidean" checked ><label>Euclidean Distance</label><br>
-                    <input type="radio" name="distance-method" value="segmentation" ><label>Segmentation</label><br>
-                    <input type="radio" name="distance-method" value="dtw" ><label>DTW</label>
+                    <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>Euclidean Distance</label><br>
+                    <input type="radio" name="search-method" value="Outlier" ><label>Segmentation</label><br>
+                    <input type="radio" name="search-method" value="Outlier" ><label>DTW</label>
                   </form>
                 </div>
-                <!--
+              </div>
+              <div class="col-md-3">
                 <b>Representative/Outlier</b>
                 <div class="radio">
                   <form>
                     <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>K-means</label><br>
+                    <input type="radio" name="search-method" value="Outlier" ><label>Fuzzy c-means</label><br>
                   </form>
                 </div>
-                -->
               </div>
               <div class="col-md-3">
                 <div class="info-text"><b>Aggregation Method</b></div>
@@ -141,12 +140,9 @@
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
                   <div>
-                    <input class="num-results" type="text" name="number-of-results" value="50">
+                    <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
                   </div>
                 </div>
-              </div>
-              <div class="col-md-3">
-
               </div>
             </div>
           </div>
