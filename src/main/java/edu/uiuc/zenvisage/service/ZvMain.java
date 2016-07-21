@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -43,7 +44,7 @@ import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
-//import edu.uiuc.zenvisage.service.utility.UploadHandleServlet;
+import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
@@ -140,10 +141,20 @@ public class ZvMain {
  
     }
 	
-//	public static void uploadFiles(MultipartHttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		UploadHandleServlet uploadHandler = new UploadHandleServlet();
-//		uploadHandler.doPost(request, response);	
-//	}
+	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException {
+		UploadHandleServlet uploadHandler = new UploadHandleServlet();
+		List<String> names = uploadHandler.upload(request, response);
+		
+		if (names.size() == 3) {
+			System.out.println("successful upload!");
+			inMemoryDatabase = createDatabase(names.get(0),"/data/" + names.get(2),"/data/" + names.get(1));
+			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
+		}
+		
+		for (String s : inMemoryDatabases.keySet()) {
+			System.out.println(s);
+		}
+	}
 			
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);

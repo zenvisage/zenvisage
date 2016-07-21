@@ -13,6 +13,39 @@
 
     <div id="everything">
 
+
+
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"  data-target=".bd-example-modal-sm">
+        Launch demo modal
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade bd-example-modal-sm" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
+                    Dataset name <input type="text" name="username"><br/><br/>
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv"><br/>
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema"><br/>
+                    <input type="submit" class="btn btn-primary" value="Upload">
+                </form>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController">
@@ -157,6 +190,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="chi-js/bootstrap-filestyle.min.js"> </script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>

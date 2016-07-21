@@ -23,6 +23,23 @@ app.factory('sketchpadState', function() {
 });
 */
 
+$('#uploaderForm').on('submit', function(e) {
+    e.preventDefault();
+    $.ajax({
+        url : $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: new FormData(this),
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            alert("success");
+        },
+        error: function (jXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+});
+
 app.factory('datasetInfo', function() {
   var categoryData;
   var xAxisData;
