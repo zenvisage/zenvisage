@@ -14,6 +14,7 @@ function getSketchpadDygraphObject( data, valueRange, xRange = null )
       xLabelHeight: 9,
       title: getSelectedCategory(),
       titleHeight: 9,
+      dateWindow: xRange,
       xAxisRange: xRange,
       showRangeSelector: true,
       rangeSelectorHeight: 25,

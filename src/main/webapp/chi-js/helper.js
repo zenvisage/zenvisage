@@ -25,7 +25,7 @@ function displayUserQueryResultsHelper( userQueryResults )
 
     var xlabel = userQueryResults[count]["xType"];
     var ylabel = userQueryResults[count]["yType"];
-    var ylabel = userQueryResults[count]["xRange"];
+    var xRange = userQueryResults[count]["xRange"];
 
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
