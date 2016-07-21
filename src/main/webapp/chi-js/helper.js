@@ -25,6 +25,7 @@ function displayUserQueryResultsHelper( userQueryResults )
 
     var xlabel = userQueryResults[count]["xType"];
     var ylabel = userQueryResults[count]["yType"];
+    var ylabel = userQueryResults[count]["xRange"];
 
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
@@ -50,6 +51,16 @@ function displayUserQueryResultsHelper( userQueryResults )
         interactionModel: {},
         drawGrid: false,
         colors: [ "0E3340", "#90C3D4" ],
+        underlayCallback: function(canvas, area, g) {
+            var first_left = g.toDomCoords(xmin, -20)[0];
+            var first_right = g.toDomCoords(xRange[0], +20)[0];
+            var second_left = g.toDomCoords(xRange[1], -20)[0];
+            var second_right = g.toDomCoords(xmax, +20)[0];
+
+            canvas.fillStyle = "rgba(70, 70, 70, 1.0)";
+            canvas.fillRect(first_left, area.y, first_right - first_left, area.h);
+            canvas.fillRect(second_left, area.y, second_right - second_left, area.h);
+        },
       });
   }
 

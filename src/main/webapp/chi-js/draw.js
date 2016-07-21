@@ -14,7 +14,7 @@ function getSketchpadDygraphObject( data, valueRange, xRange = null )
       xLabelHeight: 9,
       title: getSelectedCategory(),
       titleHeight: 9,
-      dateWindow: xRange,
+      xAxisRange: xRange,
       showRangeSelector: true,
       rangeSelectorHeight: 25,
       rangeSelectorPlotFillColor: "",
@@ -59,7 +59,7 @@ function plotSketchpad( dygraphObject )
     data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
   }
   var valueRange = dygraphObject.axes_[0]["valueRange"]
-  var xRange = dygraphObject.xAxisRange()
+  var xRange = sketchpad.xAxisRange()
 
   if (sketchpad != null) {
     sketchpad.destroy()
