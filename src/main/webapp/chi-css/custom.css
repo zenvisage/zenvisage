@@ -207,3 +207,6 @@ svg#treesvg {
   margin-right: 10px;
 }
 
+#uploadModal {
+    width: 150px; /* respsonsive width */
+}
