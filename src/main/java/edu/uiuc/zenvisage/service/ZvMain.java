@@ -245,7 +245,8 @@ public class ZvMain {
 			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
 			 ((Similarity) analysis).setDescending(true);
 		 }
-		 analysis.compute(output, normalizedgroups);
+		 analysis.compute(output, normalizedgroups, args);
+		 
 		 ObjectMapper mapper = new ObjectMapper();
 		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 	}
@@ -310,7 +311,7 @@ public class ZvMain {
 			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
 			 ((Similarity) analysis).setDescending(true);
 		 }
-		 analysis.compute(output, normalizedgroups);
+		 analysis.compute(output, normalizedgroups, args);
 		 ObjectMapper mapper = new ObjectMapper();
 		 
 		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
