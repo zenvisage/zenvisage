@@ -83,9 +83,9 @@
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
-                    <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>Euclidean Distance</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label>Segmentation</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label>DTW</label>
+                    <input class="active" type="radio" name="distance-method" value="euclidean" checked ><label>Euclidean Distance</label><br>
+                    <input type="radio" name="distance-method" value="segmentation" ><label>Segmentation</label><br>
+                    <input type="radio" name="distance-method" value="dtw" ><label>DTW</label>
                   </form>
                 </div>
                 <!--
@@ -108,7 +108,7 @@
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
                   <div>
-                    <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
+                    <input class="num-results" type="text" name="number-of-results" value="50">
                   </div>
                 </div>
               </div>

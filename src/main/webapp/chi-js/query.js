@@ -40,8 +40,8 @@ function Query( searchMethod ) {
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
   this.distanceNormalized = false; // fix to dynamically fetch
   this.outputNormalized = false; // fix to dynamically fetch
-  this.clustering="KMeans"; // fix to dynamically fetch
-  this.distance_metric="Euclidean"; // fix to dynamically fetch
+  this.clustering = "KMeans"; // fix to dynamically fetch
+  this.distance_metric = getDistanceMethod(); // fix to dynamically fetch
   this.predicateOperator = "="; // fix to dynamically fetch
   this.predicateColumn = getSelectedCategory();
   this.predicateValue = ""; // fix to dynamically fetch
@@ -59,7 +59,7 @@ function SketchPoints(xAxisName, yAxisName, points){
   this.yAxis = getSelectedYAxis();
   this.xAxis = getSelectedXAxis();
   this.groupBy = getSelectedCategory();
-  this.aggrFunc = "avg";
+  this.aggrFunc = getAggregationMethod();
   this.aggrVar = getSelectedYAxis();
 }
 
@@ -90,29 +90,8 @@ function getAggregationMethod()
 
 function getDistanceMethod()
 {
-  if($("#ignoreX").is(':checked')){
-    return "dtw";
-  }
-  return "euclidean";
+  return $('input[name = distance-method]:checked').val()
 }
-
-function getScaleOption()
-{
-  if($("#ignoreY").is(':checked')){
-    return "ignore-scale";
-  }
-  return "consider-scale";
-}
-
-function getOutputScaleOption()
-{
-  if($("#ignoreY").is(':checked')){
-   return "ignore-scale";
-  }
-  return "consider-scale";
-}
-
-
 
 function getNumResults()
 {
