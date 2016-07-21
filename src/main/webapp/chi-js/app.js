@@ -89,6 +89,7 @@ app.factory('plotResults', function() {
 
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
+
 app.controller('datasetController', [
   '$scope', '$http', 'datasetInfo', 'plotResults',
   function($scope, $http, datasetInfo, plotResults){

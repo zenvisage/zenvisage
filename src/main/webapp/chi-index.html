@@ -110,26 +110,25 @@
           </div>
           <!-- drawing interface END-->
 
-          <div class="col-md-8" id="table-div">
+          <div class="col-md-8">
             <div class="row">
               <div class="col-md-3">
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
-                    <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>Euclidean Distance</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label>Segmentation</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label>DTW</label>
+                    <input class="active" type="radio" name="distance-method" value="Euclidean" checked ><label>Euclidean Distance</label><br>
+                    <input type="radio" name="distance-method" value="segmentation" ><label>Segmentation</label><br>
+                    <input type="radio" name="distance-method" value="dtw" ><label>DTW</label>
                   </form>
                 </div>
-              </div>
-              <div class="col-md-3">
+                <!--
                 <b>Representative/Outlier</b>
                 <div class="radio">
                   <form>
                     <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>K-means</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label>Fuzzy c-means</label><br>
                   </form>
                 </div>
+                -->
               </div>
               <div class="col-md-3">
                 <div class="info-text"><b>Aggregation Method</b></div>
@@ -142,9 +141,12 @@
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
                   <div>
-                    <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
+                    <input class="num-results" type="text" name="number-of-results" value="50">
                   </div>
                 </div>
+              </div>
+              <div class="col-md-3">
+
               </div>
             </div>
           </div>

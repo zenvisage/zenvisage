@@ -25,6 +25,7 @@ function displayUserQueryResultsHelper( userQueryResults )
 
     var xlabel = userQueryResults[count]["xType"];
     var ylabel = userQueryResults[count]["yType"];
+    var xRange = userQueryResults[count]["xRange"];
 
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
@@ -50,6 +51,16 @@ function displayUserQueryResultsHelper( userQueryResults )
         interactionModel: {},
         drawGrid: false,
         colors: [ "0E3340", "#90C3D4" ],
+        underlayCallback: function(canvas, area, g) {
+            var first_left = g.toDomCoords(xmin, -20)[0];
+            var first_right = g.toDomCoords(xRange[0], +20)[0];
+            var second_left = g.toDomCoords(xRange[1], -20)[0];
+            var second_right = g.toDomCoords(xmax, +20)[0];
+
+            canvas.fillStyle = "rgba(70, 70, 70, 1.0)";
+            canvas.fillRect(first_left, area.y, first_right - first_left, area.h);
+            canvas.fillRect(second_left, area.y, second_right - second_left, area.h);
+        },
       });
   }
 
@@ -90,6 +101,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
     var xmax = Math.max.apply(Math, xData);
     var ymin = Math.min.apply(Math, yData);
     var ymax = Math.max.apply(Math, yData);
+    var representativeCount = " (" + varFinalArray[count]["count"] + ")";
 
     var data = [];
     var arrayLength = xData.length;
@@ -97,7 +109,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
       data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, valueRange, xlabel, count, "representative-result-" );
+    representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, valueRange, xlabel, count, "representative-result-", representativeCount );
   }
 
   $(".draggable-graph").draggable({
@@ -158,7 +170,7 @@ function displayOutlierResultsHelper( outlierResults )
   });
 }
 
-function getRepresentativeAndOutlierDygraphObject( data, valueRange, xLabel, count, id )
+function getRepresentativeAndOutlierDygraphObject( data, valueRange, xLabel, count, id, representativeCount = "" )
 {
   return new Dygraph(document.getElementById(id + count.toString()), data,
     {
@@ -167,7 +179,7 @@ function getRepresentativeAndOutlierDygraphObject( data, valueRange, xLabel, cou
       axisLabelWidth: (0,0),
       axisLabelFontSize: 0,
       ylabel: null,
-      xlabel: xLabel,
+      xlabel: xLabel + representativeCount.toString(),
       showLabelsOnHighlight: false,
       highlightCircleSize: 0,
       interactionModel: {},
