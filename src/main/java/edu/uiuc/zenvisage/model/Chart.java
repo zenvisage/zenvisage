@@ -7,6 +7,7 @@ public class Chart {
 	public String yType;
 	public String zType;
 	public String title;
+	public double[] xRange;
 	public ArrayList<String> xData = new ArrayList<String>();
 	public ArrayList<String> yData = new ArrayList<String>();
 	public int count;
@@ -65,6 +66,12 @@ public class Chart {
 	}
 	public double getNormalizedDistance(){
 		return normalizedDistance;
+	}
+	public void setXRange(double[] xRange){
+		this.xRange = xRange;
+	}
+	public double[] getXRange(){
+		return this.xRange;
 	}
 	
 }

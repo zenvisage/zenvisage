@@ -60,6 +60,7 @@ public class ChartOutputUtil {
 				chartOutput.setNormalizedDistance(normalize(orderedDistances, range, i));
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				chartOutput.setDistance(orderedDistances.get(i));
+				chartOutput.setXRange(args.xRange);
 				
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
