@@ -83,10 +83,17 @@ function getXRange() //when zoomed in
   return sketchpad.xAxisRange()
 }
 
-/* need to angularize */
 function getAggregationMethod()
 {
   return $('input[name = aggregation-method]:checked').val()
+}
+
+function getDistanceMethod()
+{
+  if($("#ignoreX").is(':checked')){
+    return "dtw";
+  }
+  return "euclidean";
 }
 
 function getScaleOption()
@@ -105,13 +112,7 @@ function getOutputScaleOption()
   return "consider-scale";
 }
 
-function getDistanceMethod()
-{
-  if($("#ignoreX").is(':checked')){
-    return "dtw";
-  }
-  return "euclidean";
-}
+
 
 function getNumResults()
 {
