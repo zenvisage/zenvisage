@@ -41,7 +41,7 @@
           </div>
         </div>
       </form>
-      
+
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController">
@@ -49,12 +49,12 @@
             ZenVisage
           </h4>
           <div class="dropdown" id="dataset">
-            <h5><b>Dataset</b><button type="button" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><b>+</b></button></h5>
+            <h5><b>Dataset</b><button type="button" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
-            <select class="form-control" id="dataset-form-control">
-              <option>Real Estate</option>
-              <option>Seed2</option>
+            <select class="form-control" ng-change="onDatasetChange()" ng-model="selectedDataset" id="dataset-form-control">
+              <option value="real_estate">Real Estate</option>
+              <option value="seed2">Seed2</option>
             </select>
           </div>
           <div>

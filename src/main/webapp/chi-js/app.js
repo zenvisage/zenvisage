@@ -39,7 +39,7 @@ $('#uploaderForm').on('submit', function(e) {
         success: function (data) {
             $('#dataset-form-control').append($("<option></option>")
                           .attr("value", formData.get("datasetName"))
-                          .text( formData.get("datasetName"))); 
+                          .text( formData.get("datasetName")));
             alert("Uploaded");
         },
         error: function (jXHR, textStatus, errorThrown) {
@@ -102,7 +102,7 @@ app.controller('datasetController', [
   function($scope, $http, datasetInfo, plotResults){
     //goes to draw.js
 
-    function initializeSketchpadOnDatasetChange( xdata, ydata, zdata )
+    function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
     {
       initializeSketchpad(
         xdata["min"],xdata["max"],ydata["min"],ydata["max"],
@@ -172,8 +172,7 @@ app.controller('datasetController', [
       });
     }
 
-    // TODO: params will need to be dynamic later
-    var q = constructDatasetChangeQuery("real_estate");
+    var q = constructDatasetChangeQuery(getSelectedDataset());
     //var q = constructDatasetChangeQuery("seed2");
 
     var params = {
@@ -183,48 +182,61 @@ app.controller('datasetController', [
       params: params,
     };
 
+   $scope.onDatasetChange = function() {
+
+      var q = constructDatasetChangeQuery(getSelectedDataset());
+      //var q = constructDatasetChangeQuery("seed2");
+
+      var params = {
+        "query": q,
+      };
+      var config = {
+        params: params,
+      };
+
+      $http.get('/zv/getformdata', config).
+        success(function(response) {
+          globalDatasetInfo = response;
+          datasetInfo.store(response); //saves form data to datasetInfo
+          $scope.categories = [];
+          $scope.xAxisItems = [];
+          $scope.yAxisItems = [];
+          $scope.selectedCategory;
+          $scope.selectedXAxis;
+          $scope.selectedYAxis;
+          angular.forEach(response.zAxisColumns, function(value, key) {
+           $scope.categories.push(key);
+          });
+          $scope.selectedCategory = $scope.categories[0];
+          angular.forEach(response.xAxisColumns, function(value, key) {
+           $scope.xAxisItems.push(key);
+          });
+          $scope.selectedXAxis = $scope.xAxisItems[0];
+          angular.forEach(response.yAxisColumns, function(value, key) {
+           $scope.yAxisItems.push(key);
+          });
+          $scope.selectedYAxis = $scope.yAxisItems[0];
+          //send in first item info
+          initializeSketchpadOnDataAttributeChange(
+                response.xAxisColumns[$scope.xAxisItems[0]],
+                response.yAxisColumns[$scope.yAxisItems[0]],
+                response.zAxisColumns[$scope.categories[0]]
+              );
+          getRepresentativeTrends( getOutlierTrends );
+        }).
+        error(function(response) {
+          alert('Request failed: /getformdata');
+        });
+    }
+
     // when the data selection is changed, the graphs needs to be re-initialized
     // and the rest of the graphs have to be fetched
     $scope.onDataAttributeChange = function() {
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
-      initializeSketchpadOnDatasetChange(xData, yData, categoryData); //only x and y values?
+      initializeSketchpadOnDataAttributeChange(xData, yData, categoryData); //only x and y values?
       getRepresentativeTrends(getOutlierTrends);
     };
 
-    // when the page first loads, initialize and then set default values
-    $http.get('/zv/getformdata', config).
-      success(function(response) {
-        globalDatasetInfo = response;
-        datasetInfo.store(response); //saves form data to datasetInfo
-        $scope.categories = [];
-        $scope.xAxisItems = [];
-        $scope.yAxisItems = [];
-        $scope.selectedCategory;
-        $scope.selectedXAxis;
-        $scope.selectedYAxis;
-        angular.forEach(response.zAxisColumns, function(value, key) {
-         $scope.categories.push(key);
-        });
-        $scope.selectedCategory = $scope.categories[0];
-        angular.forEach(response.xAxisColumns, function(value, key) {
-         $scope.xAxisItems.push(key);
-        });
-        $scope.selectedXAxis = $scope.xAxisItems[0];
-        angular.forEach(response.yAxisColumns, function(value, key) {
-         $scope.yAxisItems.push(key);
-        });
-        $scope.selectedYAxis = $scope.yAxisItems[0];
-        //send in first item info
-        initializeSketchpadOnDatasetChange(
-              response.xAxisColumns[$scope.xAxisItems[0]],
-              response.yAxisColumns[$scope.yAxisItems[0]],
-              response.zAxisColumns[$scope.categories[0]]
-            );
-        getRepresentativeTrends( getOutlierTrends );
-      }).
-      error(function(response) {
-        alert('Request failed: /getformdata');
-      });
 }]);

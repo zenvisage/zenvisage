@@ -98,3 +98,8 @@ function getNumResults()
   return $('#num-results input').val()
 }
 
+function getSelectedDataset()
+{
+  return $("#dataset-form-control option:selected").val();
+}
+
