@@ -134,13 +134,28 @@ public class Similarity extends Analysis {
 		List<Integer> orders = new ArrayList<Integer>();		
 		List<Double> orderedDistances = new ArrayList<Double>();
 		
-		int[] xRange = {(int) Math.floor(args.xRange[0])-1, (int) Math.ceil(args.xRange[1])};
+		int[] xRange = new int[2];
+		
+		ArrayList<Point> inputPoints = args.sketchPoints[0].points;
+		for (int i = 0; i < inputPoints.size(); i++) {
+			if (args.xRange[0] <= inputPoints.get(i).getX()) {
+				xRange[0] = i;
+				break;
+			}
+		}
+		
+		for (int i = inputPoints.size() - 1; i >= 0 ; i--) {
+			if (args.xRange[1] >= inputPoints.get(i).getX()) {
+				xRange[1] = i;
+				break;
+			}
+		}
+		
+		System.out.println(xRange[0] + "\t" + xRange[1]);
 				
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>(); 
     	for(int i = 0;i < normalizedgroups.length;i++) {
-//    		System.out.println(xRange[0] + "\t" + xRange[1] + "\t" + normalizedgroups[i].length + "\t" + queryTrend.length + "\t" + args.minX + "\t" + args.maxX );
-//    		int startX = xRange[0] - args.
     		double dist = distance.calculateDistance(Arrays.copyOfRange(normalizedgroups[i], xRange[0], xRange[1]), Arrays.copyOfRange(queryTrend, xRange[0], xRange[1]));
     		
     	    distances.add(dist);	
