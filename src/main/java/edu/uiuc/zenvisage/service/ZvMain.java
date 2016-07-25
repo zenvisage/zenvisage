@@ -111,8 +111,9 @@ public class ZvMain {
 //		inMemoryDatabase = createDatabase("seed2", "src/main/resources/data/seed2_schema.txt", "src/main/resources/data/seed2.csv");
 //		inMemoryDatabases.put("seed2", inMemoryDatabase);
 		
-		inMemoryDatabase = createDatabase("income","/data/census_test_schema.txt","/data/census-income-test.csv");
-		inMemoryDatabases.put("income", inMemoryDatabase);
+//		inMemoryDatabase = createDatabase("income","/data/census_test_schema.txt","/data/census-income-test.csv");
+//		inMemoryDatabases.put("income", inMemoryDatabase);
+		
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
@@ -121,6 +122,8 @@ public class ZvMain {
 		inMemoryDatabase = createDatabase("seed2", "/data/seed2_schema.txt", "/data/seed2.csv");
 		inMemoryDatabases.put("seed2", inMemoryDatabase);
 		
+//		inMemoryDatabase = createDatabase("crime", "/data/crime_schema.txt", "/data/crime.csv");
+//		inMemoryDatabases.put("crime", inMemoryDatabase);
 		
 		System.out.println("Done loading data");
 		

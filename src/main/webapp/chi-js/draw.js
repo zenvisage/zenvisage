@@ -51,6 +51,62 @@ function getSketchpadDygraphObject( data, valueRange, xRange = null )
     });
 }
 
+function datetimeTesting()
+{
+  if (sketchpad != null) {
+    sketchpad.destroy()
+  }
+
+  var data = [];
+  for (var i = 0; i < temp3.length ; i++ ) {
+    data.push([ new Date(temp3[i][0]), Number(temp3[i][1]) ]);
+  }
+
+  console.log(data)
+  var valueRange = [28,91]
+  sketchpad = new Dygraph(document.getElementById("draw-div"), data,
+    {
+      valueRange: valueRange,
+      axisLabelFontSize: 9,
+      xLabelHeight: 9,
+      title: getSelectedCategory(),
+      titleHeight: 9,
+      //dateWindow: xRange,
+      //xAxisRange: xRange,
+      showRangeSelector: true,
+      rangeSelectorHeight: 25,
+      rangeSelectorPlotFillColor: "",
+      interactionModel: {
+        mousedown: function (event, g, context) {
+          // prevents mouse drags from selecting page text.
+          if (event.preventDefault) {
+            event.preventDefault();  // Firefox, Chrome, etc.
+          } else {
+            event.returnValue = false;  // IE
+            event.cancelBubble = true;
+          }
+          isDrawing = true;
+          setPoint(event, g, context, data, valueRange);
+        },
+        mousemove: function (event, g, context) {
+          if (!isDrawing) return;
+          setPoint(event, g, context, data, valueRange);
+        },
+        mouseup: function(event, g, context) {
+          finishDraw(event, g, context);
+        },
+        mouseout: function(event, g, context) {
+          if (isDrawing)
+          {
+            finishDraw(event, g, context);
+          }
+        },
+        dblclick: function(event, g, context) {
+          Dygraph.defaultInteractionModel.dblclick(event, g, context);
+        }
+      },
+    });
+}
 
 // when drag dropped
 function plotSketchpad( dygraphObject )
