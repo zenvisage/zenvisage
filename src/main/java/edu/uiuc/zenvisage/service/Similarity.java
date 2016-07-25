@@ -87,7 +87,7 @@ public class Similarity extends Analysis {
 			
 			
 			Set<Float> ignore = new HashSet<Float>();
-			paa.setPAAwidth(output,sketchPoints[i]);
+//			paa.setPAAwidth(output,sketchPoints[i]);
 //			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
 			double[][] normalgroup = this.dataReformatter.reformatData(output);
 			data.add(normalgroup);
@@ -139,7 +139,8 @@ public class Similarity extends Analysis {
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>(); 
     	for(int i = 0;i < normalizedgroups.length;i++) {
-    		//System.out.println(normalizedgroups[i].length+":"+queryTrend.length);
+//    		System.out.println(xRange[0] + "\t" + xRange[1] + "\t" + normalizedgroups[i].length + "\t" + queryTrend.length + "\t" + args.minX + "\t" + args.maxX );
+//    		int startX = xRange[0] - args.
     		double dist = distance.calculateDistance(Arrays.copyOfRange(normalizedgroups[i], xRange[0], xRange[1]), Arrays.copyOfRange(queryTrend, xRange[0], xRange[1]));
     		
     	    distances.add(dist);	

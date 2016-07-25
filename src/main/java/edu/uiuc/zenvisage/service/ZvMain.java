@@ -265,9 +265,11 @@ public class ZvMain {
 	
 	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
 		// get data from database
-//		System.out.println(query);
+		System.out.println(query);
 		
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
+		System.out.println(args.maxX + "\t" + args.method);
+		 
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);

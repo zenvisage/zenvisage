@@ -40,6 +40,7 @@ $('#uploaderForm').on('submit', function(e) {
             $('#dataset-form-control').append($("<option></option>")
                           .attr("value", formData.get("datasetName"))
                           .text( formData.get("datasetName")));
+            $('#uploaderModal').modal('toggle');
             alert("Uploaded");
         },
         error: function (jXHR, textStatus, errorThrown) {

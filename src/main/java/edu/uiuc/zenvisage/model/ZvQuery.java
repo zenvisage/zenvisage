@@ -10,10 +10,11 @@ public class ZvQuery {
 	public int outlierCount;
 	public double[] dataX;
 	public double[] dataY;
-	public double[] xRange;
 	public double yMax;
 	public double yMin;
 	public Sketch[] sketchPoints;
+	public double minX;
+	public double maxX;
 	public boolean outputNormalized = false;
 	public boolean distanceNormalized=false;
 	public String clustering="DBSCAN";
@@ -21,6 +22,7 @@ public class ZvQuery {
 	public String predicateColumn;
 	public String predicateOperator;
 	public String predicateValue;
+	public double[] xRange;
 
 	
 	public String getDistance_metric() {
