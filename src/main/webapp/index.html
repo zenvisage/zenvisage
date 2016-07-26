@@ -23,7 +23,7 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="assets/js/jquery.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-	 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 
     <!-- My External Files -->
     <script src="js/vdb.js"></script>
@@ -54,7 +54,7 @@
     <div id="left-bar">
       <div id="sidebar" class="interface">
         <h4>
-			zenvisage
+      zenvisage
         </h4>
         <hr>
         <div>
@@ -89,7 +89,7 @@
           <ul id="y-axis"></ul>
         </div>
         <hr>
-		    <div class="info-text"><b>Aggregation Method</b></div>
+        <div class="info-text"><b>Aggregation Method</b></div>
         <div class="radio">
           <form>
             <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
@@ -106,7 +106,7 @@
         </div>
 
         <div class = "row">
-         	<div class = "col-md-5">
+          <div class = "col-md-5">
             <div class="dropdown" >
             <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" onclick= "fillPredicateDropdown()">Value
             <span class="caret"></span></button>
@@ -143,7 +143,7 @@
             <span data-toggle="modal" data-target="#right-bar"class="glyphicon glyphicon-cog cog" aria-hidden="true"></span>&nbsp;
         </h5>
           <div class="btn-group" role="group" aria-label="..." id="changeButtons" style="display : none">
-  			  <button type="button" class="btn btn-default" onclick = "changeExistingTrends(0)" id = "0">Column-A</button>
+          <button type="button" class="btn btn-default" onclick = "changeExistingTrends(0)" id = "0">Column-A</button>
           <button type="button" class="btn btn-default" onclick = "changeExistingTrends(1)" id = "1">Column-B</button>
         </div>
         <div id="existing-trends"></div>
@@ -191,7 +191,7 @@
     <div id="middle-bar">
       <div id="buttons">
         <div class = "row">
-        	<div class = "col-md-5">
+          <div class = "col-md-5">
             <div class="btn-group" role="group" aria-label="...">
               <button type="button" class = "btn btn-info btn-s" id = "cqb-1" >Custom Query Builder</button>
               <script>
@@ -231,14 +231,14 @@
               <button type="button" class = "btn btn-default btn-xs" id = " singlecircle" style= "display: none">circle</button>
 
             </div>
-  	        <select id="sel">
+            <select id="sel">
               <option id ="auto" value="Auto">Recommended</option>
-  	          <option id ="lineChart" value="Line Chart">Line Chart</option>
-  	          <option id="barChart" value="Bar Chart">Bar Chart</option>
-  	          <option id ="scatter" value= "Scatter">Scatter Plot</option>
-  	        </select>
+              <option id ="lineChart" value="Line Chart">Line Chart</option>
+              <option id="barChart" value="Bar Chart">Bar Chart</option>
+              <option id ="scatter" value= "Scatter">Scatter Plot</option>
+            </select>
           </div>
-  		    <div class="col-md-5" id="search-value">
+          <div class="col-md-5" id="search-value">
             <div id="submit-info-text"><h5>Predicate = </h5></div>
             <input id="submit-form-1"class="form-control search-value" type="text" size = "10" name="search-value" onchange = "onSubmit()" value="" >
             <button type="button" class = "btn btn-default btn-s" id="submit-button" onclick = "onSubmit()">Submit</button>
@@ -402,9 +402,6 @@
    </div>
   </div>
 <script>
-
-
-
 /*
     saves the magicSuggest objects for use later
 */
@@ -433,17 +430,14 @@ function saveRowData(index){
             tableHasSketch = false;
         }
     });
-
     var constraintComboBox = $('#constraint-table-select-'+index).magicSuggest({allowFreeEntries:false, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput" });
     var constraintPredicate = $('#constraint-predicate-select-'+index).magicSuggest({allowFreeEntries:false, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput" });
     constraintPredicate.setData(["=", "!="])
     var constraintField = $('#constraint-field-select-'+index).magicSuggest({maxSelection :1 , toggleOnClick:true,  hideTrigger:true, maxDropHeight:0, infoMsgCls: "axesInput" }); //special for only text fields
     var constraint = [constraintComboBox, constraintPredicate, constraintField];
-
     var processComboBox = $('#process-table-select-'+index).magicSuggest({maxSelection :1 , toggleOnClick:true, placeholder: 'Enter function', infoMsgCls: "axesInput" });
     var processParams = $('#process-params-select-'+index).magicSuggest({maxSelection :null , toggleOnClick:true, placeholder: 'Enter parameters',hideTrigger:true, maxDropHeight:0, infoMsgCls: "axesInput" });
     var processes = [processComboBox, processParams];
-
     $('#x-table-select-'+index).width(150);
     $('#y-table-select-'+index).width(150);
     $('#z-table-select-'+index).width(150);
@@ -452,25 +446,19 @@ function saveRowData(index){
     $('#constraint-field-select-'+index).width(220);
     $('#process-table-select-'+index).width(220);
     $('#process-params-select-'+index).width(220);
-
     var rowData = new magicSuggestStruct(index, xComboBox, yComboBox, zComboBox, constraint, processes);
     magicSuggestRows.push(rowData)
-
 }
-
-
 function deleteRow(button)
 {
     var i=button.parentNode.parentNode.rowIndex; //row index to be deleted
     var rowElement = button.parentNode.parentNode; //actual row element
     //gets first column value, aka the actual unique ID associated with row we want to delete
     var name_id = $(rowElement).children(":first").text()
-
     document.getElementById('cqbtable').deleteRow(i);
     //move the result charts up
     var windowWidth = $("#middle-bar").width()
     resizeResultsTable($("#scrollbar").height() , windowWidth);
-
     deleteRowData(name_id)
 }
 /* Id is not equivalent to array position
@@ -483,46 +471,35 @@ function deleteRowData(name_id){
         }
     }
 }
-
 function insRow()
 {
     var x=$('#cqbtable');
-
     var new_row = $('<tr>')
     x.append(new_row)
-
     var new_td = $('<td>')
     new_td.append(vqlTablerows)
     new_row.append(new_td)
-
     var x_td = $('<td>')
     x_td.append("<div id='x-table-select-" + vqlTablerows + "'></div>");
     new_row.append(x_td)
-
     var y_td = $('<td>')
     y_td.append("<div id='y-table-select-" + vqlTablerows + "'></div>");
     new_row.append(y_td)
-
     var z_td = $('<td>')
     z_td.append("<div id=z-table-select-" + vqlTablerows + "></div>");
     new_row.append(z_td)
-
     var constraints_td = $('<td>')
     constraints_td.append("<div id=constraint-table-select-"+ vqlTablerows + "></div> <div id=constraint-predicate-select-"+ vqlTablerows + "></div><div class=\"constraint-field\" id=constraint-field-select-" + vqlTablerows + "></div>");
     new_row.append(constraints_td)
-
     var process_td = $('<td>')
     process_td.append("<div id=process-table-select-" + vqlTablerows + "></div> <div id=process-params-select-" + vqlTablerows + "></div>");
     new_row.append(process_td)
-
     var delete_td = $('<td>')
     delete_td.append("<input type='button' class ='btn btn-danger btn-s' id='deleterow' value='X' onclick='deleteRow(this)'/>");
     new_row.append(delete_td)
-
     // var add_td = $('<td>')
     // add_td.append("<input type='button' id='addrow' value='Add Rows' onclick='insRow()'/>");
     // new_row.append(add_td)
-
     saveRowData(vqlTablerows)
     addDropDownData()
     vqlTablerows ++
@@ -530,7 +507,6 @@ function insRow()
     var windowWidth = $("#middle-bar").width()
     resizeResultsTable($("#scrollbar").height() , windowWidth);
 }
-
 function addDropDownData(){
     var schemax = []
     var schemay = []
@@ -539,40 +515,33 @@ function addDropDownData(){
     for(xAxis in currentFormData.xAxisColumns){
       schemax.push(xAxis);
     }
-  	  row.x.setData(schemax)
-  	  //row.x.setValue([xvalues[0]])
-  	  //row.constraints[0].setData(schemax)
+      row.x.setData(schemax)
+      //row.x.setValue([xvalues[0]])
+      //row.constraints[0].setData(schemax)
     for(yAxis in currentFormData.yAxisColumns){
       schemay.push(yAxis);
     }
-  	  row.y.setData(schemay)
-  	  //row.y.setValue([yvalues[0]])
-
+      row.y.setData(schemay)
+      //row.y.setValue([yvalues[0]])
     for(zAxis in currentFormData.zAxisColumns){
       schema.push(zAxis);
     }
-      	//row.z.setValue([zvalues[0]])
-      	//var list = schemax.concat(schema)
+        //row.z.setValue([zvalues[0]])
+        //var list = schemax.concat(schema)
     row.constraints[0].setData(schema)
     schema.push("sketch")
-
     for(var i = 0; i < magicSuggestRows.length-1; i++){
         var curr_row = magicSuggestRows[i];
         var processes = curr_row.process;
         var processFunction = processes[0].getValue()[0];
-      	schema.push(curr_row.id+".Process.Output")
-
+        schema.push(curr_row.id+".Process.Output")
     }
-
     row.z.setData(schema)
-
     row.process[0].setData(["similar", "dissimilar", "increasing", "decreasing"])
 }
-
 function isNumeric(obj) {
     return obj - parseFloat(obj) >= 0;
 }
-
 function submitTable(){
     $("#views_table").empty();
     var json = {};
@@ -607,8 +576,6 @@ function submitTable(){
         }else {
             row["constraints"] = []
         }
-
-
         var processes = curr_row.process;
         var processFunction = processes[0].getValue()[0];
         var processParams = processes[1].getValue();
@@ -616,40 +583,36 @@ function submitTable(){
             processFunction = "incTrends"; //BACKEND
             row["processe"] =
             {name: row["name"]+"p", function: processFunction,
-            		  parameters: {viz2: null, viz1:row["name"]}
+                  parameters: {viz2: null, viz1:row["name"]}
             }
         }
         if(processFunction =="decreasing"){
             processFunction = "decTrends"; //BACKEND
             row["processe"] =
             {name: row["name"]+"p", function: processFunction,
-            		  parameters: {viz2: null, viz1:row["name"]}
+                  parameters: {viz2: null, viz1:row["name"]}
             }
         }
         if(processFunction =="similar"){
             processFunction = "similar"; //BACKEND
             if(processParams.length < 1){
-            	alert("similar in Process should compare current row with some above row!")
+              alert("similar in Process should compare current row with some above row!")
             }
             row["processe"] =
             {name: row["name"]+"p", function: processFunction,
-            		  parameters: {viz2: processParams[0], viz1:row["name"]}
+                  parameters: {viz2: processParams[0], viz1:row["name"]}
             }
         }
         if(processFunction =="dissimilar"){
             processFunction = "dissimilar"; //BACKEND
             row["processe"] =
             {name: row["name"]+"p", function: processFunction,
-            		  parameters: {viz2: processParams[0], viz1:row["name"]}
+                  parameters: {viz2: processParams[0], viz1:row["name"]}
             }
-
             if(processParams.length < 1){
-            	alert("dissimilar in Process should compare current row with some above row!")
+              alert("dissimilar in Process should compare current row with some above row!")
             }
         }
-
-
-
         //Processes creation & checks
 /*         var processes = curr_row.process;
         var processFunction = processes[0].getValue()[0];
@@ -674,7 +637,6 @@ function submitTable(){
         }else{
             row["processe"] = null;
         } */
-
         row["output"] = false;
         if(row["z"][0] == "sketch"){
             sketchs = sketchPointsList[0];
@@ -699,7 +661,6 @@ function submitTable(){
     // Checks for VQL Table
     function isZQLValid(json){
         rows = json["zqlRows"]
-
         //Last row should not have process because last row is assumed to be an output visualisation.
        /*  if (rows[rows.length-1]["processe"] != null){
             alert("There should not be a process in final row.");
@@ -758,16 +719,13 @@ function submitTable(){
             if(process !=null){
                 var row_id = process["parameters"]["viz1"];
                 var func = process["function"]
-
                 if((func =="similar" || func =="dissimilar") && process["parameters"]["viz2"]==null){
-                	return false;
+                  return false;
                 }
-
                 if((func =="similar" || func =="dissimilar") && process["parameters"]["viz2"]==row_id){
-                	alert("Parameter cannot be current row, You need to compare with some above row")
-                	return false;
+                  alert("Parameter cannot be current row, You need to compare with some above row")
+                  return false;
                 }
-
           /*
             if(process !=null){
                 var row_id = process["parameters"]["viz1"];
@@ -781,7 +739,6 @@ function submitTable(){
                     alert("Process Parameter Row does not exist!");
                     return false;
                 } */
-
                 row_id = process["parameters"]["viz2"];
                 if(row_id != null){
                     var correctedIndex = row_id; //we need this because the row_id may not be same as our array id
@@ -797,12 +754,9 @@ function submitTable(){
                 }
             }
         }
-
         return true;
     }
-
 </script>
-
       <script> // REMEMBER TO MAKE ID DYNAMIC (EG 1,2,3)...
         //do vega
         var div = $("#mainChart1")
@@ -818,7 +772,6 @@ function submitTable(){
         $("#mainChart1").append(canvas)
         var barGraph = $('<div id = "bar1"><svg id="visualisation1" width="' + div.width() + '" height=" ' + div.height() + '" style = "z-index:5; display:none; position: absolute;margin-top:6px;margin-left:60px;"></svg></div>')
         $("#mainChart1").append(barGraph)
-
         var svgLayer = $('<div id ="svgLayer1" style="display:none;position: absolute;margin-top:6px; margin-left:60px; z-index:2;">')
           var mySvg =  $('<svg id="mySvg1" style="display:block" width="' + div.width() + '" height="' + div.height() + '" viewBox="0 0 ' + div.width() + ' ' + div.height() + '">')
             var path = $('<path id = "myPath1" d="" stroke="#14a9a1" stroke-width="3" fill="none" />')
@@ -829,56 +782,43 @@ function submitTable(){
             }
           svgLayer.append(mySvg)
         $("#mainChart1").append(svgLayer)
-
         $("#mySvg1").html($("#mySvg1").html()); //http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
       </script>
-
       <div id="views" class="view">
       </div>
-
       <div class="scrollbar" id="scrollbar">
-    		<div class="force-overflow">
+        <div class="force-overflow">
           <table id="views_table" class="table"></table>
         </div>
       </div> <!-- end scroll bar-->
     </div> <!-- end middle bar -->
-
 </div> <!-- end everything -->
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-
     <script src="js/main.js"></script>
     <script src="js/scattersearch.js"></script>
     <script src="js/rect.js"></script>
-
     <script src="js/smartdraw.js"></script>
     <script src="js/draganddrop.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
-
     <script src="dist/js/tooltip.js"></script>
     <script src="dist/js/underscore-min.js"></script>
     <script src="dist/js/underscore.string.min.js"></script>
     <script src="dist/js/backbone-min.js"></script>
     <script src="assets/magicsuggest/magicsuggest-min.js"></script>
     <script src="js/xdata.js"></script>
-
     <script src="js/generate-vega.js"></script>
     <script src="js/histogram.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <!--script src="js/scatter.js"></script-->
-
     <script>
-
-
     $.attrHooks['viewbox'] = {
         set: function(elem, value, name) {
             elem.setAttributeNS(null, 'viewBox', value + '');
             return value;
         }
     };
-
     function updateSizes(){
       var windowWidth = $("#middle-bar").width()
       var windowHeight = $("#middle-bar").height()
@@ -888,11 +828,9 @@ function submitTable(){
           drawGraphWidth = Math.round(windowWidth/1.5);
       }
       drawGraphHeight = Math.round(drawGraphWidth/2);
-
       resizeSketch(drawGraphHeight, drawGraphWidth); //when we resize, we should also resize the sketch
       resizePointsAndPath(drawGraphHeight, drawGraphWidth); //when we resize, we should also resize the path and points
       resizeResultsTable($("#scrollbar").height() , windowWidth);
-
       $("#firstDrawChartColumn").width(drawGraphWidth+100); //to support axis title (try to make this not fixed)
       $("#firstDrawChartColumn").height(drawGraphHeight+50); //to support the axis title
       $("#mainChart").width(drawGraphWidth);
@@ -913,9 +851,7 @@ function submitTable(){
       xAxisSelect0.input.width(0);
       $("#y-axis-select-0").width(drawGraphWidth);
       $("#y-axis-select-0").height($("#y-axis-select-0").height());
-
       yAxisSelect0.input.width(0);
-
       $("#secondDrawChartColumn").width(drawGraphWidth+100);
       $("secondDrawChartColumn").height(drawGraphHeight+50);
       $("#mainChart1").width(drawGraphWidth);
@@ -931,11 +867,9 @@ function submitTable(){
       chart1Information['mySvgObject'].attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
       $("#x-axis-select-1").width(drawGraphWidth);
       $("#x-axis-select-1").height($("#x-axis-select-1").height());
-
       xAxisSelect1.input.width(0);
       $("#y-axis-select-1").width(drawGraphWidth);
       $("#y-axis-select-1").height($("#y-axis-select-1").height());
-
       yAxisSelect1.input.width(0);
     }
     function resizeSketch(newHeight, newWidth){
@@ -995,18 +929,15 @@ function submitTable(){
         var vegaRealWidth = vega.children(":first").width(); //width including offset title
         //console.log("norm", vegaWidth, "real", vegaRealWidth)
         //var marginLeft = vegaRealWidth - vegaWidth;
-
-	    //align svg, sketchpad with the chart
+      //align svg, sketchpad with the chart
         var spec = createBlankNoScale("");
-	    var fontsize = spec["axes"][1]["properties"]["title"]["fontSize"]["value"];
-	    var titletochart = spec["axes"][1]["titleOffset"];
-	    var result = fontsize+titletochart;
-	    chart0Information['tools_sketchObject'].css( { "margin-left" : result} );
-	    chart0Information['visualisationObject'].css( { "margin-left" : result} );
-	    chart0Information['svgLayerObject'].css( { "margin-left" : result} );
-	    $("#draganddrop").css( { "margin-left" : result} );
-
-
+      var fontsize = spec["axes"][1]["properties"]["title"]["fontSize"]["value"];
+      var titletochart = spec["axes"][1]["titleOffset"];
+      var result = fontsize+titletochart;
+      chart0Information['tools_sketchObject'].css( { "margin-left" : result} );
+      chart0Information['visualisationObject'].css( { "margin-left" : result} );
+      chart0Information['svgLayerObject'].css( { "margin-left" : result} );
+      $("#draganddrop").css( { "margin-left" : result} );
         vega = $("#secondDrawChartColumn").find(".vega");
         vegaWidth = vega.width();
         vegaRealWidth = vega.children(":first").width(); //width including offset title
@@ -1014,10 +945,9 @@ function submitTable(){
         //$("#tools_sketch1").css("margin-left", marginLeft);
         //$("#svgLayer1").css("margin-left", marginLeft);
         chart1Information['tools_sketchObject'].css( { "margin-left" : result} );
-	    chart0Information['svgLayerObject'].css( { "margin-left" : result} );
-	    //$("#draganddrop").css( { "margin-left" : result} );
+      chart0Information['svgLayerObject'].css( { "margin-left" : result} );
+      //$("#draganddrop").css( { "margin-left" : result} );
     }
-
     function populateChartInformation() {
         chart0Information['dragAndDropObject'] = $("#draganddrop");
         chart0Information['tools_sketchObject'] = $('#tools_sketch');
@@ -1030,8 +960,6 @@ function submitTable(){
           var point = $('#point' + i);
           chart0Information['points'].push(point);
         }
-
-
         chart1Information['dragAndDropObject'] = $("#draganddrop1");
         chart1Information['tools_sketchObject'] = $('#tools_sketch1');
         chart1Information['visualisationObject'] = $('#visualisation1');
@@ -1043,7 +971,6 @@ function submitTable(){
           chart1Information['points'].push(point);
         }
     }
-
     </script>
     <script>
         var graphChanger;
@@ -1053,7 +980,6 @@ function submitTable(){
             console.log(chart0Information['svgLayerObject'].width())
             saveRowData(vqlTablerows); //for the first row data
             vqlTablerows ++
-
             graphChanger = $("#graphChanger");
             updateSizes();
             updateDefaultModify();
@@ -1065,14 +991,11 @@ function submitTable(){
             //initialize formdata
             //getSuggestData(getSimilarTrendData());
             //getSuggestData(query)
-
             $("#secondDrawChartColumn").hide();
             $("#axesChart1").hide();
             $("#mainChart1").hide();
-
             //$("#axesChart0").hide();
             //$("#graphChanger").hide();
-
             graphChanger.click(function(){
               if(graphChanger.attr("adder") == "true"){
                   showSecondChartElement();
@@ -1094,7 +1017,6 @@ function submitTable(){
               //updateOneTrend("");
               //updateBothTrends();
             });
-
         });
       $(window).resize(function() {
           updateSizes()
@@ -1103,13 +1025,11 @@ function submitTable(){
               resizeResultsTable();
               resizeMargins();
           });
-
           existingTrends[1] = existingTrends[0];
           //updateBothTrends();
       });
-
     function showSecondChartElement() {
-        for(var i = 0; i< 30; i++){		//these following lines hides the points
+        for(var i = 0; i< 30; i++){   //these following lines hides the points
             var id = "point"+i;
             var myCir = document.getElementById(id);
             id = "point"+i +"-1";
@@ -1132,9 +1052,8 @@ function submitTable(){
         $("#changeButtons").show();
         $("#drawing-tool2").show();
     }
-
     function hideSecondChartElement() {
-        for(var i = 0; i< 30; i++){		//this following lines hides the points
+        for(var i = 0; i< 30; i++){   //this following lines hides the points
             var id = "point"+i;
             var myCir = document.getElementById(id);
             id = "point"+i +"-1";
@@ -1157,13 +1076,11 @@ function submitTable(){
         $("#changeButtons").hide();
         $("#drawing-tool2").hide();
         changeExistingTrends(0);
-
     }
   //Calls vega to update the blank charts. Only returns as DONE if both blank charts are done being created by vega
     function asyncronousVegaMainCharts() {
         var dfrd1 = $.Deferred();
         var dfrd2 = $.Deferred();
-
         mainChartAsync(" ","").done(function() {
             if(chart0Information != null && chart0Information['chartData']!= null){
                 changeScaleMainChart(chart0Information);
@@ -1184,23 +1101,19 @@ function submitTable(){
         return $('#mainChart'+suffix).css('display') == 'block'
       }
     </script>
-
     <script>
           var scriptChangedX0 = true;
           var scriptChangedX1 = true;
           var scriptChangedY0 = true;
           var scriptChangedY1 = true;
-
           var xAxisSelect0 = $('#x-axis-select-0').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput" });
           var xAxisSelect1 = $('#x-axis-select-1').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput"});
           var yAxisSelect1 = $('#y-axis-select-1').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput"  });
           var yAxisSelect0 = $('#y-axis-select-0').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput"});
-
-
       $(xAxisSelect1).on('selectionchange', function(e,m){
-    	  if (isGraphVisible("1")) {
-      	  	ExTrendindex = 1;
-      	  }
+        if (isGraphVisible("1")) {
+            ExTrendindex = 1;
+          }
         if(!scriptChangedX1){
           if(xAxisSelect1.getValue().length == 1) {
             //onSubmit();
@@ -1208,25 +1121,23 @@ function submitTable(){
             var x1Value = JSON.stringify(xAxisSelect1.getValue());
             var y0Value = JSON.stringify(yAxisSelect0.getValue());
             var y1Value = JSON.stringify(yAxisSelect1.getValue());
-        	  if (x0Value != x1Value || y0Value != y1Value) {
-     				     updateOneTrend(chart1Information, "1", true);
-        	  }
-        	  else { // copy existing trend and change
-      		      existingTrends[1] = existingTrends[0];
-		            changeExistingTrends(1);
-        	  }
+            if (x0Value != x1Value || y0Value != y1Value) {
+                 updateOneTrend(chart1Information, "1", true);
+            }
+            else { // copy existing trend and change
+                existingTrends[1] = existingTrends[0];
+                changeExistingTrends(1);
+            }
           }
-
         }
           scriptChangedX1 = false;
       });
-
       $(yAxisSelect1).on('selectionchange', function(e,m){
-    	  //console.log("y1 selection change");
-    	  //setTimeout(function() {
-    	  if (isGraphVisible("1")) {
-    	  	ExTrendindex = 1;
-    	  }
+        //console.log("y1 selection change");
+        //setTimeout(function() {
+        if (isGraphVisible("1")) {
+          ExTrendindex = 1;
+        }
         if(!scriptChangedY1){
           if(yAxisSelect1.getValue().length == 1) {
             //onSubmit();
@@ -1234,19 +1145,18 @@ function submitTable(){
             var x1Value = JSON.stringify(xAxisSelect1.getValue());
             var y0Value = JSON.stringify(yAxisSelect0.getValue());
             var y1Value = JSON.stringify(yAxisSelect1.getValue());
-        	  if (x0Value != x1Value || y0Value != y1Value) {
-        		  updateOneTrend(chart1Information, "1", true);
-        	  }
-        	  else { // copy existing trend and change
-        		  existingTrends[1] = existingTrends[0];
-        		  changeExistingTrends(1);
-        	  }
+            if (x0Value != x1Value || y0Value != y1Value) {
+              updateOneTrend(chart1Information, "1", true);
+            }
+            else { // copy existing trend and change
+              existingTrends[1] = existingTrends[0];
+              changeExistingTrends(1);
+            }
           }
         }
         scriptChangedY1 = false;
-    	  //  }, 0)
+        //  }, 0)
       });
-
 $(xAxisSelect0).on('selectionchange', function(e,m){
     ExTrendindex = 0;
     // if someone manually changed combobox
@@ -1268,12 +1178,10 @@ $(xAxisSelect0).on('selectionchange', function(e,m){
                     updateOneTrend(chart0Information, "", true);
                 }
             }
-
         }
     }
     scriptChangedX0 = false;
 });
-
 $(yAxisSelect0).on('selectionchange', function(e,m){
     console.log("def");
     //$("#scatterplot").children().remove();

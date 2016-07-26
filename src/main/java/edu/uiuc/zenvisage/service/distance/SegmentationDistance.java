@@ -22,10 +22,9 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
  */
 
 public class SegmentationDistance implements Distance {
-
-	static double MAX_ERROR = 400;
-	static double NUM_OF_SEGMENTS = 4;
-	static int NUM_TO_RETURN = 100;
+	static double MAX_ERROR = 1000;
+	static double NUM_OF_SEGMENTS = 10;
+	static int NUM_TO_RETURN = 20;
 	
 	public static class Segment {
 		double startX;
@@ -51,6 +50,7 @@ public class SegmentationDistance implements Distance {
 			this.costToMergeNext = cost;
 			this.length = Math.sqrt(Math.pow(inputTrend[startX][0] - inputTrend[endX][0], 2) + Math.pow(inputTrend[startX][1] - inputTrend[endX][1], 2));
 		}
+		
 		Segment (double startX, double startY, double endX, double endY, double angle, double slope, double intercept) {
 			this.startX = startX;
 			this.startY = startY;
@@ -60,6 +60,7 @@ public class SegmentationDistance implements Distance {
 			this.slope = slope;
 			this.intercept = intercept;
 		}
+		
 		double[] getMidpoint() {
 			double[] rt = new double[2];
 			rt[0] = 0.5 * (startX + endX);
@@ -221,7 +222,7 @@ public class SegmentationDistance implements Distance {
 		distance = Math.sqrt(2 * Math.pow(s1.getMidpoint()[1] - s2.getMidpoint()[1], 2));
 		
 		distance = 0;
-		int k = 10;
+		int k = 5;
 		double width1 = s1.getWidth();
 		double width2 = s2.getWidth();
 		for (int i = 0; i <= k; i++) {
@@ -672,21 +673,13 @@ public class SegmentationDistance implements Distance {
 		// TODO Auto-generated method stub
 		assert src.length == tar.length;
 		
-		for (int i = 0; i < src.length; i++) {
-			System.out.println(i + ": " + src[i] + "\t" + tar[i]);
-		}
-		
-		
 		double[][] srcR = new double[src.length][2];
 		for (int i = 0; i < src.length; i++) {
 			srcR[i][0] = i;
 			srcR[i][1] = src[i];
 		}		
 		
-		srcR = linearNormalize(srcR);
-		
-
-		
+		srcR = linearNormalize(srcR);		
 		
 		double[][] tarR = new double[tar.length][2];
 		for (int i = 0; i < tar.length; i++) {
@@ -695,10 +688,8 @@ public class SegmentationDistance implements Distance {
 		}
 		tarR = linearNormalize(tarR);
 		
-
-		
 		double s = calculateSimilarity(srcR, tarR);
-		
+//		System.out.println(s);
 		
 		return 100 - s;
 	}

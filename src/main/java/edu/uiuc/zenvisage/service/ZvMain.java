@@ -81,10 +81,7 @@ public class ZvMain {
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
-//		inMemoryDatabase = createDatabase("seed2", "/data/seed2_schema.txt", "/data/seed2.csv");
-//		inMemoryDatabases.put("seed2", inMemoryDatabase);
-
-		inMemoryDatabase = createDatabase("cmu", "/data/fullsets_schema.txt", "/data/fullsqm_half.csv");
+		inMemoryDatabase = createDatabase("crime", "/data/fullsets_schema.txt", "/data/fullsqm_half.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
 
 		System.out.println("Done loading data");
@@ -223,7 +220,6 @@ public class ZvMain {
 		System.out.println(query);
 
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		System.out.println(args.maxX + "\t" + args.method);
 
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
@@ -242,7 +238,9 @@ public class ZvMain {
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
-//			 distance = new SegmentationDistance();
+		 }
+		 else if (args.distance_metric.equals("Segmentation")){
+			 distance = new SegmentationDistance();
 		 }
 		 else {
 			 distance = new DTWDistance();
@@ -250,6 +248,7 @@ public class ZvMain {
 		 // generate the corresponding data normalization metric
 		 if (args.distanceNormalized) {
 			 normalization = new Zscore();
+//			 normalization = new Original();
 		 }
 		 else {
 			 normalization = new Original();
@@ -263,11 +262,11 @@ public class ZvMain {
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 Clustering cluster = new KMeans(distance, normalization, args);
-			 analysis = new Outlier(executor,inMemoryDatabase,chartOutput,distance,normalization,cluster,args);
+			 analysis = new Outlier(executor,inMemoryDatabase,chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("RepresentativeTrends")) {
 			 Clustering cluster = new KMeans(distance, normalization, args);
-			 analysis = new Representative(executor,inMemoryDatabase,chartOutput,distance,normalization,cluster,args);
+			 analysis = new Representative(executor,inMemoryDatabase,chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("SimilaritySearch")) {
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
