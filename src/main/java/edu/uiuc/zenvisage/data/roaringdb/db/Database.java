@@ -23,19 +23,19 @@ public class Database {
 	private Map<String,Column> indexedColumns= new HashMap<String,Column>();
 	public DatabaseMetaData databaseMetaData= new DatabaseMetaData();
 	public long rowCount;
-	
+
 	public Database(String name,String schemafilename,String datafilename) throws IOException, InterruptedException{
 		this.name=name;
 		this.databaseMetaData.dataset = name;
 		readSchema(schemafilename);
 		loadData(datafilename);
-		DatabaseCatalog.addDatabase(name, this);		
+		DatabaseCatalog.addDatabase(name, this);
 	}
-	
+
 	public Map<String, Column> getColumns() {
 		return columns;
 	}
-	
+
 	public Map<String, Column> getIndexedColumns() {
 		return indexedColumns;
 	}
@@ -44,12 +44,12 @@ public class Database {
 		Column column=columns.get(columnName);
 		column.add(row, value);
  	}
-	
+
 	private void readSchema(String schemafilename) throws IOException, InterruptedException{
 //   	 BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
 //   	 String in = getClass().getClassLoader().getResource(schemafilename).getPath();
 //     BufferedReader bufferedReader = new BufferedReader(new FileReader(in));
-   	 
+
    	InputStream is = getClass().getResourceAsStream(schemafilename);
    	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
 	 String line;
@@ -58,7 +58,7 @@ public class Database {
 			 String[] sections=line.split(":");
 			 columnMetadata.name=sections[0];
 			 String[] terms=sections[1].split(",");
-			 columnMetadata.isIndexed=true;			 
+			 columnMetadata.isIndexed=true;
 			 columnMetadata.dataType=terms[0];
 			 columnMetadata.columnType=terms[8];
 			 if("indexed".equals(terms[1])){
@@ -66,38 +66,38 @@ public class Database {
 			 }
 			 else{
 				 columnMetadata.isIndexed=false;
-			 }		 
-			 
+			 }
+
 		     if(terms[2].equals("T")){
-		    	 databaseMetaData.xAxisColumns.put(columnMetadata.name,columnMetadata);	    	   
+		    	 databaseMetaData.xAxisColumns.put(columnMetadata.name,columnMetadata);
 		     }
 		     if(terms[3].equals("T")){
-		    	 databaseMetaData.yAxisColumns.put(columnMetadata.name,columnMetadata);	    	   
+		    	 databaseMetaData.yAxisColumns.put(columnMetadata.name,columnMetadata);
 		     }
-		       
+
 		     if(terms[4].equals("T")){
-		    	 databaseMetaData.zAxisColumns.put(columnMetadata.name,columnMetadata);	    	   
+		    	 databaseMetaData.zAxisColumns.put(columnMetadata.name,columnMetadata);
 		     }
-		       
+
 		     if(terms[5].equals("T")){
-		    	 databaseMetaData.predicateColumns.put(columnMetadata.name,columnMetadata);	    	   
+		    	 databaseMetaData.predicateColumns.put(columnMetadata.name,columnMetadata);
 		     }
 		     if (terms[6].equals("T")) {
 		    	 columnMetadata.unit = terms[7];
 		     }
-		     
+
 		    Column column = new Column(columnMetadata, this);
-			 
+
 		 }
-		 
-		bufferedReader.close();		
+
+		bufferedReader.close();
 	}
-	
-	
+
+
 
     private void loadData(String datafilename) throws IOException{
 //      	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
-      	
+
        	InputStream is = getClass().getResourceAsStream(datafilename);
        	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
 		String line;
@@ -108,15 +108,15 @@ public class Database {
 		while ((line = bufferedReader.readLine()) != null){
 			 terms=line.split(",");
             for(int i=0;i<header.length;i++){
-           	     addValue(header[i], count, terms[i]);
+           	     addValue(header[i].trim(), count, terms[i]);
                 }
-            count=count+1;	 		
+            count=count+1;
 		 }
 		this.rowCount=count;
-		 
+
 		bufferedReader.close();
 	}
-    
+
     public RoaringBitmap getColumn(FilterPredicate filterPredicate) {
     	String columnName = filterPredicate.getPropertyName();
     	Column column = indexedColumns.get(columnName);
@@ -125,12 +125,12 @@ public class Database {
     	}
     	return getUnIndexedColumn(filterPredicate);
     }
-    
+
     public RoaringBitmap getIndexedColumn(FilterPredicate filterPredicate){
   		Column column=indexedColumns.get(filterPredicate.getPropertyName());
   		return column.getIndexedValues(filterPredicate);
   	 }
-    
+
     public RoaringBitmap getUnIndexedColumn(FilterPredicate filterPredicate){
   		Column column=columns.get(filterPredicate.getPropertyName());
   		return column.getUnIndexedValues(filterPredicate);
@@ -141,13 +141,13 @@ public class Database {
   		if (column == null) return null;
   		return column.getIndexedValues();
   	 }
-    
+
     public List<String> getUnIndexedColumn(String columnName){
     	Column column = columns.get(columnName);
     	if (column == null) return null;
     	return column.getUnIndexedValues();
     }
-    
+
     // new
     public Map<String,RoaringBitmap> getColumn(String columnName) {
     	Column column = indexedColumns.get(columnName);
@@ -158,7 +158,7 @@ public class Database {
     		for (int i = 0; i < values.size(); i++) {
     			if (maps.containsKey(values.get(i))) {
     				maps.get(values.get(i)).add(i);
-    				
+
     			}
     			else {
     				RoaringBitmap bits = new RoaringBitmap();
@@ -171,16 +171,16 @@ public class Database {
     	return column.getIndexedValues();
     }
 
-   
+
     public ColumnMetadata getColumnMetaData(String columnName){
-    	
+
     	//columnName format incorrect... discovered during zql parser process column test
     	//Column column = columns.get(columnName);
     	Column column = columns.get(columnName.substring(0,1).toUpperCase()+columnName.substring(1));
 		return column.columnMetadata;
-			
+
      }
- 
+
      public DatabaseMetaData getFormMetdaData(){
 	  return databaseMetaData;
       }

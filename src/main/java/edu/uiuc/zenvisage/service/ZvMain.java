@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.uiuc.zenvisage.service;
 
@@ -54,14 +54,14 @@ import edu.uiuc.zenvisage.zql.executor.ZQLTable;
  *
  */
 public class ZvMain {
-	
+
 	private Result cachedResult = new Result();
 	private BaselineQuery cachedQuery = new BaselineQuery();
 //	private InMemoryDatabase inMemoryDatabase;
 	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
 
 	private Database inMemoryDatabase;
-	
+
 	public Executor executor = new Executor(inMemoryDatabase);
 	public Analysis analysis;
 	public Distance distance;
@@ -73,92 +73,41 @@ public class ZvMain {
 	public ZvMain() throws IOException, InterruptedException{
 		System.out.println("ZVMAIN LOADED");
 		loadData();
-		
+
 	}
-	
+
 	public  void loadData() throws IOException, InterruptedException{
-		
-//		inMemoryDatabase = createDatabase("income","zenvisage/WEB-INF/classes/data/census_test_schema.txt","zenvisage/WEB-INF/classes/data/census-income-test.csv");
-//		inMemoryDatabases.put("income", inMemoryDatabase);
-//		inMemoryDatabase = createDatabase("real_estate","zenvisage/WEB-INF/classes/data/real_estate.txt","zenvisage/WEB-INF/classes/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
-//		//inMemoryDatabases.put("iris", inMemoryDatabase);
-//		
-//		inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
-//		inMemoryDatabases.put("seed2", inMemoryDatabase);
-		
-		
-		
-//		inMemoryDatabase = createDatabase("income","WEB-INF/classes/data/census_test_schema.txt","WEB-INF/classes/data/census-income-test.csv");
-//		inMemoryDatabases.put("income", inMemoryDatabase);
-//		inMemoryDatabase = createDatabase("real_estate","WEB-INF/classes/data/real_estate.txt","WEB-INF/classes/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
-//		//inMemoryDatabases.put("iris", inMemoryDatabase);
-//		
-//		inMemoryDatabase = createDatabase("seed2", "WEB-INF/classes/data/seed2_schema.txt", "WEB-INF/classes/data/seed2.csv");
-//		inMemoryDatabases.put("seed2", inMemoryDatabase);
-		
-		
-//		inMemoryDatabase = createDatabase("income","src/main/resources/data/census_test_schema.txt","src/main/resources/data/census-income-test.csv");
-//		inMemoryDatabases.put("income", inMemoryDatabase);
-//		inMemoryDatabase = createDatabase("real_estate","src/main/resources/data/real_estate.txt","src/main/resources/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
-//		//inMemoryDatabases.put("iris", inMemoryDatabase);
-//		
-//		inMemoryDatabase = createDatabase("seed2", "src/main/resources/data/seed2_schema.txt", "src/main/resources/data/seed2.csv");
-//		inMemoryDatabases.put("seed2", inMemoryDatabase);
-		
-//		inMemoryDatabase = createDatabase("income","/data/census_test_schema.txt","/data/census-income-test.csv");
-//		inMemoryDatabases.put("income", inMemoryDatabase);
-		
+
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-		//inMemoryDatabase = createDatabase("iris", "zenvisage/WEB-INF/classes/data/iris_schema.txt","zenvisage/WEB-INF/classes/data/iris_data.csv");
-		//inMemoryDatabases.put("iris", inMemoryDatabase);
-		
-		inMemoryDatabase = createDatabase("seed2", "/data/seed2_schema.txt", "/data/seed2.csv");
-		inMemoryDatabases.put("seed2", inMemoryDatabase);
-		
-//		inMemoryDatabase = createDatabase("crime", "/data/crime_schema.txt", "/data/crime.csv");
-//		inMemoryDatabases.put("crime", inMemoryDatabase);
-		
+
+		inMemoryDatabase = createDatabase("crime", "/data/fullsets_schema.txt", "/data/fullsqm_half.csv");
+		inMemoryDatabases.put("cmu", inMemoryDatabase);
+
 		System.out.println("Done loading data");
-		
-		//inMemoryDatabase = createDatabase("seed2", "zenvisage/WEB-INF/classes/data/seed2_schema.txt", "zenvisage/WEB-INF/classes/data/seed2.csv");
-		//inMemoryDatabases.put("seed2", inMemoryDatabase);
-		
-	/*	inMemoryDatabase = DataLoader.createDatabase("seed", "src/data/seed_schema.txt", "src/data/seed.csv");
-		inMemoryDatabases.put("seed", inMemoryDatabase);
-		inMemoryDatabase = DataLoader.createDatabase("seed2", "src/data/seed2_schema.txt", "src/data/seed2.csv");
-		inMemoryDatabases.put("seed2", inMemoryDatabase);
-		inMemoryDatabase = DataLoader.createDatabase("seed3", "src/data/seed3_schema.txt", "src/data/seed3.csv");
-		inMemoryDatabases.put("seed3", inMemoryDatabase);*/
 	}
 
 	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
     	Database database = new Database(name,schemafile,datafile);
     	return database;
- 
+
     }
-	
+
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-		
+
 		if (names.size() == 3) {
 			System.out.println("successful upload!");
 			inMemoryDatabase = createDatabase(names.get(0),"/data/" + names.get(2),"/data/" + names.get(1));
 			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
-		
+
 		for (String s : inMemoryDatabases.keySet()) {
 			System.out.println(s);
 		}
 	}
-			
+
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);
 	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
@@ -169,9 +118,9 @@ public class ZvMain {
      	  System.out.println(result);
      	  return result;
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
-			
+
 		}
-   
+
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 		  executor = new Executor(inMemoryDatabase);
@@ -179,10 +128,10 @@ public class ZvMain {
 		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
   	  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
-			
+
 		}
-		
-	
+
+
 	public String getScatterPlot(String query) throws JsonParseException, JsonMappingException, IOException {
 		System.out.print(query);
 		ScatterPlotQuery q = new ObjectMapper().readValue(query, ScatterPlotQuery.class);
@@ -199,8 +148,8 @@ public class ZvMain {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(finalOutput);
 	}
-	
-	
+
+
 	/* Will be obsolete when the new separated query method is utilized */
 	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 		// get data from database
@@ -235,7 +184,7 @@ public class ZvMain {
 			 normalization = new Original();
 		 }
 		 // generate the corresponding output normalization
-		 
+
 		 outputNormalization = new Original();
 		 // reformat database data
 		 DataReformation dataReformatter = new DataReformation(outputNormalization);
@@ -260,26 +209,25 @@ public class ZvMain {
 			 ((Similarity) analysis).setDescending(true);
 		 }
 		 analysis.compute(output, normalizedgroups, args);
-		 
+
 		 ObjectMapper mapper = new ObjectMapper();
 		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 	}
-	
-	
+
+
 	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
 		// get data from database
 		System.out.println(query);
-		
+
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		System.out.println(args.distance_metric);
 		 
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
 		 ExecutorResult executorResult = executor.getData(q);
 		 if (executorResult == null) return "";
-		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;		 
-		 
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+
 		 // setup result format
 		 Result finalOutput = new Result();
 		 finalOutput.method = method;
@@ -306,7 +254,7 @@ public class ZvMain {
 			 normalization = new Original();
 		 }
 		 // generate the corresponding output normalization
-		 
+
 		 outputNormalization = new Original();
 		 // reformat database data
 		 DataReformation dataReformatter = new DataReformation(outputNormalization);
@@ -332,10 +280,10 @@ public class ZvMain {
 		 }
 		 analysis.compute(output, normalizedgroups, args);
 		 ObjectMapper mapper = new ObjectMapper();
-		 
+
 		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 //		 System.out.println(str);
-		 
+
 		 return str;
 	}
 
@@ -343,10 +291,10 @@ public class ZvMain {
 	/**
 	 * @param query
 	 * @return
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
-	 * @throws InterruptedException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 * @throws InterruptedException
 	 */
 	public String getBaselineData(String query) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
 		BaselineQuery bq = new ObjectMapper().readValue(query, BaselineQuery.class);
@@ -372,24 +320,24 @@ public class ZvMain {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(response);
 	}
-	
+
 	public String outlier(String method,String sql,String outliercount) throws IOException{
 		return readFile();
 	}
-	
-	
+
+
 	public String getDatabaseNames() throws JsonGenerationException, JsonMappingException, IOException{
 		return new ObjectMapper().writeValueAsString(inMemoryDatabases.keySet());
 	}
-	
-	
+
+
 	public String getInterfaceFomData(String query) throws IOException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		inMemoryDatabase = inMemoryDatabases.get(fq.getDatabasename());
 		executor = new Executor(inMemoryDatabase);
 		return new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData());
 	}
-	
+
 	/**
 	 * @param q
 	 * @param arg
@@ -399,13 +347,13 @@ public class ZvMain {
 		Query.Filter filter = new Query.FilterPredicate(arg.predicateColumn,Query.FilterOperator.fromString(arg.predicateOperator),arg.predicateValue);
 		q.setFilter(filter);
 	}
-	
+
 	public void setBaselineFilter(Query q, BaselineQuery bq) {
 		if (bq.predicateValue.equals("")) return;
 		Query.Filter filter = new Query.FilterPredicate(bq.predicateColumn, Query.FilterOperator.fromString(bq.predicateOperator), bq.predicateValue);
 		q.setFilter(filter);
 	}
-	
+
 	public String readFile() throws IOException {
 	    BufferedReader br = new BufferedReader(new FileReader("/src/data1.txt"));
 	    try {
@@ -420,9 +368,9 @@ public class ZvMain {
 	        br.close();
 	    }
 	}
-	
 
 
-	
-	
+
+
+
 }
