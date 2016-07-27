@@ -114,9 +114,9 @@
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
-                    <input class="active" type="radio" name="distance-method" value="Euclidean" checked ><label>Euclidean Distance</label><br>
-                    <input type="radio" name="distance-method" value="Segmentation" ><label>Segmentation</label><br>
-                    <input type="radio" name="distance-method" value="DTW" ><label>DTW</label>
+                    <input id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
+                    <input id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
+                    <input id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label>
                   </form>
                 </div>
               </div>
@@ -124,8 +124,8 @@
                 <b>Representative/Outlier</b>
                 <div class="radio">
                   <form>
-                    <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked ><label>K-means</label><br>
-                    <input type="radio" name="search-method" value="Outlier" ><label>Fuzzy c-means</label><br>
+                    <input id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label><br>
+                    <input type="radio" id="fuzzycmeans" name="search-method" value="fuzzycmeans" ><label for="fuzzycmeans">Fuzzy c-means</label><br>
                   </form>
                 </div>
               </div>
@@ -133,8 +133,8 @@
                 <div class="info-text"><b>Aggregation Method</b></div>
                 <div class="radio">
                   <form>
-                    <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
-                    <input type="radio" name="aggregation-method" value="avg" checked><label>Average</label>
+                    <input id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
+                    <input id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
                   </form>
                 </div>
                 <div id="num-results">

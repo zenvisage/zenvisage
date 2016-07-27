@@ -216,7 +216,7 @@ public class ZvMain {
 		System.out.println(query);
 
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		 
+
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
@@ -244,7 +244,7 @@ public class ZvMain {
 		 // generate the corresponding data normalization metric
 		 if (args.distanceNormalized) {
 			 normalization = new Zscore();
-//			 normalization = new Original();			 
+//			 normalization = new Original();
 		 }
 		 else {
 			 normalization = new Original();
