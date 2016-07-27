@@ -93,8 +93,6 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-
-	    System.out.println(body);
 	    
 	    
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
