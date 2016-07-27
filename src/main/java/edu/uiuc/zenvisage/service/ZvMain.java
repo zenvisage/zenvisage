@@ -81,7 +81,7 @@ public class ZvMain {
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
-		inMemoryDatabase = createDatabase("crime", "/data/fullsets_schema.txt", "/data/fullsqm_half.csv");
+		inMemoryDatabase = createDatabase("cmu", "/data/fullsets_schema.txt", "/data/fullsqm_half.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
 
 		System.out.println("Done loading data");
@@ -101,10 +101,6 @@ public class ZvMain {
 			System.out.println("successful upload!");
 			inMemoryDatabase = createDatabase(names.get(0),"/data/" + names.get(2),"/data/" + names.get(1));
 			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
-		}
-
-		for (String s : inMemoryDatabases.keySet()) {
-			System.out.println(s);
 		}
 	}
 
