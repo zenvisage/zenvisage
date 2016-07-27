@@ -125,6 +125,7 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("getUserQueryResults: fail");
       });
+
     }
 
     // for representative trends

@@ -33,20 +33,19 @@ public class ZvBasicAPI {
 
 	@Autowired
 	private ZvMain zvMain;
-	
-   
-	
+
+
+
     public ZvBasicAPI(){
-    	
+
 	}
-    
+
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException {
 		zvMain.fileUpload(request, response);
 	}
-		
-		
+
     /* Will be obsolete after separated calls*/
 	@RequestMapping(value = "/getdata", method = RequestMethod.GET)
 	@ResponseBody
@@ -54,7 +53,7 @@ public class ZvBasicAPI {
 		//System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuery(arg);
 	}
-	
+
 	/* New Separated API calls
 	 * Representative
 	 * 	-Distance(Euc/DTW)
@@ -66,7 +65,7 @@ public class ZvBasicAPI {
 	 */
 	@RequestMapping(value = "/postRepresentative", method = RequestMethod.POST)
 	@ResponseBody
-	public String getRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+	public String postRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -80,7 +79,7 @@ public class ZvBasicAPI {
 	
 	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody
-	public String getOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+	public String postOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -91,14 +90,7 @@ public class ZvBasicAPI {
 	    
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
-	
-//	@RequestMapping(value = "/getSimilarity", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getSimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-//		System.out.println(arg);
-//		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "SimilaritySearch");
-//	}
-	
+
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
@@ -109,11 +101,11 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-	    
-	    
+
+
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
-	
+
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
 	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
