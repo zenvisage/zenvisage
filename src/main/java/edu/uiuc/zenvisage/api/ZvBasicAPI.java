@@ -2,6 +2,7 @@ package edu.uiuc.zenvisage.api;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -74,11 +75,19 @@ public class ZvBasicAPI {
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "Outlier");
 	}
 
-	@RequestMapping(value = "/getSimilarity", method = RequestMethod.GET)
+	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
-	public String getSimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-		System.out.println(arg);
-		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "SimilaritySearch");
+	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
+
+	    String body = stringBuilder.toString();
+
+
+		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)

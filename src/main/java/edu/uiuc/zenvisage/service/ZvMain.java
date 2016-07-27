@@ -102,10 +102,6 @@ public class ZvMain {
 			inMemoryDatabase = createDatabase(names.get(0),"/data/" + names.get(2),"/data/" + names.get(1));
 			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
-
-		for (String s : inMemoryDatabases.keySet()) {
-			System.out.println(s);
-		}
 	}
 
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{

@@ -115,14 +115,9 @@ app.controller('datasetController', [
     $scope.getUserQueryResults = function getUserQueryResults()
     {
       var q = constructUserQuery(); //goes to query.js
-      var params = {
-        "query": q
-      };
-      var config = {
-        params: params
-      };
+      var data = q;
 
-      $http.get('/zv/getSimilarity', config).
+      $http.post('/zv/postSimilarity', data).
       success(function(response) {
         console.log("getUserQueryResults: success");
         plotResults.displayUserQueryResults(response.outputCharts);

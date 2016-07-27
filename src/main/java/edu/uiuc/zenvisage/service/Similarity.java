@@ -151,8 +151,6 @@ public class Similarity extends Analysis {
 			}
 		}
 		
-		System.out.println(xRange[0] + "\t" + xRange[1]);
-				
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>(); 
     	for(int i = 0;i < normalizedgroups.length;i++) {
