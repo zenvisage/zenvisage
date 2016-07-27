@@ -41,6 +41,7 @@ import edu.uiuc.zenvisage.service.distance.Euclidean;
 import edu.uiuc.zenvisage.service.distance.SegmentationDistance;
 import edu.uiuc.zenvisage.model.*;
 import edu.uiuc.zenvisage.service.utility.DataReformation;
+import edu.uiuc.zenvisage.service.utility.LinearNormalization;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
@@ -243,7 +244,8 @@ public class ZvMain {
 		 }
 		 // generate the corresponding data normalization metric
 		 if (args.distanceNormalized) {
-			 normalization = new Zscore();
+			 normalization = new LinearNormalization();
+//			 normalization = new Zscore();
 //			 normalization = new Original();
 		 }
 		 else {
@@ -278,7 +280,7 @@ public class ZvMain {
 		 ObjectMapper mapper = new ObjectMapper();
 
 		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
-//		 System.out.println(str);
+		 System.out.println(str);
 
 		 return str;
 	}

@@ -64,16 +64,32 @@ public class ZvBasicAPI {
 	 *	-Distance(Euc/DTW)
 	 *  -Similarity/Dis-similarity (true/false)
 	 */
-	@RequestMapping(value = "/getRepresentative", method = RequestMethod.GET)
+	@RequestMapping(value = "/postRepresentative", method = RequestMethod.POST)
 	@ResponseBody
-	public String getRepresentative(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "RepresentativeTrends");
+	public String getRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
+
+	    String body = stringBuilder.toString();
+		
+		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 	
-	@RequestMapping(value = "/getOutlier", method = RequestMethod.GET)
+	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody
-	public String getOutlier(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "Outlier");
+	public String getOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
+
+	    String body = stringBuilder.toString();
+	    
+		return zvMain.runDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 	
 //	@RequestMapping(value = "/getSimilarity", method = RequestMethod.GET)

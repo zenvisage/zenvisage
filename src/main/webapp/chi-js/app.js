@@ -131,13 +131,9 @@ app.controller('datasetController', [
     function getRepresentativeTrends( outlierCallback )
     {
       var q = constructRepresentativeTrendQuery(); //goes to query.js
-      var params = {
-        "query": q
-      };
-      var config = {
-        params: params
-      };
-      $http.get('/zv/getRepresentative', config).
+      // q["sketchPoints"][0]["points"] = [];
+      var data = q;
+      $http.post('/zv/postRepresentative', data).
       success(function(response) {
         console.log("getRepresentativeTrends: success");
         plotResults.displayRepresentativeResults( response.outputCharts );
@@ -151,14 +147,10 @@ app.controller('datasetController', [
     function getOutlierTrends()
     {
       var q = constructOutlierTrendQuery(); //goes to query.js
-      var params = {
-        "query": q
-      };
-      var config = {
-        params: params
-      };
+      // q["sketchPoints"][0]["points"] = [];
+      var data = q;
 
-      $http.get('/zv/getOutlier', config).
+      $http.post('/zv/postOutlier', data).
       success(function(response) {
         console.log("getOutlierTrends: success");
         plotResults.displayOutlierResults( response.outputCharts );
