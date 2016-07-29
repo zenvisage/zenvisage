@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.uiuc.zenvisage.service;
 import java.util.ArrayList;
@@ -51,20 +51,20 @@ public class Similarity extends Analysis {
 	@Override
 	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException {
 		// TODO Auto-generated method stub
-		Sketch[] sketchPoints = args.getSketchPoints();		
-		
+		Sketch[] sketchPoints = args.getSketchPoints();
+
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {
 			mappings.add(key);
 		}
 		List<List<Integer>> orders = new ArrayList<List<Integer>>();
-		
+
 		List<List<Double>> orderedDistances = new ArrayList<List<Double>>();
-		
+
 		List<double[][]> data = new ArrayList<double[][]>();
 		List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> outputs = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
 		List<BiMap<Float,String>> xMaps = new ArrayList<BiMap<Float,String>>();
-		
+
 		for (int i = 0; i < sketchPoints.length; i++) {
 			if (sketchPoints[i].points.isEmpty()) {
 				if (i < sketchPoints.length - 1) {
@@ -84,37 +84,37 @@ public class Similarity extends Analysis {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
+
 			Set<Float> ignore = new HashSet<Float>();
 //			paa.setPAAwidth(output,sketchPoints[i]);
 //			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
 			double[][] normalgroup = this.dataReformatter.reformatData(output);
 			data.add(normalgroup);
-//			double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
-			
+			//double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
+
 			ArrayList<Point> sPoints = sketchPoints[i].points;
 			double[] qT = new double[sketchPoints[i].points.size()];
 			for (int x = 0; x < qT.length; x++) {
 				qT[x] = sPoints.get(x).getY();
-			}			
-			
+			}
+
 			ListPair lp = computeOrders(normalizedgroups,qT,mappings, args);
 			orders.add(lp.order);
 			orderedDistances.add(lp.distances);
 		}
-		
+
 		ListPair lp = computeWeightedRanks(orders, orderedDistances);
-		
+
 //		System.out.println(lp.order.size() + "\t" + lp.distances.size());
 //		for (int i = 0; i < lp.order.size(); i++) {
 //			System.out.println(lp.order.get(i) + "\t" + lp.distances.get(i));
 //		}
-		
+
 		chartOutput.chartOutput(data, outputs, lp.order, lp.distances, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
 		return;
 	}
-	
+
 	public class ListPair {
 		List<Integer> order;
 		List<Double> distances;
@@ -123,7 +123,7 @@ public class Similarity extends Analysis {
 			this.distances = distances;
 		}
 	}
-	
+
 	/**
 	 * @param normalizedgroups
 	 * @param queryTrend
@@ -131,11 +131,11 @@ public class Similarity extends Analysis {
 	 * @return
 	 */
 	public ListPair computeOrders(double[][] normalizedgroups, double[] queryTrend, ArrayList<String> mappings, ZvQuery args) {
-		List<Integer> orders = new ArrayList<Integer>();		
+		List<Integer> orders = new ArrayList<Integer>();
 		List<Double> orderedDistances = new ArrayList<Double>();
-		
+
 		int[] xRange = new int[2];
-		
+
 		ArrayList<Point> inputPoints = args.sketchPoints[0].points;
 		for (int i = 0; i < inputPoints.size(); i++) {
 			if (args.xRange[0] <= inputPoints.get(i).getX()) {
@@ -143,23 +143,23 @@ public class Similarity extends Analysis {
 				break;
 			}
 		}
-		
+
 		for (int i = inputPoints.size() - 1; i >= 0 ; i--) {
 			if (args.xRange[1] >= inputPoints.get(i).getX()) {
 				xRange[1] = i;
 				break;
 			}
 		}
-		
+
 		MultiValueMap indexOrder =new MultiValueMap();
-    	List<Double> distances = new ArrayList<Double>(); 
+    	List<Double> distances = new ArrayList<Double>();
     	for(int i = 0;i < normalizedgroups.length;i++) {
     		double dist = distance.calculateDistance(Arrays.copyOfRange(normalizedgroups[i], xRange[0], xRange[1]), Arrays.copyOfRange(queryTrend, xRange[0], xRange[1]));
-    		
-    	    distances.add(dist);	
+
+    	    distances.add(dist);
     		indexOrder.put(dist,i);
-    	}   
-	  
+    	}
+
     	Collections.sort(distances);
     	if (descending)
     		Collections.reverse(distances);
@@ -170,14 +170,14 @@ public class Similarity extends Analysis {
 			orders.add((val));
 			orderedDistances.add(d);
 			indexOrder.remove(d,val);
-			 
+
 		 }
     	ListPair lp = new ListPair(orders, orderedDistances);
-    	return lp;		
+    	return lp;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param orders
 	 * @return
@@ -227,7 +227,7 @@ public class Similarity extends Analysis {
 	public void setDescending(boolean descending) {
 		this.descending = descending;
 	}
-	
+
 	/**
 	 * @param q
 	 * @param arg

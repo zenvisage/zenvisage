@@ -1,8 +1,8 @@
 function constructDatasetChangeQuery( datasetName )
 {
-  return new formQuery(datasetName);
+  return new formQuery( datasetName );
 }
-function formQuery(databasename){
+function formQuery( databasename ){
   this.databasename = databasename;
 }
 
