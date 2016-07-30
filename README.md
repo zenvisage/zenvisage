@@ -22,7 +22,7 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 *  cd zenvisage
 *  sh build.sh  
 *  sh run.sh
-*  http://localhost:9991/
+*  http://localhost:8080/
 
 
 # Architecture
