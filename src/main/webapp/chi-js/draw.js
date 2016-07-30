@@ -116,8 +116,8 @@ function plotSketchpad( dygraphObject )
     data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
   }
   var valueRange = dygraphObject.axes_[0]["valueRange"]
-  var xRange = sketchpad.xAxisRange()
-
+  //var xRange = sketchpad.xAxisRange()
+  var xRange = dygraphObject.xAxisRange()
   if (sketchpad != null) {
     sketchpad.destroy()
   }
@@ -132,8 +132,10 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
     sketchpad.destroy()
   }
   var data = []
-  for (var d = xmin; d < xmax + 1; d += 1 ) {
-    data.push( [ d, (ymin+ymax)/2 ] );
+
+  // intialize to 100 points
+  for (var d = xmin; d < 100; d += 1 ) {
+    data.push( [ d + (xmax-xmin)/100 , (ymin+ymax)/2 ] );
   }
   var valueRange = [ymin, ymax];
   sketchpad = getSketchpadDygraphObject( data, valueRange );

@@ -1,7 +1,5 @@
 
 var app = angular.module('zenvisage', []);
-
-
 var globalDatasetInfo; //remove after fixing sketchpad controller
 /*
 sketchpad should be a controller
@@ -22,32 +20,6 @@ app.factory('sketchpadState', function() {
   return sketchpadService;
 });
 */
-
-$('#uploaderForm').on('submit', function(e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-    if (formData.get("csv").name == "" || formData.get("schema").name == "" ) {
-      alert("Please select corresponding files!");
-      return;
-    }
-    $.ajax({
-        url : $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            $('#dataset-form-control').append($("<option></option>")
-                          .attr("value", formData.get("datasetName"))
-                          .text( formData.get("datasetName")));
-            $('#uploaderModal').modal('toggle');
-            alert("Uploaded");
-        },
-        error: function (jXHR, textStatus, errorThrown) {
-            alert(errorThrown);
-        }
-    });
-});
 
 app.factory('datasetInfo', function() {
   var categoryData;
@@ -120,6 +92,7 @@ app.controller('datasetController', [
       $http.post('/zv/postSimilarity', data).
       success(function(response) {
         console.log("getUserQueryResults: success");
+        if (response.length == 0){console.log("empty response")}
         plotResults.displayUserQueryResults(response.outputCharts);
       }).
       error(function(response) {
@@ -132,11 +105,12 @@ app.controller('datasetController', [
     function getRepresentativeTrends( outlierCallback )
     {
       var q = constructRepresentativeTrendQuery(); //goes to query.js
-      // q["sketchPoints"][0]["points"] = [];
       var data = q;
+
       $http.post('/zv/postRepresentative', data).
       success(function(response) {
         console.log("getRepresentativeTrends: success");
+        if (response.length == 0){console.log("empty response")}
         plotResults.displayRepresentativeResults( response.outputCharts );
         outlierCallback();
       }).
@@ -148,12 +122,12 @@ app.controller('datasetController', [
     function getOutlierTrends()
     {
       var q = constructOutlierTrendQuery(); //goes to query.js
-      // q["sketchPoints"][0]["points"] = [];
       var data = q;
 
       $http.post('/zv/postOutlier', data).
       success(function(response) {
         console.log("getOutlierTrends: success");
+        if (response.length == 0){console.log("empty response")}
         plotResults.displayOutlierResults( response.outputCharts );
       }).
       error(function(response) {
@@ -173,8 +147,11 @@ app.controller('datasetController', [
 
    $scope.onDatasetChange = function() {
 
+      clearRepresentativeTable();
+      clearOutlierTable();
+      clearUserQueryResultsTable();
+
       var q = constructDatasetChangeQuery(getSelectedDataset());
-      //var q = constructDatasetChangeQuery("seed2");
 
       var params = {
         "query": q,
@@ -227,5 +204,4 @@ app.controller('datasetController', [
       initializeSketchpadOnDataAttributeChange(xData, yData, categoryData); //only x and y values?
       getRepresentativeTrends(getOutlierTrends);
     };
-
 }]);

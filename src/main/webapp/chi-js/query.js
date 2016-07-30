@@ -46,6 +46,7 @@ function Query( searchMethod ) {
   this.predicateColumn = getSelectedCategory();
   this.predicateValue = ""; // fix to dynamically fetch
   this.xRange = getXRange();
+  //this.segmentCount = getNumSegments();
 }
 
 function SketchPoints(xAxisName, yAxisName, points){
@@ -96,6 +97,11 @@ function getDistanceMethod()
 function getNumResults()
 {
   return $('#num-results input').val()
+}
+
+function getNumSegments()
+{
+  return $('#num-segments input').val()
 }
 
 function getSelectedDataset()
