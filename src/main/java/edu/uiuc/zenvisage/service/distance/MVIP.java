@@ -28,14 +28,6 @@ public class MVIP implements Distance {
 		public double VIPDist;//Normalized Dist of each VIP
 		public int VIPimportance;//the order of being added to VIP set
 		
-		public VIPinfo() {}
-		
-		public VIPinfo(int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
-			VIPindex = VIPINDEX;
-			VIPDist = VIPDIST;
-			VIPimportance = PIPIMPORTANCE;
-		}
-		
 		public VIPinfo setValue(int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
 			VIPindex = VIPINDEX;
 			VIPDist = VIPDIST;
@@ -48,7 +40,25 @@ public class MVIP implements Distance {
 	    }
 	}
 	
-	public static class Indicator { //PIP Indicator
+	public static class possibleVIP implements Comparable<possibleVIP> {
+		public int index;
+		public Double dist;
+		public int leftVIPindex;
+		public int rightVIPindex;
+		
+		public void setValue(int INDEX, double DIST, int LEFTVIPINDEX, int RIGHTVIPINDEX) {
+			index = INDEX;
+			dist = DIST;
+			leftVIPindex = LEFTVIPINDEX;
+			rightVIPindex = RIGHTVIPINDEX;
+		}
+		
+		public int compareTo(possibleVIP arg0) {
+	        return this.dist.compareTo(arg0.dist);
+	    }
+	}
+	
+	public static class Indicator { //VIP Indicator
 		//position
 		public double X;
 		public double Y;
@@ -65,9 +75,9 @@ public class MVIP implements Distance {
 	}
 	
 	//preprocessing - Redundant preprocessings could happen during similarity search and especially clustering
-	public static double[][] preprocessing(double[] array) {
+	public static double[] preprocessing(double[] array) {
 		double[] smooth;
-		double[][] result;
+		double[] result;
 		
 		//Zcore - already done by service.utility.Zscore.java
 		
@@ -83,39 +93,126 @@ public class MVIP implements Distance {
 		}
 		
 		//axis normalization
-		double Xrange = array.length-1;
 		double Yrange = StatUtils.max(smooth) - StatUtils.min(smooth);
-		result = new double[smooth.length][2];
+		result = new double[smooth.length];
 		for (int i = 0; i < smooth.length; ++i){
-			if (Xrange != 0)
-				result[i][0] = i / Xrange;
 			if (Yrange != 0)
-				result[i][1] = smooth[i] / Yrange;
+				result[i] = smooth[i] / Yrange;
 		}
 		
 		return result;
 	}
 	
-	public static double[] NormVDist()
+	public static double[] NormVDist(double[] array) {
+		final double step = (array[array.length-1] - array[0]) / (array.length - 1);
+		double current = array[0];
+		double[] Dist = new double[array.length];
+		
+		for (int i = 0; i < array.length; ++i) {
+			Dist[i] = Math.abs((array[i] - current));
+			current += step;
+		}
+		return Dist;
+	}
 	
 	//get VIPs' info
-	public static List<VIPinfo> getVIPs(double[][]ts) {
+	public static List<VIPinfo> getVIPs(double[]ts) {
+		
 		final double threshold = 0.05;
-		int tslength = ts.length;
 		List<VIPinfo> VIPlist = new ArrayList<VIPinfo>();//VIPlist=PIPinfo - delete
 		VIPinfo newVIP = new VIPinfo();
 		double[] Dist;
+		int possVIPindex;
+		double possVIPdist;
+		List<possibleVIP> waitinglist = new ArrayList<possibleVIP>();
+		possibleVIP possVIP = new possibleVIP();
+		int dewlIndex; //the index of dewaitinglist in waitinglist
+		double tmpdist;
 		
 		//add start point and tail point into VIP set
 		newVIP.setValue(0, 0, 0);
 		VIPlist.add(newVIP);
-		newVIP.setValue(tslength-1, 0, 1);
-		VIPlist.add(newVIP);
+		if (ts.length > 1) {
+			newVIP.setValue(ts.length-1, 0, 1);
+			VIPlist.add(newVIP);
+		}
 		
-		//Dist=NormVDist(ts,yrange);
-		
-		
-		
+		if (ts.length > 2) {
+			Dist = NormVDist(ts);
+			possVIPindex = 1;
+			possVIPdist = Dist[1];
+			for (int i = 2; i < (ts.length-1); ++i) {
+				if (Dist[i] > possVIPdist) {
+					possVIPdist = Dist[i];
+					possVIPindex = i;
+				}
+			}
+			if (possVIPdist > threshold) {
+				possVIP.setValue(possVIPindex, possVIPdist, 0, ts.length-1);
+				waitinglist.add(possVIP);
+				dewlIndex = 0;
+			}
+			else
+				dewlIndex = -1;
+			
+			while(dewlIndex >= 0) {
+				possVIP = waitinglist.get(dewlIndex);
+				newVIP.setValue(possVIP.index, possVIP.dist, VIPlist.size());
+				VIPlist.add(newVIP);
+				waitinglist.remove(dewlIndex);
+				
+				int startIndex = possVIP.leftVIPindex;
+				int endIndex = possVIP.rightVIPindex;
+				int middleIndex = possVIP.index;
+				
+				if (middleIndex > (startIndex+1)) {
+					Dist = NormVDist(Arrays.copyOfRange(ts,startIndex,middleIndex+1));
+					possVIPindex = startIndex+1;
+					possVIPdist = Dist[1];
+					for (int i = startIndex+2; i < middleIndex; ++i) {
+						if (Dist[i-startIndex] > possVIPdist) {
+							possVIPdist = Dist[i-startIndex];
+							possVIPindex = i;
+						}
+					}
+					if (possVIPdist > threshold) {
+						possVIP.setValue(possVIPindex, possVIPdist, startIndex, middleIndex);
+						waitinglist.add(possVIP);
+					}
+				}
+				
+				if (endIndex > (middleIndex+1)) {
+					Dist = NormVDist(Arrays.copyOfRange(ts,middleIndex,endIndex+1));
+					possVIPindex = middleIndex+1;
+					possVIPdist = Dist[1];
+					for (int i = middleIndex+2; i < endIndex; ++i) {
+						if (Dist[i-middleIndex] > possVIPdist) {
+							possVIPdist = Dist[i-middleIndex];
+							possVIPindex = i;
+						}
+					}
+					if (possVIPdist > threshold) {
+						possVIP.setValue(possVIPindex, possVIPdist, middleIndex, endIndex);
+						waitinglist.add(possVIP);
+					}
+				}
+				
+				if (waitinglist.size() == 0)
+					dewlIndex = -1;
+				else {
+					dewlIndex = 0;
+					tmpdist = waitinglist.get(dewlIndex).dist;
+					for (int i = 1; i < waitinglist.size(); ++i) {
+						if (waitinglist.get(i).dist > tmpdist) {
+							tmpdist = waitinglist.get(i).dist;
+							dewlIndex = i;
+						}
+					}
+				}	
+			}
+		}
+		VIPlist.sort(null);;
+		return VIPlist;
 	}
 	
 	@Override
@@ -123,7 +220,16 @@ public class MVIP implements Distance {
 		// TODO Auto-generated method stub
 		assert src.length == tar.length;
 		
-		return 22;
+		List<VIPinfo> srcVIPlist;
+		List<VIPinfo> tarVIPlist;
+		
+		src = preprocessing(src);
+		tar = preprocessing(tar);
+		
+		srcVIPlist = getVIPs(src);
+		tarVIPlist = getVIPs(tar);
+		
+		
 	}
 
 }
