@@ -229,8 +229,10 @@ public class MVIP implements Distance {
 				indicatorArray[i][0] = VIPlist.get(i).index / Xrange;
 			
 			//Y
-			indicatorArray[i][1] = ts(VIPlist.get(i).index);
+			indicatorArray[i][1] = ts[VIPlist.get(i).index];
 		}
+		
+		return indicatorArray;
 	}
 	
 	@Override

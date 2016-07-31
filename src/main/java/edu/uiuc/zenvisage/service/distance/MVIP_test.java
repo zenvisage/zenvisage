@@ -23,23 +23,30 @@ public class MVIP_test {
 		//MVIP test = new MVIP();
 		
 		//two time series
-		List<MVIP.possibleVIP> list = new ArrayList<MVIP.possibleVIP>();
-		double[] a = {1,2,3};
+		//List<MVIP.possibleVIP> list = new ArrayList<MVIP.possibleVIP>();
+		//double[] a = {1,2,3};
 		//double[] b = {4,5,6};
 		
-		Zscore zscore = new Zscore();
-		zscore.normalize(a);
-		double[] result = a;
+		//Zscore zscore = new Zscore();
+		//zscore.normalize(a);
+		//double[] result = a;
 				
 		//print distance
 		//double result = test.calculateDistance(a,b);
 		//System.out.print(result);
 		
-		double[][] aa = {{1,2},{3,4},{5,6}};
-		System.out.println(list.size());
+		//double[][] aa = {{1,2},{3,4},{5,6}};
+		//System.out.println(list.size());
 		
 		//for (int i = 0; i < result.length; ++i){
 		//	System.out.println(result[i]);
 		//}
+		
+		double[] a = {1,2,3,4};
+		double[] b = {7,89,3,1};
+		Euclidean Dist = new Euclidean();
+		double dist = Dist.calculateDistance(a, b);
+		System.out.println(dist);
+		
 	}
 }
