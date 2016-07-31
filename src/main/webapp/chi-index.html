@@ -119,15 +119,18 @@
                     <input id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label>
                   </form>
                 </div>
-              </div>
-              <div class="col-md-3">
                 <b>Representative/Outlier</b>
                 <div class="radio">
                   <form>
                     <input id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label><br>
-                    <input type="radio" id="fuzzycmeans" name="search-method" value="fuzzycmeans" ><label for="fuzzycmeans">Fuzzy c-means</label><br>
                   </form>
                 </div>
+                <!--
+                <div class="info-text"><b>Number of Segments</b></div>
+                  <div>
+                    <input class="num-segments" type="text" name="number-of-segments" value="30">
+                  </div>
+                -->
               </div>
               <div class="col-md-3">
                 <div class="info-text"><b>Aggregation Method</b></div>
@@ -140,7 +143,7 @@
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
                   <div>
-                    <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
+                    <input class="num-results" type="text" name="number-of-results" value="50">
                   </div>
                 </div>
               </div>
@@ -198,5 +201,6 @@
     <script src="chi-js/query.js"></script>
     <script src="chi-js/helper.js"></script>
     <script src="chi-js/data.js"></script>
+    <script src="chi-js/fileUploader.js"></script>
   </body>
 </html>

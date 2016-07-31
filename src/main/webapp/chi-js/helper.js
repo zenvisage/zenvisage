@@ -6,7 +6,7 @@ var outlierDygraphs = {};
 //displays user results
 function displayUserQueryResultsHelper( userQueryResults )
 {
-  $("#results-table").empty();
+  clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
   for (var count = 0; count < userQueryResults.length; count++)
@@ -79,7 +79,7 @@ function displayUserQueryResultsHelper( userQueryResults )
 
 function displayRepresentativeResultsHelper( representativePatternResults )
 {
-  $("#representative-table").find('tr').not('.middle-right-headers').remove();
+  clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
   for(var count = 0; count < 4; count++) //need to fix count
@@ -126,7 +126,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
 
 function displayOutlierResultsHelper( outlierResults )
 {
-  $("#outlier-table").find('tr').not('.middle-right-headers').remove();
+  clearOutlierTable();
   var resultsDiv = $("#outlier-table");
   var varFinalArray = [];
   for(var count = 0; count < 4; count++) //need to fix count
@@ -215,19 +215,34 @@ $(document).ready(function(){
   });
 });
 
+function clearRepresentativeTable()
+{
+  $("#representative-table").find('tr').not('.middle-right-headers').remove();
+}
+
+function clearOutlierTable()
+{
+  $("#outlier-table").find('tr').not('.middle-right-headers').remove();
+}
+
+function clearUserQueryResultsTable()
+{
+  $("#results-table").empty();
+}
+
 
 // custom event handler which triggers when zoom range is adjusted
-var xrange;
+var global_xrange;
 function refreshZoomEventHandler() {
   $("#draw-div").off();
   $(".dygraph-rangesel-fgcanvas").off();
   $(".dygraph-rangesel-zoomhandle").off();
   $("#draw-div").on('mousedown', '.dygraph-rangesel-fgcanvas, .dygraph-rangesel-zoomhandle', function(){
-    xrange = sketchpad.xAxisRange();
+    global_xrange = sketchpad.xAxisRange();
   });
   $("#draw-div").on('mouseup', '.dygraph-rangesel-fgcanvas, .dygraph-rangesel-zoomhandle', function() {
     var xr = sketchpad.xAxisRange();
-    if (xrange[0] !== xr[0] || xrange[1] !== xr[1])
+    if (global_xrange[0] !== xr[0] || global_xrange[1] !== xr[1])
     {
       angular.element($("#sidebar")).scope().getUserQueryResults();
     }

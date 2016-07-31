@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.uiuc.zenvisage.service;
 import java.util.ArrayList;
@@ -54,20 +54,20 @@ public class Similarity extends Analysis {
 	@Override
 	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException {
 		// TODO Auto-generated method stub
-		Sketch[] sketchPoints = args.getSketchPoints();		
-		
+		Sketch[] sketchPoints = args.getSketchPoints();
+
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {
 			mappings.add(key);
 		}
 		List<List<Integer>> orders = new ArrayList<List<Integer>>();
-		
+
 		List<List<Double>> orderedDistances = new ArrayList<List<Double>>();
-		
+
 		List<double[][]> data = new ArrayList<double[][]>();
 		List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> outputs = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
 		List<BiMap<Float,String>> xMaps = new ArrayList<BiMap<Float,String>>();
-		
+
 		for (int i = 0; i < sketchPoints.length; i++) {
 			if (sketchPoints[i].points.isEmpty()) {
 				if (i < sketchPoints.length - 1) {
@@ -87,8 +87,8 @@ public class Similarity extends Analysis {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
+
 			Set<Float> ignore = new HashSet<Float>();
 //			paa.setPAAwidth(output,sketchPoints[i]);
 //			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
@@ -101,13 +101,12 @@ public class Similarity extends Analysis {
 			orders.add(lp.order);
 			orderedDistances.add(lp.distances);
 		}
-		
+
 		ListPair lp = computeWeightedRanks(orders, orderedDistances);
-		
 		chartOutput.chartOutput(data, outputs, lp.order, lp.distances, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
 		return;
 	}
-	
+
 	public class ListPair {
 		List<Integer> order;
 		List<Double> distances;
@@ -197,6 +196,7 @@ public class Similarity extends Analysis {
 	 * @param mappings
 	 * @return
 	 */
+	
 	public ListPair computeOrders(double[][] overlappedDataInterpolated, double[][] overlappedQueryInterpolated, ArrayList<String> mappings, ZvQuery args) {
 		List<Integer> orders = new ArrayList<Integer>();		
 		List<Double> orderedDistances = new ArrayList<Double>();
@@ -219,8 +219,8 @@ public class Similarity extends Analysis {
     		
     	    distances.add(dist);	
     		indexOrder.put(dist,i);
-    	}   
-	  
+    	}
+
     	Collections.sort(distances);
     	if (descending)
     		Collections.reverse(distances);
@@ -231,14 +231,14 @@ public class Similarity extends Analysis {
 			orders.add((val));
 			orderedDistances.add(d);
 			indexOrder.remove(d,val);
-			 
+
 		 }
     	ListPair lp = new ListPair(orders, orderedDistances);
-    	return lp;		
+    	return lp;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param orders
 	 * @return
@@ -288,7 +288,7 @@ public class Similarity extends Analysis {
 	public void setDescending(boolean descending) {
 		this.descending = descending;
 	}
-	
+
 	/**
 	 * @param q
 	 * @param arg
