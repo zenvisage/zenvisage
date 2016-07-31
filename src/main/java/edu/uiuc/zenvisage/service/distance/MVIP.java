@@ -24,19 +24,19 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 public class MVIP implements Distance {
 	
 	public static class VIPinfo implements Comparable<VIPinfo> {
-		public Integer VIPindex; //the index in time series
-		public double VIPDist;//Normalized Dist of each VIP
-		public int VIPimportance;//the order of being added to VIP set
+		public Integer index; //the index in time series
+		public double dist;//Normalized Dist of each VIP
+		public int importance;//the order of being added to VIP set
 		
 		public VIPinfo setValue(int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
-			VIPindex = VIPINDEX;
-			VIPDist = VIPDIST;
-			VIPimportance = PIPIMPORTANCE;
+			index = VIPINDEX;
+			dist = VIPDIST;
+			importance = PIPIMPORTANCE;
 			return this;
 		}
 		
 		public int compareTo(VIPinfo arg0) {
-	        return this.VIPindex.compareTo(arg0.VIPindex);
+	        return this.index.compareTo(arg0.index);
 	    }
 	}
 	
@@ -58,6 +58,7 @@ public class MVIP implements Distance {
 	    }
 	}
 	
+	/*
 	public static class Indicator { //VIP Indicator
 		//position
 		public double X;
@@ -73,6 +74,7 @@ public class MVIP implements Distance {
 		public double normDiffVIP_L;
 		public double normDiffVIP_R;
 	}
+	*/
 	
 	//preprocessing - Redundant preprocessings could happen during similarity search and especially clustering
 	public static double[] preprocessing(double[] array) {
@@ -116,9 +118,9 @@ public class MVIP implements Distance {
 	}
 	
 	//get VIPs' info
-	public static List<VIPinfo> getVIPs(double[]ts) {
+	public static List<VIPinfo> getVIPs(double[] ts) {
 		
-		final double threshold = 0.05;
+		final double threshold = 0.05; //5% of Y-axis range
 		List<VIPinfo> VIPlist = new ArrayList<VIPinfo>();//VIPlist=PIPinfo - delete
 		VIPinfo newVIP = new VIPinfo();
 		double[] Dist;
@@ -213,6 +215,22 @@ public class MVIP implements Distance {
 		}
 		VIPlist.sort(null);;
 		return VIPlist;
+	}
+	
+	//only 2 dimensions (x, y) for now 
+	public static double[][] getIndicators(double[] ts, List<VIPinfo> VIPlist) {
+		final int dimension = 2;
+		double[][] indicatorArray = new double[VIPlist.size()][dimension];
+		double Xrange = ts.length - 1;
+		
+		for (int i = 0; i < VIPlist.size(); ++i) {
+			//X
+			if (Xrange > 0)
+				indicatorArray[i][0] = VIPlist.get(i).index / Xrange;
+			
+			//Y
+			indicatorArray[i][1] = ts(VIPlist.get(i).index);
+		}
 	}
 	
 	@Override
