@@ -234,6 +234,37 @@ public class MVIP implements Distance {
 		
 		return indicatorArray;
 	}
+
+	//Euclidean Distantce
+	public static double eucDist(double[] ts1, double[] ts2) {
+		assert ts1.length == ts2.length;
+		
+		double sum = 0;
+		double diff = 0;
+		for(int i = 0; i < ts1.length; ++i) {
+			diff = ts1[i] - ts2[i];
+			sum += diff * diff;
+		}
+		return Math.sqrt(sum);
+	}
+	
+	//DTW
+	public static double DTWDist(double[][] IndicatorsI, double[][]IndicatorsJ) {
+		double[][] costMatrix = new double[IndicatorsI.length][IndicatorsJ.length];
+		
+		costMatrix[0][0] = eucDist(IndicatorsI[0], IndicatorsJ[0]);
+		for (int j = 1; j < IndicatorsJ.length; ++j) {
+			costMatrix[0][j] = costMatrix[0][j-1] + eucDist(IndicatorsI[0], IndicatorsJ[j]);
+		}
+		for (int i = 1; i < IndicatorsI.length; ++i) {
+			costMatrix[i][0] = costMatrix[i-1][0] + eucDist(IndicatorsI[i],IndicatorsJ[0]);
+			for (int j = 1; j < IndicatorsJ.length; ++j) {
+				costMatrix[i][j] = Math.min(costMatrix[i-1][j-1], Math.min(costMatrix[i][j-1], costMatrix[i-1][j])) + eucDist(IndicatorsI[i],IndicatorsJ[j]);
+			}
+		}
+		
+		return costMatrix[IndicatorsI.length-1][IndicatorsJ.length-1];
+	}
 	
 	@Override
 	public double calculateDistance(double[] src, double[] tar) {
@@ -242,6 +273,9 @@ public class MVIP implements Distance {
 		
 		List<VIPinfo> srcVIPlist;
 		List<VIPinfo> tarVIPlist;
+		double[][] srcIndicators;
+		double[][] tarIndicators;
+		double distance;
 		
 		src = preprocessing(src);
 		tar = preprocessing(tar);
@@ -249,7 +283,10 @@ public class MVIP implements Distance {
 		srcVIPlist = getVIPs(src);
 		tarVIPlist = getVIPs(tar);
 		
+		srcIndicators = getIndicators(src, srcVIPlist);
+		tarIndicators = getIndicators(tar, tarVIPlist);
 		
+		distance = DTWDist(srcIndicators, tarIndicators) / Math.max(srcIndicators.length, tarIndicators.length);
+		return distance;
 	}
-
 }
