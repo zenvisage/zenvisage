@@ -214,7 +214,7 @@ public class ZvMain {
 
 	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
 		// get data from database
-		System.out.println(query);
+//		System.out.println(query);
 
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 
@@ -280,7 +280,7 @@ public class ZvMain {
 		 ObjectMapper mapper = new ObjectMapper();
 
 		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
-		 System.out.println(str);
+//		 System.out.println(str);
 
 		 return str;
 	}
@@ -333,6 +333,9 @@ public class ZvMain {
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		inMemoryDatabase = inMemoryDatabases.get(fq.getDatabasename());
 		executor = new Executor(inMemoryDatabase);
+		
+		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		
 		return new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData());
 	}
 

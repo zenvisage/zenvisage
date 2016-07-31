@@ -4,11 +4,14 @@
 package edu.uiuc.zenvisage.service;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.map.MultiValueMap;
@@ -89,27 +92,17 @@ public class Similarity extends Analysis {
 			Set<Float> ignore = new HashSet<Float>();
 //			paa.setPAAwidth(output,sketchPoints[i]);
 //			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
-			double[][] normalgroup = this.dataReformatter.reformatData(output);
-			data.add(normalgroup);
+			data.add(normalizedgroups);
 //			double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
+
+			double[][][] overlappedDataAndQueries = getOverlappedData(output, args);
 			
-			ArrayList<Point> sPoints = sketchPoints[i].points;
-			double[] qT = new double[sketchPoints[i].points.size()];
-			for (int x = 0; x < qT.length; x++) {
-				qT[x] = sPoints.get(x).getY();
-			}			
-			
-			ListPair lp = computeOrders(normalizedgroups,qT,mappings, args);
+			ListPair lp = computeOrders(overlappedDataAndQueries[0], overlappedDataAndQueries[1], mappings, args);
 			orders.add(lp.order);
 			orderedDistances.add(lp.distances);
 		}
 		
 		ListPair lp = computeWeightedRanks(orders, orderedDistances);
-		
-//		System.out.println(lp.order.size() + "\t" + lp.distances.size());
-//		for (int i = 0; i < lp.order.size(); i++) {
-//			System.out.println(lp.order.get(i) + "\t" + lp.distances.get(i));
-//		}
 		
 		chartOutput.chartOutput(data, outputs, lp.order, lp.distances, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
 		return;
@@ -124,37 +117,105 @@ public class Similarity extends Analysis {
 		}
 	}
 	
+	public double[][][] getOverlappedData(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, ZvQuery args) {		
+		double[][][] overlappedDataAndQueries = new double[2][output.size()][];
+		double[] xRange = args.xRange;
+		List<Double> overlappedQueryXValues = new ArrayList<Double>();
+		List<Double> overlappedQueryYValues = new ArrayList<Double>();
+		List<Point> queryPoints = args.sketchPoints[0].points;
+		
+		for (int i = 0; i < queryPoints.size(); i++) {
+			if (queryPoints.get(i).getX() >= xRange[0] && queryPoints.get(i).getX() <= xRange[1]) {
+				overlappedQueryXValues.add((double) queryPoints.get(i).getX());
+				overlappedQueryYValues.add((double) queryPoints.get(i).getY());
+			}
+		}
+		
+		int i = 0;
+		for (String s: output.keySet()) {
+			Map<Float,Float> originalData = output.get(s);
+			List<Double> overlappedXValues = new ArrayList<Double>();
+			List<Double> overlappedYValues = new ArrayList<Double>();
+			for (float dataX : originalData.keySet()) {
+				if (xRange[0] <= dataX && dataX <= xRange[1]) {
+					overlappedXValues.add((double) dataX);
+					overlappedYValues.add((double) originalData.get(dataX));
+				}
+			}
+//			System.out.println(overlappedXValues.size());
+			if (overlappedXValues.size() <= 1) {
+				overlappedDataAndQueries[0][i] = new double[0];
+				overlappedDataAndQueries[1][i] = new double[0];
+			}
+			else {
+				double[] overlappedRange = {overlappedXValues.get(0), overlappedXValues.get(overlappedXValues.size()-1)};
+				double[] overlappedDataInterpolated = getInterpolatedData(overlappedXValues, overlappedYValues, overlappedRange);
+				double[] overlappedQueryInterpolated = getInterpolatedData(overlappedQueryXValues, overlappedQueryYValues, overlappedRange);
+				overlappedDataAndQueries[0][i] = overlappedDataInterpolated;
+				overlappedDataAndQueries[1][i] = overlappedQueryInterpolated;				
+			}
+			i++;
+		}
+			
+		return overlappedDataAndQueries;
+	}
+	
+	public double[] getInterpolatedData(List<Double> overlappedXValues, List<Double> overlappedYValues, double[] overlappedRange) {
+		int n = 100;
+		double[] interpolatedXValues = new double[n];
+		double[] interpolatedYValues = new double[n];
+		double granularity = (overlappedXValues.get(overlappedXValues.size()-1) - overlappedXValues.get(0)) / 100;
+		
+//		interpolatedXValues[0] = overlappedXValues.get(0);
+//		interpolatedYValues[0] = overlappedYValues.get(0);
+//		interpolatedXValues[n-1] = overlappedXValues.get(overlappedXValues.size()-1);
+//		interpolatedXValues[n-1] = overlappedYValues.get(overlappedXValues.size()-1);
+		
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			double interpolatedX = overlappedXValues.get(0) + i * granularity;
+			interpolatedXValues[i] = interpolatedX;
+			
+			while(overlappedXValues.get(count) < interpolatedX) {
+				count++;
+			}
+			if (overlappedXValues.get(count) == interpolatedX) {
+				interpolatedYValues[i] = overlappedYValues.get(count);
+			}
+			else {
+				double xDifference = overlappedXValues.get(count) - overlappedXValues.get(count-1);
+				double yDifference = overlappedYValues.get(count) - overlappedYValues.get(count-1);
+				interpolatedYValues[i] = overlappedYValues.get(count - 1) + (interpolatedX - overlappedXValues.get(count-1)) / xDifference * yDifference;				
+			}
+		}
+		return interpolatedYValues;
+	}
+	
 	/**
 	 * @param normalizedgroups
 	 * @param queryTrend
 	 * @param mappings
 	 * @return
 	 */
-	public ListPair computeOrders(double[][] normalizedgroups, double[] queryTrend, ArrayList<String> mappings, ZvQuery args) {
+	public ListPair computeOrders(double[][] overlappedDataInterpolated, double[][] overlappedQueryInterpolated, ArrayList<String> mappings, ZvQuery args) {
 		List<Integer> orders = new ArrayList<Integer>();		
 		List<Double> orderedDistances = new ArrayList<Double>();
-		
-		int[] xRange = new int[2];
-		
-		ArrayList<Point> inputPoints = args.sketchPoints[0].points;
-		for (int i = 0; i < inputPoints.size(); i++) {
-			if (args.xRange[0] <= inputPoints.get(i).getX()) {
-				xRange[0] = i;
-				break;
-			}
-		}
-		
-		for (int i = inputPoints.size() - 1; i >= 0 ; i--) {
-			if (args.xRange[1] >= inputPoints.get(i).getX()) {
-				xRange[1] = i;
-				break;
-			}
-		}
-		
+				
 		MultiValueMap indexOrder =new MultiValueMap();
-    	List<Double> distances = new ArrayList<Double>(); 
-    	for(int i = 0;i < normalizedgroups.length;i++) {
-    		double dist = distance.calculateDistance(Arrays.copyOfRange(normalizedgroups[i], xRange[0], xRange[1]), Arrays.copyOfRange(queryTrend, xRange[0], xRange[1]));
+    	List<Double> distances = new ArrayList<Double>();
+		
+    	for(int i = 0;i < overlappedDataInterpolated.length;i++) {
+    		double dist;
+    		if (overlappedDataInterpolated[i].length == 0) {
+    			dist = Double.MAX_VALUE;
+    		}
+    		else {
+//    			for (int j = 0; j < overlappedDataInterpolated[i].length; j++) {
+//    				System.out.println(overlappedDataInterpolated[i][j] + "\t" + overlappedQueryInterpolated[i][j]);
+//    			}
+//    			System.out.println();
+        		dist = distance.calculateDistance(overlappedDataInterpolated[i], overlappedQueryInterpolated[i]);
+    		}
     		
     	    distances.add(dist);	
     		indexOrder.put(dist,i);
