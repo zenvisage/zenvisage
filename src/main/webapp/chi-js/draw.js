@@ -143,8 +143,8 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
   var data = []
 
   // intialize to 100 points
-  for (var d = xmin; d < 100; d += 1 ) {
-    data.push( [ d + (xmax-xmin)/100 , (ymin+ymax)/2 ] );
+  for (var d = 0; d < 100; d += 1 ) {
+    data.push( [ xmin + (xmax-xmin)/100*d , (ymin+ymax)/2 ] );
   }
   var valueRange = [ymin, ymax];
   sketchpad = getSketchpadDygraphObject( data, valueRange );
