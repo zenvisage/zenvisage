@@ -32,11 +32,16 @@ function displayUserQueryResultsHelper( userQueryResults )
     var ymin = Math.min.apply(Math, yData);
     var ymax = Math.max.apply(Math, yData);
 
+    /*
     var data = [];
     var arrayLength = xData.length;
     for (var i = 0; i < arrayLength; i++ ) {
       data.push( [ Number(xData[i]), Number(yData[i]), Number(sketchpad.rawData_[i][1]) ]);
     }
+    */
+
+    var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
+
     var valueRange = [ymin, ymax];
     userQueryDygraphs["result-" + count.toString()] = new Dygraph(document.getElementById("result-" + count.toString()), data,
       {
@@ -248,5 +253,83 @@ function refreshZoomEventHandler() {
     }
   });
 }
+
+function combineTwoArrays( arr1_xdata, arr1_ydata, arr2 )
+{
+  data = [];
+  i = 0;
+  j = 0;
+  while (arr1_xdata.length > i && arr2.length > j)
+  {
+    if ( Number(arr1_xdata[i]) == arr2[j][0] )
+    {
+      data.push( [Number( arr1_xdata[i] ), Number( arr1_ydata[i] ), arr2[j][1]] );
+      i += 1;
+      j += 1;
+    }
+    else if (arr1_xdata[i][0] < arr2[j][0])
+    {
+       data.push( [Number( arr1_xdata[i] ), Number( arr1_ydata[i] ), null] );
+       i += 1;
+    }
+    else //(arr1_xdata[i] > arr2[j])
+    {
+      var vals = arr2[j];
+      data.push( [vals[0], null, vals[1]] );
+      j += 1;
+    }
+  }
+  while(arr1_xdata.length > i)
+  {
+    data.push( [Number( arr1_xdata[i] ), Number( arr1_ydata[i] ), null] );
+    i += 1;
+  }
+  while(arr2.length > j)
+  {
+    var vals = arr2[j];
+    data.push( [vals[0], null, vals[1]] );
+    j += 1;
+  }
+  return data
+}
+
+function separateTwoArrays( data )
+{
+  arr1 = [];
+  arr2 = [];
+  i = 0
+  while ( data.length > i)
+  {
+    var item = data[i];
+    if (item[1] && item[2])
+    {
+      arr1.push([item[0], item[1]]);
+      arr2.push([item[0], item[2]]);
+    }
+    else if (item[1]) //item[2] is null
+    {
+      arr1.push([item[0], item[1]]);
+    }
+    else
+    {
+      arr2.push([item[0], item[2]]);
+    }
+    i += 1;
+  }
+  return [arr1, arr2]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
