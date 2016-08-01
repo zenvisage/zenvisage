@@ -1,21 +1,14 @@
 package edu.uiuc.zenvisage.service.distance;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-
 import org.apache.commons.math3.stat.StatUtils;
-import org.apache.commons.math3.stat.regression.SimpleRegression;
-import org.apache.commons.math3.util.FastMath;
-
+/*
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
-
+*/
 
 /*
  * @author Changfeng
@@ -28,11 +21,10 @@ public class MVIP implements Distance {
 		public double dist;//Normalized Dist of each VIP
 		public int importance;//the order of being added to VIP set
 		
-		public VIPinfo setValue(int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
+		public VIPinfo (int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
 			index = VIPINDEX;
 			dist = VIPDIST;
 			importance = PIPIMPORTANCE;
-			return this;
 		}
 		
 		public int compareTo(VIPinfo arg0) {
@@ -46,7 +38,7 @@ public class MVIP implements Distance {
 		public int leftVIPindex;
 		public int rightVIPindex;
 		
-		public void setValue(int INDEX, double DIST, int LEFTVIPINDEX, int RIGHTVIPINDEX) {
+		public possibleVIP(int INDEX, double DIST, int LEFTVIPINDEX, int RIGHTVIPINDEX) {
 			index = INDEX;
 			dist = DIST;
 			leftVIPindex = LEFTVIPINDEX;
@@ -84,7 +76,8 @@ public class MVIP implements Distance {
 		//Zcore - already done by service.utility.Zscore.java
 		
 		//smoothing [1/4, 1/2, 1/4]
-		if (array.length > 5) {
+		if (array.length > 5) { //this can ignore spike?
+		//if (array.length < 0) {
 			smooth = new double[array.length-2];
 			for (int i = 0; i < smooth.length; ++i){
 				smooth[i] = array[i] / 4 + array[i+1] / 2 + array[i+2] / 4;
@@ -100,6 +93,7 @@ public class MVIP implements Distance {
 		for (int i = 0; i < smooth.length; ++i){
 			if (Yrange != 0)
 				result[i] = smooth[i] / Yrange;
+				//result[i] = smooth[i]/6; -3sigma ~ 3sigma
 		}
 		
 		return result;
@@ -121,21 +115,21 @@ public class MVIP implements Distance {
 	public static List<VIPinfo> getVIPs(double[] ts) {
 		
 		final double threshold = 0.05; //5% of Y-axis range
-		List<VIPinfo> VIPlist = new ArrayList<VIPinfo>();//VIPlist=PIPinfo - delete
-		VIPinfo newVIP = new VIPinfo();
+		List<VIPinfo> VIPlist = new ArrayList<VIPinfo>();
+		VIPinfo newVIP;
 		double[] Dist;
 		int possVIPindex;
 		double possVIPdist;
 		List<possibleVIP> waitinglist = new ArrayList<possibleVIP>();
-		possibleVIP possVIP = new possibleVIP();
+		possibleVIP possVIP;
 		int dewlIndex; //the index of dewaitinglist in waitinglist
 		double tmpdist;
 		
 		//add start point and tail point into VIP set
-		newVIP.setValue(0, 0, 0);
+		newVIP = new VIPinfo(0, 0, 0);
 		VIPlist.add(newVIP);
 		if (ts.length > 1) {
-			newVIP.setValue(ts.length-1, 0, 1);
+			newVIP = new VIPinfo(ts.length-1, 0, 1);
 			VIPlist.add(newVIP);
 		}
 		
@@ -150,7 +144,7 @@ public class MVIP implements Distance {
 				}
 			}
 			if (possVIPdist > threshold) {
-				possVIP.setValue(possVIPindex, possVIPdist, 0, ts.length-1);
+				possVIP = new possibleVIP(possVIPindex, possVIPdist, 0, ts.length-1);
 				waitinglist.add(possVIP);
 				dewlIndex = 0;
 			}
@@ -159,7 +153,7 @@ public class MVIP implements Distance {
 			
 			while(dewlIndex >= 0) {
 				possVIP = waitinglist.get(dewlIndex);
-				newVIP.setValue(possVIP.index, possVIP.dist, VIPlist.size());
+				newVIP = new VIPinfo(possVIP.index, possVIP.dist, VIPlist.size());
 				VIPlist.add(newVIP);
 				waitinglist.remove(dewlIndex);
 				
@@ -178,7 +172,8 @@ public class MVIP implements Distance {
 						}
 					}
 					if (possVIPdist > threshold) {
-						possVIP.setValue(possVIPindex, possVIPdist, startIndex, middleIndex);
+						//System.out.println(possVIPindex);//for debug
+						possVIP = new possibleVIP(possVIPindex, possVIPdist, startIndex, middleIndex);
 						waitinglist.add(possVIP);
 					}
 				}
@@ -194,7 +189,8 @@ public class MVIP implements Distance {
 						}
 					}
 					if (possVIPdist > threshold) {
-						possVIP.setValue(possVIPindex, possVIPdist, middleIndex, endIndex);
+						//System.out.println(0-possVIPindex);//for debug
+						possVIP = new possibleVIP(possVIPindex, possVIPdist, middleIndex, endIndex);
 						waitinglist.add(possVIP);
 					}
 				}
@@ -286,6 +282,7 @@ public class MVIP implements Distance {
 		srcIndicators = getIndicators(src, srcVIPlist);
 		tarIndicators = getIndicators(tar, tarVIPlist);
 		
+		//求distance是有问题的，分母不是路径长度
 		distance = DTWDist(srcIndicators, tarIndicators) / Math.max(srcIndicators.length, tarIndicators.length);
 		return distance;
 	}

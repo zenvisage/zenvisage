@@ -49,6 +49,7 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
+import edu.uiuc.zenvisage.service.distance.MVIP;
 
 /**
  * @author tarique
@@ -246,7 +247,8 @@ public class ZvMain {
 		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
-			 distance = new Euclidean();
+			 //distance = new Euclidean();
+			 distance = new MVIP();
 		 }
 		 else if (args.distance_metric.equals("Segmentation")){
 			 distance = new SegmentationDistance();
