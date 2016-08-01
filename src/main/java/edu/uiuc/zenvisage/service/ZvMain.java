@@ -82,10 +82,10 @@ public class ZvMain {
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
-		/*
+
 		inMemoryDatabase = createDatabase("cmu", "/data/half_schema.txt", "/data/fullsqm_half.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
-		*/
+
 		
 		inMemoryDatabase = createDatabase("small_cmu", "/data/fullsets_schema.txt", "/data/fullsqm_500.csv");
 		inMemoryDatabases.put("small_cmu", inMemoryDatabase);

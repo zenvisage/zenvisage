@@ -87,7 +87,8 @@ function displayRepresentativeResultsHelper( representativePatternResults )
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
-  for(var count = 0; count < 4; count++) //need to fix count
+  var arrLength = representativePatternResults.length < 4 ? representativePatternResults.length : 4
+  for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"representative-row-" + count.toString() + "\"></tr>")
     $("#representative-row-" + count.toString()).append("<td><div class=\"representative-results draggable-graph\" data-graph-type=\"representativeQuery\" id=\"representative-result-" + count.toString() + "\"></div></td>");
