@@ -48,10 +48,10 @@ function displayUserQueryResultsHelper( userQueryResults )
         valueRange: valueRange,
         xlabel: xlabel,
         xLabelHeight: 11,
-        axisLabelWidth: (0,0),
-        axisLabelFontSize: 0,
-        ylabel: null,
+        axisLabelWidth: 11,
+        axisLabelFontSize: 9,
         showLabelsOnHighlight: false,
+        pixelsPerLabel: 20,
         highlightCircleSize: 0,
         interactionModel: {},
         drawGrid: false,
@@ -115,7 +115,8 @@ function displayRepresentativeResultsHelper( representativePatternResults )
       data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, valueRange, xlabel, count, "representative-result-", representativeCount );
+    var xRange = [xmin, xmax];
+    representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xlabel, count, "representative-result-", representativeCount );
   }
 
   $(".draggable-graph").draggable({
@@ -161,7 +162,8 @@ function displayOutlierResultsHelper( outlierResults )
       data.push( [ Number(xData[i]), Number(yData[i]) ] );
     }
     var valueRange = [ymin, ymax];
-    outlierDygraphs["outlier-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, valueRange, xlabel, count, "outlier-result-" )
+    var xRange = [xmin, xmax];
+    outlierDygraphs["outlier-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xlabel, count, "outlier-result-" )
   }
 
   $(".draggable-graph").draggable({
@@ -176,21 +178,24 @@ function displayOutlierResultsHelper( outlierResults )
   });
 }
 
-function getRepresentativeAndOutlierDygraphObject( data, valueRange, xLabel, count, id, representativeCount = "" )
+function getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xLabel, count, id, representativeCount = "" )
 {
   return new Dygraph(document.getElementById(id + count.toString()), data,
     {
       valueRange: valueRange,
-      xLabelHeight: 11,
-      axisLabelWidth: (0,0),
-      axisLabelFontSize: 0,
-      ylabel: null,
-      xlabel: xLabel + representativeCount.toString(),
+      axisLabelFontSize: 9,
+      pixelsPerLabel: 20,
+      title: getSelectedCategory(),
+      titleHeight: 9,
+      axisLabelWidth: 11,
+      dateWindow: xRange,
+      xAxisRange: xRange,
       showLabelsOnHighlight: false,
-      highlightCircleSize: 0,
       interactionModel: {},
-      drawGrid: false,
       colors: [ "0E3340" ],
+      xlabel: xLabel + representativeCount.toString(),
+      xLabelHeight: 11,
+      drawGrid: false,
     });
 }
 
