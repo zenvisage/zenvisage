@@ -89,6 +89,9 @@ public class ZvMain {
 		
 		inMemoryDatabase = createDatabase("small_cmu", "/data/fullsets_schema.txt", "/data/fullsqm_500.csv");
 		inMemoryDatabases.put("small_cmu", inMemoryDatabase);
+	
+		inMemoryDatabase = createDatabase("test", "/data/test_schema.txt", "/data/test.csv");
+		inMemoryDatabases.put("test", inMemoryDatabase);
 		
 		System.out.println("Done loading data");
 	}
