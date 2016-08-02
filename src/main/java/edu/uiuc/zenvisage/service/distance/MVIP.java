@@ -70,31 +70,30 @@ public class MVIP implements Distance {
 	
 	//preprocessing - Redundant preprocessings could happen during similarity search and especially clustering
 	public static double[] preprocessing(double[] array) {
-		double[] smooth;
 		double[] result;
 		
 		//Zcore - already done by service.utility.Zscore.java
 		
 		//smoothing [1/4, 1/2, 1/4]
 		if (array.length > 5) { //this can ignore spike?
-		//if (array.length < 0) {
-			smooth = new double[array.length-2];
-			for (int i = 0; i < smooth.length; ++i){
-				smooth[i] = array[i] / 4 + array[i+1] / 2 + array[i+2] / 4;
+		//if (array.length < 0) { // no smoothing
+			result = new double[array.length-2];
+			for (int i = 0; i < result.length; ++i){
+				result[i] = array[i] / 4 + array[i+1] / 2 + array[i+2] / 4;
 			}
 		}
 		else {
-			smooth = array;
+			result = array;
 		}
 		
+		/*
 		//axis normalization
-		double Yrange = StatUtils.max(smooth) - StatUtils.min(smooth);
-		result = new double[smooth.length];
-		for (int i = 0; i < smooth.length; ++i){
+		double Yrange = StatUtils.max(result) - StatUtils.min(result);
+		for (int i = 0; i < result.length; ++i){
 			if (Yrange != 0)
 				result[i] = smooth[i] / Yrange;
-				//result[i] = smooth[i]/6; -3sigma ~ 3sigma
 		}
+		*/
 		
 		return result;
 	}

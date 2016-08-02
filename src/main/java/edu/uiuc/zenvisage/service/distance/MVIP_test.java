@@ -11,6 +11,7 @@ import org.apache.commons.math3.util.FastMath;
 import net.sf.javaml.distance.fastdtw.dtw.*;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
+import edu.uiuc.zenvisage.service.distance.MVIP.VIPinfo;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 
 public class MVIP_test {
@@ -45,21 +46,78 @@ public class MVIP_test {
 		return darr;
 	}
 	
-	public void main(String[] args) throws IOException{
+	public static class tsSearch implements Comparable<tsSearch> {
+		public int whichClass;
+		public Double dist;
+		public int index;
+		
+		public tsSearch(int WHICHCLASS, double DIST, int INDEX) {
+			whichClass = WHICHCLASS;
+			dist = DIST;
+			index = INDEX;
+		}
+		
+		public void setValue(int WHICHCLASS, double DIST, int INDEX) {
+			whichClass = WHICHCLASS;
+			dist = DIST;
+			index = INDEX;
+		}
+		
+		public int compareTo(tsSearch arg0) {
+	        return this.dist.compareTo(arg0.dist);
+	    }
+	}
+	
+	public static double simSearch(int query, double[][]dataset, int topN, Distance distance) {
+		int queryClass = query / 100 + 1;
+		tsSearch[] simRank = new tsSearch[dataset.length];
+		int correct = 0;
+		
+		for (int i = 0; i < dataset.length; ++i) {
+			simRank[i] = new tsSearch(i / 100 + 1, distance.calculateDistance(dataset[query], dataset[i]), i);
+		}
+		
+		Arrays.sort(simRank);
+		
+		for (int i = 0; i < topN; ++i) {
+			if (simRank[i].whichClass == queryClass)
+				correct++;
+		}
+		
+		return (double)(correct) / topN;
+	}
+	
+	public static void main(String[] args) throws IOException{
 		
 		final String filePath = "/Users/Steven/Academic/SR@Aditya/Zenvisage/datasets/synthetic_control.data.txt";
 		double[][] dataset = read2DArray(filePath);
-		int index1 = 1 - 1;
-		int index2 = 101 - 1;
-		double dist;
-		MVIP distance = new MVIP();
-		Zscore zscore = new Zscore();
+		//MVIP distance = new MVIP();
+		//SegmentationDistance distance = new SegmentationDistance();
+		DTWDistance distance = new DTWDistance();
 		
+		Zscore zscore = new Zscore();
 		for (int i = 0; i < dataset.length; ++i) {
 			zscore.normalize(dataset[i]);
 		}
 		
-		dist = distance.calculateDistance(dataset[index1], dataset[index2]);
-		System.out.println(dist);
+		/*
+		final int query = 202 - 1;
+		final int topN = 100;
+		double accuracy;
+		accuracy = simSearch(query, dataset, topN);
+		System.out.println(accuracy);
+		*/
+		final int topN = 100;
+		double[] accuGroup = {0,0,0,0,0,0};
+		for (int i = 0; i < 6; ++i) {
+			for (int j = 0; j < 100; ++j) {
+				//System.out.println(i*100+j);
+				accuGroup[i] += simSearch(i*100+j, dataset, topN, distance);
+			}
+			accuGroup[i] /= topN;
+		}
+		for (int i = 0; i < 6; ++i) {
+			System.out.println(accuGroup[i]);
+		}
 	}
 }

@@ -247,11 +247,13 @@ public class ZvMain {
 		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
-			 //distance = new Euclidean();
-			 distance = new MVIP();
+			 distance = new Euclidean();
 		 }
 		 else if (args.distance_metric.equals("Segmentation")){
 			 distance = new SegmentationDistance();
+		 }
+		 else if (args.distance_metric.equals("MVIP")){
+			 distance = new MVIP();
 		 }
 		 else {
 			 distance = new DTWDistance();
