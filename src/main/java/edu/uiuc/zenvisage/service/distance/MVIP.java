@@ -251,7 +251,7 @@ public class MVIP implements Distance {
 			for (int j = 0; j < nearbyShapeInterval.length; ++j) {
 				index = VIPlist.get(i).index + nearbyShapeInterval[j];
 				if (index >= 0 && index < ts.length)
-					indicatorArray[i][2+j] = ts[index] - ts[VIPlist.get(i).index];
+					indicatorArray[i][2+j] = (ts[index] - ts[VIPlist.get(i).index]) * Xrange;
 				else
 					indicatorArray[i][2+j] = 0;
 			}
@@ -262,7 +262,7 @@ public class MVIP implements Distance {
 				if (VIPindex >= 0 && VIPindex < VIPlist.size()) {
 					indicatorArray[i][2+nearbyShapeInterval.length+j] = 
 							(ts[VIPlist.get(i).index] - ts[VIPindex]) / 
-							(VIPlist.get(i).index - VIPindex);
+							((VIPlist.get(i).index - VIPindex) / Xrange);
 				}
 				else {
 					indicatorArray[i][2+nearbyShapeInterval.length+j] = 0;
