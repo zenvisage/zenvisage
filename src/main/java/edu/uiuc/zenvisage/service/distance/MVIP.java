@@ -3,7 +3,6 @@ package edu.uiuc.zenvisage.service.distance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.math3.stat.StatUtils;
 /*
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
@@ -17,9 +16,9 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 public class MVIP implements Distance {
 	
 	public static class VIPinfo implements Comparable<VIPinfo> {
-		public Integer index; //the index in time series
-		public double dist;//Normalized Dist of each VIP
-		public int importance;//the order of being added to VIP set
+		public Integer index;
+		public double dist;
+		public int importance;
 		
 		public VIPinfo (int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
 			index = VIPINDEX;
@@ -50,33 +49,13 @@ public class MVIP implements Distance {
 	    }
 	}
 	
-	/*
-	public static class Indicator { //VIP Indicator
-		//position
-		public double X;
-		public double Y;
-		
-		//nearby shape
-		public double diffY_L2;
-		public double diffY_L1;
-		public double diffY_R1;
-		public double diffY_R2;
-		
-		//nearby pattern
-		public double normDiffVIP_L;
-		public double normDiffVIP_R;
-	}
-	*/
-	
-	//preprocessing - Redundant preprocessings could happen during similarity search and especially clustering
 	public static double[] preprocessing(double[] array) {
 		double[] result;
 		
-		//Zcore - already done by service.utility.Zscore.java
+		//Zcore - already done by service.utility.Zscore
 		
 		//smoothing [1/4, 1/2, 1/4]
-		if (array.length > 5) { //this can ignore spike?
-		//if (array.length < 0) { // no smoothing
+		if (array.length > 5) {
 			result = new double[array.length-2];
 			for (int i = 0; i < result.length; ++i){
 				result[i] = array[i] / 4 + array[i+1] / 2 + array[i+2] / 4;
@@ -85,15 +64,6 @@ public class MVIP implements Distance {
 		else {
 			result = array;
 		}
-		
-		/*
-		//axis normalization
-		double Yrange = StatUtils.max(result) - StatUtils.min(result);
-		for (int i = 0; i < result.length; ++i){
-			if (Yrange != 0)
-				result[i] = smooth[i] / Yrange;
-		}
-		*/
 		
 		return result;
 	}
@@ -110,10 +80,9 @@ public class MVIP implements Distance {
 		return Dist;
 	}
 	
-	//get VIPs' info
 	public static List<VIPinfo> getVIPs(double[] ts) {
 		
-		final double threshold = 0.05; //5% of Y-axis range
+		final double threshold = 0.05;
 		List<VIPinfo> VIPlist = new ArrayList<VIPinfo>();
 		VIPinfo newVIP;
 		double[] Dist;
@@ -121,10 +90,9 @@ public class MVIP implements Distance {
 		double possVIPdist;
 		List<possibleVIP> waitinglist = new ArrayList<possibleVIP>();
 		possibleVIP possVIP;
-		int dewlIndex; //the index of dewaitinglist in waitinglist
+		int dewlIndex;
 		double tmpdist;
 		
-		//add start point and tail point into VIP set
 		newVIP = new VIPinfo(0, 0, 0);
 		VIPlist.add(newVIP);
 		if (ts.length > 1) {
@@ -171,7 +139,6 @@ public class MVIP implements Distance {
 						}
 					}
 					if (possVIPdist > threshold) {
-						//System.out.println(possVIPindex);//for debug
 						possVIP = new possibleVIP(possVIPindex, possVIPdist, startIndex, middleIndex);
 						waitinglist.add(possVIP);
 					}
@@ -188,7 +155,6 @@ public class MVIP implements Distance {
 						}
 					}
 					if (possVIPdist > threshold) {
-						//System.out.println(0-possVIPindex);//for debug
 						possVIP = new possibleVIP(possVIPindex, possVIPdist, middleIndex, endIndex);
 						waitinglist.add(possVIP);
 					}
@@ -212,24 +178,6 @@ public class MVIP implements Distance {
 		return VIPlist;
 	}
 	
-	//only 2 dimensions (x, y) for now 
-	public static double[][] getIndicatorsOnlyXY(double[] ts, List<VIPinfo> VIPlist) {
-		final int dimension = 2;
-		double[][] indicatorArray = new double[VIPlist.size()][dimension];
-		double Xrange = ts.length - 1;
-		
-		for (int i = 0; i < VIPlist.size(); ++i) {
-			//X
-			if (Xrange > 0)
-				indicatorArray[i][0] = VIPlist.get(i).index / Xrange;
-			
-			//Y
-			indicatorArray[i][1] = ts[VIPlist.get(i).index];
-		}
-		
-		return indicatorArray;
-	}
-
 	public static double[][] getIndicators(double[] ts, List<VIPinfo> VIPlist) {
 		final int dimension = 8;
 		double[][] indicatorArray = new double[VIPlist.size()][dimension];
@@ -273,95 +221,6 @@ public class MVIP implements Distance {
 		return indicatorArray;
 	}
 	
-	public static double[][] getIndicatorsTest(double[] ts, List<VIPinfo> VIPlist) {
-		final int dimension =10;
-		double[][] indicatorArray = new double[VIPlist.size()][dimension];
-		double Xrange = ts.length - 1;
-		int index;
-		int VIPindex;
-		int[] nearbyShapeInterval = {-2, -1, 1, 2};
-		int[] nearbyPatternInterval = {-1, 1};
-		
-		for (int i = 0; i < VIPlist.size(); ++i) {
-			//X
-			if (Xrange > 0)
-				indicatorArray[i][0] = VIPlist.get(i).index / Xrange;
-			
-			//Y
-			indicatorArray[i][1] = ts[VIPlist.get(i).index];
-			
-			//nearby shape
-			for (int j = 0; j < nearbyShapeInterval.length; ++j) {
-				index = VIPlist.get(i).index + nearbyShapeInterval[j];
-				if (index >= 0 && index < ts.length)
-					//indicatorArray[i][2+j] = (ts[index] - ts[VIPlist.get(i).index]) * Xrange;
-					indicatorArray[i][2+j] = (ts[index] - ts[VIPlist.get(i).index]);
-				else
-					indicatorArray[i][2+j] = 0;
-			}
-			
-			//nearby pattern
-			for (int j = 0; j < nearbyPatternInterval.length; ++j) {
-				VIPindex = i + nearbyPatternInterval[j];
-				if (VIPindex >= 0 && VIPindex < VIPlist.size()) {
-					indicatorArray[i][2+nearbyShapeInterval.length+2*j+0] = 
-							ts[VIPlist.get(i).index] - ts[VIPindex];
-					indicatorArray[i][2+nearbyShapeInterval.length+2*j+1] = 
-							(VIPlist.get(i).index - VIPindex) / Xrange;
-				}
-				else {
-					indicatorArray[i][2+nearbyShapeInterval.length+2*j+0] = 0;
-					indicatorArray[i][2+nearbyShapeInterval.length+2*j+1] = 0;
-				}
-			}
-		}
-		
-		return indicatorArray;
-	}
-	
-	public static double[][] getIndicatorsTest2(double[] ts, List<VIPinfo> VIPlist) {
-		final int dimension = 8;
-		double[][] indicatorArray = new double[VIPlist.size()][dimension];
-		double Xrange = ts.length - 1;
-		int index;
-		int VIPindex;
-		int[] nearbyShapeInterval = {-2, -1, 1, 2};
-		int[] nearbyPatternInterval = {-1, 1};
-		
-		for (int i = 0; i < VIPlist.size(); ++i) {
-			//X
-			if (Xrange > 0)
-				indicatorArray[i][0] = VIPlist.get(i).index / Xrange;
-			
-			//Y
-			indicatorArray[i][1] = ts[VIPlist.get(i).index];
-			
-			//nearby shape
-			for (int j = 0; j < nearbyShapeInterval.length; ++j) {
-				index = VIPlist.get(i).index + nearbyShapeInterval[j];
-				if (index >= 0 && index < ts.length)
-					indicatorArray[i][2+j] = (ts[index] - ts[VIPlist.get(i).index]) * Xrange;
-				else
-					indicatorArray[i][2+j] = 0;
-			}
-			
-			//nearby pattern
-			for (int j = 0; j < nearbyPatternInterval.length; ++j) {
-				VIPindex = i + nearbyPatternInterval[j];
-				if (VIPindex >= 0 && VIPindex < VIPlist.size()) {
-					indicatorArray[i][2+nearbyShapeInterval.length+j] = 
-							Math.atan((ts[VIPlist.get(i).index] - ts[VIPindex]) / ((VIPlist.get(i).index - VIPindex) / Xrange));
-				}
-				else {
-					indicatorArray[i][2+nearbyShapeInterval.length+j] = 0;
-				}
-			}
-		}
-		
-		return indicatorArray;
-	}
-
-	//Euclidean Distantce
 	public static double eucDist(double[] ts1, double[] ts2) {
 		assert ts1.length == ts2.length;
 		
@@ -374,7 +233,6 @@ public class MVIP implements Distance {
 		return Math.sqrt(sum);
 	}
 	
-	//DTW
 	public static double DTWDist(double[][] IndicatorsI, double[][]IndicatorsJ) {
 		double[][] costMatrix = new double[IndicatorsI.length][IndicatorsJ.length];
 		
@@ -409,12 +267,9 @@ public class MVIP implements Distance {
 		srcVIPlist = getVIPs(src);
 		tarVIPlist = getVIPs(tar);
 		
-		//srcIndicators = getIndicatorsTest2(src, srcVIPlist);
-		//tarIndicators = getIndicatorsTest2(tar, tarVIPlist);
 		srcIndicators = getIndicators(src, srcVIPlist);
 		tarIndicators = getIndicators(tar, tarVIPlist);
 		
-		//求distance是有问题的，分母不是路径长度
 		distance = DTWDist(srcIndicators, tarIndicators) / Math.max(srcIndicators.length, tarIndicators.length);
 		return distance;
 	}

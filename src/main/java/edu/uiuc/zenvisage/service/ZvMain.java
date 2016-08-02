@@ -255,10 +255,6 @@ public class ZvMain {
 		 else if (args.distance_metric.equals("MVIP")){
 			 distance = new MVIP();
 		 }
-		 else if (args.distance_metric.equals("MVIPOnlyXY")){
-			 distance = new MVIPOnlyXY();
-			 System.out.println("MVIPOnlyXY!");
-		 }
 		 else {
 			 distance = new DTWDistance();
 		 }
