@@ -107,6 +107,7 @@ public class MVIP_test {
 		accuracy = simSearch(query, dataset, topN);
 		System.out.println(accuracy);
 		*/
+		/*
 		final int topN = 100;
 		double[] accuGroup = {0,0,0,0,0,0};
 		for (int i = 0; i < 6; ++i) {
@@ -119,5 +120,11 @@ public class MVIP_test {
 		for (int i = 0; i < 6; ++i) {
 			System.out.println(accuGroup[i]);
 		}
+		*/
+		double degrees = 45.0;
+	     double radians = Math.toRadians(degrees);
+
+	     System.out.format("The value of pi is %.4f%n", Math.PI);
+	     System.out.format("The arctangent of %.4f is %.4f degrees %n", Math.cos(radians), Math.toDegrees(Math.atan(1)));
 	}
 }

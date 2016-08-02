@@ -49,7 +49,7 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
-import edu.uiuc.zenvisage.service.distance.MVIP;
+import edu.uiuc.zenvisage.service.distance.*;
 
 /**
  * @author tarique
@@ -254,6 +254,10 @@ public class ZvMain {
 		 }
 		 else if (args.distance_metric.equals("MVIP")){
 			 distance = new MVIP();
+		 }
+		 else if (args.distance_metric.equals("MVIPOnlyXY")){
+			 distance = new MVIPOnlyXY();
+			 System.out.println("MVIPOnlyXY!");
 		 }
 		 else {
 			 distance = new DTWDistance();
