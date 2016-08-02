@@ -213,7 +213,7 @@ public class MVIP implements Distance {
 	}
 	
 	//only 2 dimensions (x, y) for now 
-	public static double[][] getIndicators(double[] ts, List<VIPinfo> VIPlist) {
+	public static double[][] getIndicatorsOnlyXY(double[] ts, List<VIPinfo> VIPlist) {
 		final int dimension = 2;
 		double[][] indicatorArray = new double[VIPlist.size()][dimension];
 		double Xrange = ts.length - 1;
@@ -230,6 +230,49 @@ public class MVIP implements Distance {
 		return indicatorArray;
 	}
 
+	public static double[][] getIndicators(double[] ts, List<VIPinfo> VIPlist) {
+		final int dimension = 8;
+		double[][] indicatorArray = new double[VIPlist.size()][dimension];
+		double Xrange = ts.length - 1;
+		int index;
+		int VIPindex;
+		int[] nearbyShapeInterval = {-2, -1, 1, 2};
+		int[] nearbyPatternInterval = {-1, 1};
+		
+		for (int i = 0; i < VIPlist.size(); ++i) {
+			//X
+			if (Xrange > 0)
+				indicatorArray[i][0] = VIPlist.get(i).index / Xrange;
+			
+			//Y
+			indicatorArray[i][1] = ts[VIPlist.get(i).index];
+			
+			//nearby shape
+			for (int j = 0; j < nearbyShapeInterval.length; ++j) {
+				index = VIPlist.get(i).index + nearbyShapeInterval[j];
+				if (index >= 0 && index < ts.length)
+					indicatorArray[i][2+j] = ts[index] - ts[VIPlist.get(i).index];
+				else
+					indicatorArray[i][2+j] = 0;
+			}
+			
+			//nearby pattern
+			for (int j = 0; j < nearbyPatternInterval.length; ++j) {
+				VIPindex = i + nearbyPatternInterval[j];
+				if (VIPindex >= 0 && VIPindex < VIPlist.size()) {
+					indicatorArray[i][2+nearbyShapeInterval.length+j] = 
+							(ts[VIPlist.get(i).index] - ts[VIPindex]) / 
+							(VIPlist.get(i).index - VIPindex);
+				}
+				else {
+					indicatorArray[i][2+nearbyShapeInterval.length+j] = 0;
+				}
+			}
+		}
+		
+		return indicatorArray;
+	}
+	
 	//Euclidean Distantce
 	public static double eucDist(double[] ts1, double[] ts2) {
 		assert ts1.length == ts2.length;
@@ -278,6 +321,8 @@ public class MVIP implements Distance {
 		srcVIPlist = getVIPs(src);
 		tarVIPlist = getVIPs(tar);
 		
+		//srcIndicators = getIndicatorsOnlyXY(src, srcVIPlist);
+		//tarIndicators = getIndicatorsOnlyXY(tar, tarVIPlist);
 		srcIndicators = getIndicators(src, srcVIPlist);
 		tarIndicators = getIndicators(tar, tarVIPlist);
 		
