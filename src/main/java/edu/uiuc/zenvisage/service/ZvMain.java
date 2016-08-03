@@ -84,9 +84,17 @@ public  void loadData() throws IOException, InterruptedException{
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
-		inMemoryDatabase = createDatabase("cmu", "/data/fullsets_schema.txt", "/data/fullsqm_half.csv");
+
+		inMemoryDatabase = createDatabase("cmu", "/data/half_schema.txt", "/data/fullsqm_half.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
 
+		
+		inMemoryDatabase = createDatabase("small_cmu", "/data/fullsets_schema.txt", "/data/fullsqm_500.csv");
+		inMemoryDatabases.put("small_cmu", inMemoryDatabase);
+	
+		inMemoryDatabase = createDatabase("test", "/data/test_schema.txt", "/data/test.csv");
+		inMemoryDatabases.put("test", inMemoryDatabase);
+		
 		System.out.println("Done loading data");
 	}
 
@@ -216,7 +224,7 @@ public  void loadData() throws IOException, InterruptedException{
 
 	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
 		// get data from database
-		System.out.println(query);
+//		System.out.println(query);
 
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 
@@ -282,7 +290,7 @@ public  void loadData() throws IOException, InterruptedException{
 		 ObjectMapper mapper = new ObjectMapper();
 
 		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
-		 System.out.println(str);
+//		 System.out.println(str);
 
 		 return str;
 	}
@@ -335,6 +343,9 @@ public  void loadData() throws IOException, InterruptedException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		inMemoryDatabase = inMemoryDatabases.get(fq.getDatabasename());
 		executor = new Executor(inMemoryDatabase);
+		
+		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		
 		return new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData());
 	}
 

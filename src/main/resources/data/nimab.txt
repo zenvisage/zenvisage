@@ -1,0 +1,42 @@
+Age:int,indexed,T,F,F,T,T,Year,O
+Class of Worker:string,indexed,F,F,T,T,F,0,C
+industry_code:int,indexed,F,F,F,T,F,0,C
+occupation_code:int,indexed,F,F,F,T,F,0,C
+Adjusted Gross Income:int,unindexed,F,T,F,T,T,$,Q
+Education:string,indexed,F,F,T,T,F,0,C
+enrolled_in_edu_inst_last_wk:string,indexed,F,F,F,T,F,0,C
+Marital Status:string,indexed,F,F,F,T,F,0,C
+Major Industry Code:string,indexed,F,F,T,T,F,0,C
+Major Occupation Code:string,indexed,F,F,T,T,F,0,C
+Race:string,indexed,F,F,T,T,F,0,C
+Hispanic Origin:string,indexed,F,F,T,T,F,0,C
+Sex:string,indexed,F,F,F,T,F,0,C
+member_of_a_labor_union:string,indexed,F,F,F,T,F,0,C
+reason_for_unemployment:string,unindexed,F,F,F,T,F,0,C
+full_or_part_time_employment_stat:string,unindexed,F,F,F,T,F,0,C
+Capital Gains:int,unindexed,F,T,F,T,T,$,Q
+Capital Losses:int,unindexed,F,T,F,T,T,$,Q
+divdends_from_stocks:int,unindexed,F,F,F,T,F,0,C
+federal_income_tax_liability:string,indexed,F,F,F,T,F,0,C
+tax_filer_status:string,indexed,F,F,F,T,F,0,C
+Region of Residence:string,indexed,F,F,T,T,F,0,C
+state_of_previous_residence:string,indexed,F,F,F,T,F,0,C
+detailed_household_and_family_stat:string,unindexed,F,F,F,T,F,0,C
+Household Income:int,unindexed,F,T,F,T,T,$,Q
+instance_weight:string,unindexed,F,F,F,T,F,0,C
+migration_code-change_in_msa:string,unindexed,F,F,F,T,F,0,C
+migration_code-change_in_reg:string,unindexed,F,F,F,T,F,0,C
+migration_code-move_within_reg:string,unindexed,F,F,F,T,F,0,C
+live_in_this_house:string,unindexed,F,F,F,T,F,0,C
+Number of Employer worked for:int,indexed,T,F,F,T,T,Persons,0,O
+family_members_under_18:string,indexed,F,F,F,T,F,0,C
+country_of_birth_father:string,unindexed,F,F,F,T,F,0,C
+country_of_birth_mother:string,unindexed,F,F,F,T,F,0,C
+country_of_birth_self:string,unindexed,F,F,F,T,F,0,C
+Citizenship:string,indexed,F,F,T,T,F,0,C
+total_person_income:int,unindexed,F,F,F,T,F,0,C
+own_business_or_self_employed:string,indexed,F,F,F,T,F,0,C
+taxable_income_amount:int,unindexed,F,F,F,T,F,0,C
+fill_inc_questionnaire_for_veteran's_admin:int,unindexed,F,F,F,T,F,0,C
+veterans_benefits:int,indexed,F,F,F,T,F,0,C
+weeks_worked_in_year:int,unindexed,F,F,F,T,F,0,C

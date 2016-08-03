@@ -111,13 +111,22 @@ function datetimeTesting()
 // when drag dropped
 function plotSketchpad( dygraphObject )
 {
-  var data = [];
-  for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
-    data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
+  var data;
+  if (dygraphObject.rawData_[0].length == 2)
+  {
+    data = [];
+    for (var i = 0; i < dygraphObject.rawData_.length; i++ ) {
+      data.push([ Number(dygraphObject.rawData_[i][0]), Number(dygraphObject.rawData_[i][1]) ]);
+    }
   }
-  var valueRange = dygraphObject.axes_[0]["valueRange"]
-  var xRange = sketchpad.xAxisRange()
+  else
+  {
+    data = separateTwoArrays( dygraphObject.rawData_ )[0];
+  }
 
+  var valueRange = dygraphObject.axes_[0]["valueRange"]
+  //var xRange = sketchpad.xAxisRange()
+  var xRange = dygraphObject.xAxisRange()
   if (sketchpad != null) {
     sketchpad.destroy()
   }
@@ -132,8 +141,10 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
     sketchpad.destroy()
   }
   var data = []
-  for (var d = xmin; d < xmax + 1; d += 1 ) {
-    data.push( [ d, (ymin+ymax)/2 ] );
+
+  // intialize to 100 points
+  for (var d = 0; d < 100; d += 1 ) {
+    data.push( [ xmin + (xmax-xmin)/100*d , (ymin+ymax)/2 ] );
   }
   var valueRange = [ymin, ymax];
   sketchpad = getSketchpadDygraphObject( data, valueRange );

@@ -1,0 +1,6 @@
+color:string,indexed,F,F,T,T,F,0,Q
+tom:int,unindexed,T,T,F,F,F,0,Q
+harry:int,unindexed,T,T,F,F,F,0,Q
+scott:int,unindexed,T,T,F,F,F,0,Q
+matt:int,unindexed,T,T,F,F,F,0,Q
+aaron:int,unindexed,T,T,F,F,F,0,Q
