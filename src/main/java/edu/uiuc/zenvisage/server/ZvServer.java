@@ -5,7 +5,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class ZvServer {
 
 	private Server server;
-	private static int port = 9991;
+	private static int port = 8080;
 
 	public void setPort(int port) {
 		this.port = port;
