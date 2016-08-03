@@ -24,11 +24,9 @@ public class UploadHandleServlet extends HttpServlet {
 	
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String savePath = System.getProperty("user.dir");
-        int index = savePath.lastIndexOf("/target");
-        if(index!=-1)
-        	savePath = savePath.substring(0,index);
+        savePath = savePath.substring(0, savePath.lastIndexOf("/target"));
         savePath = savePath + "/src/main/resources/data/";
-        System.out.println("saveParth:"+savePath);
+        
         File file = new File(savePath);
         if (!file.exists() && !file.isDirectory()) {
             System.out.println(savePath+" creating dir");

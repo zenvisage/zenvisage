@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.math3.exception.OutOfRangeException;
@@ -123,6 +125,7 @@ public class Executor {
 		}*/
 		
 		List<String> yValues = database.getUnIndexedColumn(yAxis);
+		List<String> xValues2 = database.getUnIndexedColumn(xAxis);
 		Map<String,RoaringBitmap> zValues = database.getIndexedColumn(zAxis);
 		Map<String,RoaringBitmap> xValues = database.getColumn(xAxis);
 		if (zValues == null || xValues == null) return null;
@@ -158,6 +161,42 @@ public class Executor {
 			if (RoaringBitmap.and(zValues.get(zKey), bitSet).getCardinality()==0) continue;
 			LinkedHashMap<Float,Float> innerMap = new LinkedHashMap<Float,Float>();
 			// do linear interpolation
+			
+
+			HashMap<Float,Float> innerMap2 = new HashMap<Float,Float>();
+			HashMap<Float,Integer> countX = new HashMap<Float,Integer>();			
+			for (int i : zValues.get(zKey)) {
+				float currentX = Float.valueOf(xValues2.get(i));
+				float currentY = Float.valueOf(yValues.get(i));
+				
+				if (innerMap2.containsKey(currentX)) {
+					innerMap2.put(currentX, innerMap2.get(currentX) + currentY);
+					countX.put(currentX, countX.get(currentX)+1);
+				}
+				else {
+					innerMap2.put(currentX, currentY);
+					countX.put(currentX, 1);
+				}
+			}
+			
+			TreeMap<Float, Float> innerMap3 = new TreeMap<Float, Float>();
+			for (float x : innerMap2.keySet()) {
+				float y = innerMap2.get(x)/countX.get(x);
+				innerMap3.put(x, y);
+			}
+			
+//			for (float x: innerMap3.keySet()) {
+//				System.out.println(x + "\t" +  innerMap3.get(x));
+//			}
+			
+			LinkedHashMap<Float, Float> innerMap4 = new LinkedHashMap<Float, Float>();
+			for (float x : innerMap3.keySet()) {
+				innerMap4.put(x, innerMap3.get(x));
+			}
+			
+			
+			
+			
 			ArrayList<Float> xs = new ArrayList<Float>();
 			ArrayList<Float> ys = new ArrayList<Float>();
 			Map<Float,Float> yvs = new HashMap<Float,Float>();
@@ -188,30 +227,30 @@ public class Executor {
 				}
 				innerMap.put(Float.valueOf(xMap.get(xKey)), (float) sum);
 			}
-			// add more points for interpolation
-			xs.add(0,xmin-1);
-			ys.add(0,ys.get(0));
-			xs.add(xmax+1);
-			ys.add(ys.get(ys.size()-1));
+//			// add more points for interpolation
+//			xs.add(0,xmin-1);
+//			ys.add(0,ys.get(0));
+//			xs.add(xmax+1);
+//			ys.add(ys.get(ys.size()-1));
 			
 			
 			
-			// interpolate
-			double[] x = Doubles.toArray(xs);
-			double[] y = Doubles.toArray(ys);  
-			PolynomialSplineFunction psf = interpolater.interpolate(x, y);
+//			// interpolate
+//			double[] x = Doubles.toArray(xs);
+//			double[] y = Doubles.toArray(ys);  
+//			PolynomialSplineFunction psf = interpolater.interpolate(x, y);
 	
 			
 			// BINNING
-			LinkedHashMap<Float,Float> binnedMap = new LinkedHashMap<Float,Float>();
+//			LinkedHashMap<Float,Float> binnedMap = new LinkedHashMap<Float,Float>();
 		
-	 		int count=0;
-	        double yval=0.0;
-	        float min=Float.valueOf(xMap.get(xKeys.get(0)));
-	        float max=Float.valueOf(xMap.get(xKeys.get(xKeys.size()-1)));
-	        float previousValue=min;
-	    	int numBins = 100;
-			double binSize =(max-min)/numBins;     
+//	 		int count=0;
+//	        double yval=0.0;
+//	        float min=Float.valueOf(xMap.get(xKeys.get(0)));
+//	        float max=Float.valueOf(xMap.get(xKeys.get(xKeys.size()-1)));
+//	        float previousValue=min;
+//	    	int numBins = 100;
+//			double binSize =(max-min)/numBins;     
 			//System.out.println(binSize);
 			/*
 			for (String xKey : xKeys) {
@@ -249,7 +288,7 @@ public class Executor {
 			//if(x.length > numBins) 			
 			//result.put(zKey, binnedMap);
 			//else
-			result.put(zKey, innerMap);
+			result.put(zKey, innerMap4);
 				
 		}
 		ExecutorResult executorResult = new ExecutorResult(result, xMap);
