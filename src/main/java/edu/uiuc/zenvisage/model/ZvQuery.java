@@ -75,7 +75,6 @@ public class ZvQuery {
 		this.sketchPoints = sketchPoints;
 	}
 
-	
 	public String getxAxis() {
 		return xAxis;
 	}
@@ -89,7 +88,6 @@ public class ZvQuery {
 		this.yAxis = yAxis;
 	}
 
-	
 	public String getMethod() {
 		return method;
 	}
