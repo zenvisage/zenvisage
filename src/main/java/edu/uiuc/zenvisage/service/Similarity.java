@@ -61,7 +61,6 @@ public class Similarity extends Analysis {
 			mappings.add(key);
 		}
 		List<List<Integer>> orders = new ArrayList<List<Integer>>();
-
 		List<List<Double>> orderedDistances = new ArrayList<List<Double>>();
 
 		List<double[][]> data = new ArrayList<double[][]>();
@@ -69,27 +68,27 @@ public class Similarity extends Analysis {
 		List<BiMap<Float,String>> xMaps = new ArrayList<BiMap<Float,String>>();
 
 		for (int i = 0; i < sketchPoints.length; i++) {
-			if (sketchPoints[i].points.isEmpty()) {
-				if (i < sketchPoints.length - 1) {
-					sketchPoints[i] = sketchPoints[i+1];
-					sketchPoints[i+1].points.clear();
-				}
-				else continue;
-			}
-			Query  q = new Query("query").setGrouby(args.groupBy+","+sketchPoints[i].xAxis).setAggregationFunc(sketchPoints[i].aggrFunc).setAggregationVaribale(sketchPoints[i].aggrVar);
-			setFilter(q, args);
-			try {
-				ExecutorResult executorResult = executor.getData(q);
-				output = executorResult.output;
-				outputs.add(output);
-				xMaps.add(executorResult.xMap.inverse());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			if (sketchPoints[i].points.isEmpty()) {
+//				if (i < sketchPoints.length - 1) {
+//					sketchPoints[i] = sketchPoints[i+1];
+//					sketchPoints[i+1].points.clear();
+//				}
+//				else continue;
+//			}
+//			Query  q = new Query("query").setGrouby(args.groupBy+","+sketchPoints[i].xAxis).setAggregationFunc(sketchPoints[i].aggrFunc).setAggregationVaribale(sketchPoints[i].aggrVar);
+//			setFilter(q, args);
+//			try {
+//				ExecutorResult executorResult = executor.getData(q);
+//				output = executorResult.output;
+//				outputs.add(output);
+//				xMaps.add(executorResult.xMap.inverse());
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			outputs.add(output);
 
-
-			Set<Float> ignore = new HashSet<Float>();
+//			Set<Float> ignore = new HashSet<Float>();
 //			paa.setPAAwidth(output,sketchPoints[i]);
 //			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
 			data.add(normalizedgroups);

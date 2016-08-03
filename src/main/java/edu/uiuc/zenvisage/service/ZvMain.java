@@ -1,6 +1,6 @@
 /**
-*
-*/
+ *
+ */
 package edu.uiuc.zenvisage.service;
 
 import java.io.BufferedReader;
@@ -51,36 +51,34 @@ import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
 
 /**
-* @author tarique
-*
-*/
+ * @author tarique
+ *
+ */
 public class ZvMain {
 
-private Result cachedResult = new Result();
-private BaselineQuery cachedQuery = new BaselineQuery();
+	private Result cachedResult = new Result();
+	private BaselineQuery cachedQuery = new BaselineQuery();
 //	private InMemoryDatabase inMemoryDatabase;
-private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
+	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
 
-private Database inMemoryDatabase;
+	private Database inMemoryDatabase;
 
-public Executor executor = new Executor(inMemoryDatabase);
-public Analysis analysis;
-public Distance distance;
-public Normalization normalization;
-public Normalization outputNormalization;
-public PiecewiseAggregation paa;
-public ArrayList<List<Double>> data;
+	public Executor executor = new Executor(inMemoryDatabase);
+	public Analysis analysis;
+	public Distance distance;
+	public Normalization normalization;
+	public Normalization outputNormalization;
+	public PiecewiseAggregation paa;
+	public ArrayList<List<Double>> data;
 
-public ZvMain() throws IOException, InterruptedException{
-	System.out.println("ZVMAIN LOADED");
-	loadData();
+	public ZvMain() throws IOException, InterruptedException{
+		System.out.println("ZVMAIN LOADED");
+		loadData();
 
-}
+	}
 
-public  void loadData() throws IOException, InterruptedException{
-		
-		inMemoryDatabase = createDatabase("income","/data/census_test_schema.txt","/data/census-income-test.csv");
-		inMemoryDatabases.put("income", inMemoryDatabase);
+	public  void loadData() throws IOException, InterruptedException{
+
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
@@ -91,9 +89,13 @@ public  void loadData() throws IOException, InterruptedException{
 		
 		inMemoryDatabase = createDatabase("small_cmu", "/data/fullsets_schema.txt", "/data/fullsqm_500.csv");
 		inMemoryDatabases.put("small_cmu", inMemoryDatabase);
-	
+
 		inMemoryDatabase = createDatabase("test", "/data/test_schema.txt", "/data/test.csv");
 		inMemoryDatabases.put("test", inMemoryDatabase);
+		
+
+		inMemoryDatabase = createDatabase("cmuhaha", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
+		inMemoryDatabases.put("cmuhaha", inMemoryDatabase);
 		
 		System.out.println("Done loading data");
 	}
@@ -133,7 +135,7 @@ public  void loadData() throws IOException, InterruptedException{
 		  executor = new Executor(inMemoryDatabase);
 		  ZQLExecutor.executor=executor;
 		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
-  	  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
+		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
 
 		}

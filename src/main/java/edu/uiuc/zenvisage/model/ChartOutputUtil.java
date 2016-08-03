@@ -68,8 +68,8 @@ public class ChartOutputUtil {
 				if (points == null) continue;
 				int c = 0;
 				for(Float k : points.keySet()) {
-					chartOutput.xData.add(xMaps.get(j%2).get(k));
-					chartOutput.yData.add(Double.toString(result[orders.get(i)][c]));
+					chartOutput.xData.add(Double.toString(k));
+					chartOutput.yData.add(Double.toString(points.get(k)));
 					c++;
 				}
 				finalOutput.outputCharts.add(chartOutput);
