@@ -80,7 +80,6 @@ app.controller('datasetController', [
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
-
       initializeSketchpad(
         xdata["min"],xdata["max"],ydata["min"],ydata["max"],
         xdata["name"],ydata["name"],zdata["name"]
