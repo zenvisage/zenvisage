@@ -3,11 +3,6 @@ package edu.uiuc.zenvisage.service.distance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/*
-import net.sf.javaml.distance.fastdtw.dtw.DTW;
-import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
-import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
-*/
 
 /*
  * @author Changfeng
@@ -15,15 +10,16 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 
 public class MVIP implements Distance {
 	
+	//Visually important points' info
 	public static class VIPinfo implements Comparable<VIPinfo> {
-		public Integer index;
-		public double dist;
-		public int importance;
+		public Integer index;//X-index in time series
+		public double dist;//vertical distance to the line connecting two adjacent VIPs
+		public int importance;//selecting order of VIPs
 		
-		public VIPinfo (int VIPINDEX, double VIPDIST, int PIPIMPORTANCE) {
-			index = VIPINDEX;
-			dist = VIPDIST;
-			importance = PIPIMPORTANCE;
+		public VIPinfo (int INDEX, double DIST, int IMPORTANCE) {
+			index = INDEX;
+			dist = DIST;
+			importance = IMPORTANCE;
 		}
 		
 		public int compareTo(VIPinfo arg0) {
@@ -31,17 +27,18 @@ public class MVIP implements Distance {
 	    }
 	}
 	
+	//possible VIPs in waitinglist during getVIPs
 	public static class possibleVIP implements Comparable<possibleVIP> {
 		public int index;
 		public Double dist;
-		public int leftVIPindex;
-		public int rightVIPindex;
+		public int leftVIPIndex;
+		public int rightVIPIndex;
 		
 		public possibleVIP(int INDEX, double DIST, int LEFTVIPINDEX, int RIGHTVIPINDEX) {
 			index = INDEX;
 			dist = DIST;
-			leftVIPindex = LEFTVIPINDEX;
-			rightVIPindex = RIGHTVIPINDEX;
+			leftVIPIndex = LEFTVIPINDEX;
+			rightVIPIndex = RIGHTVIPINDEX;
 		}
 		
 		public int compareTo(possibleVIP arg0) {
@@ -54,7 +51,7 @@ public class MVIP implements Distance {
 		
 		//Zcore - already done by service.utility.Zscore
 		
-		//smoothing [1/4, 1/2, 1/4]
+		//Smoothing. Smoothing window: [1/4, 1/2, 1/4].
 		if (array.length > 5) {
 			result = new double[array.length-2];
 			for (int i = 0; i < result.length; ++i){
@@ -67,7 +64,8 @@ public class MVIP implements Distance {
 		
 		return result;
 	}
-	
+
+	//Normalized vertical distance to the line connecting two adjacent VIPs
 	public static double[] NormVDist(double[] array) {
 		final double step = (array[array.length-1] - array[0]) / (array.length - 1);
 		double current = array[0];
@@ -90,13 +88,13 @@ public class MVIP implements Distance {
 		double possVIPdist;
 		List<possibleVIP> waitinglist = new ArrayList<possibleVIP>();
 		possibleVIP possVIP;
-		int dewlIndex;
+		int dewlIndex;//the index in waitinglist which will be deleted from waitinglist
 		double tmpdist;
 		
-		newVIP = new VIPinfo(0, 0, 0);
+		newVIP = new VIPinfo(0, 0, 0);//head point of time series
 		VIPlist.add(newVIP);
 		if (ts.length > 1) {
-			newVIP = new VIPinfo(ts.length-1, 0, 1);
+			newVIP = new VIPinfo(ts.length-1, 0, 1);//tail point of time series
 			VIPlist.add(newVIP);
 		}
 		
@@ -124,10 +122,11 @@ public class MVIP implements Distance {
 				VIPlist.add(newVIP);
 				waitinglist.remove(dewlIndex);
 				
-				int startIndex = possVIP.leftVIPindex;
-				int endIndex = possVIP.rightVIPindex;
+				int startIndex = possVIP.leftVIPIndex;
+				int endIndex = possVIP.rightVIPIndex;
 				int middleIndex = possVIP.index;
 				
+				//find possible VIP from left subsequence divided by newVIP
 				if (middleIndex > (startIndex+1)) {
 					Dist = NormVDist(Arrays.copyOfRange(ts,startIndex,middleIndex+1));
 					possVIPindex = startIndex+1;
@@ -144,6 +143,7 @@ public class MVIP implements Distance {
 					}
 				}
 				
+				//find possible VIP from right subsequence divided by newVIP
 				if (endIndex > (middleIndex+1)) {
 					Dist = NormVDist(Arrays.copyOfRange(ts,middleIndex,endIndex+1));
 					possVIPindex = middleIndex+1;
@@ -178,6 +178,7 @@ public class MVIP implements Distance {
 		return VIPlist;
 	}
 	
+	//calculate the feature vectors (indicators) of VIPs
 	public static double[][] getIndicators(double[] ts, List<VIPinfo> VIPlist) {
 		final int dimension = 8;
 		double[][] indicatorArray = new double[VIPlist.size()][dimension];
@@ -221,6 +222,7 @@ public class MVIP implements Distance {
 		return indicatorArray;
 	}
 	
+	//Euclidean Distance
 	public static double eucDist(double[] ts1, double[] ts2) {
 		assert ts1.length == ts2.length;
 		
@@ -233,6 +235,7 @@ public class MVIP implements Distance {
 		return Math.sqrt(sum);
 	}
 	
+	//DTW distance
 	public static double DTWDist(double[][] IndicatorsI, double[][]IndicatorsJ) {
 		double[][] costMatrix = new double[IndicatorsI.length][IndicatorsJ.length];
 		
