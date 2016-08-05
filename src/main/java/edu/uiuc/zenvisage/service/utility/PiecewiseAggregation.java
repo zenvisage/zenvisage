@@ -129,7 +129,7 @@ public class PiecewiseAggregation {
 		float rangeYQ = maxYQ-minYQ;
 		for (Point p : sketchPoint.points) {		  
 			int segment = (int) ((p.getX()-min)/(rangeX*pAAWidth));
-			float yvalue = minY+((p.getY()-minYQ)*rangeY/(rangeYQ));
+			float yvalue = (float) (minY+((p.getY()-minYQ)*rangeY/(rangeYQ)));
 			normalizedValues[segment] = normalizedValues[segment]+yvalue;
 			numberofpoints[segment] = numberofpoints[segment]+1;
 		}

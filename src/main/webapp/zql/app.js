@@ -27,7 +27,7 @@ app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.submitZQL = function () {
     	$("#views_table").empty();
-        $http.get('http://localhost:8080/zv/executeZQLComplete', {params: {'query': JSON.stringify($scope.parsed)}}
+        $http.get('http://localhost:9991/zv/executeZQLComplete', {params: {'query': JSON.stringify($scope.parsed)}}
         ).then(
             function (response) {
                 console.log("success: ", response);
