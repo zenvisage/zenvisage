@@ -35,7 +35,11 @@ function Query( searchMethod ) {
   this.yMin = null; // fix to dynamically fetch. is this field necessary?
   var points = []
   for(var i = 0; i < sketchpad.rawData_.length; i++){
-    points.push(new Point( sketchpad.rawData_[i][0], sketchpad.rawData_[i][1] ));
+    var xp = sketchpad.rawData_[i][0];
+    var yp = sketchpad.rawData_[i][1];
+    points.push(new Point( xp, yp ));
+    this.dataX.push( xp );
+    this.dataY.push( yp );
   }
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
   this.distanceNormalized = false; // fix to dynamically fetch

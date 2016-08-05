@@ -59,9 +59,9 @@ public class Outlier extends Analysis {
 		for(String key : output.keySet()) {
 			 mappings.add(key);
 		}
-		//double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
+		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
 		@SuppressWarnings("rawtypes")
-		List clusters = cluster.calculateClusters(0, 2, normalizedgroups);
+		List clusters = cluster.calculateClusters(eps, 2, normalizedgroups);
 		//double[][] representativeTrends = cluster.computeRepresentativeTrends(clusters);
 		//List<Integer> orders = computeOrders(normalizedgroups,representativeTrends);
 		//chartOutput.chartOutput(normalizedgroups,output,orders,mappings,chartOutput.args,chartOutput.finalOutput);

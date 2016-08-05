@@ -42,6 +42,7 @@ public class KMeans extends Clustering {
 	@Override
 	public List calculateClusters(double eps, int k, double[][] normalizedgroups) {
 		// TODO Auto-generated method stub
+		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
 		List<DoublePoint> dataset = new ArrayList<DoublePoint>();
 		for(int i = 0;i < normalizedgroups.length; i++) {

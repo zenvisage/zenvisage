@@ -32,20 +32,13 @@ function displayUserQueryResultsHelper( userQueryResults )
     var ymin = Math.min.apply(Math, yData);
     var ymax = Math.max.apply(Math, yData);
 
-    /*
-    var data = [];
-    var arrayLength = xData.length;
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( [ Number(xData[i]), Number(yData[i]), Number(sketchpad.rawData_[i][1]) ]);
-    }
-    */
-
     var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
 
     var valueRange = [ymin, ymax];
     userQueryDygraphs["result-" + count.toString()] = new Dygraph(document.getElementById("result-" + count.toString()), data,
       {
         valueRange: valueRange,
+        dateWindow: [xmin, xmax],
         xlabel: xlabel,
         xLabelHeight: 11,
         axisLabelWidth: 11,
@@ -55,13 +48,14 @@ function displayUserQueryResultsHelper( userQueryResults )
         highlightCircleSize: 0,
         interactionModel: {},
         drawGrid: false,
+        axisLabelWidth: 20,
         colors: [ "0E3340", "#90C3D4" ],
         underlayCallback: function(canvas, area, g) {
-            var first_left = g.toDomCoords(xmin, -20)[0];
-            var first_right = g.toDomCoords(xRange[0], +20)[0];
-            var second_left = g.toDomCoords(xRange[1], -20)[0];
-            var second_right = g.toDomCoords(xmax, +20)[0];
-
+            var params = getEvaluatingRange( xmin, xmax, xRange )
+            var first_left = g.toDomCoords(params[0], -20)[0];
+            var first_right = g.toDomCoords(params[1], +20)[0];
+            var second_left = g.toDomCoords(params[2], -20)[0];
+            var second_right = g.toDomCoords(params[3], +20)[0];
             canvas.fillStyle = "rgba(70, 70, 70, 1.0)";
             canvas.fillRect(first_left, area.y, first_right - first_left, area.h);
             canvas.fillRect(second_left, area.y, second_right - second_left, area.h);
@@ -323,6 +317,52 @@ function separateTwoArrays( data )
     i += 1;
   }
   return [arr1, arr2]
+}
+
+function getEvaluatingRange( xmin, xmax, xrange )
+{
+  var first_left;
+  var first_right;
+  var second_left;
+  var second_right;
+
+  // if range does not cover anything... should not be displayed actually
+  if (xrange[1] <= xmin || xrange[0] >= xmax )
+  {
+    first_left = xmin;
+    first_right = xmax;
+    second_left = xmax;
+    second_right = xmax;
+  }
+  else if ( xrange[0] <= xmin && xrange[1] <= xmax && xrange[1] >= xmin)
+  {
+    first_left = xmin;
+    first_right = xmin;
+    second_left = xrange[1];
+    second_right = xmax;
+  }
+  else if ( xrange[0] >= xmin && xrange[1] <= xmax )
+  {
+    first_left = xmin;
+    first_right = xrange[0];
+    second_left = xrange[1];
+    second_right = xmax;
+  }
+  else if ( xrange[0] >= xmin && xrange[1] >= xmax && xrange[0] <= xmax )
+  {
+    first_left = xmin;
+    first_right = xrange[0];
+    second_left = xmax;
+    second_right = xmax;
+  }
+  else
+  {
+    first_left = xmin;
+    first_right = xmin;
+    second_left = xmax;
+    second_right = xmax;
+  }
+  return [first_left, first_right, second_left, second_right]
 }
 
 
