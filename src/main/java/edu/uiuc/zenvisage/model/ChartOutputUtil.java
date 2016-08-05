@@ -102,8 +102,8 @@ public class ChartOutputUtil {
 			int c = 0;
 			double[] p = repTrend.getP();
 			for(Float k : points.keySet()) {
-				chartOutput.xData.add(this.xMap.get(k));
-				chartOutput.yData.add(Double.toString(p[c]));
+				chartOutput.xData.add(Float.toString(k));
+				chartOutput.yData.add(Float.toString(points.get(k)));
 				c++;
 			}
 			chartOutput.count = repTrend.getSimilarTrends();

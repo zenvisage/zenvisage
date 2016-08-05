@@ -39,13 +39,15 @@ public class Similarity extends Analysis {
 	public boolean descending = true;
 	public PiecewiseAggregation paa;
 	public DataReformation dataReformatter;
+	double[] interpolatedQuery;
 
 	public Similarity(Executor executor, Database inMemoryDatabase,
-			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter) {
+			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
 		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;
+		this.interpolatedQuery = interpolatedQuery;
 	}
 
 	/* (non-Javadoc)
@@ -94,9 +96,10 @@ public class Similarity extends Analysis {
 			data.add(normalizedgroups);
 //			double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
 
-			double[][][] overlappedDataAndQueries = getOverlappedData(output, args);
-			
-			ListPair lp = computeOrders(overlappedDataAndQueries[0], overlappedDataAndQueries[1], mappings, args);
+//			double[][][] overlappedDataAndQueries = getOverlappedData(output, args);
+
+//			ListPair lp = computeOrders(overlappedDataAndQueries[0], overlappedDataAndQueries[1], mappings, args);
+			ListPair lp = computeOrders(normalizedgroups, mappings, args);
 			orders.add(lp.order);
 			orderedDistances.add(lp.distances);
 		}
@@ -196,25 +199,35 @@ public class Similarity extends Analysis {
 	 * @return
 	 */
 	
-	public ListPair computeOrders(double[][] overlappedDataInterpolated, double[][] overlappedQueryInterpolated, ArrayList<String> mappings, ZvQuery args) {
+	public ListPair computeOrders(double[][] normalizedgroups, ArrayList<String> mappings, ZvQuery args) {
 		List<Integer> orders = new ArrayList<Integer>();		
 		List<Double> orderedDistances = new ArrayList<Double>();
 				
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>();
+
+//    	List<Float> queryXValues = new ArrayList<Float>();
+//    	List<Float> queryYValues = new ArrayList<Float>();    	
+//    	
+//    	List<Point> queryPoints = args.sketchPoints[0].points;
+//		
+//		for (int i = 0; i < queryPoints.size(); i++) {
+//			if (queryPoints.get(i).getX() >= args.xRange[0] && queryPoints.get(i).getX() <= args.xRange[1]) {
+//				queryXValues.add((float) queryPoints.get(i).getX());
+//				queryYValues.add((float) queryPoints.get(i).getY());
+//			}
+//		}
+//		
+//		double[] queryData = this.dataReformatter.getInterpolatedData(queryXValues, queryYValues, normalizedgroups[0].length);
 		
-    	for(int i = 0;i < overlappedDataInterpolated.length;i++) {
+    	for(int i = 0;i < normalizedgroups.length;i++) {
     		double dist;
-    		if (overlappedDataInterpolated[i].length == 0) {
-    			dist = Double.MAX_VALUE;
-    		}
-    		else {
 //    			for (int j = 0; j < overlappedDataInterpolated[i].length; j++) {
 //    				System.out.println(overlappedDataInterpolated[i][j] + "\t" + overlappedQueryInterpolated[i][j]);
 //    			}
 //    			System.out.println();
-        		dist = distance.calculateDistance(overlappedDataInterpolated[i], overlappedQueryInterpolated[i]);
-    		}
+			dist = distance.calculateDistance(normalizedgroups[i], this.interpolatedQuery);
+    		
     		
     	    distances.add(dist);	
     		indexOrder.put(dist,i);

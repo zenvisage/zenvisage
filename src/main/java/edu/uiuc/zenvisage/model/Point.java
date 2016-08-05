@@ -1,16 +1,16 @@
 package edu.uiuc.zenvisage.model;
 
 public class Point {
-	int x;
-	int y;
+	double x;
+	double y;
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	public void setX(int x) {
 		this.x = x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	public void setY(int y) {
