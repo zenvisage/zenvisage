@@ -86,16 +86,16 @@ public class ZvMain {
 		inMemoryDatabase = createDatabase("cmu", "/data/half_schema.txt", "/data/fullsqm_half.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
 
-		
+		/*
 		inMemoryDatabase = createDatabase("small_cmu", "/data/fullsets_schema.txt", "/data/fullsqm_500.csv");
 		inMemoryDatabases.put("small_cmu", inMemoryDatabase);
 
 		inMemoryDatabase = createDatabase("test", "/data/test_schema.txt", "/data/test.csv");
 		inMemoryDatabases.put("test", inMemoryDatabase);
 		
-
 		inMemoryDatabase = createDatabase("cmuhaha", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
 		inMemoryDatabases.put("cmuhaha", inMemoryDatabase);
+		*/
 		
 		System.out.println("Done loading data");
 	}
