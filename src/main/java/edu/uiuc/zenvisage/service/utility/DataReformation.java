@@ -81,11 +81,16 @@ public class DataReformation {
 		int n = length;
 		float[] interpolatedXValues = new float[n+1];
 		double[] interpolatedYValues = new double[n+1];
+
+		interpolatedXValues[0] = inputXValues.get(0);
+		interpolatedYValues[0] = inputYValues.get(0);
+		interpolatedXValues[n] = inputXValues.get(inputXValues.size()-1);
+		interpolatedYValues[n] = inputYValues.get(inputYValues.size()-1);
 		
 		float granularity = (inputXValues.get(inputXValues.size()-1) - inputXValues.get(0)) / n;
 		
 		int count = 0;
-		for (int i = 0; i <= n; i++) {
+		for (int i = 1; i < n ; i++) {
 			float interpolatedX = inputXValues.get(0) + i * granularity;
 			interpolatedXValues[i] = interpolatedX;
 			

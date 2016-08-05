@@ -45,13 +45,13 @@ public class ZvBasicAPI {
 		zvMain.fileUpload(request, response);
 	}
 
-    /* Will be obsolete after separated calls*/
-	@RequestMapping(value = "/getdata", method = RequestMethod.GET)
-	@ResponseBody
-	public String getData(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
-		//System.out.println(arg);
-		return zvMain.runDragnDropInterfaceQuery(arg);
-	}
+//    /* Will be obsolete after separated calls*/
+//	@RequestMapping(value = "/getdata", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getData(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+//		//System.out.println(arg);
+//		return zvMain.runDragnDropInterfaceQuery(arg);
+//	}
 
 	/* New Separated API calls
 	 * Representative

@@ -8,8 +8,8 @@ public class ZvQuery {
 	public String aggrFunc;
 	public String aggrVar;
 	public int outlierCount;
-	public double[] dataX;
-	public double[] dataY;
+	public float[] dataX;
+	public float[] dataY;
 	public double yMax;
 	public double yMin;
 	public Sketch[] sketchPoints;
@@ -130,16 +130,16 @@ public class ZvQuery {
 	public void setOutlierCount(int outlierCount) {
 		this.outlierCount = outlierCount;
 	}
-	public double[] getDataX() {
+	public float[] getDataX() {
 		return dataX;
 	}
-	public void setDataX(double[] dataX) {
+	public void setDataX(float[] dataX) {
 		this.dataX = dataX;
 	}
-	public double[] getDataY() {
+	public float[] getDataY() {
 		return dataY;
 	}
-	public void setDataY(double[] dataY) {
+	public void setDataY(float[] dataY) {
 		this.dataY = dataY;
 	}
 }

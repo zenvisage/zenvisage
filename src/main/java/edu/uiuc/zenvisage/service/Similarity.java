@@ -39,13 +39,15 @@ public class Similarity extends Analysis {
 	public boolean descending = true;
 	public PiecewiseAggregation paa;
 	public DataReformation dataReformatter;
+	double[] interpolatedQuery;
 
 	public Similarity(Executor executor, Database inMemoryDatabase,
-			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter) {
+			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
 		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;
+		this.interpolatedQuery = interpolatedQuery;
 	}
 
 	/* (non-Javadoc)
@@ -204,19 +206,19 @@ public class Similarity extends Analysis {
 		MultiValueMap indexOrder =new MultiValueMap();
     	List<Double> distances = new ArrayList<Double>();
 
-    	List<Float> queryXValues = new ArrayList<Float>();
-    	List<Float> queryYValues = new ArrayList<Float>();    	
-    	
-    	List<Point> queryPoints = args.sketchPoints[0].points;
-		
-		for (int i = 0; i < queryPoints.size(); i++) {
-			if (queryPoints.get(i).getX() >= args.xRange[0] && queryPoints.get(i).getX() <= args.xRange[1]) {
-				queryXValues.add((float) queryPoints.get(i).getX());
-				queryYValues.add((float) queryPoints.get(i).getY());
-			}
-		}
-		
-		double[] queryData = this.dataReformatter.getInterpolatedData(queryXValues, queryYValues, normalizedgroups[0].length);
+//    	List<Float> queryXValues = new ArrayList<Float>();
+//    	List<Float> queryYValues = new ArrayList<Float>();    	
+//    	
+//    	List<Point> queryPoints = args.sketchPoints[0].points;
+//		
+//		for (int i = 0; i < queryPoints.size(); i++) {
+//			if (queryPoints.get(i).getX() >= args.xRange[0] && queryPoints.get(i).getX() <= args.xRange[1]) {
+//				queryXValues.add((float) queryPoints.get(i).getX());
+//				queryYValues.add((float) queryPoints.get(i).getY());
+//			}
+//		}
+//		
+//		double[] queryData = this.dataReformatter.getInterpolatedData(queryXValues, queryYValues, normalizedgroups[0].length);
 		
     	for(int i = 0;i < normalizedgroups.length;i++) {
     		double dist;
@@ -224,7 +226,7 @@ public class Similarity extends Analysis {
 //    				System.out.println(overlappedDataInterpolated[i][j] + "\t" + overlappedQueryInterpolated[i][j]);
 //    			}
 //    			System.out.println();
-			dist = distance.calculateDistance(normalizedgroups[i], queryData);
+			dist = distance.calculateDistance(normalizedgroups[i], this.interpolatedQuery);
     		
     		
     	    distances.add(dist);	
