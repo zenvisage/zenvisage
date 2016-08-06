@@ -3,6 +3,15 @@ package edu.uiuc.zenvisage.service.distance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.BufferedWriter;  
+import java.io.File;  
+import java.io.FileWriter;  
+import java.io.IOException;
+/*
+import net.sf.javaml.distance.fastdtw.dtw.DTW;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
+*/
 
 /*
  * @author Changfeng
@@ -14,7 +23,7 @@ public class MVIP implements Distance {
 	public static class VIPinfo implements Comparable<VIPinfo> {
 		public Integer index;//X-index in time series
 		public double dist;//vertical distance to the line connecting two adjacent VIPs
-		public int importance;//selecting order of VIPs
+		public int importance;//the order of being added to VIP set
 		
 		public VIPinfo (int INDEX, double DIST, int IMPORTANCE) {
 			index = INDEX;
@@ -31,14 +40,14 @@ public class MVIP implements Distance {
 	public static class possibleVIP implements Comparable<possibleVIP> {
 		public int index;
 		public Double dist;
-		public int leftVIPIndex;
-		public int rightVIPIndex;
+		public int leftVIPindex;
+		public int rightVIPindex;
 		
 		public possibleVIP(int INDEX, double DIST, int LEFTVIPINDEX, int RIGHTVIPINDEX) {
 			index = INDEX;
 			dist = DIST;
-			leftVIPIndex = LEFTVIPINDEX;
-			rightVIPIndex = RIGHTVIPINDEX;
+			leftVIPindex = LEFTVIPINDEX;
+			rightVIPindex = RIGHTVIPINDEX;
 		}
 		
 		public int compareTo(possibleVIP arg0) {
@@ -46,13 +55,14 @@ public class MVIP implements Distance {
 	    }
 	}
 	
+	//preprocessing - Redundant preprocessings could happen during similarity search and especially clustering
 	public static double[] preprocessing(double[] array) {
 		double[] result;
 		
 		//Zcore - already done by service.utility.Zscore
 		
 		//Smoothing. Smoothing window: [1/4, 1/2, 1/4].
-		if (array.length > 5) {
+		if (array.length > 5) { 
 			result = new double[array.length-2];
 			for (int i = 0; i < result.length; ++i){
 				result[i] = array[i] / 4 + array[i+1] / 2 + array[i+2] / 4;
@@ -62,9 +72,18 @@ public class MVIP implements Distance {
 			result = array;
 		}
 		
+		/*
+		//axis normalization
+		double Yrange = StatUtils.max(result) - StatUtils.min(result);
+		for (int i = 0; i < result.length; ++i){
+			if (Yrange != 0)
+				result[i] = smooth[i] / Yrange;
+		}
+		*/
+		
 		return result;
 	}
-
+	
 	//Normalized vertical distance to the line connecting two adjacent VIPs
 	public static double[] NormVDist(double[] array) {
 		final double step = (array[array.length-1] - array[0]) / (array.length - 1);
@@ -78,9 +97,10 @@ public class MVIP implements Distance {
 		return Dist;
 	}
 	
+	//get VIPs' info
 	public static List<VIPinfo> getVIPs(double[] ts) {
 		
-		final double threshold = 0.05;
+		final double threshold = 0.15;
 		List<VIPinfo> VIPlist = new ArrayList<VIPinfo>();
 		VIPinfo newVIP;
 		double[] Dist;
@@ -88,13 +108,14 @@ public class MVIP implements Distance {
 		double possVIPdist;
 		List<possibleVIP> waitinglist = new ArrayList<possibleVIP>();
 		possibleVIP possVIP;
-		int dewlIndex;//the index in waitinglist which will be deleted from waitinglist
+		int dewlIndex; ////the index in waitinglist which will be deleted from waitinglist
 		double tmpdist;
 		
-		newVIP = new VIPinfo(0, 0, 0);//head point of time series
+		//add start point and tail point into VIP set
+		newVIP = new VIPinfo(0, 0, 0);
 		VIPlist.add(newVIP);
 		if (ts.length > 1) {
-			newVIP = new VIPinfo(ts.length-1, 0, 1);//tail point of time series
+			newVIP = new VIPinfo(ts.length-1, 0, 1);
 			VIPlist.add(newVIP);
 		}
 		
@@ -122,8 +143,8 @@ public class MVIP implements Distance {
 				VIPlist.add(newVIP);
 				waitinglist.remove(dewlIndex);
 				
-				int startIndex = possVIP.leftVIPIndex;
-				int endIndex = possVIP.rightVIPIndex;
+				int startIndex = possVIP.leftVIPindex;
+				int endIndex = possVIP.rightVIPindex;
 				int middleIndex = possVIP.index;
 				
 				//find possible VIP from left subsequence divided by newVIP
@@ -209,9 +230,7 @@ public class MVIP implements Distance {
 			for (int j = 0; j < nearbyPatternInterval.length; ++j) {
 				VIPindex = i + nearbyPatternInterval[j];
 				if (VIPindex >= 0 && VIPindex < VIPlist.size()) {
-					indicatorArray[i][2+nearbyShapeInterval.length+j] = 
-							(ts[VIPlist.get(i).index] - ts[VIPindex]) / 
-							((VIPlist.get(i).index - VIPindex) / Xrange);
+					indicatorArray[i][2+nearbyShapeInterval.length+j] = (ts[VIPlist.get(i).index] - ts[VIPlist.get(VIPindex).index]) / ((VIPlist.get(i).index - VIPlist.get(VIPindex).index) / Xrange);
 				}
 				else {
 					indicatorArray[i][2+nearbyShapeInterval.length+j] = 0;
@@ -222,7 +241,7 @@ public class MVIP implements Distance {
 		return indicatorArray;
 	}
 	
-	//Euclidean Distance
+	//Euclidean Distantce
 	public static double eucDist(double[] ts1, double[] ts2) {
 		assert ts1.length == ts2.length;
 		
@@ -251,6 +270,22 @@ public class MVIP implements Distance {
 		}
 		
 		return costMatrix[IndicatorsI.length-1][IndicatorsJ.length-1];
+	}
+	
+	//Write double[] into a file
+	public static void writeArray(double[]array, String fileName) throws IOException {
+		File file = new File(fileName);
+		 if (!file.exists()) {
+			 file.createNewFile();  
+		 }
+		 BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+		 for (int i = 0; i < array.length; ++i) {
+			 bufferedWriter.write(String.valueOf(array[i]));
+			 bufferedWriter.write(' ');
+		 }
+		 bufferedWriter.newLine();
+		 //bufferedWriter.flush();
+		 bufferedWriter.close();
 	}
 	
 	@Override
