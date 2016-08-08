@@ -1,0 +1,3 @@
+time series no:string,indexed,F,F,T,F,F,0,C
+X-index:int,indexed,T,F,F,F,F,0,O
+Y-value:float,unindexed,F,T,F,F,F,0,Q
