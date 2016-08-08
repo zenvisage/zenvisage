@@ -68,11 +68,53 @@ app.factory('plotResults', function() {
     return plottingService;
 });
 
+app.controller('options-controller', [
+  '$scope', '$rootScope', '$http',
+  function($scope, $rootScope, $http){
+    $scope.similarity = 'Euclidean';
+    $scope.representative = 'kmeans';
+    $scope.aggregation = 'avg';
+    $scope.numResults = 50;
+
+    $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        $scope.callGetUserQueryResults();
+      }
+    });
+
+    $scope.$watch('representative', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        $scope.callgetRepresentativeTrends();
+      }
+    });
+
+    $scope.$watch('aggregation', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        $scope.callGetUserQueryResults();
+        $scope.callgetRepresentativeTrends();
+      }
+    });
+
+    $scope.callGetUserQueryResults = function() {
+      $rootScope.$emit("callGetUserQueryResults", {});
+    }
+
+    $scope.callgetRepresentativeTrends = function() {
+      $rootScope.$emit("callgetRepresentativeTrends", {});
+    }
+
+}]);
+
+
+
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
-  '$scope', '$http', 'datasetInfo', 'plotResults',
-  function($scope, $http, datasetInfo, plotResults){
+  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults',
+  function($scope, $rootScope, $http, datasetInfo, plotResults){
     //goes to draw.js
 
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
@@ -102,6 +144,11 @@ app.controller('datasetController', [
         console.log("getUserQueryResults: fail");
       });
 
+    }
+
+    $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
+    {
+      getRepresentativeTrends( getOutlierTrends );
     }
 
     // for representative trends
@@ -207,4 +254,12 @@ app.controller('datasetController', [
       initializeSketchpadOnDataAttributeChange(xData, yData, categoryData); //only x and y values?
       getRepresentativeTrends(getOutlierTrends);
     };
-}]);
+
+    $rootScope.$on("callGetUserQueryResults", function(){
+      $scope.getUserQueryResults();
+    });
+
+    $rootScope.$on("callgetRepresentativeTrends", function(){
+      $scope.getRepresentativeTrendsWithoutCallback();
+    });
+  }]);

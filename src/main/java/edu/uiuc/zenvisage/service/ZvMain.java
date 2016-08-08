@@ -49,6 +49,7 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
+import edu.uiuc.zenvisage.service.distance.*;
 
 /**
  * @author tarique
@@ -84,8 +85,7 @@ public class ZvMain {
 
 
 		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-		inMemoryDatabases.put("cmu", inMemoryDatabase);
-		
+		inMemoryDatabases.put("cmu", inMemoryDatabase);		
 
 		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
 		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
@@ -243,6 +243,9 @@ public class ZvMain {
 		 }
 		 else if (args.distance_metric.equals("Segmentation")){
 			 distance = new SegmentationDistance();
+		 }
+		 else if (args.distance_metric.equals("MVIP")){
+			 distance = new MVIP();
 		 }
 		 else {
 			 distance = new DTWDistance();

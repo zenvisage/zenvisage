@@ -109,21 +109,22 @@
           </div>
           <!-- drawing interface END-->
 
-          <div class="col-md-8" id="table-div">
+          <div class="col-md-8" id="table-div" ng-controller="options-controller">
             <div class="row">
               <div class="col-md-3">
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
-                    <input id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
-                    <input id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
-                    <input id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label>
+                    <input ng-model="similarity.method" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
+                    <input ng-model="similarity.method" id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
+                    <input ng-model="similarity.method" id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label><br>
+                    <input ng-model="similarity.method" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
                   </form>
                 </div>
                 <b>Representative/Outlier</b>
                 <div class="radio">
                   <form>
-                    <input id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
+                    <input ng-model="representative.method" id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
                   </form>
                 </div>
                 <!--
@@ -137,16 +138,25 @@
                 <div class="info-text"><b>Aggregation Method</b></div>
                 <div class="radio">
                   <form>
-                    <input id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
-                    <input id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
+                    <input ng-model="aggregation.method" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
+                    <input ng-model="aggregation.method" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
                   </form>
                 </div>
+
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
                   <div>
-                    <input class="num-results" type="text" name="number-of-results" value="50">
+                    <input ng-model="numResults" class="num-results" type="text" id="num-reslts" name="number-of-results" value="50">
                   </div>
                 </div>
+                <!--
+                <div id="math-equation">
+                  <div class="info-text"><b>Custom Equation</b></div>
+                  <div>
+                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
+                  </div>
+                </div>
+                -->
               </div>
             </div>
           </div>
