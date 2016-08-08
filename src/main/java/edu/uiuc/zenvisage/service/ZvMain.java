@@ -83,19 +83,12 @@ public class ZvMain {
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
 
-		inMemoryDatabase = createDatabase("cmu", "/data/half_schema.txt", "/data/fullsqm_half.csv");
+		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
-
-		
-		inMemoryDatabase = createDatabase("small_cmu", "/data/fullsets_schema.txt", "/data/fullsqm_500.csv");
-		inMemoryDatabases.put("small_cmu", inMemoryDatabase);
-
-		inMemoryDatabase = createDatabase("test", "/data/test_schema.txt", "/data/test.csv");
-		inMemoryDatabases.put("test", inMemoryDatabase);
 		
 
-		inMemoryDatabase = createDatabase("cmuhaha", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
-		inMemoryDatabases.put("cmuhaha", inMemoryDatabase);
+		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
+		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
 		
 		System.out.println("Done loading data");
 	}
@@ -268,43 +261,59 @@ public class ZvMain {
 		 outputNormalization = new Original();
 		 // reformat database data
 		 DataReformation dataReformatter = new DataReformation(outputNormalization);
-		 double[][] normalizedgroups = dataReformatter.reformatData(output);
+		 double[][] normalizedgroups;
+		 boolean overlapping = false;
+		 
+		 
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
+			 normalizedgroups = dataReformatter.reformatData(output);
 			 Clustering cluster = new KMeans(distance, normalization, args);
 			 analysis = new Outlier(executor,inMemoryDatabase,chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("RepresentativeTrends")) {
+			 normalizedgroups = dataReformatter.reformatData(output);
 			 Clustering cluster = new KMeans(distance, normalization, args);
 			 analysis = new Representative(executor,inMemoryDatabase,chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("SimilaritySearch")) {
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
-			 List<Float> dataXInRange = new ArrayList<Float>();
-			 List<Float> dataYInRange = new ArrayList<Float>();
-			 for (int i = 0; i < args.dataX.length; i++) {
-				 if (args.xRange[0] <= args.dataX[i] && args.xRange[1] >= args.dataX[i]) {
-					 dataXInRange.add(args.dataX[i]);
-					 dataYInRange.add(args.dataY[i]);
-				 }
+			 
+			 if (overlapping = true) {
+				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
+				 normalizedgroups = overlappedDataAndQueries[0];
+				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
+				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);
 			 }
-			 double[] interpolatedQuery = dataReformatter.getInterpolatedData(dataXInRange, dataYInRange, normalizedgroups[0].length);
-			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
+			 else {
+				 normalizedgroups = dataReformatter.reformatData(output);
+				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);			 
+				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
+			 }
+			 
 			 ((Similarity) analysis).setDescending(false);
 		 }
-		 else if (method.equals("DissimilaritySearch")) {
+		 else { //(method.equals("DissimilaritySearch"))
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
-			 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, normalizedgroups[0].length);
-			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
+			 
+			 if (overlapping = true) {
+				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
+				 normalizedgroups = overlappedDataAndQueries[0];
+				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
+				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);				 
+			 }
+			 else {
+				 normalizedgroups = dataReformatter.reformatData(output);
+				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);			 
+				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
+			 }
 			 ((Similarity) analysis).setDescending(true);
 		 }
+		 
 		 analysis.compute(output, normalizedgroups, args);
 		 ObjectMapper mapper = new ObjectMapper();
 
-		 String str = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
-//		 System.out.println(str);
-
-		 return str;
+		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 	}
 
 

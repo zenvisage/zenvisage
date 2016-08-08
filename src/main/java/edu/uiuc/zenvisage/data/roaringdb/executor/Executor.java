@@ -127,33 +127,33 @@ public class Executor {
 		List<String> yValues = database.getUnIndexedColumn(yAxis);
 		List<String> xValues2 = database.getUnIndexedColumn(xAxis);
 		Map<String,RoaringBitmap> zValues = database.getIndexedColumn(zAxis);
-		Map<String,RoaringBitmap> xValues = database.getColumn(xAxis);
-		if (zValues == null || xValues == null) return null;
+//		Map<String,RoaringBitmap> xValues = database.getColumn(xAxis);
+//		if (zValues == null || xValues == null) return null;
 		
 		List<String> zKeys = new ArrayList<String>(zValues.keySet());
-		List<String> xKeys = new ArrayList<String>(xValues.keySet());
+//		List<String> xKeys = new ArrayList<String>(xValues.keySet());
 
 		Collections.sort(zKeys);
-		Collections.sort(xKeys,new Comparator<String>() {
-			public int compare(String a, String b) {
-				try {
-					return Float.valueOf(a).compareTo(Float.valueOf(b));
-				}
-				catch(NumberFormatException e) {
-				  // sort alphabetically
-					return a.compareTo(b);
-				}
-					
-			}
-		});
+//		Collections.sort(xKeys,new Comparator<String>() {
+//			public int compare(String a, String b) {
+//				try {
+//					return Float.valueOf(a).compareTo(Float.valueOf(b));
+//				}
+//				catch(NumberFormatException e) {
+//				  // sort alphabetically
+//					return a.compareTo(b);
+//				}
+//					
+//			}
+//		});
 		
 		// add x axis key (string) value (float - index) mappings
 		BiMap<String, Float> xMap = HashBiMap.create();
-		Float index = (float) 0;
-		for (String xKey : xKeys) {
-			xMap.put(xKey, index);
-			index++;
-		}
+//		Float index = (float) 0;
+//		for (String xKey : xKeys) {
+//			xMap.put(xKey, index);
+//			index++;
+//		}
 	
 		LinkedHashMap<String,LinkedHashMap<Float,Float>> result = new LinkedHashMap<String,LinkedHashMap<Float,Float>>();
 		for (String zKey : zKeys) {
@@ -197,36 +197,65 @@ public class Executor {
 			
 			
 			
-			ArrayList<Float> xs = new ArrayList<Float>();
-			ArrayList<Float> ys = new ArrayList<Float>();
-			Map<Float,Float> yvs = new HashMap<Float,Float>();
-			float xmin = Float.valueOf(xMap.get(xKeys.get(0)));
-			float xmax = Float.valueOf(xMap.get(xKeys.get(xKeys.size()-1)));
-			for (String xKey : xKeys) {
-				// check whether this xKey has been filtered
-				if (RoaringBitmap.and(zValues.get(zKey), bitSet).getCardinality()==0) continue;
-				RoaringBitmap bitset = RoaringBitmap.and(zValues.get(zKey), xValues.get(xKey));
-				float sum = 0;
-				int count = 0;
-				IntIterator it = bitset.getIntIterator();
-				while (it.hasNext()) {
-					sum += Float.valueOf(yValues.get(it.next()));
-					count++;
-				}
-				if (query.getAggregationFunc().equals("avg")) {
-					sum /= count;
-				}
-				
-				if (count == 0) {
-					sum = 0;
-				}
-				else {
-					xs.add(xMap.get(xKey));
-					ys.add(sum);
-					yvs.put(xMap.get(xKey), sum);
-				}
-				innerMap.put(Float.valueOf(xMap.get(xKey)), (float) sum);
-			}
+//			ArrayList<Float> xs = new ArrayList<Float>();
+//			ArrayList<Float> ys = new ArrayList<Float>();
+//			Map<Float,Float> yvs = new HashMap<Float,Float>();
+//			float xmin = Float.valueOf(xMap.get(xKeys.get(0)));
+//			float xmax = Float.valueOf(xMap.get(xKeys.get(xKeys.size()-1)));
+//			for (String xKey : xKeys) {
+//				// check whether this xKey has been filtered
+//				if (RoaringBitmap.and(z//			ArrayList<Float> xs = new ArrayList<Float>();
+//			ArrayList<Float> ys = new ArrayList<Float>();
+//			Map<Float,Float> yvs = new HashMap<Float,Float>();
+//			float xmin = Float.valueOf(xMap.get(xKeys.get(0)));
+//			float xmax = Float.valueOf(xMap.get(xKeys.get(xKeys.size()-1)));
+//			for (String xKey : xKeys) {
+//				// check whether this xKey has been filtered
+//				if (RoaringBitmap.and(zValues.get(zKey), bitSet).getCardinality()==0) continue;
+//				RoaringBitmap bitset = RoaringBitmap.and(zValues.get(zKey), xValues.get(xKey));
+//				float sum = 0;
+//				int count = 0;
+//				IntIterator it = bitset.getIntIterator();
+//				while (it.hasNext()) {
+//					sum += Float.valueOf(yValues.get(it.next()));
+//					count++;
+//				}
+//				if (query.getAggregationFunc().equals("avg")) {
+//					sum /= count;
+//				}
+//				
+//				if (count == 0) {
+//					sum = 0;
+//				}
+//				else {
+//					xs.add(xMap.get(xKey));
+//					ys.add(sum);
+//					yvs.put(xMap.get(xKey), sum);
+//				}
+//				innerMap.put(Float.valueOf(xMap.get(xKey)), (float) sum);
+//			}Values.get(zKey), bitSet).getCardinality()==0) continue;
+//				RoaringBitmap bitset = RoaringBitmap.and(zValues.get(zKey), xValues.get(xKey));
+//				float sum = 0;
+//				int count = 0;
+//				IntIterator it = bitset.getIntIterator();
+//				while (it.hasNext()) {
+//					sum += Float.valueOf(yValues.get(it.next()));
+//					count++;
+//				}
+//				if (query.getAggregationFunc().equals("avg")) {
+//					sum /= count;
+//				}
+//				
+//				if (count == 0) {
+//					sum = 0;
+//				}
+//				else {
+//					xs.add(xMap.get(xKey));
+//					ys.add(sum);
+//					yvs.put(xMap.get(xKey), sum);
+//				}
+//				innerMap.put(Float.valueOf(xMap.get(xKey)), (float) sum);
+//			}
 //			// add more points for interpolation
 //			xs.add(0,xmin-1);
 //			ys.add(0,ys.get(0));

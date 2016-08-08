@@ -39,7 +39,9 @@ public class Similarity extends Analysis {
 	public boolean descending = true;
 	public PiecewiseAggregation paa;
 	public DataReformation dataReformatter;
-	double[] interpolatedQuery;
+	double[] interpolatedQuery = null;
+	double[][] overlappedAndInterpolatedQuery = null;
+	boolean overlapping;
 
 	public Similarity(Executor executor, Database inMemoryDatabase,
 			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
@@ -48,6 +50,17 @@ public class Similarity extends Analysis {
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;
 		this.interpolatedQuery = interpolatedQuery;
+		this.overlapping = false;
+	}
+	
+	public Similarity(Executor executor, Database inMemoryDatabase,
+			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[][] overlappedAndInterpolatedQuery) {
+		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
+		// TODO Auto-generated constructor stub
+		this.paa = paa;
+		this.dataReformatter = dataReformatter;
+		this.overlappedAndInterpolatedQuery = overlappedAndInterpolatedQuery;
+		this.overlapping = true;
 	}
 
 	/* (non-Javadoc)
@@ -117,81 +130,6 @@ public class Similarity extends Analysis {
 			this.distances = distances;
 		}
 	}
-	
-	public double[][][] getOverlappedData(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, ZvQuery args) {		
-		double[][][] overlappedDataAndQueries = new double[2][output.size()][];
-		double[] xRange = args.xRange;
-		List<Double> overlappedQueryXValues = new ArrayList<Double>();
-		List<Double> overlappedQueryYValues = new ArrayList<Double>();
-		List<Point> queryPoints = args.sketchPoints[0].points;
-		
-		for (int i = 0; i < queryPoints.size(); i++) {
-			if (queryPoints.get(i).getX() >= xRange[0] && queryPoints.get(i).getX() <= xRange[1]) {
-				overlappedQueryXValues.add((double) queryPoints.get(i).getX());
-				overlappedQueryYValues.add((double) queryPoints.get(i).getY());
-			}
-		}
-		
-		int i = 0;
-		for (String s: output.keySet()) {
-			Map<Float,Float> originalData = output.get(s);
-			List<Double> overlappedXValues = new ArrayList<Double>();
-			List<Double> overlappedYValues = new ArrayList<Double>();
-			for (float dataX : originalData.keySet()) {
-				if (xRange[0] <= dataX && dataX <= xRange[1]) {
-					overlappedXValues.add((double) dataX);
-					overlappedYValues.add((double) originalData.get(dataX));
-				}
-			}
-//			System.out.println(overlappedXValues.size());
-			if (overlappedXValues.size() <= 1) {
-				overlappedDataAndQueries[0][i] = new double[0];
-				overlappedDataAndQueries[1][i] = new double[0];
-			}
-			else {
-				double[] overlappedRange = {overlappedXValues.get(0), overlappedXValues.get(overlappedXValues.size()-1)};
-				double[] overlappedDataInterpolated = getInterpolatedData(overlappedXValues, overlappedYValues, overlappedRange);
-				double[] overlappedQueryInterpolated = getInterpolatedData(overlappedQueryXValues, overlappedQueryYValues, overlappedRange);
-				overlappedDataAndQueries[0][i] = overlappedDataInterpolated;
-				overlappedDataAndQueries[1][i] = overlappedQueryInterpolated;				
-			}
-			i++;
-		}
-			
-		return overlappedDataAndQueries;
-	}
-	
-	public double[] getInterpolatedData(List<Double> overlappedXValues, List<Double> overlappedYValues, double[] overlappedRange) {
-		int n = 100;
-		double[] interpolatedXValues = new double[n];
-		double[] interpolatedYValues = new double[n];
-		double granularity = (overlappedXValues.get(overlappedXValues.size()-1) - overlappedXValues.get(0)) / 100;
-		
-//		interpolatedXValues[0] = overlappedXValues.get(0);
-//		interpolatedYValues[0] = overlappedYValues.get(0);
-//		interpolatedXValues[n-1] = overlappedXValues.get(overlappedXValues.size()-1);
-//		interpolatedXValues[n-1] = overlappedYValues.get(overlappedXValues.size()-1);
-		
-		int count = 0;
-		for (int i = 0; i < n; i++) {
-			double interpolatedX = overlappedXValues.get(0) + i * granularity;
-			interpolatedXValues[i] = interpolatedX;
-			
-			while(overlappedXValues.get(count) < interpolatedX) {
-				count++;
-			}
-			if (overlappedXValues.get(count) == interpolatedX) {
-				interpolatedYValues[i] = overlappedYValues.get(count);
-			}
-			else {
-				double xDifference = overlappedXValues.get(count) - overlappedXValues.get(count-1);
-				double yDifference = overlappedYValues.get(count) - overlappedYValues.get(count-1);
-				interpolatedYValues[i] = overlappedYValues.get(count - 1) + (interpolatedX - overlappedXValues.get(count-1)) / xDifference * yDifference;				
-			}
-		}
-		return interpolatedYValues;
-	}
-	
 	/**
 	 * @param normalizedgroups
 	 * @param queryTrend
@@ -226,7 +164,17 @@ public class Similarity extends Analysis {
 //    				System.out.println(overlappedDataInterpolated[i][j] + "\t" + overlappedQueryInterpolated[i][j]);
 //    			}
 //    			System.out.println();
-			dist = distance.calculateDistance(normalizedgroups[i], this.interpolatedQuery);
+    		if (this.overlapping) {
+    			if (normalizedgroups[i].length == 0) {
+    				dist = Double.MAX_VALUE;
+    			}
+    			else {
+        			dist = distance.calculateDistance(normalizedgroups[i], this.overlappedAndInterpolatedQuery[i]);    				
+    			}
+    		}
+    		else {
+    			dist = distance.calculateDistance(normalizedgroups[i], this.interpolatedQuery);
+    		}
     		
     		
     	    distances.add(dist);	
