@@ -71,32 +71,26 @@ app.factory('plotResults', function() {
 app.controller('options-controller', [
   '$scope', '$rootScope', '$http',
   function($scope, $rootScope, $http){
-    $scope.similarity = {
-      method: 'Euclidean'
-    };
-    $scope.representative = {
-      method: 'kmeans'
-    };
-    $scope.aggregation = {
-      method: 'avg'
-    };
+    $scope.similarity = 'Euclidean';
+    $scope.representative = 'kmeans';
+    $scope.aggregation = 'avg';
     $scope.numResults = 50;
 
-    $scope.$watchGroup(['similarity.method', 'numResults'], function( newValue, oldValue ) {
+    $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResults();
       }
     });
 
-    $scope.$watch('representative.method', function( newValue, oldValue ) {
+    $scope.$watch('representative', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callgetRepresentativeTrends();
       }
     });
 
-    $scope.$watch('aggregation.method', function( newValue, oldValue ) {
+    $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResults();

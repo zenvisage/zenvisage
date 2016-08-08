@@ -90,17 +90,17 @@ function getXRange() //when zoomed in
 
 function getAggregationMethod()
 {
-  return $('input[name = aggregation-method]:checked').val()
+  return angular.element($("#table-div")).scope().aggregation;
 }
 
 function getDistanceMethod()
 {
-  return $('input[name = distance-method]:checked').val()
+  return angular.element($("#table-div")).scope().similarity;
 }
 
 function getNumResults()
 {
-  return $('#num-results input').val()
+  return angular.element($("#table-div")).scope().numResults;
 }
 
 function getNumSegments()
