@@ -23,6 +23,7 @@ public class ZvQuery {
 	public String predicateOperator;
 	public String predicateValue;
 	public float[] xRange;
+	public boolean considerRange;
 
 	
 	public String getDistance_metric() {

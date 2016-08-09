@@ -14,6 +14,7 @@ public class Chart {
 	public int rank;
 	public double distance;
 	public double normalizedDistance;
+	public boolean considerRange;
 	
 	// default constructor
 	public Chart() {
@@ -72,6 +73,12 @@ public class Chart {
 	}
 	public float[] getXRange(){
 		return this.xRange;
+	}
+	public void setConsiderRange(boolean considerRange){
+		this.considerRange = considerRange;
+	}
+	public boolean getConsiderRange(){
+		return this.considerRange;
 	}
 	
 }

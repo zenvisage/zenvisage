@@ -51,6 +51,7 @@ function Query( searchMethod ) {
   this.predicateValue = ""; // fix to dynamically fetch
   this.xRange = getXRange();
   //this.segmentCount = getNumSegments();
+  this.considerRange = getConsiderRange();
 }
 
 function SketchPoints(xAxisName, yAxisName, points){
@@ -101,6 +102,11 @@ function getDistanceMethod()
 function getNumResults()
 {
   return angular.element($("#table-div")).scope().numResults;
+}
+
+function getConsiderRange()
+{
+  return angular.element($("#table-div")).scope().considerRange;
 }
 
 function getNumSegments()

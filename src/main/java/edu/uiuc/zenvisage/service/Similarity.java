@@ -41,7 +41,7 @@ public class Similarity extends Analysis {
 	public DataReformation dataReformatter;
 	double[] interpolatedQuery = null;
 	double[][] overlappedAndInterpolatedQuery = null;
-	boolean overlapping;
+	boolean considerRange;
 
 	public Similarity(Executor executor, Database inMemoryDatabase,
 			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
@@ -50,7 +50,7 @@ public class Similarity extends Analysis {
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;
 		this.interpolatedQuery = interpolatedQuery;
-		this.overlapping = false;
+		this.considerRange = false;
 	}
 	
 	public Similarity(Executor executor, Database inMemoryDatabase,
@@ -60,7 +60,7 @@ public class Similarity extends Analysis {
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;
 		this.overlappedAndInterpolatedQuery = overlappedAndInterpolatedQuery;
-		this.overlapping = true;
+		this.considerRange = true;
 	}
 
 	/* (non-Javadoc)
@@ -164,7 +164,7 @@ public class Similarity extends Analysis {
 //    				System.out.println(overlappedDataInterpolated[i][j] + "\t" + overlappedQueryInterpolated[i][j]);
 //    			}
 //    			System.out.println();
-    		if (this.overlapping) {
+    		if (this.considerRange) {
     			if (normalizedgroups[i].length == 0) {
     				dist = Double.MAX_VALUE;
     			}

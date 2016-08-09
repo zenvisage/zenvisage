@@ -266,7 +266,7 @@ public class ZvMain {
 		 // reformat database data
 		 DataReformation dataReformatter = new DataReformation(outputNormalization);
 		 double[][] normalizedgroups;
-		 boolean overlapping = false;
+		 boolean considerRange = args.considerRange;
 		 
 		 
 		 // generate the corresponding analysis method
@@ -283,7 +283,7 @@ public class ZvMain {
 		 else if (method.equals("SimilaritySearch")) {
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
 			 
-			 if (overlapping = true) {
+			 if (considerRange = true) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
@@ -300,7 +300,7 @@ public class ZvMain {
 		 else { //(method.equals("DissimilaritySearch"))
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
 			 
-			 if (overlapping = true) {
+			 if (considerRange = true) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 

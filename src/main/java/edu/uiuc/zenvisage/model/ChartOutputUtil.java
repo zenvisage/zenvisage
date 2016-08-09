@@ -61,6 +61,7 @@ public class ChartOutputUtil {
 				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				chartOutput.setDistance(orderedDistances.get(i));
 				chartOutput.setXRange(args.xRange);
+				chartOutput.setConsiderRange(args.considerRange);
 				
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
