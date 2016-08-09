@@ -32,10 +32,15 @@ function displayUserQueryResultsHelper( userQueryResults )
     var ymin = Math.min.apply(Math, yData);
     var ymax = Math.max.apply(Math, yData);
 
+    var considerRange = userQueryResults[count]["considerRange"];
     var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
 
     var valueRange = [ymin, ymax];
-    userQueryDygraphs["result-" + count.toString()] = new Dygraph(document.getElementById("result-" + count.toString()), data,
+    var tempDygraph;
+
+    if (considerRange)
+    {
+     tempDygraph = new Dygraph(document.getElementById("result-" + count.toString()), data,
       {
         valueRange: valueRange,
         dateWindow: [xmin, xmax],
@@ -61,6 +66,29 @@ function displayUserQueryResultsHelper( userQueryResults )
             canvas.fillRect(second_left, area.y, second_right - second_left, area.h);
         },
       });
+    }
+    else
+    {
+     tempDygraph = new Dygraph(document.getElementById("result-" + count.toString()), data,
+      {
+        valueRange: valueRange,
+        dateWindow: [xmin, xmax],
+        xlabel: xlabel,
+        xLabelHeight: 11,
+        axisLabelWidth: 11,
+        axisLabelFontSize: 9,
+        showLabelsOnHighlight: false,
+        pixelsPerLabel: 20,
+        highlightCircleSize: 0,
+        interactionModel: {},
+        drawGrid: false,
+        axisLabelWidth: 20,
+        colors: [ "0E3340", "#90C3D4" ],
+      });
+    }
+
+    userQueryDygraphs["result-" + count.toString()] = tempDygraph;
+
   }
 
   $(".draggable-graph").draggable({
