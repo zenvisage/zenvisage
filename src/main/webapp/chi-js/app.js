@@ -75,11 +75,19 @@ app.controller('options-controller', [
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
     $scope.numResults = 50;
+    $scope.considerRange = true;
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResults();
+      }
+    });
+
+    $scope.$watch('considerRange', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        //$scope.callgetRepresentativeTrends();
       }
     });
 
