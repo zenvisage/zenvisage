@@ -87,6 +87,7 @@ app.controller('options-controller', [
     $scope.$watch('considerRange', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        $scope.callGetUserQueryResults();
         //$scope.callgetRepresentativeTrends();
       }
     });

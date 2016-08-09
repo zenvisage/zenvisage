@@ -78,6 +78,7 @@ public class DataReformation {
 				interpolatedYValues[i] = inputYValues[count - 1] + (interpolatedX - inputXValues[count-1]) / xDifference * yDifference;				
 			}
 		}
+		normalization.normalize(interpolatedYValues);
 		return interpolatedYValues;
 	}
 	
@@ -111,6 +112,7 @@ public class DataReformation {
 				interpolatedYValues[i] = inputYValues.get(count - 1) + (interpolatedX - inputXValues.get(count-1)) / xDifference * yDifference;				
 			}
 		}
+		normalization.normalize(interpolatedYValues);		
 		return interpolatedYValues;
 	}
 	
@@ -145,7 +147,8 @@ public class DataReformation {
 		}
 		float xDifference = inputXValues[count] - inputXValues[count-1];
 		double yDifference = inputYValues[count] - inputYValues[count-1];
-		interpolatedYValues[n-1] = inputYValues[count - 1] + (interpolatedXValues[n-1] - inputXValues[count-1]) / xDifference * yDifference;		
+		interpolatedYValues[n-1] = inputYValues[count - 1] + (interpolatedXValues[n-1] - inputXValues[count-1]) / xDifference * yDifference;	
+		normalization.normalize(interpolatedYValues);	
 		
 		return interpolatedYValues;
 	}
@@ -181,7 +184,8 @@ public class DataReformation {
 		}
 		float xDifference = xValues.get(count) - xValues.get(count-1);
 		double yDifference = yValues.get(count) - yValues.get(count-1);
-		interpolatedYValues[n-1] = yValues.get(count-1) + (interpolatedXValues[n-1] - xValues.get(count-1)) / xDifference * yDifference;		
+		interpolatedYValues[n-1] = yValues.get(count-1) + (interpolatedXValues[n-1] - xValues.get(count-1)) / xDifference * yDifference;
+		normalization.normalize(interpolatedYValues);		
 		
 		return interpolatedYValues;
 	}

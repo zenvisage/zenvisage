@@ -671,7 +671,8 @@ public class SegmentationDistance implements Distance {
 	public double calculateDistance(double[] src, double[] tar) {
 		
 		// TODO Auto-generated method stub
-		assert src.length == tar.length;
+		if (src.length > 138)
+			this.MAX_ERROR = 100.0 * src.length/138;
 		
 		double[][] srcR = new double[src.length][2];
 		for (int i = 0; i < src.length; i++) {

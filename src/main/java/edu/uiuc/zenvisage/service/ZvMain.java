@@ -258,7 +258,8 @@ public class ZvMain {
 //			 normalization = new Original();
 		 }
 		 else {
-			 normalization = new Original();
+			 normalization = new Zscore();
+//			 normalization = new Original();
 		 }
 		 // generate the corresponding output normalization
 
@@ -283,7 +284,7 @@ public class ZvMain {
 		 else if (method.equals("SimilaritySearch")) {
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
 			 
-			 if (considerRange = true) {
+			 if (considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
@@ -300,7 +301,7 @@ public class ZvMain {
 		 else { //(method.equals("DissimilaritySearch"))
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
 			 
-			 if (considerRange = true) {
+			 if (considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
