@@ -85,7 +85,8 @@ public class ZvMain {
 
 
 		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-		inMemoryDatabases.put("cmu", inMemoryDatabase);		
+		inMemoryDatabases.put("cmu", inMemoryDatabase);
+		
 
 		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
 		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
