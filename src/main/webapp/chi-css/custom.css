@@ -185,6 +185,10 @@ svg#treesvg {
   margin-left: 0px;
 }
 
+.checkbox input[type=checkbox]{
+  margin-left: 0px; !important
+}
+
 .dropdown {
  width: 150px
 }
