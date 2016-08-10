@@ -140,6 +140,8 @@ app.controller('datasetController', [
     // for all other normal queries
     $scope.getUserQueryResults = function getUserQueryResults()
     {
+      clearUserQueryResultsTable();
+
       var q = constructUserQuery(); //goes to query.js
       var data = q;
 
@@ -157,12 +159,15 @@ app.controller('datasetController', [
 
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
+
       getRepresentativeTrends( getOutlierTrends );
     }
 
     // for representative trends
     function getRepresentativeTrends( outlierCallback )
     {
+      clearRepresentativeTable();
+
       var q = constructRepresentativeTrendQuery(); //goes to query.js
       var data = q;
 
@@ -180,6 +185,8 @@ app.controller('datasetController', [
 
     function getOutlierTrends()
     {
+      clearOutlierTable();
+
       var q = constructOutlierTrendQuery(); //goes to query.js
       var data = q;
 
