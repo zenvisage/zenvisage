@@ -146,6 +146,7 @@ function initializeSketchpad(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
     data.push( [ xmin + (xmax-xmin)/100*d , (ymin+ymax)/2 ] );
   }
   var valueRange = [ymin, ymax];
+
   sketchpad = getSketchpadDygraphObject( data, valueRange );
   refreshZoomEventHandler();
 }

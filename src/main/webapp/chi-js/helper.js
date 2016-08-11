@@ -12,11 +12,13 @@ function displayUserQueryResultsHelper( userQueryResults )
   var connectSeparatedPoints = true;
   var pointSize = 1.0;
   var drawPoints = false;
+  var strokeWidth = 1.0;
   if ( getScatterplotOption() )
   {
     connectSeparatedPoints = false;
     pointSize = 2;
     drawPoints = true;
+    strokeWidth = 0;
   }
   for (var count = 0; count < userQueryResults.length; count++)
   {
@@ -64,6 +66,7 @@ function displayUserQueryResultsHelper( userQueryResults )
         connectSeparatedPoints: connectSeparatedPoints,
         drawPoints: drawPoints,
         pointSize: pointSize,
+        strokeWidth: strokeWidth,
         drawGrid: false,
         axisLabelWidth: 20,
         colors: [ "0E3340", "#90C3D4" ],
@@ -95,7 +98,7 @@ function displayUserQueryResultsHelper( userQueryResults )
         interactionModel: {},
         drawGrid: false,
         axisLabelWidth: 20,
-        strokeWidth: strokeWidth,
+        connectSeparatedPoints: connectSeparatedPoints,
         drawPoints: drawPoints,
         pointSize: pointSize,
         colors: [ "0E3340", "#90C3D4" ],
@@ -218,14 +221,16 @@ function displayOutlierResultsHelper( outlierResults )
 
 function getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xLabel, count, id, representativeCount = "" )
 {
-  var strokeWidth = 1.0;
-  var pointSize = 1;
+  var connectSeparatedPoints = true;
+  var pointSize = 1.0;
   var drawPoints = false;
+  var strokeWidth = 1.0;
   if ( getScatterplotOption() )
   {
-    strokeWidth = 0;
+    connectSeparatedPoints = false;
     pointSize = 2;
     drawPoints = true;
+    strokeWidth = 0;
   }
   return new Dygraph(document.getElementById(id + count.toString()), data,
     {
@@ -237,9 +242,10 @@ function getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xLa
       axisLabelWidth: 11,
       dateWindow: xRange,
       xAxisRange: xRange,
-      strokeWidth: strokeWidth,
+      connectSeparatedPoints: connectSeparatedPoints,
       drawPoints: drawPoints,
       pointSize: pointSize,
+      strokeWidth: strokeWidth,
       showLabelsOnHighlight: false,
       interactionModel: {},
       colors: [ "0E3340" ],
