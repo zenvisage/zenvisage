@@ -109,6 +109,11 @@ function getConsiderRange()
   return angular.element($("#table-div")).scope().considerRange;
 }
 
+function getScatterplotOption()
+{
+  return angular.element($("#table-div")).scope().showScatterplot;
+}
+
 function getNumSegments()
 {
   return $('#num-segments input').val()

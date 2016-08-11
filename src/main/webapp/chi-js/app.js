@@ -76,6 +76,7 @@ app.controller('options-controller', [
     $scope.aggregation = 'avg';
     $scope.numResults = 50;
     $scope.considerRange = true;
+    $scope.showScatterplot = false;
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
