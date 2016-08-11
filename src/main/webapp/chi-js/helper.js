@@ -9,12 +9,12 @@ function displayUserQueryResultsHelper( userQueryResults )
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
-  var strokeWidth = 1.0;
+  var connectSeparatedPoints = true;
   var pointSize = 1.0;
   var drawPoints = false;
   if ( getScatterplotOption() )
   {
-    strokeWidth = 0;
+    connectSeparatedPoints = false;
     pointSize = 2;
     drawPoints = true;
   }
@@ -61,7 +61,7 @@ function displayUserQueryResultsHelper( userQueryResults )
         pixelsPerLabel: 20,
         highlightCircleSize: 0,
         interactionModel: {},
-        strokeWidth: strokeWidth,
+        connectSeparatedPoints: connectSeparatedPoints,
         drawPoints: drawPoints,
         pointSize: pointSize,
         drawGrid: false,

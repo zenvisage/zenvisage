@@ -62,7 +62,6 @@ function datetimeTesting()
     data.push([ new Date(temp3[i][0]), Number(temp3[i][1]) ]);
   }
 
-  console.log(data)
   var valueRange = [28,91]
   sketchpad = new Dygraph(document.getElementById("draw-div"), data,
     {
