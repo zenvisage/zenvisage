@@ -38,10 +38,14 @@ public class DataReformation {
 				maxLength = data.get(s).size();
 			}
 		}
-		double[][] interpolatedData = new double[data.size()][maxLength];
+		double[][] interpolatedData = new double[data.size()][];
 		
 		int i = 0;
 		for (String s: data.keySet()) {
+//			if (data.get(s).size() < 2) {
+//				interpolatedData[i++] = new double[0];
+//				continue;
+//			}
 			List<Float> overlappedXValues = new ArrayList<Float>(data.get(s).keySet());
 			List<Float> overlappedYValues = new ArrayList<Float>(data.get(s).values());
 			
@@ -153,7 +157,7 @@ public class DataReformation {
 		return interpolatedYValues;
 	}
 	
-	public double[] getInterpolatedData(List<Float> xValues, List<Double> yValues, float[] xRange, int length) {		
+	public double[] getInterpolatedData(List<Float> xValues, List<Float> yValues, float[] xRange, int length) {		
 		int n = length;
 		float[] interpolatedXValues = new float[n];
 		double[] interpolatedYValues = new double[n];		
@@ -169,7 +173,7 @@ public class DataReformation {
 					count++;
 			}
 			if (xValues.get(count) == interpolatedX) {
-				interpolatedYValues[i] = xValues.get(count);
+				interpolatedYValues[i] = yValues.get(count);
 			}
 			else {
 				float xDifference = xValues.get(count) - xValues.get(count-1);
@@ -197,12 +201,18 @@ public class DataReformation {
 		
 		int i = 0;
 		for (String s: output.keySet()) {
+			if (xRange[0] >= xRange[1] || output.get(s).size() < 2) {
+				overlappedDataAndQueries[0][i] = new double[0];
+				overlappedDataAndQueries[1][i] = new double[0];
+				i++;
+				continue;
+			}
 			LinkedHashMap<Float,Float> originalData = output.get(s);
 			List<Float> dataXValues = new ArrayList<Float>();
-			List<Double> dataYValues = new ArrayList<Double>();
+			List<Float> dataYValues = new ArrayList<Float>();
 			for (float dataX : originalData.keySet()) {
 				dataXValues.add( dataX);
-				dataYValues.add((double) originalData.get(dataX));
+				dataYValues.add( originalData.get(dataX));
 			}
 			
 			float[] dataRange = {dataXValues.get(0), dataXValues.get(dataXValues.size() - 1)};

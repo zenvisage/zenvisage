@@ -268,6 +268,19 @@ public class ZvMain {
 		 DataReformation dataReformatter = new DataReformation(normalization);
 		 double[][] normalizedgroups;
 		 
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> temp = new LinkedHashMap<String, LinkedHashMap<Float, Float>>();
+		 for (String s: output.keySet()) {
+			 if (output.get(s).size() >= 2) {
+				 temp.put(s, output.get(s));
+			 }
+		 }
+//		 for (String s: output.keySet()) {
+//			 if (s.equals("class-08775001") || s.equals("class-15750001")) {
+//				 temp.put(s, output.get(s));
+//			 }
+//		 }
+		 output = temp;
+		 
 		 
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {

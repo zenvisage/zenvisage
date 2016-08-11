@@ -165,7 +165,7 @@ public class Similarity extends Analysis {
 //    			}
 //    			System.out.println();
     		if (this.considerRange) {
-    			if (normalizedgroups[i].length == 0) {
+    			if (normalizedgroups[i].length == 0 || this.overlappedAndInterpolatedQuery[i].length == 0) {
     				dist = Double.MAX_VALUE;
     			}
     			else {
@@ -173,7 +173,12 @@ public class Similarity extends Analysis {
     			}
     		}
     		else {
-    			dist = distance.calculateDistance(normalizedgroups[i], this.interpolatedQuery);
+    			if (normalizedgroups[i].length == 0) {
+    				dist = Double.MAX_VALUE;
+    			}
+    			else {
+    				dist = distance.calculateDistance(normalizedgroups[i], this.interpolatedQuery);
+    			}
     		}
     		
     		
