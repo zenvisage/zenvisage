@@ -76,6 +76,7 @@ app.controller('options-controller', [
     $scope.aggregation = 'avg';
     $scope.numResults = 50;
     $scope.considerRange = true;
+    $scope.showScatterplot = false;
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -140,6 +141,8 @@ app.controller('datasetController', [
     // for all other normal queries
     $scope.getUserQueryResults = function getUserQueryResults()
     {
+      clearUserQueryResultsTable();
+
       var q = constructUserQuery(); //goes to query.js
       var data = q;
 
@@ -157,12 +160,15 @@ app.controller('datasetController', [
 
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
+
       getRepresentativeTrends( getOutlierTrends );
     }
 
     // for representative trends
     function getRepresentativeTrends( outlierCallback )
     {
+      clearRepresentativeTable();
+
       var q = constructRepresentativeTrendQuery(); //goes to query.js
       var data = q;
 
@@ -180,6 +186,8 @@ app.controller('datasetController', [
 
     function getOutlierTrends()
     {
+      clearOutlierTable();
+
       var q = constructOutlierTrendQuery(); //goes to query.js
       var data = q;
 

@@ -60,6 +60,33 @@ public class SQLQueryExecutor {
 	    stmt.close();
 	}	
 	
+	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
+		Statement st = c.createStatement();
+		String sql = null;	
+		if (whereCondition == null) {
+			sql = "SELECT " + Z + "," + X + " ," + "avg(" + Y + ")"
+					+ " FROM " + table
+					+ " GROUP BY " + Z + ", "+ X
+					+ " ORDER BY " + Z + ", "+ X;
+		} else {
+			sql = "SELECT " + Z + "," + X
+			+ " FROM " + table
+			+ " WHERE " + whereCondition
+			+ " GROUP BY " + Z + ", "+ X
+			+ " ORDER BY " + Z + ", "+ X;
+		}
+		
+		ResultSet rs = st.executeQuery(sql);
+		System.out.println("Running ZQL Query ...");
+		while (rs.next())
+		{
+		   System.out.print("Column 1 returned ");
+		   System.out.println(rs.getString(4));
+		} rs.close();
+		st.close();
+	
+	}
+	
 	public static void main(String[] args){
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		try {
@@ -71,6 +98,9 @@ public class SQLQueryExecutor {
 	                " ADDRESS        CHAR(50), " +
 	                " SALARY         REAL)");
 			sqlQueryExecutor.query("SELECT * FROM COMPANY");
+			
+			sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -9,9 +9,18 @@ function displayUserQueryResultsHelper( userQueryResults )
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
+  var connectSeparatedPoints = true;
+  var pointSize = 1.0;
+  var drawPoints = false;
+  if ( getScatterplotOption() )
+  {
+    connectSeparatedPoints = false;
+    pointSize = 2;
+    drawPoints = true;
+  }
   for (var count = 0; count < userQueryResults.length; count++)
   {
-    if (count%2 == 0)
+    if (count % 2 == 0)
     {
       var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
       current = count;
@@ -52,6 +61,9 @@ function displayUserQueryResultsHelper( userQueryResults )
         pixelsPerLabel: 20,
         highlightCircleSize: 0,
         interactionModel: {},
+        connectSeparatedPoints: connectSeparatedPoints,
+        drawPoints: drawPoints,
+        pointSize: pointSize,
         drawGrid: false,
         axisLabelWidth: 20,
         colors: [ "0E3340", "#90C3D4" ],
@@ -83,6 +95,9 @@ function displayUserQueryResultsHelper( userQueryResults )
         interactionModel: {},
         drawGrid: false,
         axisLabelWidth: 20,
+        strokeWidth: strokeWidth,
+        drawPoints: drawPoints,
+        pointSize: pointSize,
         colors: [ "0E3340", "#90C3D4" ],
       });
     }
@@ -110,6 +125,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
   var arrLength = representativePatternResults.length < 4 ? representativePatternResults.length : 4
+
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"representative-row-" + count.toString() + "\"></tr>")
@@ -202,6 +218,15 @@ function displayOutlierResultsHelper( outlierResults )
 
 function getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xLabel, count, id, representativeCount = "" )
 {
+  var strokeWidth = 1.0;
+  var pointSize = 1;
+  var drawPoints = false;
+  if ( getScatterplotOption() )
+  {
+    strokeWidth = 0;
+    pointSize = 2;
+    drawPoints = true;
+  }
   return new Dygraph(document.getElementById(id + count.toString()), data,
     {
       valueRange: valueRange,
@@ -212,6 +237,9 @@ function getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xLa
       axisLabelWidth: 11,
       dateWindow: xRange,
       xAxisRange: xRange,
+      strokeWidth: strokeWidth,
+      drawPoints: drawPoints,
+      pointSize: pointSize,
       showLabelsOnHighlight: false,
       interactionModel: {},
       colors: [ "0E3340" ],
@@ -295,7 +323,7 @@ function combineTwoArrays( arr1_xdata, arr1_ydata, arr2 )
       i += 1;
       j += 1;
     }
-    else if (arr1_xdata[i][0] < arr2[j][0])
+    else if (arr1_xdata[i] < arr2[j][0])
     {
        data.push( [Number( arr1_xdata[i] ), Number( arr1_ydata[i] ), null] );
        i += 1;
@@ -392,18 +420,3 @@ function getEvaluatingRange( xmin, xmax, xrange )
   }
   return [first_left, first_right, second_left, second_right]
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
