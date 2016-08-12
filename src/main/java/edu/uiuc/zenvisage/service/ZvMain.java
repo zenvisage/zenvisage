@@ -90,7 +90,10 @@ public class ZvMain {
 
 		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
 		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
-		
+
+		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
+		inMemoryDatabases.put("sales", inMemoryDatabase);
+
 		System.out.println("Done loading data");
 	}
 

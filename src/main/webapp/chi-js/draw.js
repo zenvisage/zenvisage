@@ -7,6 +7,21 @@ var lastDrawValue = null;
 
 function getSketchpadDygraphObject( data, valueRange, xRange = null )
 {
+
+/*
+  var dateData = [];
+  if (getSelectedXAxis() == "data")
+  {
+    for (var i = 0; i < data.length; i++ ) {
+      dateData.push( [ new Date(data[i][0]), Number(data[i][1]) ] );
+    }
+  }
+  else
+  {
+    dateData = data;
+  }
+*/
+
   return new Dygraph(document.getElementById("draw-div"), data,
     {
       valueRange: valueRange,
