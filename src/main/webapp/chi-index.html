@@ -128,6 +128,16 @@
                     <input ng-model="representative" id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
                   </form>
                 </div>
+
+                <div>
+                  <div class="info-text"><b>Input equation</b></div>
+                  <div class="input-group">
+                    <input ng-model="equation" type="text" class="form-control">
+                    <div class="input-group-btn">
+                      <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
+                    </div>
+                  </div>
+                </div>
                 <!--
                 <div class="info-text"><b>Number of Segments</b></div>
                   <div>
@@ -147,7 +157,7 @@
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
                   <div>
-                    <input ng-model="numResults" class="num-results" type="text" id="num-reslts" name="number-of-results" value="50">
+                    <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
                   </div>
                 </div>
 
@@ -215,7 +225,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="chi-js/bootstrap-filestyle.min.js"> </script>
+    <script src="assets/js/bootstrap-filestyle.min.js"> </script>
+    <script src="assets/js/math.min.js"> </script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>

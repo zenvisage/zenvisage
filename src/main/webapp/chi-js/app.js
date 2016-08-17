@@ -1,25 +1,5 @@
-
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo; //remove after fixing sketchpad controller
-/*
-sketchpad should be a controller
-app.factory('sketchpadState', function() {
-
-  var isDrawing = false;
-  var lastDrawRow = null;
-  var lastDrawValue = null;
-  var sketchpadService = {};
-
-  sketchpadService.setLastDrawRow = function( item ) {
-      items.push(item);
-  };
-  sketchpadService.setLastDrawRow = function( item ) {
-      items.push(item);
-  };
-
-  return sketchpadService;
-});
-*/
 
 app.factory('datasetInfo', function() {
   var categoryData;
@@ -77,6 +57,7 @@ app.controller('options-controller', [
     $scope.numResults = 50;
     $scope.considerRange = true;
     $scope.showScatterplot = false;
+    $scope.equation= '';
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -107,6 +88,10 @@ app.controller('options-controller', [
         $scope.callgetRepresentativeTrends();
       }
     });
+
+    $scope.drawFunction = function() {
+      console.log($scope.equation);
+    }
 
     $scope.callGetUserQueryResults = function() {
       $rootScope.$emit("callGetUserQueryResults", {});
