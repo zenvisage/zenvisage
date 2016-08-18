@@ -57,7 +57,7 @@ app.controller('options-controller', [
     $scope.numResults = 50;
     $scope.considerRange = true;
     $scope.showScatterplot = false;
-    $scope.equation= '';
+    $scope.equation =  '';
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -90,7 +90,36 @@ app.controller('options-controller', [
     });
 
     $scope.drawFunction = function() {
-      console.log($scope.equation);
+      var xval = [];
+      var plotData = [];
+      for (i = 0; i < sketchpad.rawData_.length; i++) {
+        xval.push( sketchpad.rawData_[i][0] )
+      }
+      var scope = {
+        x: xval,
+      };
+      var eq = $scope.equation.replace("^", ".^");
+      var y = math.eval( eq, scope )
+      if( eq.includes("x") )
+      {
+
+        for (i = 0; i < xval.length; i++) {
+          plotData.push( [ xval[i], y[i] ] )
+        }
+      }
+      else
+      {
+        for (i = 0; i < xval.length; i++) {
+          plotData.push( [ xval[i], y ] )
+        }
+      }
+      sketchpad.updateOptions(
+        {
+          'file': plotData,
+           valueRange: [null, null],
+        }
+      );
+      angular.element($("#sidebar")).scope().getUserQueryResults();
     }
 
     $scope.callGetUserQueryResults = function() {

@@ -44,11 +44,11 @@ function getSketchpadDygraphObject( data, valueRange, xRange = null )
             event.cancelBubble = true;
           }
           isDrawing = true;
-          setPoint(event, g, context, data, valueRange);
+          setPoint(event, g, context);
         },
         mousemove: function (event, g, context) {
           if (!isDrawing) return;
-          setPoint(event, g, context, data, valueRange);
+          setPoint(event, g, context);
         },
         mouseup: function(event, g, context) {
           finishDraw(event, g, context);
@@ -139,7 +139,6 @@ function plotSketchpad( dygraphObject )
   }
 
   var valueRange = dygraphObject.axes_[0]["valueRange"]
-  //var xRange = sketchpad.xAxisRange()
   var xRange = dygraphObject.xAxisRange()
   if (sketchpad != null) {
     sketchpad.destroy()
@@ -173,7 +172,7 @@ function finishDraw(event, g, context) {
   angular.element($("#sidebar")).scope().getUserQueryResults();
 }
 
-function setPoint(event, g, context, data, valueRange) {
+function setPoint(event, g, context) {
   var graphPos = Dygraph.findPos(g.graphDiv);
   var canvasx = Dygraph.pageX(event) - graphPos.x;
   var canvasy = Dygraph.pageY(event) - graphPos.y;
@@ -182,6 +181,8 @@ function setPoint(event, g, context, data, valueRange) {
   var rows = g.numRows();
   var closest_row = -1;
   var smallest_diff = -1;
+  var data = sketchpad.rawData_;
+  var valueRange = sketchpad.axes_[0]["extremeRange"]
 
   for (var row = 0; row < rows; row++) {
     var date = g.getValue(row, 0);  // millis
