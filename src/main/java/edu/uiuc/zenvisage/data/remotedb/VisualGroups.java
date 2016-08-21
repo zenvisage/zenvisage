@@ -1,18 +1,18 @@
 package edu.uiuc.zenvisage.data.remotedb;		
 import java.util.ArrayList;;		
 public class VisualGroups {		
-	private ArrayList<String> zValues;		
-	private ArrayList<VisualGroup> visualGroups;		
-	public ArrayList<String> getzValues() {		
+	private ArrayList<?> zValues;		
+	private Points points;		
+	public ArrayList<?> getzValues() {		
 		return zValues;		
 	}		
-	public void setzValues(ArrayList<String> zValues) {		
+	public void setzValues(ArrayList<?> zValues) {		
 		this.zValues = zValues;		
 	}		
-	public ArrayList<VisualGroup> getVisualGroups() {		
-		return visualGroups;		
+	public Points getVisualGroups() {		
+		return points;		
 	}		
-	public void setVisualGroups(ArrayList<VisualGroup> visualGroups) {		
-		this.visualGroups = visualGroups;		
+	public void setVisualGroups(Points points) {		
+		this.points = points;
 	}		
 }

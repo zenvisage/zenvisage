@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * PostgreSQL database connection portal for my local machine
@@ -21,6 +22,7 @@ public class SQLQueryExecutor {
 	private String username = "postgres";
 	private String password = "";
 	Connection c = null;
+	private VisualGroups visualgroup = null;
 	
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -78,11 +80,32 @@ public class SQLQueryExecutor {
 		
 		ResultSet rs = st.executeQuery(sql);
 		System.out.println("Running ZQL Query ...");
+		
+		ArrayList <?> xList = null;
+		ArrayList <?> yList = null;
+		ArrayList <?> zValues = null;
+		if(rs.next()){
+			if (rs.getString(1).matches("[0-9]+")){
+				xList = new ArrayList<Integer>();
+				xList.add(Integer.parseInt(rs.getString(1)));
+			} else {
+				yList = new ArrayList<String>();
+				yList.add(rs.getString(1));
+			}	
+		}
+		
 		while (rs.next())
 		{
-		   System.out.print("Column 1 returned ");
-		   System.out.println(rs.getString(1));
-		} rs.close();
+		 
+			rs.getString(1);
+			rs.getString(2);
+			rs.getString(3);
+		} 
+		
+		
+
+		this.visualgroup.setVisualGroups(new Points(xList, yList));
+		rs.close();
 		st.close();
 	
 	}
@@ -105,5 +128,13 @@ public class SQLQueryExecutor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public VisualGroups getVisualgroup() {
+		return visualgroup;
+	}
+
+	public void setVisualgroup(VisualGroups visualgroup) {
+		this.visualgroup = visualgroup;
 	}
 }

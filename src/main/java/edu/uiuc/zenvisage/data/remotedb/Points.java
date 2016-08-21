@@ -2,9 +2,12 @@ package edu.uiuc.zenvisage.data.remotedb;
  		
 import java.util.ArrayList;		
  		
-public class VisualGroup {		
+public class Points {		
 	private ArrayList <?> X;		
-	private ArrayList <?> Y;		
+	private ArrayList <?> Y;
+	public Points (ArrayList <?> X, ArrayList <?> Y){
+		this.X = X; this.Y = Y;
+	}
 	public ArrayList <?> getX() {		
 		return X;		
 	}		
