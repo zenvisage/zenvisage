@@ -1,12 +1,12 @@
 package edu.uiuc.zenvisage.data.remotedb;		
 import java.util.ArrayList;;		
 public class VisualGroups {		
-	private ArrayList<?> zValues;		
+	private ArrayList<WrapperType> zValues;		
 	private Points points;		
-	public ArrayList<?> getzValues() {		
+	public ArrayList<WrapperType> getzValues() {		
 		return zValues;		
 	}		
-	public void setzValues(ArrayList<?> zValues) {		
+	public void setzValues(ArrayList<WrapperType> zValues) {		
 		this.zValues = zValues;		
 	}		
 	public Points getVisualGroups() {		

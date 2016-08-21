@@ -65,6 +65,7 @@ public class SQLQueryExecutor {
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;	
+		
 		if (whereCondition == null) {
 			sql = "SELECT " + Z + "," + X + " ," + "avg(" + Y + ")"
 					+ " FROM " + table
@@ -81,28 +82,75 @@ public class SQLQueryExecutor {
 		ResultSet rs = st.executeQuery(sql);
 		System.out.println("Running ZQL Query ...");
 		
-		ArrayList <?> xList = null;
-		ArrayList <?> yList = null;
-		ArrayList <?> zValues = null;
+		ArrayList <WrapperType> zValues = null;
+		ArrayList <WrapperType> xList = null;
+		ArrayList <WrapperType> yList = null;
+		boolean zValuesInt = true;
+		boolean xListInt = true;
+		boolean yListInt = true;
+		
 		if(rs.next()){
-			if (rs.getString(1).matches("[0-9]+")){
-				xList = new ArrayList<Integer>();
-				xList.add(Integer.parseInt(rs.getString(1)));
+			String retString1 = rs.getString(1);
+			if (retString1.matches("[0-9]+")){
+				zValues = new ArrayList<WrapperType>();
+				zValues.add(new WrapperType(Integer.parseInt(retString1)));
 			} else {
-				yList = new ArrayList<String>();
-				yList.add(rs.getString(1));
-			}	
+				zValuesInt = false;
+				zValues = new ArrayList<WrapperType>();
+				zValues.add(new WrapperType(retString1));
+			}
+			
+			String retString2 = rs.getString(2);
+			if (retString1.matches("[0-9]+")){
+				xList = new ArrayList<WrapperType>();
+				xList.add(new WrapperType(Integer.parseInt(retString2)));
+			} else {
+				xListInt = false;
+				xList = new ArrayList<WrapperType>();
+				xList.add(new WrapperType(retString2));
+			}
+			
+			String retString3 = rs.getString(3);
+			if (retString1.matches("[0-9]+")){
+				yList = new ArrayList<WrapperType>();
+				yList.add(new WrapperType(Integer.parseInt(retString3)));
+			} else {
+				yListInt = false;
+				yList = new ArrayList<WrapperType>();
+				yList.add(new WrapperType(retString3));
+			}
 		}
 		
 		while (rs.next())
 		{
-		 
-			rs.getString(1);
-			rs.getString(2);
-			rs.getString(3);
-		} 
+			String retString1 = rs.getString(1);
+			if (zValuesInt){
+				zValues.add(new WrapperType(Integer.parseInt(retString1)));
+			} else {
+				zValues.add(new WrapperType(retString1));
+			}
+			
+			String retString2 = rs.getString(2);
+			if (xListInt){
+				xList = new ArrayList<WrapperType>();
+				xList.add(new WrapperType(Integer.parseInt(retString2)));
+			} else {
+				xList = new ArrayList<WrapperType>();
+				xList.add(new WrapperType(retString2));
+			}
+			
+			String retString3 = rs.getString(3);
+			if (yListInt){
+				yList = new ArrayList<WrapperType>();
+				yList.add(new WrapperType(Integer.parseInt(retString3)));
+			} else {
+				yList = new ArrayList<WrapperType>();
+				yList.add(new WrapperType(retString3));
+			}
+		}
 		
-		
+		visualgroup.setVisualGroups(new Points(xList, yList));
+		visualgroup.setzValues(zValues);
 
 		this.visualgroup.setVisualGroups(new Points(xList, yList));
 		rs.close();
