@@ -97,7 +97,8 @@ public class SQLQueryExecutor {
 		}
 		this.visualgroup.setVisualGroups(new Points(xList, yList));
 		this.visualgroup.setzValues(zValues);
-		System.out.println("Printing Visual Groups:\n" + visualgroup.toString());
+		/* Testing below */
+        // System.out.println("Printing Visual Groups:\n" + visualgroup.toString());
 		rs.close();
 		st.close();
 	}

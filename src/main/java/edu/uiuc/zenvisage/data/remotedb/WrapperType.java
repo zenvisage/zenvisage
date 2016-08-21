@@ -3,14 +3,14 @@ package edu.uiuc.zenvisage.data.remotedb;
 public class WrapperType {
 	private Integer intValue = null; 
 	private String strValue = null; 
-	private Double doubleValue  = null; 
+	private Float floatValue  = null; 
 	
 	
 	public WrapperType(String input){
 		if (input.matches("^\\d+$")){
 			this.intValue = Integer.parseInt(input);
 		} else if (input.matches("[+-]([0-9]*[.])?[0-9]+")){
-			this.doubleValue = Double.parseDouble(input);
+			this.floatValue = Float.parseFloat(input);
 		} else {
 			this.strValue = input;
 		}
@@ -28,11 +28,11 @@ public class WrapperType {
 	public void setIntValue(Integer intValue) {
 		this.intValue = intValue;
 	}
-	public Double getDoubleValue() {
-		return doubleValue;
+	public Float getfloatValue() {
+		return floatValue;
 	}
-	public void setDoubleValue(Double doubleValue) {
-		this.doubleValue = doubleValue;
+	public void setfloatValue(Float floatValue) {
+		this.floatValue = floatValue;
 	}
 	public String toString(){
 		if(intValue != null){
@@ -41,8 +41,8 @@ public class WrapperType {
 		if(strValue != null){
 			return strValue.toString();
 		}
-		if(doubleValue != null){
-			return doubleValue.toString();
+		if(floatValue != null){
+			return floatValue.toString();
 		}
 		return null;
 	}
