@@ -22,7 +22,7 @@ public class SQLQueryExecutor {
 	private String username = "postgres";
 	private String password = "";
 	Connection c = null;
-	private VisualGroups visualgroup = null;
+	private VisualGroups visualgroup = new VisualGroups();
 	
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -85,77 +85,21 @@ public class SQLQueryExecutor {
 		ArrayList <WrapperType> zValues = null;
 		ArrayList <WrapperType> xList = null;
 		ArrayList <WrapperType> yList = null;
-		boolean zValuesInt = true;
-		boolean xListInt = true;
-		boolean yListInt = true;
-		
-		if(rs.next()){
-			String retString1 = rs.getString(1);
-			if (retString1.matches("[0-9]+")){
-				zValues = new ArrayList<WrapperType>();
-				zValues.add(new WrapperType(Integer.parseInt(retString1)));
-			} else {
-				zValuesInt = false;
-				zValues = new ArrayList<WrapperType>();
-				zValues.add(new WrapperType(retString1));
-			}
-			
-			String retString2 = rs.getString(2);
-			if (retString1.matches("[0-9]+")){
-				xList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(Integer.parseInt(retString2)));
-			} else {
-				xListInt = false;
-				xList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(retString2));
-			}
-			
-			String retString3 = rs.getString(3);
-			if (retString1.matches("[0-9]+")){
-				yList = new ArrayList<WrapperType>();
-				yList.add(new WrapperType(Integer.parseInt(retString3)));
-			} else {
-				yListInt = false;
-				yList = new ArrayList<WrapperType>();
-				yList.add(new WrapperType(retString3));
-			}
-		}
+		zValues = new ArrayList<WrapperType>();
+		xList = new ArrayList<WrapperType>();
+		yList = new ArrayList<WrapperType>();
 		
 		while (rs.next())
 		{
-			String retString1 = rs.getString(1);
-			if (zValuesInt){
-				zValues.add(new WrapperType(Integer.parseInt(retString1)));
-			} else {
-				zValues.add(new WrapperType(retString1));
-			}
-			
-			String retString2 = rs.getString(2);
-			if (xListInt){
-				xList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(Integer.parseInt(retString2)));
-			} else {
-				xList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(retString2));
-			}
-			
-			String retString3 = rs.getString(3);
-			if (yListInt){
-				yList = new ArrayList<WrapperType>();
-				yList.add(new WrapperType(Integer.parseInt(retString3)));
-			} else {
-				yList = new ArrayList<WrapperType>();
-				yList.add(new WrapperType(retString3));
-			}
+			zValues.add(new WrapperType(rs.getString(1)));
+			xList.add(new WrapperType(rs.getString(2)));
+			yList.add(new WrapperType(rs.getString(3)));
 		}
-		
-		visualgroup.setVisualGroups(new Points(xList, yList));
-		visualgroup.setzValues(zValues);
-
 		this.visualgroup.setVisualGroups(new Points(xList, yList));
+		this.visualgroup.setzValues(zValues);
+		System.out.println("Printing Visual Groups:\n" + visualgroup.toString());
 		rs.close();
 		st.close();
-	
 	}
 	
 	public static void main(String[] args){

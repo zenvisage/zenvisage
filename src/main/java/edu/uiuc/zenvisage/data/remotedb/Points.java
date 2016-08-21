@@ -3,21 +3,21 @@ package edu.uiuc.zenvisage.data.remotedb;
 import java.util.ArrayList;		
  		
 public class Points {		
-	private ArrayList <WrapperType> X;		
-	private ArrayList <WrapperType> Y;
-	public Points (ArrayList <WrapperType> X, ArrayList <WrapperType> Y){
-		this.X = X; this.Y = Y;
+	private ArrayList <WrapperType> xList;		
+	private ArrayList <WrapperType> yList;
+	public Points (ArrayList <WrapperType> xList, ArrayList <WrapperType> yList){
+		this.xList = xList; this.yList = yList;
 	}
 	public ArrayList <WrapperType> getX() {		
-		return X;		
+		return xList;		
 	}		
 	public void setX(ArrayList <WrapperType> x) {		
-		X = x;		
+		this.xList = x;		
 	}		
 	public ArrayList <WrapperType> getY() {		
- 		return Y;		
+ 		return yList;		
  	}		
  	public void setY(ArrayList <WrapperType> y) {		
- 		Y = y;		
+ 		this.yList = y;		
  	}		
  }
