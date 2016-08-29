@@ -22,7 +22,7 @@ public class SQLQueryExecutor {
 	private String username = "postgres";
 	private String password = "";
 	Connection c = null;
-	private VisualGroups visualgroup = new VisualGroups();
+	private VisualComponentList visualComponentList;
 	
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -82,23 +82,36 @@ public class SQLQueryExecutor {
 		ResultSet rs = st.executeQuery(sql);
 		System.out.println("Running ZQL Query ...");
 		
-		ArrayList <WrapperType> zValues = null;
+		this.visualComponentList = new VisualComponentList();
+		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
+		
+		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
 		ArrayList <WrapperType> yList = null;
-		zValues = new ArrayList<WrapperType>();
-		xList = new ArrayList<WrapperType>();
-		yList = new ArrayList<WrapperType>();
+		VisualComponent tempVisualComponent = null;
 		
 		while (rs.next())
 		{
-			zValues.add(new WrapperType(rs.getString(1)));
-			xList.add(new WrapperType(rs.getString(2)));
-			yList.add(new WrapperType(rs.getString(3)));
+			
+			WrapperType tempZValue = new WrapperType(rs.getString(1));
+
+			if(tempZValue.equals(zValue)){
+				xList.add(new WrapperType(rs.getString(2)));
+				yList.add(new WrapperType(rs.getString(3)));
+			} else {
+				zValue = tempZValue;
+				xList = new ArrayList<WrapperType>();
+				yList = new ArrayList<WrapperType>();
+				xList.add(new WrapperType(rs.getString(2)));
+				yList.add(new WrapperType(rs.getString(3)));
+				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
+				this.visualComponentList.addVisualComponent(tempVisualComponent);
+			}
+
 		}
-		this.visualgroup.setVisualGroups(new Points(xList, yList));
-		this.visualgroup.setzValues(zValues);
+
 		/* Testing below */
-        System.out.println("Printing Visual Groups:\n" + visualgroup.toString());
+        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 		rs.close();
 		st.close();
 	}
@@ -123,11 +136,11 @@ public class SQLQueryExecutor {
 		}
 	}
 
-	public VisualGroups getVisualgroup() {
-		return visualgroup;
+	public VisualComponentList getVisualComponentList() {
+		return visualComponentList;
 	}
 
-	public void setVisualgroup(VisualGroups visualgroup) {
-		this.visualgroup = visualgroup;
+	public void setVisualComponentList(VisualComponentList visualComponentList) {
+		this.visualComponentList = visualComponentList;
 	}
 }
