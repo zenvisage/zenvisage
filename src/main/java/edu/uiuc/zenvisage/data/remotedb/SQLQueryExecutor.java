@@ -22,7 +22,7 @@ public class SQLQueryExecutor {
 	private String username = "postgres";
 	private String password = "";
 	Connection c = null;
-	private VisualGroups visualgroup = new VisualGroups();
+	private VisualComponentList visualComponentList;
 	
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -95,10 +95,10 @@ public class SQLQueryExecutor {
 			xList.add(new WrapperType(rs.getString(2)));
 			yList.add(new WrapperType(rs.getString(3)));
 		}
-		this.visualgroup.setVisualGroups(new Points(xList, yList));
-		this.visualgroup.setzValues(zValues);
-		/* Testing below */
-        System.out.println("Printing Visual Groups:\n" + visualgroup.toString());
+//		this.visualComponentList.setVisualGroups(new Points(xList, yList));
+//		this.visualComponentList.setzValues(zValues);
+//		/* Testing below */
+//        System.out.println("Printing Visual Groups:\n" + visualgroup.toString());
 		rs.close();
 		st.close();
 	}
