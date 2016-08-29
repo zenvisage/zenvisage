@@ -16,6 +16,12 @@ public class WrapperType {
 	}
 	
 	public boolean equals(WrapperType input) {
+		
+		if(input == null && this.intValue == null && this.strValue == null && this.floatValue == null) {
+			return true;
+		}
+		if(input == null) return false;
+		
 		if(input.intValue != null && this.intValue != null && input.intValue == this.intValue) return true;
 		if(input.floatValue != null && this.floatValue != null && input.floatValue == this.floatValue) return true;
 		if(input.strValue != null && this.strValue != null && input.strValue.equals(this.strValue)) return true;
