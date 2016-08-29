@@ -20,4 +20,9 @@ public class VisualComponentList {
 		this.visualComponentList.add(input);
 	}
 	
+	public String toString(){
+		for(VisualComponent i : this.visualComponentList){
+			
+		}
+	}
 }

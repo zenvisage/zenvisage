@@ -28,23 +28,21 @@ public class VisualComponent {
 	}
 	
 	public String toString(){
-		String ret = "";
-
-	    ret += zValue.toString() + " ";  
-	    ret += "\n";
+		
+		StringBuilder ret = new StringBuilder();
+	    ret.append(zValue.toString()+"/n");  
 	    
-	    for(WrapperType x: points.getX()){
-	    	ret += x.toString() + " ";
-	    }
-	    ret += "\n";
-	    for(WrapperType y: points.getY()){
-	    	ret += y.toString() + " ";
-	    }
-	    ret += "\n";
-
-		return ret;
+	    for(WrapperType x: points.getX())
+	    	ret.append(x.toString() + " ");
+	    ret.append("/n");
+	    
+	    for(WrapperType y: points.getY())
+	    	ret.append(y.toString() + " ");
+	    ret.append("/n");
+	    
+		return ret.toString();
+		
 	}
-	
 	
 	
 }
