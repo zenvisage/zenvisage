@@ -3,13 +3,21 @@ package edu.uiuc.zenvisage.data.remotedb;
 import java.util.ArrayList;
 
 public class VisualComponentList {
-	private ArrayList<VisualComponent> visualComponent;
+	
+	private ArrayList<VisualComponent> visualComponentList;
 
-	public ArrayList<VisualComponent> getVisualComponent() {
-		return visualComponent;
+	public VisualComponentList(){}
+	
+	public ArrayList<VisualComponent> getVisualComponentList() {
+		return visualComponentList;
 	}
 
-	public void setVisualComponent(ArrayList<VisualComponent> visualComponent) {
-		this.visualComponent = visualComponent;
+	public void setVisualComponentList(ArrayList<VisualComponent> visualComponentList) {
+		this.visualComponentList = visualComponentList;
 	}
+	
+	public void addVisualComponent(VisualComponent input){
+		this.visualComponentList.add(input);
+	}
+	
 }

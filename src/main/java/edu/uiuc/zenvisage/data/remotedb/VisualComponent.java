@@ -6,7 +6,10 @@ public class VisualComponent {
 	private Points points;
 	
 	/*Empty Constructor*/
-	public VisualComponent(){};
+	public VisualComponent(WrapperType zValue, Points points){
+		this.zValue = zValue;
+		this.points = points;
+	};
 	
 	public WrapperType getZValue() {		
 		return zValue;		
