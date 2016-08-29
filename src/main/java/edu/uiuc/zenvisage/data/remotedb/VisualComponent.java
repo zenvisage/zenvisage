@@ -43,6 +43,5 @@ public class VisualComponent {
 		return ret.toString();
 		
 	}
-	
-	
+		
 }

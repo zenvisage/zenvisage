@@ -21,8 +21,10 @@ public class VisualComponentList {
 	}
 	
 	public String toString(){
+		StringBuilder ret = new StringBuilder();
 		for(VisualComponent i : this.visualComponentList){
-			
+			ret.append(i.toString());
 		}
+		return ret.toString();
 	}
 }
