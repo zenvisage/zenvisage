@@ -109,7 +109,6 @@ public class SQLQueryExecutor {
 			}
 
 		}
-		
 
 		/* Testing below */
         System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
