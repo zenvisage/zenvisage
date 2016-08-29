@@ -30,15 +30,15 @@ public class VisualComponent {
 	public String toString(){
 		
 		StringBuilder ret = new StringBuilder();
-	    ret.append(zValue.toString()+"/n");  
+	    ret.append(zValue.toString()+"\n");  
 	    
 	    for(WrapperType x: points.getX())
 	    	ret.append(x.toString() + " ");
-	    ret.append("/n");
+	    ret.append("\n");
 	    
 	    for(WrapperType y: points.getY())
 	    	ret.append(y.toString() + " ");
-	    ret.append("/n");
+	    ret.append("\n");
 	    
 		return ret.toString();
 		
