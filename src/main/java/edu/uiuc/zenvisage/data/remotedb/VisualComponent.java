@@ -19,11 +19,11 @@ public class VisualComponent {
 		this.zValue = zValues;		
 	}
 	
-	public Points getVisualGroups() {		
+	public Points getPoints() {		
 		return points;		
 	}
 	
-	public void setVisualGroups(Points points) {		
+	public void setPoints(Points points) {		
 		this.points = points;
 	}
 	
@@ -32,11 +32,11 @@ public class VisualComponent {
 		StringBuilder ret = new StringBuilder();
 	    ret.append(zValue.toString()+"\n");  
 	    
-	    for(WrapperType x: points.getX())
+	    for(WrapperType x: points.getXList())
 	    	ret.append(x.toString() + " ");
 	    ret.append("\n");
 	    
-	    for(WrapperType y: points.getY())
+	    for(WrapperType y: points.getYList())
 	    	ret.append(y.toString() + " ");
 	    ret.append("\n");
 	    

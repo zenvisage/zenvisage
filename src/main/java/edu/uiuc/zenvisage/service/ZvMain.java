@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import edu.uiuc.zenvisage.data.Query;
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.data.roaringdb.executor.ExecutorResult;
@@ -230,9 +231,17 @@ public class ZvMain {
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
-		 ExecutorResult executorResult = executor.getData(q);
-		 if (executorResult == null) return "";
-		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+		 /*
+		  * Instead of calling roaring db, we feed in VC output from postgres
+		  * ExecutorResult executorResult = executor.getData(q);
+		  * if (executorResult == null) return "";
+		  * LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+		  */
+		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+		 
+		 
 
 		 // setup result format
 		 Result finalOutput = new Result();
@@ -240,7 +249,12 @@ public class ZvMain {
 		 //finalOutput.xUnit = inMemoryDatabase.getColumnMetaData(args.xAxis).unit;
 		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
 		 // generate new result for query
-		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+		 /*
+		  * We don't have xMap now since we use posgres
+		  * ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+		  */
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, null);
+		 
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
