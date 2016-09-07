@@ -8,16 +8,16 @@ public class Points {
 	public Points (ArrayList <WrapperType> xList, ArrayList <WrapperType> yList){
 		this.xList = xList; this.yList = yList;
 	}
-	public ArrayList <WrapperType> getX() {		
+	public ArrayList <WrapperType> getXList() {		
 		return xList;		
 	}		
-	public void setX(ArrayList <WrapperType> x) {		
+	public void setXList(ArrayList <WrapperType> x) {		
 		this.xList = x;		
 	}		
-	public ArrayList <WrapperType> getY() {		
+	public ArrayList <WrapperType> getYList() {		
  		return yList;		
  	}		
- 	public void setY(ArrayList <WrapperType> y) {		
+ 	public void setYList(ArrayList <WrapperType> y) {		
  		this.yList = y;		
  	}		
  }
