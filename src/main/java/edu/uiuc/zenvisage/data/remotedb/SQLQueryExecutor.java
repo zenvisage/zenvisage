@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
+
+
 /**
  * PostgreSQL database connection portal for my local machine
  * need to change to in general
@@ -77,6 +80,62 @@ public class SQLQueryExecutor {
 			+ " WHERE " + whereCondition
 			+ " GROUP BY " + Z + ", "+ X
 			+ " ORDER BY " + Z + ", "+ X;
+		}
+		
+		ResultSet rs = st.executeQuery(sql);
+		System.out.println("Running ZQL Query ...");
+		
+		this.visualComponentList = new VisualComponentList();
+		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
+		
+		WrapperType zValue = null;
+		ArrayList <WrapperType> xList = null;
+		ArrayList <WrapperType> yList = null;
+		VisualComponent tempVisualComponent = null;
+		
+		while (rs.next())
+		{
+			
+			WrapperType tempZValue = new WrapperType(rs.getString(1));
+
+			if(tempZValue.equals(zValue)){
+				xList.add(new WrapperType(rs.getString(2)));
+				yList.add(new WrapperType(rs.getString(3)));
+			} else {
+				zValue = tempZValue;
+				xList = new ArrayList<WrapperType>();
+				yList = new ArrayList<WrapperType>();
+				xList.add(new WrapperType(rs.getString(2)));
+				yList.add(new WrapperType(rs.getString(3)));
+				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
+				this.visualComponentList.addVisualComponent(tempVisualComponent);
+			}
+
+		}
+
+		/* Testing below */
+        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
+		rs.close();
+		st.close();
+	}
+	
+	public void ZQLQueryEnhanced(ZQLRow zqlRow) throws SQLException{
+		Statement st = c.createStatement();
+		String sql = null;	
+		
+		
+		//zqlRow.getConstraint() has replaced the whereCondiditon
+		if (zqlRow.getConstraint() == null) {
+			sql = "SELECT " + zqlRow.getZ() + "," + zqlRow.getX() + " ," + "avg(" + zqlRow.getY() + ")" //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + zqlRow.getName()
+					+ " GROUP BY " + zqlRow.getZ() + ", "+ zqlRow.getX()
+					+ " ORDER BY " + zqlRow.getZ() + ", "+ zqlRow.getX();
+		} else {
+			sql = "SELECT " + zqlRow.getZ() + "," + zqlRow.getX()
+			+ " FROM " + zqlRow.getName()
+			+ " WHERE " + zqlRow.getConstraint() //zqlRow.getConstraint() has replaced the whereCondiditon
+			+ " GROUP BY " + zqlRow.getZ() + ", "+ zqlRow.getX()
+			+ " ORDER BY " + zqlRow.getZ() + ", "+ zqlRow.getX();
 		}
 		
 		ResultSet rs = st.executeQuery(sql);

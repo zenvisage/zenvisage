@@ -6,7 +6,7 @@ import java.util.List;
 public class ZColumn {
 	
 	private String variable;
-	private String column;
+	private String column; //put z here
 	private List<String> values;
 	private String expression;
 	

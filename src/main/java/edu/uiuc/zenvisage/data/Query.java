@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
+
 
 public class Query {
   
@@ -31,6 +33,10 @@ public class Query {
 	}
 	public String getAggregationFunc() {
 		return aggregationFunc;
+	}
+	
+	public ZQLRow toZQLRow(){
+		return new ZQLRow();
 	}
   	
   public static class Filter{
