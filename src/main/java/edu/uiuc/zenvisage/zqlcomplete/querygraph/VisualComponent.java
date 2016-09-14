@@ -1,7 +1,14 @@
-package edu.uiuc.zenvisage.zqlcomplete.executor;
+package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
+import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 
 public class VisualComponent {
 	private Name name;

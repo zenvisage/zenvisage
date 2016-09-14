@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.zqlcomplete.executor;
+package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 
 /**
