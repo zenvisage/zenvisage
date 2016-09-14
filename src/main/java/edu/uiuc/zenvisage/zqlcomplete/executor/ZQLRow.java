@@ -44,6 +44,14 @@ public class ZQLRow {
 		sketchPoints = source.sketchPoints;
 		
 	}
+	public ZQLRow(Name name, XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz){
+		this.name = name;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.constraints = constraints;
+		this.viz = viz;
+	}
 	
 	/**
 	 * Need implementing using parser parsing expressions
