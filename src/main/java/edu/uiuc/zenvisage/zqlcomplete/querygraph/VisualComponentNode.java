@@ -1,6 +1,6 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
-public class VisualComponentNode extends ExecutableNode{
+public class VisualComponentNode extends QueryNode{
 
 	private VisualComponent vc;
 	// private vc output

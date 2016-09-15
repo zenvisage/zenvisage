@@ -3,9 +3,10 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 /**
  * @author Edward Xue
- * Abstraction of a node that is executable in our query language
+ * Abstraction of a node in our query language
+ * Either this is a "plan" node, or a "state/result" node
  */
-public abstract class ExecutableNode extends Node {
+public abstract class QueryNode extends Node {
 	
 	public enum State {
 		READY, RUNNING, BLOCKED, FINISHED;
@@ -14,7 +15,7 @@ public abstract class ExecutableNode extends Node {
 	protected State state; // "ready" "blocked" "finished"
 	boolean resultNode;
 	
-	public ExecutableNode() {
+	public QueryNode() {
 		super();
 		state = State.READY;
 	}

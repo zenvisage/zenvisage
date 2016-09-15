@@ -9,7 +9,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
  * @author Edward Xue
  * ProcessNodes are nodes that contains the process/task component
  */
-public class ProcessNode extends ExecutableNode {
+public class ProcessNode extends QueryNode {
 
 	private Processe process;
 	private List<Integer> data;
