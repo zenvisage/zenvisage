@@ -29,6 +29,16 @@ public class VisualComponent {
 		viz = new VizColumn();		
 	}
 
+	public VisualComponent(Name name, XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
+		super();
+		this.name = name;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.constraints = constraints;
+		this.viz = viz;
+	}
+
 	public VisualComponent(VisualComponent source) {
 		name = source.getName();
 		x = source.getX();
