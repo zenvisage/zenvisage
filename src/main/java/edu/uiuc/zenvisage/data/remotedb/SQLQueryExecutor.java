@@ -29,7 +29,7 @@ public class SQLQueryExecutor {
 	private String database = "postgres";
 	private String host = "jdbc:postgresql://localhost:5432/"+database;
 	private String username = "postgres";
-	private String password = "zenvisage";
+	private String password = "";
 	Connection c = null;
 	private VisualComponentList visualComponentList;
 	
