@@ -71,11 +71,41 @@ COPY cmu(class, ip, ea, vis, bp, fp, li, mg, al, pf6, lio2, o2m, o2, na, ni2, ni
 FROM '/home/aditya/Desktop/fullcmuwithoutid.csv' DELIMITER ',' CSV HEADER;
 
 
+CREATE TABLE cmutesting
+(
+	class TEXT,
+	al REAL,
+	co2 REAL
+ );
+
+COPY cmutesting(class, al, co2) 
+FROM '/Users/chaoran/Desktop/cmuhaha.csv' DELIMITER ',' CSV HEADER;
+
+COPY cmutesting(class, al, co2) 
+FROM '/home/aditya/Desktop/cmuhaha.csv' DELIMITER ',' CSV HEADER;
+ 
+ CREATE TABLE sales 
+(
+	date TEXT,
+	year INT,
+	day INT,
+	month INT,
+	week INT,
+	product TEXT,
+	color INT,
+	size TEXT,
+	quantity INT,
+	salesprice REAL
+ );
+COPY sales(date, year, day, month, week, product, color, size, quantity, salesprice) 
+FROM '/Users/chaoran/Desktop/sales.csv' DELIMITER ',' CSV HEADER;
+ 
+COPY sales(date, year, day, month, week, product, color, size, quantity, salesprice) 
+FROM '/home/aditya/Desktop/sales.csv' DELIMITER ',' CSV HEADER;
 
 
 
-
-
+scp cmuhaha.csv sales.csv aditya@zenvisage.cs.illinois.edu:~/Desktop
 
 
 
