@@ -64,7 +64,7 @@ public class ZvBasicAPI {
 	 */
 	@RequestMapping(value = "/postRepresentative", method = RequestMethod.POST)
 	@ResponseBody
-	public String postRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+	public String postRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -78,7 +78,7 @@ public class ZvBasicAPI {
 	
 	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody
-	public String postOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+	public String postOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -92,7 +92,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
-	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException {
+	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -107,7 +107,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
-	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException {
+	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
 		System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}

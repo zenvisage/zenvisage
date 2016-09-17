@@ -132,16 +132,16 @@ public class SQLQueryExecutor {
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
 		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
-			sql = "SELECT " + zqlRow.getZ().getVariable() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
+			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
 					+ " FROM " + "real_estate"
-					+ " GROUP BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable()
-					+ " ORDER BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable();
+					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
+					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
 		} else {
-			sql = "SELECT " + zqlRow.getZ().getVariable() + "," + zqlRow.getX().getVariable()
+			sql = "SELECT " + zqlRow.getZ().getColumn()+ "," + zqlRow.getX().getVariable()
 			+ " FROM " + "real_estate"
 			+ " WHERE " + zqlRow.getConstraint() //zqlRow.getConstraint() has replaced the whereCondiditon
-			+ " GROUP BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable()
-			+ " ORDER BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable();
+			+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
+			+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
 		}
 		System.out.println("Running ZQL Query :"+sql);
 		ResultSet rs = st.executeQuery(sql);
