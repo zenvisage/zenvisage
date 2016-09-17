@@ -92,7 +92,7 @@ FROM '/home/aditya/Desktop/cmuhaha.csv' DELIMITER ',' CSV HEADER;
 	month INT,
 	week INT,
 	product TEXT,
-	color INT,
+	color TEXT,
 	size TEXT,
 	quantity INT,
 	salesprice REAL
@@ -103,6 +103,7 @@ FROM '/Users/chaoran/Desktop/sales.csv' DELIMITER ',' CSV HEADER;
 COPY sales(date, year, day, month, week, product, color, size, quantity, salesprice) 
 FROM '/home/aditya/Desktop/sales.csv' DELIMITER ',' CSV HEADER;
 
+ drop table sales;
 
 
 scp cmuhaha.csv sales.csv aditya@zenvisage.cs.illinois.edu:~/Desktop
