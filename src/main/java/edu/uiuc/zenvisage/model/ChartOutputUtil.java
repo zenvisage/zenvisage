@@ -46,7 +46,10 @@ public class ChartOutputUtil {
 			outputLength = output.get(0).length;
 		}
 		
-		Double range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+		Double range = 0.0;
+		if(orderedDistances != null && orderedDistances.size()!= 0){
+			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+		}
 		
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
 			// initialize a new chart
