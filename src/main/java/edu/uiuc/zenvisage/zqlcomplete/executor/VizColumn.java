@@ -8,6 +8,10 @@ public class VizColumn {
 	private List<String> type;
 	private List<String> parameters;
 	
+	public VizColumn(String variable) {
+		this.variable = variable;
+	}
+	
 	public VizColumn() {
 		variable = "";
 		type = new ArrayList<String>();

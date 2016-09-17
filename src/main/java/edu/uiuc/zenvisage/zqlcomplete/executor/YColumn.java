@@ -8,6 +8,9 @@ public class YColumn {
 	private String variable;
 	private List<String> values;
 	
+	public YColumn(String variable){
+		this.variable = variable;
+	}
 	public YColumn() {
 		variable = "";
 		values = new ArrayList<String>();

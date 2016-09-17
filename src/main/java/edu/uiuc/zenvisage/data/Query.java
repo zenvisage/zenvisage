@@ -36,7 +36,7 @@ public class Query {
 	}
 	
 	public ZQLRow toZQLRow(){
-		return new ZQLRow();
+		//return new ZQLRow();
 	}
   	
   public static class Filter{

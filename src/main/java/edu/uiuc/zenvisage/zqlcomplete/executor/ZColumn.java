@@ -13,6 +13,10 @@ public class ZColumn {
 	// after executing expression, implement after set operation is implemented
 	// private List<String> parsedValues;
 	
+	public ZColumn(String variable) {
+		this.variable = variable;
+	}
+	
 	public ZColumn() {
 		variable = "";
 		column = "";

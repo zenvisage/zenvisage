@@ -6,7 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
+import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 
@@ -125,21 +131,21 @@ public class SQLQueryExecutor {
 		
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
-		if (zqlRow.getConstraint() == null) {
-			sql = "SELECT " + zqlRow.getZ() + "," + zqlRow.getX() + " ," + "avg(" + zqlRow.getY() + ")" //zqlRow.getViz() should replace the avg() function
-					+ " FROM " + zqlRow.getName()
-					+ " GROUP BY " + zqlRow.getZ() + ", "+ zqlRow.getX()
-					+ " ORDER BY " + zqlRow.getZ() + ", "+ zqlRow.getX();
+		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
+			sql = "SELECT " + zqlRow.getZ().getVariable() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + "real_estate"
+					+ " GROUP BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable()
+					+ " ORDER BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable();
 		} else {
-			sql = "SELECT " + zqlRow.getZ() + "," + zqlRow.getX()
-			+ " FROM " + zqlRow.getName()
+			sql = "SELECT " + zqlRow.getZ().getVariable() + "," + zqlRow.getX().getVariable()
+			+ " FROM " + "real_estate"
 			+ " WHERE " + zqlRow.getConstraint() //zqlRow.getConstraint() has replaced the whereCondiditon
-			+ " GROUP BY " + zqlRow.getZ() + ", "+ zqlRow.getX()
-			+ " ORDER BY " + zqlRow.getZ() + ", "+ zqlRow.getX();
+			+ " GROUP BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable()
+			+ " ORDER BY " + zqlRow.getZ().getVariable() + ", "+ zqlRow.getX().getVariable();
 		}
-		
+		System.out.println("Running ZQL Query :"+sql);
 		ResultSet rs = st.executeQuery(sql);
-		System.out.println("Running ZQL Query ...");
+		
 		
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
@@ -185,9 +191,12 @@ public class SQLQueryExecutor {
 	                " AGE            INT     NOT NULL, " +
 	                " ADDRESS        CHAR(50), " +
 	                " SALARY         REAL)");
-			sqlQueryExecutor.query("SELECT * FROM COMPANY");
+			//sqlQueryExecutor.query("SELECT * FROM COMPANY");
 			
-			sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
+			//sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
+			List<Constraints> constraints = new ArrayList<Constraints>();
+			ZQLRow zqlRow = new ZQLRow(new XColumn("Quarter"), new YColumn("SoldPrice"), new ZColumn("State"), constraints, new VizColumn("avg"));
+			sqlQueryExecutor.ZQLQueryEnhanced(zqlRow);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
