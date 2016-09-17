@@ -74,6 +74,7 @@ public class ZvMain {
 	public Normalization outputNormalization;
 	public PiecewiseAggregation paa;
 	public ArrayList<List<Double>> data;
+	public String databaseName;
 
 	public ZvMain() throws IOException, InterruptedException{
 		System.out.println("ZVMAIN LOADED");
@@ -235,7 +236,7 @@ public class ZvMain {
 			 setFilter(q, args);
 		 
 		 
-		 ExecutorResult executorResult = executor.getData(q);
+//		 ExecutorResult executorResult = executor.getData(q);
 //		 if (executorResult == null) return "";
 //		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
 		 /*
@@ -246,7 +247,7 @@ public class ZvMain {
 		  */
 		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
-		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow());
+		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 
 		 
@@ -406,7 +407,8 @@ public class ZvMain {
 
 	public String getInterfaceFomData(String query) throws IOException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
-		inMemoryDatabase = inMemoryDatabases.get(fq.getDatabasename());
+		this.databaseName = fq.getDatabasename();
+		inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		executor = new Executor(inMemoryDatabase);
 		
 		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );

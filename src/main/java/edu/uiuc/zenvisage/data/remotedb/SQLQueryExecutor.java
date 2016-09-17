@@ -125,7 +125,7 @@ public class SQLQueryExecutor {
 		st.close();
 	}
 	
-	public void ZQLQueryEnhanced(ZQLRow zqlRow) throws SQLException{
+	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;	
 		
@@ -133,12 +133,12 @@ public class SQLQueryExecutor {
 		//zqlRow.getConstraint() has replaced the whereCondiditon
 		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
 			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
-					+ " FROM " + "real_estate"
+					+ " FROM " + databaseName
 					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
 					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
 		} else {
 			sql = "SELECT " + zqlRow.getZ().getColumn()+ "," + zqlRow.getX().getVariable()
-			+ " FROM " + "real_estate"
+			+ " FROM " + databaseName
 			+ " WHERE " + zqlRow.getConstraint() //zqlRow.getConstraint() has replaced the whereCondiditon
 			+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
 			+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
@@ -176,7 +176,7 @@ public class SQLQueryExecutor {
 		}
 
 		/* Testing below */
-        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
+        //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 		rs.close();
 		st.close();
 	}
@@ -196,7 +196,7 @@ public class SQLQueryExecutor {
 			//sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
 			List<Constraints> constraints = new ArrayList<Constraints>();
 			ZQLRow zqlRow = new ZQLRow(new XColumn("Quarter"), new YColumn("SoldPrice"), new ZColumn("State"), constraints, new VizColumn("avg"));
-			sqlQueryExecutor.ZQLQueryEnhanced(zqlRow);
+			sqlQueryExecutor.ZQLQueryEnhanced(zqlRow, "real_estate");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -211,4 +211,5 @@ public class SQLQueryExecutor {
 	public void setVisualComponentList(VisualComponentList visualComponentList) {
 		this.visualComponentList = visualComponentList;
 	}
+
 }

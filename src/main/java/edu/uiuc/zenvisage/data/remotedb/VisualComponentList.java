@@ -29,7 +29,7 @@ public class VisualComponentList {
 			List<WrapperType> yList = i.getPoints().getYList();
 			LinkedHashMap<Float, Float> map = new LinkedHashMap<Float, Float>();
 			for(int j = 0; j < xList.size(); j++) {
-				map.put(new Float(xList.get(j).getIntValue()), new Float(yList.get(j).getfloatValue()));
+				map.put(xList.get(j).getNumberValue(), yList.get(j).getNumberValue());
 			}
 			output.put(new String(i.getZValue().toString()), map);
 		}
