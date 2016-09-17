@@ -30,6 +30,9 @@ CREATE TABLE real_estate
 COPY real_estate(SoldPricePerSqft, PctForeclosured, PctIncreasing, Metro, County, Turnover, Month, PctDecreasing, ListingPricePerSqft, PctPriceReductions, ForeclosuresRatio, State, PriceToRentRatio, SaleToListRatio, ListingPrice, NumberForRent, SoldPrice, City, Year, Quarter) 
 FROM '/Users/chaoran/Desktop/real_estate.csv' DELIMITER ',' CSV HEADER;
 
+COPY real_estate(SoldPricePerSqft, PctForeclosured, PctIncreasing, Metro, County, Turnover, Month, PctDecreasing, ListingPricePerSqft, PctPriceReductions, ForeclosuresRatio, State, PriceToRentRatio, SaleToListRatio, ListingPrice, NumberForRent, SoldPrice, City, Year, Quarter) 
+FROM '/home/aditya/Desktop/real_estate.csv' DELIMITER ',' CSV HEADER;
+
 
 CREATE TABLE cmu
 (
@@ -63,6 +66,9 @@ CREATE TABLE cmu
  
 COPY cmu(class, ip, ea, vis, bp, fp, li, mg, al, pf6, lio2, o2m, o2, na, ni2, ni3, mn2, mn3, mn4, co, PYR14, FSI, TFSI, co2, h2o) 
 FROM '/Users/chaoran/Desktop/fullcmuwithoutid.csv' DELIMITER ',' CSV HEADER;
+
+COPY cmu(class, ip, ea, vis, bp, fp, li, mg, al, pf6, lio2, o2m, o2, na, ni2, ni3, mn2, mn3, mn4, co, PYR14, FSI, TFSI, co2, h2o) 
+FROM '/home/aditya/Desktop/fullcmuwithoutid.csv' DELIMITER ',' CSV HEADER;
 
 
 
