@@ -29,7 +29,7 @@ public class SQLQueryExecutor {
 	private String database = "postgres";
 	private String host = "jdbc:postgresql://localhost:5432/"+database;
 	private String username = "postgres";
-	private String password = "";
+	private String password = "zenvisage";
 	Connection c = null;
 	private VisualComponentList visualComponentList;
 	
@@ -76,7 +76,7 @@ public class SQLQueryExecutor {
 		String sql = null;	
 		
 		if (whereCondition == null) {
-			sql = "SELECT " + Z + "," + X + " ," + "avg(" + Y + ")"
+			sql = "SELECT " + Z + "," + X + "," + "avg(" + Y + ")"
 					+ " FROM " + table
 					+ " GROUP BY " + Z + ", "+ X
 					+ " ORDER BY " + Z + ", "+ X;
