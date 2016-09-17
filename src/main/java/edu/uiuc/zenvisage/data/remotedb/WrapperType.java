@@ -8,7 +8,7 @@ public class WrapperType {
 	public WrapperType(String input) {
 		if (input.matches("^\\d+$")){
 			this.intValue = Integer.parseInt(input);
-		} else if (input.matches("[+-]([0-9]*[.])?[0-9]+")){
+		} else if (input.matches("\\d+(?:\\.\\d+)?")){
 			this.floatValue = Float.parseFloat(input);
 		} else {
 			this.strValue = input;
@@ -37,7 +37,7 @@ public class WrapperType {
 	}
 	
 	public Integer getIntValue() {
-		return intValue;
+		return this.intValue;
 	}
 	
 	public void setIntValue(Integer intValue) {
@@ -45,7 +45,14 @@ public class WrapperType {
 	}
 	
 	public Float getfloatValue() {
-		return floatValue;
+		if(intValue != null){
+			return new Float(intValue);
+		}
+
+		if(floatValue != null){
+			return floatValue;
+		}
+		return new Float(0.0);
 	}
 	
 	public void setfloatValue(Float floatValue) {

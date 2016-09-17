@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 
@@ -35,8 +39,11 @@ public class Query {
 		return aggregationFunc;
 	}
 	
-	public ZQLRow toZQLRow(){
-		return new ZQLRow();
+	public ZQLRow getZQLRow(){
+		//return new ZQLRow();
+		String zAndX[] = groupBy.split(",");
+		ZQLRow zqlRow = new ZQLRow(new XColumn(zAndX[1]), new YColumn(aggregationVarible), new ZColumn(zAndX[0]), null, new VizColumn(aggregationFunc));
+		return zqlRow;
 	}
   	
   public static class Filter{
@@ -69,7 +76,8 @@ public class Query {
 		return value;
 	}
 	public String toString(){
-		return "";}
+		return "";
+	}
   
   }
   

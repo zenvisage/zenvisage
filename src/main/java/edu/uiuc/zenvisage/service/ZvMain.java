@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import edu.uiuc.zenvisage.data.Query;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
@@ -222,7 +224,7 @@ public class ZvMain {
 //	}
 
 
-	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
+	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 //		System.out.println(query);
 
@@ -234,17 +236,18 @@ public class ZvMain {
 		 
 		 
 		 ExecutorResult executorResult = executor.getData(q);
-		 if (executorResult == null) return "";
-		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+//		 if (executorResult == null) return "";
+//		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
 		 /*
 		  * Instead of calling roaring db, we feed in VC output from postgres
 		  * ExecutorResult executorResult = executor.getData(q);
 		  * if (executorResult == null) return "";
 		  * LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
 		  */
-//		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
-//		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow());
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 
 		 
 
@@ -255,12 +258,12 @@ public class ZvMain {
 		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
 		 // generate new result for query
 		 
-		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+//		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
 		 /*
 		  * We don't have xMap now since we use posgres
 		  * ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
 		  */
-//		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, null);
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, HashBiMap.create());
 		 
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {

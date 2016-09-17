@@ -9,13 +9,13 @@ public class Points {
 		this.xList = xList; this.yList = yList;
 	}
 	public ArrayList <WrapperType> getXList() {		
-		return xList;		
+		return this.xList;		
 	}		
 	public void setXList(ArrayList <WrapperType> x) {		
 		this.xList = x;		
 	}		
 	public ArrayList <WrapperType> getYList() {		
- 		return yList;		
+ 		return this.yList;		
  	}		
  	public void setYList(ArrayList <WrapperType> y) {		
  		this.yList = y;		
