@@ -44,7 +44,7 @@ public class WrapperType {
 		this.intValue = intValue;
 	}
 	
-	public Float getfloatValue() {
+	public Float getNumberValue() {
 		if(intValue != null){
 			return new Float(intValue);
 		}
