@@ -13,7 +13,6 @@ public abstract class QueryNode extends Node {
 	}
 	
 	protected State state; // "ready" "blocked" "finished"
-	boolean resultNode;
 	
 	public QueryNode() {
 		super();

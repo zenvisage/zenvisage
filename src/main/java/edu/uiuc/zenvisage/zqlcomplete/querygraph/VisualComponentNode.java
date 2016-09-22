@@ -1,14 +1,22 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+/**
+ * @author Edward Xue
+ * The visual component node to be executed
+ */
 public class VisualComponentNode extends QueryNode{
 
-	private VisualComponent vc;
+	private VisualComponentQuery vc;
 	// private vc output
-	private boolean resultNode = false;
+	//TODO: build separate result node
+	// call QueryGraphResults
+	// VisualComponentResultNode
+		// should not have the visual componentquery
+	// ProcessResultNode
+		//should have top 5 visualcomponents from list (for now)
 	
-	public VisualComponentNode(VisualComponent vc, boolean resultNode) {
+	public VisualComponentNode(VisualComponentQuery vc, boolean resultNode) {
 		this.vc = vc;
-		this.resultNode = resultNode;
 	}
 	
 	@Override
@@ -16,4 +24,11 @@ public class VisualComponentNode extends QueryNode{
 		this.state = State.RUNNING;
 	}
 
+	public VisualComponentQuery getVc() {
+		return vc;
+	}
+
+	public void setVc(VisualComponentQuery vc) {
+		this.vc = vc;
+	}
 }

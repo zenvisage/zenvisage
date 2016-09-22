@@ -10,7 +10,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 
-public class VisualComponent {
+public class VisualComponentQuery {
 	private Name name;
 	private XColumn x;
 	private YColumn y;
@@ -20,7 +20,7 @@ public class VisualComponent {
 	// is sketchPoints associated with visualComponent?
 	// or vc output?
 	
-	public VisualComponent() {
+	public VisualComponentQuery() {
 		name = new Name();
 		x = new XColumn();
 		y= new YColumn();
@@ -29,7 +29,7 @@ public class VisualComponent {
 		viz = new VizColumn();		
 	}
 
-	public VisualComponent(Name name, XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
+	public VisualComponentQuery(Name name, XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
 		super();
 		this.name = name;
 		this.x = x;
@@ -39,7 +39,7 @@ public class VisualComponent {
 		this.viz = viz;
 	}
 
-	public VisualComponent(VisualComponent source) {
+	public VisualComponentQuery(VisualComponentQuery source) {
 		name = source.getName();
 		x = source.getX();
 		y = source.getY();
