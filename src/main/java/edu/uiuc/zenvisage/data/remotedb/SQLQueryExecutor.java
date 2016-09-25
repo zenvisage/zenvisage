@@ -158,17 +158,17 @@ public class SQLQueryExecutor {
 		while (rs.next())
 		{
 			
-			WrapperType tempZValue = new WrapperType(rs.getString(1));
+			WrapperType tempZValue = new WrapperType(rs.getString(1), getType(zqlRow.getZ().getColumn()) );
 
 			if(tempZValue.equals(zValue)){
-				xList.add(new WrapperType(rs.getString(2)));
-				yList.add(new WrapperType(rs.getString(3)));
+				xList.add(new WrapperType(rs.getString(2), getType(zqlRow.getX().getVariable())));
+				yList.add(new WrapperType(rs.getString(3), getType(zqlRow.getY().getVariable())));
 			} else {
 				zValue = tempZValue;
 				xList = new ArrayList<WrapperType>();
 				yList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(rs.getString(2)));
-				yList.add(new WrapperType(rs.getString(3)));
+				xList.add(new WrapperType(rs.getString(2), getType(zqlRow.getX().getVariable())));
+				yList.add(new WrapperType(rs.getString(3), getType(zqlRow.getY().getVariable())));
 				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
 			}
