@@ -21,6 +21,7 @@ public class SchemeToMetatable {
 			String split2[] = split1[1].split(",");
 			sql.append("('" + tablename + "', '" + split1[0] + "', '" + split2[0] + "'), ");
 		}
+		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
 		return sql.toString();
 	}

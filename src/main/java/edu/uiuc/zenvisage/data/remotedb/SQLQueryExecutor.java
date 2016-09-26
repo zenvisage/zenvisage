@@ -187,7 +187,7 @@ public class SQLQueryExecutor {
 		String databaseName = "zenvisage_metatable";
 		sql = "SELECT " + "type"
 			+ " FROM " + databaseName
-			+ " WHERE " + "table = " + table
+			+ " WHERE " + "tablename = " + table
 			+ " AND attribute = " + variable;
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next())
