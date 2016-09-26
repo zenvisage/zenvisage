@@ -155,20 +155,24 @@ public class SQLQueryExecutor {
 		ArrayList <WrapperType> yList = null;
 		VisualComponent tempVisualComponent = null;
 		
+		String zType = null, xType = null, yType = null;
 		while (rs.next())
 		{
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable(), databaseName);
 			
-			WrapperType tempZValue = new WrapperType(rs.getString(1));
+			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
 			if(tempZValue.equals(zValue)){
-				xList.add(new WrapperType(rs.getString(2)));
-				yList.add(new WrapperType(rs.getString(3)));
+				xList.add(new WrapperType(rs.getString(2), xType));
+				yList.add(new WrapperType(rs.getString(3), yType));
 			} else {
 				zValue = tempZValue;
 				xList = new ArrayList<WrapperType>();
 				yList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(rs.getString(2)));
-				yList.add(new WrapperType(rs.getString(3)));
+				xList.add(new WrapperType(rs.getString(2), xType));
+				yList.add(new WrapperType(rs.getString(3), yType));
 				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
 			}
@@ -180,6 +184,24 @@ public class SQLQueryExecutor {
 		rs.close();
 		st.close();
 	}
+	
+	public String getMetaType(String variable, String table) throws SQLException{
+		Statement st = c.createStatement();
+		String sql = null;	
+		sql = "SELECT " + "type"
+			+ " FROM " + "zenvisage_metatable"
+			+ " WHERE " + "tablename = '" + table
+			+ "' AND attribute = '" + variable + "'";
+		System.out.println(sql);
+		ResultSet rs = st.executeQuery(sql);
+		while (rs.next())
+		{
+			return rs.getString(1);
+		}
+		return null;
+	}
+	
+	
 	
 	public static void main(String[] args){
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();

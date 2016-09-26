@@ -107,8 +107,16 @@ FROM '/home/aditya/Desktop/sales.csv' DELIMITER ',' CSV HEADER;
 
 
 scp cmuhaha.csv sales.csv aditya@zenvisage.cs.illinois.edu:~/Desktop
-
-
-
-
-)
+drop table zenvisage_metatable;
+CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
+ 
+ INSERT INTO zenvisage_metatable
+ (table, attribute, type) 
+ VALUES 
+ ('', '', ''), ('', '', ''), ('', '', ''),
+ ('', '', ''), ('', '', ''), ('', '', ''),
+ ('', '', ''), ('', '', ''), ('', '', ''),
+ ('', '', '');
+ 
+ 
+SELECT type FROM zenvisage_metatable WHERE tablename = 'real_estate' AND attribute = 'Metro';

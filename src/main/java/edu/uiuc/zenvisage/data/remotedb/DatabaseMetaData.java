@@ -39,6 +39,4 @@ public class DatabaseMetaData {
 		this.predicateColumns = predicateColumns;
 	}
 	
-	 
-
 }
