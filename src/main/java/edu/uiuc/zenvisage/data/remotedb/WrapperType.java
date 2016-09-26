@@ -17,11 +17,11 @@ public class WrapperType {
 	
 	public WrapperType(String input, String metaType) {
 		switch(metaType){
-			case "Integer":
+			case "int":
 				this.intValue = Integer.parseInt(input); break;
-			case "String":
+			case "string":
 				this.strValue = input; break;
-			case "Float":
+			case "float":
 				this.floatValue = Float.parseFloat(input); break;
 		}
 	}
