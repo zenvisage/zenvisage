@@ -12,6 +12,12 @@ import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
  */
 public class QueryGraphExecutor {
 
+	/**
+	 * Taking in a queryGraph, execute it from entryNodes down to leaves.
+	 * In the meantime, buildup the resultGraph to go along with it.
+	 * @param queryGraph
+	 * @return What to visualize
+	 */
 	public VisualComponentList execute(QueryGraph queryGraph) {
 		// TODO: design decision: casting and instanceof?
 		ResultGraph resultGraph = new ResultGraph();
