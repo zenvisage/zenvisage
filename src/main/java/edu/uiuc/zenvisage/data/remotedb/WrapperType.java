@@ -15,6 +15,17 @@ public class WrapperType {
 		}
 	}
 	
+	public WrapperType(String input, String metaType) {
+		switch(metaType){
+			case "Integer":
+				this.intValue = Integer.parseInt(input); break;
+			case "String":
+				this.strValue = input; break;
+			case "Float":
+				this.floatValue = Float.parseFloat(input); break;
+		}
+	}
+	
 	public boolean equals(WrapperType input) {
 		
 		if(input == null && this.intValue == null && this.strValue == null && this.floatValue == null) {

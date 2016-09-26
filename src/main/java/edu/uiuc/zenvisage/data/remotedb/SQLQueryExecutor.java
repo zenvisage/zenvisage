@@ -158,17 +158,17 @@ public class SQLQueryExecutor {
 		while (rs.next())
 		{
 			
-			WrapperType tempZValue = new WrapperType(rs.getString(1), getType(zqlRow.getZ().getColumn()) );
+			WrapperType tempZValue = new WrapperType(rs.getString(1), getMetaType(zqlRow.getZ().getColumn(), database) );
 
 			if(tempZValue.equals(zValue)){
-				xList.add(new WrapperType(rs.getString(2), getType(zqlRow.getX().getVariable())));
-				yList.add(new WrapperType(rs.getString(3), getType(zqlRow.getY().getVariable())));
+				xList.add(new WrapperType(rs.getString(2), getMetaType(zqlRow.getX().getVariable(), database)));
+				yList.add(new WrapperType(rs.getString(3), getMetaType(zqlRow.getY().getVariable(), database)));
 			} else {
 				zValue = tempZValue;
 				xList = new ArrayList<WrapperType>();
 				yList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(rs.getString(2), getType(zqlRow.getX().getVariable())));
-				yList.add(new WrapperType(rs.getString(3), getType(zqlRow.getY().getVariable())));
+				xList.add(new WrapperType(rs.getString(2), getMetaType(zqlRow.getX().getVariable(), database)));
+				yList.add(new WrapperType(rs.getString(3), getMetaType(zqlRow.getY().getVariable(), database)));
 				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
 			}
@@ -180,6 +180,19 @@ public class SQLQueryExecutor {
 		rs.close();
 		st.close();
 	}
+	
+	public String getMetaType(String variable, String databasename){
+		Statement st = c.createStatement();
+		String sql = null;	
+		String databaseName = "zenvisage_metatable";
+	
+			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + databaseName
+					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
+					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
+	}
+	
+	
 	
 	public static void main(String[] args){
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
