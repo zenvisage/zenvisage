@@ -41,7 +41,6 @@ public class ZQLParser {
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
 			Node vcNode = new VisualComponentNode(vc, true);
 			
-			// TODO: Robustness. Update hashmap only if new assignment to exisitng variable occurs
 			if (resultNodes.containsKey(x.getVariable())) {
 				Node parent = resultNodes.get(x.getVariable());
 				parent.addChild(vcNode);
@@ -69,16 +68,23 @@ public class ZQLParser {
 				// process nodes depend on some parameters, so is this case reachable?
 			}
 			
+			// Robustness. Update HashMap only if new assignment to existing variable occurs
 			// Update hash map
-			resultNodes.put(name.getName(), vcNode);
-			resultNodes.put(x.getVariable(), vcNode);
-			resultNodes.put(y.getVariable(), vcNode);
-			resultNodes.put(z.getVariable(), vcNode);
+			resultNodes.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
+			if (!x.getValues().isEmpty()) {
+				resultNodes.put(x.getVariable(), vcNode);	
+			}
+			if (!y.getValues().isEmpty()) {
+				resultNodes.put(y.getVariable(), vcNode);
+			}
+			if (!z.getValues().isEmpty()) {
+				resultNodes.put(z.getVariable(), vcNode);
+			}
 			for (String variable : process.getVariables()) {
-				resultNodes.put(variable, processNode);
+				resultNodes.put(variable, processNode); // if they reuse a process variable, assume future rows refer to the latest reused variable name node
 			}
 		}
-		return null;
+		return graph;
 		
 	}
 }
