@@ -24,7 +24,8 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
 public class QueryGraph extends Graph {
 		
 	public QueryGraph () {
-		
+		// so we have an entryList which is an ArrayList<Node>
+		// the nodes we put in the list are of type QueryNode
 	}
 	
 
