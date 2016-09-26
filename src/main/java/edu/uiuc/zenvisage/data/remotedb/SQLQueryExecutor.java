@@ -181,15 +181,20 @@ public class SQLQueryExecutor {
 		st.close();
 	}
 	
-	public String getMetaType(String variable, String databasename){
+	public String getMetaType(String variable, String table) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;	
 		String databaseName = "zenvisage_metatable";
-	
-			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
-					+ " FROM " + databaseName
-					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
-					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
+		sql = "SELECT " + "type"
+			+ " FROM " + databaseName
+			+ " WHERE " + "table = " + table
+			+ " AND attribute = " + variable;
+		ResultSet rs = st.executeQuery(sql);
+		while (rs.next())
+		{
+			return rs.getString(1);
+		}
+		return null;
 	}
 	
 	
