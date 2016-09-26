@@ -117,3 +117,6 @@ CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
  ('', '', ''), ('', '', ''), ('', '', ''),
  ('', '', ''), ('', '', ''), ('', '', ''),
  ('', '', '');
+ 
+ 
+SELECT type FROM zenvisage_metatable WHERE tablename = 'real_estate' AND attribute = 'Metro';

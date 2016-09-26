@@ -155,20 +155,24 @@ public class SQLQueryExecutor {
 		ArrayList <WrapperType> yList = null;
 		VisualComponent tempVisualComponent = null;
 		
+		String zType = null, xType = null, yType = null;
 		while (rs.next())
 		{
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable(), databaseName);
 			
-			WrapperType tempZValue = new WrapperType(rs.getString(1), getMetaType(zqlRow.getZ().getColumn(), database) );
+			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
 			if(tempZValue.equals(zValue)){
-				xList.add(new WrapperType(rs.getString(2), getMetaType(zqlRow.getX().getVariable(), database)));
-				yList.add(new WrapperType(rs.getString(3), getMetaType(zqlRow.getY().getVariable(), database)));
+				xList.add(new WrapperType(rs.getString(2), xType));
+				yList.add(new WrapperType(rs.getString(3), yType));
 			} else {
 				zValue = tempZValue;
 				xList = new ArrayList<WrapperType>();
 				yList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(rs.getString(2), getMetaType(zqlRow.getX().getVariable(), database)));
-				yList.add(new WrapperType(rs.getString(3), getMetaType(zqlRow.getY().getVariable(), database)));
+				xList.add(new WrapperType(rs.getString(2), xType));
+				yList.add(new WrapperType(rs.getString(3), yType));
 				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
 			}
@@ -184,11 +188,11 @@ public class SQLQueryExecutor {
 	public String getMetaType(String variable, String table) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;	
-		String databaseName = "zenvisage_metatable";
 		sql = "SELECT " + "type"
-			+ " FROM " + databaseName
-			+ " WHERE " + "tablename = " + table
-			+ " AND attribute = " + variable;
+			+ " FROM " + "zenvisage_metatable"
+			+ " WHERE " + "tablename = '" + table
+			+ "' AND attribute = '" + variable + "'";
+		System.out.println(sql);
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next())
 		{
