@@ -19,7 +19,7 @@ public abstract class QueryNode extends Node {
 		state = State.READY;
 	}
 	
-	abstract public void execute();
+	abstract public Node execute();
 
 	public State getState() {
 		return state;

@@ -32,7 +32,7 @@ public class QueryGraphExecutor {
 			
 			while(!nodeQueue.isEmpty()) {
 				currNode = (QueryNode) nodeQueue.remove();
-				currNode.execute();
+				Node result = currNode.execute(); // either result from Process or VC
 				if (currNode.state == State.FINISHED) {
 					// Add result node to contain the executed data
 					// add children to queue

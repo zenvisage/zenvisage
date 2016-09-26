@@ -12,20 +12,17 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 public class ProcessNode extends QueryNode {
 
 	private Processe process;
-	private List<Integer> data;
 	
-	public ProcessNode(Processe process_, boolean resultNode) {
+	public ProcessNode(Processe process_) {
 		super();
 		process = process_;
-		if (resultNode) {
-			data = new ArrayList<Integer>();
-		}
 	}
 	
 	@Override
-	public void execute() {
+	public Node execute() {
 		this.state = State.RUNNING;
-		
+		ProcessResultNode results = new ProcessResultNode();
+		return results;
 	}
 
 }

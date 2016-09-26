@@ -15,13 +15,17 @@ public class VisualComponentNode extends QueryNode{
 	// ProcessResultNode
 		//should have top 5 visualcomponents from list (for now)
 	
-	public VisualComponentNode(VisualComponentQuery vc, boolean resultNode) {
+	public VisualComponentNode(VisualComponentQuery vc) {
 		this.vc = vc;
 	}
 	
 	@Override
-	public void execute() {
+	public Node execute() {
 		this.state = State.RUNNING;
+		// call SQL backend
+		// place results in a resultNode
+		VisualComponentResultNode results = new VisualComponentResultNode();
+		return results;
 	}
 
 	public VisualComponentQuery getVc() {
