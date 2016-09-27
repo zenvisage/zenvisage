@@ -3,6 +3,7 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
@@ -23,7 +24,8 @@ public class QueryGraphExecutor {
 		ResultGraph resultGraph = new ResultGraph();
 		
 		VisualComponentList outputList = new VisualComponentList();
-		
+		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+
 		Queue<Node> nodeQueue = new ArrayDeque<Node>();
 		for (Node entryNode : queryGraph.entryNodes) {
 			QueryNode currNode = (QueryNode) entryNode;
@@ -32,7 +34,7 @@ public class QueryGraphExecutor {
 			
 			while(!nodeQueue.isEmpty()) {
 				currNode = (QueryNode) nodeQueue.remove();
-				Node result = currNode.execute(); // either result from Process or VC
+				Node result = currNode.execute(sqlQueryExecutor); // either result from Process or VC
 				if (currNode.state == State.FINISHED) {
 					// Add result node to contain the executed data
 					// add children to queue

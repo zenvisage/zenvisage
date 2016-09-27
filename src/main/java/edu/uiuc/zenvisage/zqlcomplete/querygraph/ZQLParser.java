@@ -39,7 +39,7 @@ public class ZQLParser {
 			Name name = row.getName();
 			
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
-			Node vcNode = new VisualComponentNode(vc, true);
+			Node vcNode = new VisualComponentNode(vc);
 			
 			if (resultNodes.containsKey(x.getVariable())) {
 				Node parent = resultNodes.get(x.getVariable());
@@ -52,7 +52,7 @@ public class ZQLParser {
 				graph.entryNodes.add(vcNode);
 			}
 			Processe process = row.getProcesse();
-			ProcessNode processNode = new ProcessNode(process, true);
+			ProcessNode processNode = new ProcessNode(process);
 			boolean hasParent = false;
 			for (String argument : process.getArguments()) {
 				Node parent = resultNodes.get(argument);

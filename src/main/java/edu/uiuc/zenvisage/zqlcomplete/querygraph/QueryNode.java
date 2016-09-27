@@ -1,5 +1,6 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 
 /**
  * @author Edward Xue
@@ -19,7 +20,7 @@ public abstract class QueryNode extends Node {
 		state = State.READY;
 	}
 	
-	abstract public Node execute();
+	abstract public Node execute(SQLQueryExecutor sqlQueryExecutor);
 
 	public State getState() {
 		return state;

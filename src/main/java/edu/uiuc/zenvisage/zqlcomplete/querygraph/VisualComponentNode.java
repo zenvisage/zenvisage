@@ -1,5 +1,10 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import java.sql.SQLException;
+
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
+
 /**
  * @author Edward Xue
  * The visual component node to be executed
@@ -20,11 +25,25 @@ public class VisualComponentNode extends QueryNode{
 	}
 	
 	@Override
-	public Node execute() {
+	public Node execute(SQLQueryExecutor sqlQueryExecutor) {
+		if (isBlocked()) {
+			this.state = State.BLOCKED;
+			return null;
+		}
 		this.state = State.RUNNING;
+		
 		// call SQL backend
+		ZQLRow row = buildRowFromNode();
+		try {
+			sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		this.state = State.FINISHED;
 		// place results in a resultNode
 		VisualComponentResultNode results = new VisualComponentResultNode();
+		results.setVcList(sqlQueryExecutor.getVisualComponentList());
 		return results;
 	}
 
@@ -34,5 +53,25 @@ public class VisualComponentNode extends QueryNode{
 
 	public void setVc(VisualComponentQuery vc) {
 		this.vc = vc;
+	}
+	
+	public ZQLRow buildRowFromNode() {
+		ZQLRow result = new ZQLRow(vc.getX(), vc.getY(), vc.getZ(), vc.getConstraints(), vc.getViz());
+		// null processe and sketchPoints (for now)
+		return result;
+	}
+	
+	/**
+	 * If one parent has not finished, we are still blocked
+	 * @return
+	 */
+	private boolean isBlocked() {
+		boolean blocked = false;
+		for (Node parent : this.getParents()) {
+			if ( ((QueryNode)parent).state != State.FINISHED ) {
+				blocked = true;
+			}
+		}
+		return blocked;
 	}
 }
