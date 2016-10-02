@@ -42,6 +42,7 @@ public class ZQLTableToGraphTest {
 		// Z column has slightly different syntax
 		ZColumn z1 = new ZColumn("z");
 		z1.setVariable("z1");
+		values.add("CA");
 		values.clear();
 		//values.add
 		
