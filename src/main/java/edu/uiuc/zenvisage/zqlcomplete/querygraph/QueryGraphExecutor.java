@@ -19,7 +19,7 @@ public class QueryGraphExecutor {
 	 * @param queryGraph
 	 * @return What to visualize
 	 */
-	public VisualComponentList execute(QueryGraph queryGraph) {
+	public static VisualComponentList execute(QueryGraph queryGraph) {
 		// TODO: design decision: casting and instanceof?
 		ResultGraph resultGraph = new ResultGraph();
 		
