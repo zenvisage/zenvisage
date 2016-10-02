@@ -201,7 +201,21 @@ public class SQLQueryExecutor {
 		return null;
 	}
 	
-	
+	public String[] getMetaFileLocation(String database) throws SQLException {
+		Statement st = c.createStatement();
+ 		String sql = null;	
+ 		sql = "SELECT " + "metafilelocation, "+"csvfilelocation"
+ 			+ " FROM " + "zenvisage_metafilelocation"
+ 			+ " WHERE " + "database = '" + database + "'";
+ 		System.out.println(sql);
+ 		ResultSet rs = st.executeQuery(sql);
+ 		while (rs.next())
+ 		{
+ 			System.out.println( "/data/" + rs.getString(1) + "\n" + "/data/" + rs.getString(2));
+ 			return new String[]{ "/data/" + rs.getString(1), "/data/" + rs.getString(2)};
+ 		}
+ 		return null;
+ 	}
 	
 	public static void main(String[] args){
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();

@@ -315,7 +315,6 @@ public class ZvMain {
 //		 }
 		 output = temp;
 		 
-		 
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
@@ -411,18 +410,21 @@ public class ZvMain {
 //	}
 
 
-	public String getInterfaceFomData(String query) throws IOException, InterruptedException{
+	public String getInterfaceFomData(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		this.databaseName = fq.getDatabasename();
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		executor = new Executor(inMemoryDatabase);
-		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
-		if(buffer == null) buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
+		System.out.println(locations[0]+"\n"+locations[1]);
+		inMemoryDatabase = createDatabase(this.databaseName, locations[0], locations[1]);
+		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		System.out.println(buffer);
 //		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
 		return buffer;
 }
 	
-	
+
 
 	/**
 	 * @param q
