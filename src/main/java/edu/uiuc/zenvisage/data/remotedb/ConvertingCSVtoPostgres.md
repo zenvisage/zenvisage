@@ -120,3 +120,16 @@ CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
  
  
 SELECT type FROM zenvisage_metatable WHERE tablename = 'real_estate' AND attribute = 'Metro';
+
+drop table zenvisage_metafilelocation;
+
+CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);
+
+INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation)
+VALUES
+('real_estate', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/real_estate.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/real_estate.csv'),
+('cmu', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/cmuwithoutidschema.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/fullcmuwithoutid.csv'), 
+('cmutesting', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/cmuwithoutidschema.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/cmuhaha.csv'), 
+('sales', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/sales.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/sales.csv')
+
+

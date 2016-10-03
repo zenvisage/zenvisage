@@ -41,7 +41,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException {
+	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
 		zvMain.fileUpload(request, response);
 	}
 
@@ -114,7 +114,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)
 	@ResponseBody
-	public String getformdata( @RequestParam(value="query") String arg) throws JsonGenerationException, JsonMappingException, IOException {
+	public String getformdata( @RequestParam(value="query") String arg) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException, SQLException {
 		System.out.println(arg);
 		return zvMain.getInterfaceFomData(arg);
 	}

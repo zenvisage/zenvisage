@@ -201,7 +201,40 @@ public class SQLQueryExecutor {
 		return null;
 	}
 	
+	public String[] getMetaFileLocation(String database) throws SQLException {
+		Statement st = c.createStatement();
+ 		String sql = null;	
+ 		sql = "SELECT " + "metafilelocation, "+"csvfilelocation"
+ 			+ " FROM " + "zenvisage_metafilelocation"
+ 			+ " WHERE " + "database = '" + database + "'";
+ 		System.out.println(sql);
+ 		ResultSet rs = st.executeQuery(sql);
+ 		while (rs.next())
+ 		{
+ 			System.out.println( rs.getString(1) + "\n" + rs.getString(2));
+ 			return new String[]{ rs.getString(1), rs.getString(2)};
+ 		}
+ 		return null;
+ 	}
 	
+	public boolean insert(String sql, String tablename, String tablenameVariable, String databasename) throws SQLException{
+		int count = 0;
+		Statement st0 = c.createStatement();
+		String sql0 = "SELECT COUNT(*) FROM "
+				+ tablename
+	 			+ " WHERE " + tablenameVariable + " = '" + databasename + "'";
+		ResultSet rs0 = st0.executeQuery(sql0);
+		
+		//if database already exist return false;
+		while (rs0.next())
+ 		{
+			if(Integer.parseInt(rs0.getString(1))>0) return false;
+ 		}
+		
+		Statement st = c.createStatement();
+		count = st.executeUpdate(sql);
+		return count > 0;
+	}
 	
 	public static void main(String[] args){
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
