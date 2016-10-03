@@ -125,14 +125,17 @@ public class ZvMain {
 			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
 			
 			/*insert zenvisage_metafilelocation*/
-			if(new SQLQueryExecutor().insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable",  names.get(0))){
+			
+			String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
+					"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"'),";
+			if(new SQLQueryExecutor().insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
 				System.out.println("Metafilelocation Data successfully inserted into Postgres");
 			} else {
 				System.out.println("Metafilelocation already exists!");
 			}
 			
 			/*insert zenvisage_metatable*/
-			if(new SQLQueryExecutor().insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable",  names.get(0))){
+			if(new SQLQueryExecutor().insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
 				System.out.println("MetaType Data successfully inserted into Postgres");
 			} else {
 				System.out.println("MetaType already exists!");

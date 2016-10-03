@@ -217,12 +217,12 @@ public class SQLQueryExecutor {
  		return null;
  	}
 	
-	public boolean insert(String sql, String tablename, String databasename) throws SQLException{
+	public boolean insert(String sql, String tablename, String tablenameVariable, String databasename) throws SQLException{
 		int count = 0;
 		Statement st0 = c.createStatement();
 		String sql0 = "SELECT COUNT(*) FROM "
 				+ tablename
-	 			+ " WHERE " + "tablename = '" + databasename + "'";
+	 			+ " WHERE " + tablenameVariable + " = '" + databasename + "'";
 		ResultSet rs0 = st0.executeQuery(sql0);
 		
 		//if database already exist return false;
