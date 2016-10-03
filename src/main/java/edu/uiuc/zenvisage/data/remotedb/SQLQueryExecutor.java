@@ -211,8 +211,8 @@ public class SQLQueryExecutor {
  		ResultSet rs = st.executeQuery(sql);
  		while (rs.next())
  		{
- 			System.out.println( "/data/" + rs.getString(1) + "\n" + "/data/" + rs.getString(2));
- 			return new String[]{ "/data/" + rs.getString(1), "/data/" + rs.getString(2)};
+ 			System.out.println( rs.getString(1) + "\n" + rs.getString(2));
+ 			return new String[]{ rs.getString(1), rs.getString(2)};
  		}
  		return null;
  	}

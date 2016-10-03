@@ -4,6 +4,7 @@
 package edu.uiuc.zenvisage.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +33,7 @@ import com.google.common.collect.HashBiMap;
 
 import edu.uiuc.zenvisage.data.Query;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.SchemeToMetatable;
 import edu.uiuc.zenvisage.data.roaringdb.db.Column;
 import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
@@ -114,12 +117,14 @@ public class ZvMain {
     }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException {
+		
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
 
 		if (names.size() == 3) {
-			System.out.println("successful upload!");
-			inMemoryDatabase = createDatabase(names.get(0),"/data/" + names.get(2),"/data/" + names.get(1));
+			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
+			inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
+			System.out.println(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)));
 //			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
 	}

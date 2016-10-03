@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.data.roaringdb.db;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,9 +50,10 @@ public class Database {
 //   	 BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
 //   	 String in = getClass().getClassLoader().getResource(schemafilename).getPath();
 //     BufferedReader bufferedReader = new BufferedReader(new FileReader(in));
+		System.out.println(schemafilename);
 		System.out.println(this.databaseMetaData.dataset);
-   	InputStream is = getClass().getResourceAsStream(schemafilename);
-   	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+//   	InputStream is = getClass().getResourceAsStream(schemafilename);
+   	BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
 	 String line;
 	 while ((line = bufferedReader.readLine()) != null){
 			 ColumnMetadata columnMetadata= new ColumnMetadata();
@@ -98,8 +100,8 @@ public class Database {
     private void loadData(String datafilename) throws IOException{
 //      	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 
-       	InputStream is = getClass().getResourceAsStream(datafilename);
-       	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+//       	InputStream is = getClass().getResourceAsStream(datafilename);
+       	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 		String line;
 		line = bufferedReader.readLine();
 		String[] header=line.split(",");
