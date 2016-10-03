@@ -116,15 +116,29 @@ public class ZvMain {
 
     }
 
-	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException {
+	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 		
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
 
 		if (names.size() == 3) {
 			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
+			
+			/*insert zenvisage_metafilelocation*/
+			if(new SQLQueryExecutor().insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable",  names.get(0))){
+				System.out.println("Metafilelocation Data successfully inserted into Postgres");
+			} else {
+				System.out.println("Metafilelocation already exists!");
+			}
+			
+			/*insert zenvisage_metatable*/
+			if(new SQLQueryExecutor().insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable",  names.get(0))){
+				System.out.println("MetaType Data successfully inserted into Postgres");
+			} else {
+				System.out.println("MetaType already exists!");
+			}
 			inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
-			System.out.println(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)));
+			
 //			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
 	}

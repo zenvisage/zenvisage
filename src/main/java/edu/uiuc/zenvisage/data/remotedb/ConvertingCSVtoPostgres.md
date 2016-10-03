@@ -127,10 +127,9 @@ CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, c
 
 INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation)
 VALUES
-('real_estate', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/real_estate.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/real_estate.csv');
-
-
-
-('cmu', 'cmuwithoutidschema.txt', 'fullcmuwithoutid.csv'), ('cmutesting', 'cmuwithoutidschema.txt', 'cmuhaha.csv'), ('sales', 'sales.txt', 'sales.csv')
+('real_estate', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/real_estate.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/real_estate.csv'),
+('cmu', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/cmuwithoutidschema.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/fullcmuwithoutid.csv'), 
+('cmutesting', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/cmuwithoutidschema.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/cmuhaha.csv'), 
+('sales', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/sales.txt', '/Applications/eclipse_ee/Eclipse.app/Contents/MacOS/sales.csv')
 
 

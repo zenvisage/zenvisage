@@ -41,7 +41,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException {
+	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
 		zvMain.fileUpload(request, response);
 	}
 
