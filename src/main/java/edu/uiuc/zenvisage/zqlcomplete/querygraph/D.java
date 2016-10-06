@@ -12,5 +12,5 @@ import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
  *
  */
 public interface D {
-	public  FunctionalPrimitiveOutput  execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables);
+	public  AxisVariableScores  execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables);
 }

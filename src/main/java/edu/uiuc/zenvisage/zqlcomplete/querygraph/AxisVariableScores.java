@@ -3,11 +3,13 @@
  */
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import java.util.List;
+
 /**
  * @author tarique
  *
  */
-public class FunctionalPrimitiveOutput {
- private Object output;
+public class AxisVariableScores {
+ private List<Object> axisvars;
  private double [] score;
 }

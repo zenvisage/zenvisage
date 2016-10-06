@@ -13,7 +13,7 @@ public class ArgAnySortFilterPrimitive implements SortFilterPrimitive {
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.SortFilterPrimitive#execute(edu.uiuc.zenvisage.zqlcomplete.querygraph.FunctionalPrimitiveOutput)
 	 */
 	@Override
-	public TaskProcessorOuput execute(FunctionalPrimitiveOutput fpo) {
+	public AxisVariableScores execute(AxisVariableScores fpo) {
 		// TODO Auto-generated method stub
 		return null;
 	}

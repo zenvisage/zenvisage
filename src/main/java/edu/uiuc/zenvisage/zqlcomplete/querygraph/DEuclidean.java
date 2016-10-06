@@ -17,7 +17,7 @@ public class DEuclidean implements D {
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.D#execute(edu.uiuc.zenvisage.data.remotedb.VisualComponentList, edu.uiuc.zenvisage.data.remotedb.VisualComponentList, java.util.List)
 	 */
 	@Override
-	public FunctionalPrimitiveOutput execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables) {
+	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables) {
 		// TODO Auto-generated method stub
 		
 		return null;
