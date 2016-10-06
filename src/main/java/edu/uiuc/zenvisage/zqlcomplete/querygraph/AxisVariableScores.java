@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.List;
