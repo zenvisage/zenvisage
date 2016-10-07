@@ -1,5 +1,6 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,6 +8,6 @@ import java.util.List;
  *
  */
 public class AxisVariableScores {
- private List<Object> axisvars;
+ private ArrayList<ArrayList<String>> axisvars;
  private double [] score;
 }
