@@ -38,12 +38,51 @@ public class QueryGraph extends Graph {
 		result.append("Graph view: \n");
 		for (Node node : entryNodes) {
 			if (node instanceof VisualComponentNode) {
-				result.append("node is: " + ((VisualComponentNode) node).getVc().getName());
+				result.append("--node is: " + ((VisualComponentNode) node).getVc().getName() + "\n");
+				result.append("----parents are: \n");
 				for (Node parent: node.getParents()) {
-					
+					if (node instanceof VisualComponentNode) {
+						result.append("----VC: " + ((VisualComponentNode)node).getVc().getName() + "\n");
+					}
+					else if (node instanceof ProcessNode){
+						result.append("----P: " + ((ProcessNode)node).getProcess().getVariables() + "\n");
+					}
 				}
+				for (Node child: node.getChildren()) {
+					if (node instanceof VisualComponentNode) {
+						result.append("----VC: " + ((VisualComponentNode)node).getVc().getName() + "\n");
+					}
+					else if (node instanceof ProcessNode){
+						result.append("----P: " + ((ProcessNode)node).getProcess().getVariables() + "\n");
+					}
+				}				
+			}
+			else if (node instanceof ProcessNode) {
+				if (((ProcessNode) node).getProcess() != null) {
+				result.append("--node is: " + ((ProcessNode) node).getProcess().getVariables() + "\n");
+				}
+				else {
+					result.append("--node is null process");
+				}
+				result.append("----parents are: \n");
+				for (Node parent: node.getParents()) {
+					if (node instanceof VisualComponentNode) {
+						result.append("----VC: " + ((VisualComponentNode)node).getVc().getName() + "\n");
+					}
+					else if (node instanceof ProcessNode){
+						result.append("----P: " + ((ProcessNode)node).getProcess().getVariables() + "\n");
+					}
+				}
+				for (Node child: node.getChildren()) {
+					if (node instanceof VisualComponentNode) {
+						result.append("----VC: " + ((VisualComponentNode)node).getVc().getName() + "\n");
+					}
+					else if (node instanceof ProcessNode){
+						result.append("----P: " + ((ProcessNode)node).getProcess().getVariables() + "\n");
+					}
+				}				
 			}
 		}
-		return super.toString();
+		return result.toString();
 	}
 }

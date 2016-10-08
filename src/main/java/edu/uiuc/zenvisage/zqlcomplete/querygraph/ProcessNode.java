@@ -14,6 +14,14 @@ public class ProcessNode extends QueryNode {
 
 	private Processe process;
 	
+	public Processe getProcess() {
+		return process;
+	}
+
+	public void setProcess(Processe process) {
+		this.process = process;
+	}
+
 	public ProcessNode(Processe process_) {
 		super();
 		process = process_;

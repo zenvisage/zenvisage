@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class ZQLParser {
 	
 	// A query graph needs O(1) access to any node
 	// Here the map is of form key = input var, value = result Node that output this
-	Map<String, Node> resultNodes;
+	Map<String, Node> resultNodes = new HashMap<String, Node>();
 	
 	
 	/**
@@ -40,9 +41,48 @@ public class ZQLParser {
 			
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
 			Node vcNode = new VisualComponentNode(vc);
-			
-			if (resultNodes.containsKey(x.getVariable())) {
+			Processe process = row.getProcesse();
+			ProcessNode processNode = new ProcessNode(process);
+
+			// Robustness. Update HashMap only if new assignment to existing variable occurs
+			// Update hash map
+			boolean updatedX = false;
+			boolean updatedY = false;
+			boolean updatedZ = false;
+			System.out.println(name);
+			System.out.println(name.getName());
+			resultNodes.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
+			if (x.getValues() != null && !x.getValues().isEmpty()) {
+				resultNodes.put(x.getVariable(), vcNode);
+				updatedX = true;
+			}
+			if (y.getValues() != null && !y.getValues().isEmpty()) {
+				resultNodes.put(y.getVariable(), vcNode);
+				updatedY = true;
+			}
+			if (z.getValues() != null && !z.getValues().isEmpty()) {
+				resultNodes.put(z.getVariable(), vcNode);
+				updatedZ = true;
+			}
+			if (process != null) {
+				for (String variable : process.getVariables()) {
+					resultNodes.put(variable, processNode); // if they reuse a process variable, assume future rows refer to the latest reused variable name node
+				}
+			}
+			// So if any x,y,or z variable is referenced from above, link that as a parent
+			// make sure that if we have updated a variable with a new assignment, make sure to NOT have a parent (since this node has the latest value)
+			if (!updatedX && resultNodes.containsKey(x.getVariable())) {
 				Node parent = resultNodes.get(x.getVariable());
+				parent.addChild(vcNode);
+				vcNode.addParent(vcNode);
+			}
+			else if (!updatedY && resultNodes.containsKey(y.getVariable())) {
+				Node parent = resultNodes.get(y.getVariable());
+				parent.addChild(vcNode);
+				vcNode.addParent(vcNode);
+			}
+			else if (!updatedZ && resultNodes.containsKey(z.getVariable())) {
+				Node parent = resultNodes.get(z.getVariable());
 				parent.addChild(vcNode);
 				vcNode.addParent(vcNode);
 			}
@@ -51,15 +91,16 @@ public class ZQLParser {
 				queryEntryNodes.add(vcNode);
 				graph.entryNodes.add(vcNode);
 			}
-			Processe process = row.getProcesse();
-			ProcessNode processNode = new ProcessNode(process);
+			
 			boolean hasParent = false;
-			for (String argument : process.getArguments()) {
-				Node parent = resultNodes.get(argument);
-				if (parent != null) {
-					hasParent = true;
-					parent.addParent(processNode);
-					processNode.addParent(parent);					
+			if (process != null) {
+				for (String argument : process.getArguments()) {
+					Node parent = resultNodes.get(argument);
+					if (parent != null) {
+						hasParent = true;
+						parent.addChild(processNode);
+						processNode.addParent(parent);					
+					}
 				}
 			}
 			if (!hasParent) {
@@ -68,21 +109,7 @@ public class ZQLParser {
 				// process nodes depend on some parameters, so is this case reachable?
 			}
 			
-			// Robustness. Update HashMap only if new assignment to existing variable occurs
-			// Update hash map
-			resultNodes.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
-			if (!x.getValues().isEmpty()) {
-				resultNodes.put(x.getVariable(), vcNode);	
-			}
-			if (!y.getValues().isEmpty()) {
-				resultNodes.put(y.getVariable(), vcNode);
-			}
-			if (!z.getValues().isEmpty()) {
-				resultNodes.put(z.getVariable(), vcNode);
-			}
-			for (String variable : process.getVariables()) {
-				resultNodes.put(variable, processNode); // if they reuse a process variable, assume future rows refer to the latest reused variable name node
-			}
+
 		}
 		return graph;
 		

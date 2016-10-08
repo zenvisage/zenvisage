@@ -8,11 +8,15 @@ import java.util.List;
 
 import org.junit.Test;
 
+import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
+import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 
 /**
  * @author eideh
@@ -30,21 +34,58 @@ public class ZQLTableToGraphTest {
 		List<ZQLRow> rows = new ArrayList<ZQLRow>();
 		
 		XColumn x1 = new XColumn("x1");
-		ArrayList<String> values = new ArrayList<String>();
-		values.add("year");
-		x1.setValues(values);
+		ArrayList<String> x1Values = new ArrayList<String>();
+		x1Values.add("year");
+		x1.setValues(x1Values);
 		
 		YColumn y1 = new YColumn("y1");
-		values.clear();
-		values.add("soldprice");
-		y1.setValues(values);
+		ArrayList<String> y1Values = new ArrayList<String>();
+		y1Values.add("soldprice");
+		y1.setValues(y1Values);
 		
 		// Z column has slightly different syntax
 		ZColumn z1 = new ZColumn("z");
 		z1.setVariable("z1");
-		values.add("CA");
-		values.clear();
-		//values.add
+		ArrayList<String> z1Values = new ArrayList<String>();
+		z1Values.add("CA");
+		z1Values.add("MN");
+		z1Values.add("FL");
+		z1Values.add("GA");
+		z1Values.add("OH");
+		z1Values.add("TN");
+		z1Values.add("AZ");
+		z1.setValues(z1Values);
+		
+		ZQLRow row1 = new ZQLRow(x1, y1, z1, null, null);
+		Name name1 = new Name();
+		name1.setName("f1");
+		row1.setName(name1);
+		rows.add(row1);
+		
+		XColumn x2 = new XColumn("x1");
+		YColumn y2 = new YColumn("y1");
+		ZColumn z2 = new ZColumn("z");
+		z2.setVariable("z1");
+		
+		Constraints constraint = new Constraints();
+		constraint.setKey("state");
+		constraint.setOperator("=");
+		constraint.setValue("CA");
+		List<Constraints> constraints = new ArrayList<Constraints>();
+		constraints.add(constraint);
+		
+		ZQLRow row2 = new ZQLRow(x2, y2, z2, constraints, null);
+		Name name2 = new Name();
+		name2.setName("f2");
+		row2.setName(name2);
+		rows.add(row2);
+		
+		table.setZqlRows(rows);
+		
+		ZQLParser parser = new ZQLParser();
+		QueryGraph graph = parser.processZQLTable(table);
+		System.out.println(graph.toString());
+		 
 		
 	}
 }
