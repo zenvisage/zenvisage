@@ -1,9 +1,0 @@
-Gender:string,indexed,F,F,F,T,F,0,C
-Year:int,indexed,T,F,F,T,T,Year,O
-Major:string,indexed,T,F,T,T,F,0,C
-GPA:float,unindexed,F,T,F,T,T,Points,Q
-FamilyIncome:float,unindexed,F,T,F,F,T,Dollars,Q
-Age:int,indexed,F,F,F,F,T,Year,C
-NoOfCourses:int,indexed,T,F,F,T,T,Courses,O
-Country:string,indexed,T,F,T,T,F,0,C
-Id:int,indexed,F,F,F,F,F,0,C

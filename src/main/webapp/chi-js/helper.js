@@ -16,7 +16,7 @@ function displayUserQueryResultsHelper( userQueryResults )
   if ( getScatterplotOption() )
   {
     connectSeparatedPoints = false;
-    pointSize = 2;
+    pointSize = 1;
     drawPoints = true;
     strokeWidth = 0;
   }
@@ -228,7 +228,7 @@ function getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xLa
   if ( getScatterplotOption() )
   {
     connectSeparatedPoints = false;
-    pointSize = 2;
+    pointSize = 1;
     drawPoints = true;
     strokeWidth = 0;
   }

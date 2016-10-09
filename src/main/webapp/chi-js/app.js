@@ -66,11 +66,11 @@ app.controller('options-controller', [
       }
     });
 
-    $scope.$watch('considerRange', function( newValue, oldValue ) {
+    $scope.$watchGroup( ['considerRange', 'showScatterplot'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResults();
-        //$scope.callgetRepresentativeTrends();
+        $scope.callgetRepresentativeTrends();
       }
     });
 

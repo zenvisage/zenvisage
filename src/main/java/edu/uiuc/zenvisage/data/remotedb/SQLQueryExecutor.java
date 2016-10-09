@@ -19,7 +19,7 @@ public class SQLQueryExecutor {
 	private String database = "postgres";
 	private String host = "jdbc:postgresql://localhost:5432/"+database;
 	private String username = "postgres";
-	private String password = "";
+	private String password = "zenvisage";
 	Connection c = null;
 	
 	// Initialize connection

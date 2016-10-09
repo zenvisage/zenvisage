@@ -1,0 +1,3 @@
+week:int,unindexed,T,F,F,F,F,0,Q
+product:string,indexed,F,F,T,F,F,0,O
+salesprice:float,unindexed,F,T,F,F,F,0,Q

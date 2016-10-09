@@ -1,3 +1,0 @@
-class:string,indexed,F,F,T,F,F,0,Q
-al:float,unindexed,T,T,F,F,F,0,Q
-co2:float,unindexed,T,T,F,F,F,0,Q

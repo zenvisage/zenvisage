@@ -83,17 +83,17 @@ public class ZvMain {
 		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 
-
+		inMemoryDatabase = createDatabase("cmu", "/data/cmu_test.txt", "/data/cmu_test.csv");
+		inMemoryDatabases.put("cmu", inMemoryDatabase);
+		
+/*
 		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
 		inMemoryDatabases.put("cmu", inMemoryDatabase);
 		
-
-		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
-		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
-
-		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
+*/
+		inMemoryDatabase = createDatabase("sales", "/data/test.txt", "/data/test.csv");
 		inMemoryDatabases.put("sales", inMemoryDatabase);
-
+	
 		System.out.println("Done loading data");
 	}
 

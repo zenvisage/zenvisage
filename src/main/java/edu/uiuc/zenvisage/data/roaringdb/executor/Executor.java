@@ -178,10 +178,21 @@ public class Executor {
 					countX.put(currentX, 1);
 				}
 			}
+
+//			sum += Float.valueOf(yValues.get(it.next()));
+//			count++;
+//		}
+//		if (query.getAggregationFunc().equals("avg")) {
+//			sum /= count;
+//		}
 			
 			TreeMap<Float, Float> innerMap3 = new TreeMap<Float, Float>();
 			for (float x : innerMap2.keySet()) {
-				float y = innerMap2.get(x)/countX.get(x);
+				float y = innerMap2.get(x);
+				if (query.getAggregationFunc().equals("avg")) {
+					y = y / countX.get(x);
+				}
+				//float y = innerMap2.get(x)/countX.get(x);
 				innerMap3.put(x, y);
 			}
 			
