@@ -236,6 +236,21 @@ public class SQLQueryExecutor {
 		return count > 0;
 	}
 	
+	public boolean isTableExists(String tableName) throws SQLException{
+		Statement st0 = c.createStatement();
+		String sql0 = "select tablename from pg_tables where schemaname='public'";
+		ResultSet rs0 = st0.executeQuery(sql0);
+		while (rs0.next())
+ 		{
+			if(rs0.getString(1).equals(tableName)) return true;
+ 		}
+		return false;
+	}
+	
+	public void createTable(String tableName, String fileLocation){
+		System.out.println("Create: "+tableName+" "+fileLocation);
+	}
+	
 	public static void main(String[] args){
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		try {

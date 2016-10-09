@@ -123,19 +123,26 @@ public class ZvMain {
 
 		if (names.size() == 3) {
 			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
-			
+			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+			/*create csv table*/
+			if(!sqlQueryExecutor.isTableExists(names.get(0))){
+				sqlQueryExecutor.createTable(names.get(0), names.get(1));
+				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
+			} else {
+				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));
+			}
 			/*insert zenvisage_metafilelocation*/
 			
 			String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
 					"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"'),";
-			if(new SQLQueryExecutor().insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
+			if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
 				System.out.println("Metafilelocation Data successfully inserted into Postgres");
 			} else {
 				System.out.println("Metafilelocation already exists!");
 			}
 			
 			/*insert zenvisage_metatable*/
-			if(new SQLQueryExecutor().insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
+			if(sqlQueryExecutor.insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
 				System.out.println("MetaType Data successfully inserted into Postgres");
 			} else {
 				System.out.println("MetaType already exists!");
@@ -478,9 +485,5 @@ public class ZvMain {
 	        br.close();
 	    }
 	}
-
-
-
-
 
 }
