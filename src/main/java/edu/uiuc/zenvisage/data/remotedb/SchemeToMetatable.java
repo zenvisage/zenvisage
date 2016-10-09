@@ -8,7 +8,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class SchemeToMetatable {
+	
+	public StringBuilder createTableSQL;
+	
 	public SchemeToMetatable(){};
+	
 	public static void main(String[] args) throws IOException{
 		String tablename = "real_estate";
 		String filePath = "/Users/chaoran/Desktop/zenvisage/zenvisage/src/main/resources/data/real_estate.txt";
@@ -34,6 +38,9 @@ public class SchemeToMetatable {
 		System.out.println(filePath);
 		System.out.println(tablename);
 //		InputStream is = getClass().getResourceAsStream(filePath);
+		
+		this.createTableSQL = new StringBuilder("Create table " + tablename + "(");
+		
 	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
 		String sCurrentLine;
@@ -42,9 +49,22 @@ public class SchemeToMetatable {
 			String split1[] = sCurrentLine.split(":");
 			String split2[] = split1[1].split(",");
 			sql.append("('" + tablename + "', '" + split1[0] + "', '" + split2[0] + "'), ");
+			this.createTableSQL.append(split1[0] + " " + typeToPostgresType(split2[0]) + ", ");
 		}
 		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
+		this.createTableSQL.replace(this.createTableSQL.length()-2,this.createTableSQL.length(), ");");
+		System.out.print(this.createTableSQL);
 		return sql.toString();
 	}
+	
+	public String typeToPostgresType(String type){
+		switch (type){
+			case "float": return "REAL";
+			case "int": return "INT";
+			case "string": return "TEXT";
+		}
+		return null;
+	}
+	
 }
