@@ -19,7 +19,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @SuppressWarnings("serial")
 public class UploadHandleServlet extends HttpServlet {
-	List<String> names;
+	public List<String> names;
+	public List<FileItem> fileList;
 	
 	public UploadHandleServlet() {
 		this.names = new ArrayList<String> ();
@@ -34,9 +35,9 @@ public class UploadHandleServlet extends HttpServlet {
             if(!ServletFileUpload.isMultipartContent(request)){
                 return;
             }
-            List<FileItem> list = upload.parseRequest(request);
-            System.out.println(list.size());
-            for(FileItem item : list){
+            List<FileItem> fileList = upload.parseRequest(request);
+            System.out.println(fileList.size());
+            for(FileItem item : fileList){
                	if(item.isFormField()){
                   String value = item.getString("UTF-8");
                   System.out.print(value);

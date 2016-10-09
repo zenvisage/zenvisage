@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.fileupload.FileItem;
+
 import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
@@ -247,8 +249,8 @@ public class SQLQueryExecutor {
 		return false;
 	}
 	
-	public void createTable(String tableName, String fileLocation){
-		System.out.println("Create: "+tableName+" "+fileLocation);
+	public void createTable(String tableName, List<FileItem> fileList){
+		System.out.println("Create: "+tableName+" "+fileList);
 	}
 	
 	public static void main(String[] args){

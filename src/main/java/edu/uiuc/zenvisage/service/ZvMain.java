@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -120,17 +121,12 @@ public class ZvMain {
 		
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-
+		List<FileItem> fileList = uploadHandler.fileList;
+		
 		if (names.size() == 3) {
 			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
 			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-			/*create csv table*/
-			if(!sqlQueryExecutor.isTableExists(names.get(0))){
-				sqlQueryExecutor.createTable(names.get(0), names.get(1));
-				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
-			} else {
-				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));
-			}
+
 			/*insert zenvisage_metafilelocation*/
 			
 			String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
@@ -147,6 +143,15 @@ public class ZvMain {
 			} else {
 				System.out.println("MetaType already exists!");
 			}
+			
+			/*create csv table*/
+			if(!sqlQueryExecutor.isTableExists(names.get(0))){
+				sqlQueryExecutor.createTable(names.get(0), fileList);
+				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
+			} else {
+				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));
+			}
+			
 			inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 			
 //			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
