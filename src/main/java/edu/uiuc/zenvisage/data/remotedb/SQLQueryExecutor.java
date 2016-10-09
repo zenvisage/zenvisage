@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.fileupload.FileItem;
+
 import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
@@ -234,6 +236,21 @@ public class SQLQueryExecutor {
 		Statement st = c.createStatement();
 		count = st.executeUpdate(sql);
 		return count > 0;
+	}
+	
+	public boolean isTableExists(String tableName) throws SQLException{
+		Statement st0 = c.createStatement();
+		String sql0 = "select tablename from pg_tables where schemaname='public'";
+		ResultSet rs0 = st0.executeQuery(sql0);
+		while (rs0.next())
+ 		{
+			if(rs0.getString(1).equals(tableName)) return true;
+ 		}
+		return false;
+	}
+	
+	public void createTable(String tableName, List<FileItem> fileList){
+		System.out.println("Create: "+tableName+" "+fileList);
 	}
 	
 	public static void main(String[] args){
