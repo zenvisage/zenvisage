@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
+import org.postgresql.util.PSQLException;
 
 import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
@@ -225,6 +226,7 @@ public class SQLQueryExecutor {
 		String sql0 = "SELECT COUNT(*) FROM "
 				+ tablename
 	 			+ " WHERE " + tablenameVariable + " = '" + databasename + "'";
+
 		ResultSet rs0 = st0.executeQuery(sql0);
 		
 		//if database already exist return false;
@@ -234,7 +236,10 @@ public class SQLQueryExecutor {
  		}
 		
 		Statement st = c.createStatement();
+	
+		System.out.println(sql);
 		count = st.executeUpdate(sql);
+
 		return count > 0;
 	}
 	

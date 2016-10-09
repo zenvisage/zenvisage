@@ -130,7 +130,7 @@ public class ZvMain {
 			/*insert zenvisage_metafilelocation*/
 			
 			String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
-					"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"'),";
+					"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"');";
 			if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
 				System.out.println("Metafilelocation Data successfully inserted into Postgres");
 			} else {
