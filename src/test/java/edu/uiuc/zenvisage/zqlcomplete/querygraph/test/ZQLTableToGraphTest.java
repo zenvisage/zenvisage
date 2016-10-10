@@ -84,8 +84,8 @@ public class ZQLTableToGraphTest {
 		
 		ZQLParser parser = new ZQLParser();
 		QueryGraph graph = parser.processZQLTable(table);
-		System.out.println(graph.toString());
-		 
+		//System.out.println(graph.toString());
+		 graph.printString();
 		
 	}
 }

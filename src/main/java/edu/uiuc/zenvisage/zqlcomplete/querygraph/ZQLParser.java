@@ -103,7 +103,7 @@ public class ZQLParser {
 					}
 				}
 			}
-			if (!hasParent) {
+			if (!hasParent && process != null) {
 				queryEntryNodes.add(processNode);
 				graph.entryNodes.add(processNode);
 				// process nodes depend on some parameters, so is this case reachable?
