@@ -6,20 +6,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SchemeToMetatable {
 	
 	public StringBuilder createTableSQL;
+	public List<String> types;
 	
-	public SchemeToMetatable(){};
+	public SchemeToMetatable(){
+		createTableSQL =null;
+		types = new ArrayList<String>();
+	};
 	
 	public static void main(String[] args) throws IOException{
 		String tablename = "real_estate";
 		String filePath = "/Users/chaoran/Desktop/zenvisage/zenvisage/src/main/resources/data/real_estate.txt";
-		System.out.println(schemeFileToMetaSQL(filePath, tablename));
+		System.out.println(new SchemeToMetatable().schemeFileToMetaSQL(filePath, tablename));
 	}
 	
-	public static String schemeFileToMetaSQL(String filePath, String tablename) throws IOException{
+	public String schemeFileToMetaSQL(String filePath, String tablename) throws IOException{
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
 		String sCurrentLine;
@@ -50,11 +56,12 @@ public class SchemeToMetatable {
 			String split2[] = split1[1].split(",");
 			sql.append("('" + tablename + "', '" + split1[0] + "', '" + split2[0] + "'), ");
 			this.createTableSQL.append(split1[0] + " " + typeToPostgresType(split2[0]) + ", ");
+			this.types.add(split2[0]);
 		}
 		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
 		this.createTableSQL.replace(this.createTableSQL.length()-2,this.createTableSQL.length(), ");");
-		System.out.print(this.createTableSQL);
+		//System.out.print(this.createTableSQL);
 		return sql.toString();
 	}
 	

@@ -254,8 +254,8 @@ public class SQLQueryExecutor {
 		return false;
 	}
 	
-	public void createTable(String tableName, List<FileItem> fileList){
-		System.out.println("Create: "+tableName+" "+fileList);
+	public void insertTable(String tableName, List<FileItem> fileList, List<String> types){
+		System.out.println("Insert: "+tableName+" "+fileList);
 	}
 	
 	public static void main(String[] args){

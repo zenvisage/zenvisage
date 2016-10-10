@@ -138,7 +138,8 @@ public class ZvMain {
 			}
 			
 			/*insert zenvisage_metatable*/
-			if(sqlQueryExecutor.insert(new SchemeToMetatable().schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
+			SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+			if(sqlQueryExecutor.insert(schemeToMetatable.schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
 				System.out.println("MetaType Data successfully inserted into Postgres");
 			} else {
 				System.out.println("MetaType already exists!");
@@ -146,7 +147,8 @@ public class ZvMain {
 			
 			/*create csv table*/
 			if(!sqlQueryExecutor.isTableExists(names.get(0))){
-				sqlQueryExecutor.createTable(names.get(0), fileList);
+				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL.toString());
+				sqlQueryExecutor.insertTable(names.get(0), fileList, schemeToMetatable.types);
 				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
 			} else {
 				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));
