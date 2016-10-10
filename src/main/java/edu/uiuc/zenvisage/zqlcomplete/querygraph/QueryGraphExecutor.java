@@ -1,6 +1,8 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
@@ -22,6 +24,8 @@ public class QueryGraphExecutor {
 	public static VisualComponentList execute(QueryGraph queryGraph) {
 		// TODO: design decision: casting and instanceof?
 		ResultGraph resultGraph = new ResultGraph();
+		// hash table representation of the nodes in resultGraph
+		Map<String, Node> resultNodeMap = new HashMap<String, Node>();
 		
 		VisualComponentList outputList = new VisualComponentList();
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
@@ -37,14 +41,39 @@ public class QueryGraphExecutor {
 				Node result = currNode.execute(sqlQueryExecutor); // either result from Process or VC
 				if (currNode.state == State.FINISHED) {
 					// Add result node to contain the executed data
+					for (Node parent : currNode.getParents()) {
+						if (parent instanceof VisualComponentNode) {
+							// grab the corresponding resultgraph node
+							
+							// TODO: IS USING NAME AS ID OK? 
+							String parentName = ((VisualComponentNode) parent).getVc().getName().getName();
+							if(resultNodeMap.containsKey(parentName)) {
+								Node resultNodeParent = resultNodeMap.get(parentName);
+								resultNodeParent.addChild(currNode);
+								currNode.addParent(resultNodeParent);
+							}
+						} else if (parent instanceof ProcessNode) {
+							
+						}
+					}
+					// add currNode to hashmap
+					if (currNode instanceof VisualComponentNode) {
+						String currName = ((VisualComponentNode) currNode).getVc().getName().getName();
+						resultNodeMap.put(currName, currNode);
+					} else if (currNode instanceof ProcessNode){
+						
+					}
+					
 					// add children to queue
 					nodeQueue.addAll(currNode.getChildren());
 					
-					// if this node should be outputted, update outputList
+					// TODO: if this node should be outputted, update outputList
 						// currently will only support last row with a *
-				}
-				else if (currNode.state == State.BLOCKED) {
+				} else if (currNode.state == State.BLOCKED) {
 					// Don't add children
+					
+					// Add node back in end of queue!
+					nodeQueue.add(currNode);
 				}
 			}
 			// from every entry node, keep traveling down to children.

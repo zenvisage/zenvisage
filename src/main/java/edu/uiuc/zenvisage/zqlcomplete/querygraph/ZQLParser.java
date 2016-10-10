@@ -21,7 +21,7 @@ public class ZQLParser {
 	
 	// A query graph needs O(1) access to any node
 	// Here the map is of form key = input var, value = result Node that output this
-	Map<String, Node> resultNodes = new HashMap<String, Node>();
+	Map<String, Node> nodeMap = new HashMap<String, Node>();
 	
 	
 	/**
@@ -51,42 +51,39 @@ public class ZQLParser {
 			boolean updatedZ = false;
 			System.out.println(name);
 			System.out.println(name.getName());
-			resultNodes.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
+			nodeMap.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
 			if (x.getValues() != null && !x.getValues().isEmpty()) {
-				resultNodes.put(x.getVariable(), vcNode);
+				nodeMap.put(x.getVariable(), vcNode);
 				updatedX = true;
 			}
 			if (y.getValues() != null && !y.getValues().isEmpty()) {
-				resultNodes.put(y.getVariable(), vcNode);
+				nodeMap.put(y.getVariable(), vcNode);
 				updatedY = true;
 			}
 			if (z.getValues() != null && !z.getValues().isEmpty()) {
-				resultNodes.put(z.getVariable(), vcNode);
+				nodeMap.put(z.getVariable(), vcNode);
 				updatedZ = true;
 			}
 			if (process != null) {
 				for (String variable : process.getVariables()) {
-					resultNodes.put(variable, processNode); // if they reuse a process variable, assume future rows refer to the latest reused variable name node
+					nodeMap.put(variable, processNode); // if they reuse a process variable, assume future rows refer to the latest reused variable name node
 				}
 			}
 			// So if any x,y,or z variable is referenced from above, link that as a parent
 			// make sure that if we have updated a variable with a new assignment, make sure to NOT have a parent (since this node has the latest value)
-			if (!updatedX && resultNodes.containsKey(x.getVariable())) {
-				Node parent = resultNodes.get(x.getVariable());
+			if (!updatedX && nodeMap.containsKey(x.getVariable())) {
+				Node parent = nodeMap.get(x.getVariable());
 				parent.addChild(vcNode);
 				vcNode.addParent(vcNode);
-			}
-			else if (!updatedY && resultNodes.containsKey(y.getVariable())) {
-				Node parent = resultNodes.get(y.getVariable());
+			} else if (!updatedY && nodeMap.containsKey(y.getVariable())) {
+				Node parent = nodeMap.get(y.getVariable());
 				parent.addChild(vcNode);
 				vcNode.addParent(vcNode);
-			}
-			else if (!updatedZ && resultNodes.containsKey(z.getVariable())) {
-				Node parent = resultNodes.get(z.getVariable());
+			} else if (!updatedZ && nodeMap.containsKey(z.getVariable())) {
+				Node parent = nodeMap.get(z.getVariable());
 				parent.addChild(vcNode);
 				vcNode.addParent(vcNode);
-			}
-			else {
+			} else {
 				// New entry node! Add as an entry node for this query, and entry node for the entire graph
 				queryEntryNodes.add(vcNode);
 				graph.entryNodes.add(vcNode);
@@ -95,7 +92,7 @@ public class ZQLParser {
 			boolean hasParent = false;
 			if (process != null) {
 				for (String argument : process.getArguments()) {
-					Node parent = resultNodes.get(argument);
+					Node parent = nodeMap.get(argument);
 					if (parent != null) {
 						hasParent = true;
 						parent.addChild(processNode);
