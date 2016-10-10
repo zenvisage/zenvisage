@@ -50,28 +50,16 @@ public class VisualComponentNode extends QueryNode{
 	public VisualComponentQuery getVc() {
 		return vc;
 	}
-
+	
 	public void setVc(VisualComponentQuery vc) {
 		this.vc = vc;
 	}
 	
+	@Override
 	public ZQLRow buildRowFromNode() {
 		ZQLRow result = new ZQLRow(vc.getX(), vc.getY(), vc.getZ(), vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)
 		return result;
 	}
 	
-	/**
-	 * If one parent has not finished, we are still blocked
-	 * @return
-	 */
-	private boolean isBlocked() {
-		boolean blocked = false;
-		for (Node parent : this.getParents()) {
-			if ( ((QueryNode)parent).state != State.FINISHED ) {
-				blocked = true;
-			}
-		}
-		return blocked;
-	}
 }

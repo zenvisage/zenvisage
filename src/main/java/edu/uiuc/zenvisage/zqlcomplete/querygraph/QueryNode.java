@@ -1,6 +1,8 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 /**
  * @author Edward Xue
@@ -26,4 +28,19 @@ public abstract class QueryNode extends Node {
 		return state;
 	}
 
+	abstract public ZQLRow buildRowFromNode();
+	
+	/**
+	 * If one parent has not finished, we are still blocked
+	 * @return
+	 */
+	protected boolean isBlocked() {
+		boolean blocked = false;
+		for (Node parent : this.getParents()) {
+			if ( ((QueryNode)parent).state != State.FINISHED ) {
+				blocked = true;
+			}
+		}
+		return blocked;
+	}
 }
