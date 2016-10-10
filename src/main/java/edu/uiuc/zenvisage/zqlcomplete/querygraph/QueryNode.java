@@ -17,6 +17,9 @@ public abstract class QueryNode extends Node {
 	
 	protected State state; // "ready" "blocked" "finished"
 	
+	// add a reference to look-up table, which is created once and linked to all the nodes during parsing or graph building.
+
+ 	
 	public QueryNode() {
 		super();
 		state = State.READY;

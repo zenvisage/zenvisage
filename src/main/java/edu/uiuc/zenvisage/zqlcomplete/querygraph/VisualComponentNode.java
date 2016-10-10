@@ -32,8 +32,11 @@ public class VisualComponentNode extends QueryNode{
 		}
 		this.state = State.RUNNING;
 		
+		// update lookup table with axisvariables
 		// call SQL backend
 		ZQLRow row = buildRowFromNode();
+		
+		
 		try {
 			sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
 		} catch (SQLException e) {
@@ -44,6 +47,7 @@ public class VisualComponentNode extends QueryNode{
 		// place results in a resultNode
 		VisualComponentResultNode results = new VisualComponentResultNode();
 		results.setVcList(sqlQueryExecutor.getVisualComponentList());
+		//update the look table with name variable, e.g, f1)
 		return results;
 	}
 
@@ -60,6 +64,10 @@ public class VisualComponentNode extends QueryNode{
 		ZQLRow result = new ZQLRow(vc.getX(), vc.getY(), vc.getZ(), vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)
 		return result;
+	}
+	
+	public void updateAxisVaribles(){
+		//TODO
 	}
 	
 }
