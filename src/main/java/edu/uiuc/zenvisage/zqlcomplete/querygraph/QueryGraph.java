@@ -49,7 +49,7 @@ public class QueryGraph extends Graph {
 							result.append("----VC: " + ((VisualComponentNode)parent).getVc().getName().getName() + "\n");
 						}
 						else if (parent instanceof ProcessNode){
-							result.append("----P: " + ((ProcessNode)currNode).getProcess().getVariables() + "\n");
+							result.append("----P: " + ((ProcessNode)parent).getProcess().getVariables() + "\n");
 						}
 					}
 					result.append("----children are: \n");
