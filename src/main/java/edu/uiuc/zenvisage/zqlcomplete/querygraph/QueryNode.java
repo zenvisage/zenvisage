@@ -17,12 +17,18 @@ public abstract class QueryNode extends Node {
 	
 	protected State state; // "ready" "blocked" "finished"
 	
-	// add a reference to look-up table, which is created once and linked to all the nodes during parsing or graph building.
-
+	protected LookUpTable lookuptable;
  	
 	public QueryNode() {
 		super();
 		state = State.READY;
+	}
+	
+	public QueryNode(LookUpTable table) {
+		super();
+		state = State.READY;
+		// add a reference to look-up table, which is created once and linked to all the nodes during parsing or graph building.
+		lookuptable = table;
 	}
 	
 	abstract public Node execute(SQLQueryExecutor sqlQueryExecutor);
@@ -45,5 +51,9 @@ public abstract class QueryNode extends Node {
 			}
 		}
 		return blocked;
+	}
+	
+	public LookUpTable getLookUpTable() {
+		return this.lookuptable;
 	}
 }

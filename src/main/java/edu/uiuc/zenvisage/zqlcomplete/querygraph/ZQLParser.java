@@ -32,6 +32,7 @@ public class ZQLParser {
 		
 		List<Node> queryEntryNodes = new ArrayList<Node>();
 		QueryGraph graph = new QueryGraph();
+		LookUpTable lookuptable = new LookUpTable();
 		
 		for (ZQLRow row : table.getZqlRows()) {
 			XColumn x = row.getX();
@@ -40,9 +41,9 @@ public class ZQLParser {
 			Name name = row.getName();
 			
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
-			Node vcNode = new VisualComponentNode(vc);
+			Node vcNode = new VisualComponentNode(vc, lookuptable);
 			Processe process = row.getProcesse();
-			ProcessNode processNode = new ProcessNode(process);
+			ProcessNode processNode = new ProcessNode(process, lookuptable);
 
 			// Robustness. Update HashMap only if new assignment to existing variable occurs
 			// Update hash map

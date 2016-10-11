@@ -14,4 +14,10 @@ public class AxisVariable {
 	private String type;
 	private List<String> values=new ArrayList<String>();
 	
+	
+	public AxisVariable(String type, List<String> values) {
+		this.type = type;
+		// by reference ok?
+		this.values = values;
+	}
 }

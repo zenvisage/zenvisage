@@ -34,6 +34,11 @@ public class ProcessNode extends QueryNode {
 		process = process_;
 	}
 	
+	public ProcessNode(Processe process_, LookUpTable table) {
+		super(table);
+		process = process_;
+	}
+	
 	@Override
 	public Node execute(SQLQueryExecutor sqlQueryExecutor) {
 		if (isBlocked()) {

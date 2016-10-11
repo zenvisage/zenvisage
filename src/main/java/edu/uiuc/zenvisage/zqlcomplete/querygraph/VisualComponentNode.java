@@ -3,6 +3,9 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 import java.sql.SQLException;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 /**
@@ -24,6 +27,11 @@ public class VisualComponentNode extends QueryNode{
 		this.vc = vc;
 	}
 	
+	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table) {
+		super(table);
+		this.vc = vc;
+	}
+	
 	@Override
 	public Node execute(SQLQueryExecutor sqlQueryExecutor) {
 		if (isBlocked()) {
@@ -32,7 +40,25 @@ public class VisualComponentNode extends QueryNode{
 		}
 		this.state = State.RUNNING;
 		
+		LookUpTable lookuptable = this.getLookUpTable();
 		// update lookup table with axisvariables
+		XColumn x = this.getVc().getX();
+		YColumn y = this.getVc().getY();
+		ZColumn z = this.getVc().getZ();
+		
+		// e.g., x1 <- 'year'
+		if (!x.getVariable().equals("")) {
+			AxisVariable axisVar = new AxisVariable(x.getVariable(), x.getValues());
+			lookuptable.put(x.getVariable(), axisVar);
+		}
+		if (!y.getVariable().equals("")) {
+			AxisVariable axisVar = new AxisVariable(y.getVariable(), y.getValues());
+			lookuptable.put(y.getVariable(), axisVar);
+		}
+		if (!z.getVariable().equals("")) {
+			AxisVariable axisVar = new AxisVariable(z.getVariable(), z.getValues());
+			lookuptable.put(z.getVariable(), axisVar);
+		}
 		// call SQL backend
 		ZQLRow row = buildRowFromNode();
 		
@@ -48,6 +74,8 @@ public class VisualComponentNode extends QueryNode{
 		VisualComponentResultNode results = new VisualComponentResultNode();
 		results.setVcList(sqlQueryExecutor.getVisualComponentList());
 		//update the look table with name variable, e.g, f1)
+		String name = this.getVc().getName().getName();
+		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
 		return results;
 	}
 
