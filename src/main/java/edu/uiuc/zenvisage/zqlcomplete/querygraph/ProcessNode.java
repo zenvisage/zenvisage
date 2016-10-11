@@ -53,8 +53,14 @@ public class ProcessNode extends QueryNode {
 		try {
 			ZQLExecutor.executeProcess(row, rowResult, tableResult);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		// TODO: only supports 1 output z1 <- Similar
+		String name = rowResult.getZqlProcessResult().getzType();
+		if(!name.equals("")) {
+			AxisVariable axisVar = new AxisVariable(name, rowResult.getZqlProcessResult().getzValues());
+			this.getLookUpTable().put(name, axisVar);
 		}
 		
 		ProcessResultNode results = new ProcessResultNode();
