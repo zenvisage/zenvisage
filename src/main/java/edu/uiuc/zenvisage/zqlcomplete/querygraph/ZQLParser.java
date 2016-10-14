@@ -77,15 +77,15 @@ public class ZQLParser {
 			if (!updatedX && nodeMap.containsKey(x.getVariable())) {
 				Node parent = nodeMap.get(x.getVariable());
 				parent.addChild(vcNode);
-				vcNode.addParent(vcNode);
+				vcNode.addParent(parent);
 			} else if (!updatedY && nodeMap.containsKey(y.getVariable())) {
 				Node parent = nodeMap.get(y.getVariable());
 				parent.addChild(vcNode);
-				vcNode.addParent(vcNode);
+				vcNode.addParent(parent);
 			} else if (!updatedZ && nodeMap.containsKey(z.getVariable())) {
 				Node parent = nodeMap.get(z.getVariable());
 				parent.addChild(vcNode);
-				vcNode.addParent(vcNode);
+				vcNode.addParent(parent);
 			} else {
 				// New entry node! Add as an entry node for this query, and entry node for the entire graph
 				queryEntryNodes.add(vcNode);
