@@ -31,7 +31,7 @@ public abstract class QueryNode extends Node {
 		lookuptable = table;
 	}
 	
-	abstract public Node execute(SQLQueryExecutor sqlQueryExecutor);
+	abstract public void execute();
 
 	public State getState() {
 		return state;

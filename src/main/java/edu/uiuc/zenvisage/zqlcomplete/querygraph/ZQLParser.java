@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
@@ -44,6 +45,7 @@ public class ZQLParser {
 			Node vcNode = new VisualComponentNode(vc, lookuptable);
 			Processe process = row.getProcesse();
 			ProcessNode processNode = new ProcessNode(process, lookuptable);
+			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 
 			// Robustness. Update HashMap only if new assignment to existing variable occurs
 			// Update hash map

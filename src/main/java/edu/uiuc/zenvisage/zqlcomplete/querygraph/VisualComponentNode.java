@@ -15,6 +15,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 public class VisualComponentNode extends QueryNode{
 
 	private VisualComponentQuery vc;
+	private SQLQueryExecutor sqlQueryExecutor;
 	// private vc output
 	//TODO: build separate result node
 	// call QueryGraphResults
@@ -27,16 +28,17 @@ public class VisualComponentNode extends QueryNode{
 		this.vc = vc;
 	}
 	
-	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table) {
+	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor) {
 		super(table);
 		this.vc = vc;
+		this.sqlQueryExecutor = sqlQueryExecutor;
 	}
 	
 	@Override
-	public Node execute(SQLQueryExecutor sqlQueryExecutor) {
+	public void execute() {
 		if (isBlocked()) {
 			this.state = State.BLOCKED;
-			return null;
+			return;
 		}
 		this.state = State.RUNNING;
 		
@@ -70,13 +72,9 @@ public class VisualComponentNode extends QueryNode{
 		}
 		
 		this.state = State.FINISHED;
-		// place results in a resultNode
-		VisualComponentResultNode results = new VisualComponentResultNode();
-		results.setVcList(sqlQueryExecutor.getVisualComponentList());
 		//update the look table with name variable, e.g, f1)
 		String name = this.getVc().getName().getName();
 		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
-		return results;
 	}
 
 	public VisualComponentQuery getVc() {

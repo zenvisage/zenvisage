@@ -36,14 +36,15 @@ public class ProcessNode extends QueryNode {
 	
 	public ProcessNode(Processe process_, LookUpTable table) {
 		super(table);
-		process = process_;
+		this.process = process_;
 	}
 	
 	@Override
-	public Node execute(SQLQueryExecutor sqlQueryExecutor) {
+	public void execute() {
+		// MAKE this argument something for VCNode only! in constructor!
 		if (isBlocked()) {
 			this.state = State.BLOCKED;
-			return null;
+			return;
 		}
 		
 		this.state = State.RUNNING;
@@ -63,8 +64,6 @@ public class ProcessNode extends QueryNode {
 			this.getLookUpTable().put(name, axisVar);
 		}
 		
-		ProcessResultNode results = new ProcessResultNode();
-		return results;
 	}
 	
 	@Override

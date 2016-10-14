@@ -28,7 +28,6 @@ public class QueryGraphExecutor {
 		Map<String, Node> resultNodeMap = new HashMap<String, Node>();
 		
 		VisualComponentList outputList = new VisualComponentList();
-		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 
 		Queue<Node> nodeQueue = new ArrayDeque<Node>();
 		for (Node entryNode : queryGraph.entryNodes) {
@@ -38,7 +37,7 @@ public class QueryGraphExecutor {
 			
 			while(!nodeQueue.isEmpty()) {
 				currNode = (QueryNode) nodeQueue.remove();
-				Node result = currNode.execute(sqlQueryExecutor); // either result from Process or VC
+				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
 					// Add result node to contain the executed data
 					for (Node parent : currNode.getParents()) {
