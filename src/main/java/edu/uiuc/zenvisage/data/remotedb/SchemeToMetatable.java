@@ -61,7 +61,7 @@ public class SchemeToMetatable {
 		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
 		this.createTableSQL.replace(this.createTableSQL.length()-2,this.createTableSQL.length(), ");");
-		//System.out.print(this.createTableSQL);
+		System.out.println(this.createTableSQL);
 		return sql.toString();
 	}
 	
