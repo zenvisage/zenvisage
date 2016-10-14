@@ -42,10 +42,10 @@ public class ZQLParser {
 			Name name = row.getName();
 			
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
-			Node vcNode = new VisualComponentNode(vc, lookuptable);
+			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+			Node vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor);
 			Processe process = row.getProcesse();
 			ProcessNode processNode = new ProcessNode(process, lookuptable);
-			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 
 			// Robustness. Update HashMap only if new assignment to existing variable occurs
 			// Update hash map
