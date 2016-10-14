@@ -16,10 +16,10 @@ CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, c
 
 (4) open http://localhost:8080/chi-index.html
 
-(5) Be-aware that column names of csv&&txt table can not contain '-' 
+(5) Be aware that column names of csv&&txt table can not contain '-' 
 (e.g.Foreclosures-Ratio, should be ForeclosuresRatio);
-Upload (csv, txt) tuples (e.g. real_estate.csv, real_estate.txt) using the servers file upload functionality;
+Upload (csv, txt) tuples (e.g. real_estate.csv, real_estate.txt) using the front-end file upload functionality;
 The file upload back-end will auto creat csv table, insert metafilelocation table && metatable;
 
-(6) now you can select the dataset from dropdown on front-end plotting and similarity search;
+(6) Now you can select the dataset from dropdown on front-end plotting and similarity search;
 
