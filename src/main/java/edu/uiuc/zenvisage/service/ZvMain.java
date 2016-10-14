@@ -121,8 +121,6 @@ public class ZvMain {
 		
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-		List<FileItem> fileList = uploadHandler.fileList;
-		
 		if (names.size() == 3) {
 			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
 			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
@@ -148,7 +146,7 @@ public class ZvMain {
 			/*create csv table*/
 			if(!sqlQueryExecutor.isTableExists(names.get(0))){
 				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL.toString());
-				sqlQueryExecutor.insertTable(names.get(0), fileList, schemeToMetatable.types);
+				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
 				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
 			} else {
 				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));

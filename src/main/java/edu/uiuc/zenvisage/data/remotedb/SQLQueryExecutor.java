@@ -254,8 +254,16 @@ public class SQLQueryExecutor {
 		return false;
 	}
 	
-	public void insertTable(String tableName, List<FileItem> fileList, List<String> types){
-		System.out.println("Insert: "+tableName+" "+fileList);
+	public void insertTable(String tableName, String fileName, List<String> columns) throws SQLException{
+		StringBuilder sql = new StringBuilder("COPY "+ tableName + "(");
+		for(String s:columns){
+			sql.append(s+",");
+		}
+		sql.deleteCharAt(sql.length()-1);
+		sql.append(") FROM '"+ fileName +"' DELIMITER ',' CSV HEADER;");
+	    Statement stmt = c.createStatement();
+	    stmt.executeUpdate(sql.toString());
+	    stmt.close();
 	}
 	
 	public static void main(String[] args){

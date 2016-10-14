@@ -35,7 +35,7 @@ public class UploadHandleServlet extends HttpServlet {
             if(!ServletFileUpload.isMultipartContent(request)){
                 return;
             }
-            List<FileItem> fileList = upload.parseRequest(request);
+            this.fileList = upload.parseRequest(request);
             System.out.println(fileList.size());
             for(FileItem item : fileList){
                	if(item.isFormField()){

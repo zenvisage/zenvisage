@@ -12,11 +12,11 @@ import java.util.List;
 public class SchemeToMetatable {
 	
 	public StringBuilder createTableSQL;
-	public List<String> types;
+	public List<String> columns;
 	
 	public SchemeToMetatable(){
 		createTableSQL =null;
-		types = new ArrayList<String>();
+		columns = new ArrayList<String>();
 	};
 	
 	public static void main(String[] args) throws IOException{
@@ -56,7 +56,7 @@ public class SchemeToMetatable {
 			String split2[] = split1[1].split(",");
 			sql.append("('" + tablename + "', '" + split1[0] + "', '" + split2[0] + "'), ");
 			this.createTableSQL.append(split1[0] + " " + typeToPostgresType(split2[0]) + ", ");
-			this.types.add(split2[0]);
+			this.columns.add(split1[0]);
 		}
 		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
