@@ -69,7 +69,7 @@ public class DEuclidean implements D {
 					secondAxisvarsList.add(f2List.get(j).getZValue().getStrValue());
 				}
 			}
-			
+		
 			axisvars.add(firstAxisvarsList);
 			axisvars.add(secondAxisvarsList);
 			axisVariableScores = new AxisVariableScores(axisvars, scores);
