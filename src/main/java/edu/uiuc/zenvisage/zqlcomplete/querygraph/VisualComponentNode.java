@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
@@ -49,22 +50,20 @@ public class VisualComponentNode extends QueryNode{
 		ZColumn z = this.getVc().getZ();
 		
 		// e.g., x1 <- 'year'
-		if (!x.getVariable().equals("")) {
+		if (!x.getVariable().equals("") && !x.getValues().isEmpty()) {
 			AxisVariable axisVar = new AxisVariable(x.getVariable(), x.getValues());
 			lookuptable.put(x.getVariable(), axisVar);
 		}
-		if (!y.getVariable().equals("")) {
+		if (!y.getVariable().equals("") && !y.getValues().isEmpty()) {
 			AxisVariable axisVar = new AxisVariable(y.getVariable(), y.getValues());
 			lookuptable.put(y.getVariable(), axisVar);
 		}
-		if (!z.getVariable().equals("")) {
+		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
 			AxisVariable axisVar = new AxisVariable(z.getVariable(), z.getValues());
 			lookuptable.put(z.getVariable(), axisVar);
 		}
 		// call SQL backend
 		ZQLRow row = buildRowFromNode();
-		
-		
 		try {
 			sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
 		} catch (SQLException e) {
@@ -74,6 +73,8 @@ public class VisualComponentNode extends QueryNode{
 		this.state = State.FINISHED;
 		//update the look table with name variable, e.g, f1)
 		String name = this.getVc().getName().getName();
+		
+		// CHECK THIS OUTPUT
 		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
 	}
 
@@ -86,8 +87,36 @@ public class VisualComponentNode extends QueryNode{
 	}
 	
 	@Override
+	/**
+	 * Four cases to deal with: 
+	 * Column has variable and values. Can use as is.
+	 * Column has variable, but no values. Need to fill in values from lookup
+	 * Column hs no variable name, but values. Can use as is
+	 * Column has no variable name, and no value. Skip row???
+	 */
 	public ZQLRow buildRowFromNode() {
-		ZQLRow result = new ZQLRow(vc.getX(), vc.getY(), vc.getZ(), vc.getConstraints(), vc.getViz());
+		XColumn x = vc.getX();		
+		// x1 (variable, no values)
+		if(!x.getVariable().equals("") && x.getValues().isEmpty()) {
+			List<String> values = (List<String>) lookuptable.get(x.getVariable());
+			x.setValues(values);
+		}
+		
+		YColumn y = vc.getY();		
+		// y1 (variable, no values)
+		if(!y.getVariable().equals("") && y.getValues().isEmpty()) {
+			List<String> values = (List<String>) lookuptable.get(y.getVariable());
+			y.setValues(values);
+		}		
+		
+		ZColumn z = vc.getZ();		
+		// z1 (variable, no values)
+		if(!z.getVariable().equals("") && z.getValues().isEmpty()) {
+			List<String> values = (List<String>) lookuptable.get(z.getVariable());
+			z.setValues(values);
+		}
+		
+		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)
 		return result;
 	}
