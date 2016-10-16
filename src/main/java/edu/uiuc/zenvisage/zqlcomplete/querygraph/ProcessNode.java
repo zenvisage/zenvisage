@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
@@ -48,14 +49,35 @@ public class ProcessNode extends QueryNode {
 		}
 		
 		this.state = State.RUNNING;
-		ZQLRow row = buildRowFromNode();
+
+		if(process.getMethod().equals("D")) {
+			DEuclidean d = new DEuclidean();
+			
+			// Cannot process D on this incorrect input
+			if (process.getArguments().size() != 2) {
+				// TODO Just returning for now
+				return;
+			}
+			VisualComponentList f1 = (VisualComponentList) lookuptable.get(process.getArguments().get(0));
+			VisualComponentList f2 = (VisualComponentList) lookuptable.get(process.getArguments().get(1));
+			
+			AxisVariableScores axisVariableScores = d.execute(f1, f2, process.getAxis());
+			
+			if (process.getMetric().equals("argmax")) {
+				ArgMaxSortFilterPrimitive argmaxFilter = new ArgMaxSortFilterPrimitive();
+				// TODO: count is stored as? "10"? "k=10"?
+				axisVariableScores = argmaxFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
+			}
+		}
 		
+		/**
+		 * update with all process variables
 		//String name = rowResult.getZqlProcessResult().getzType();
 		if(!name.equals("")) {
 			AxisVariable axisVar = new AxisVariable(name, rowResult.getZqlProcessResult().getzValues());
 			this.getLookUpTable().put(name, axisVar);
 		}
-		
+		**/
 		// mock 
 	}
 	

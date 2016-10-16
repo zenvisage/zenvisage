@@ -9,6 +9,6 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
  */
 public interface SortFilterPrimitive {
 
-	public AxisVariableScores execute(AxisVariableScores fpo);
+	public AxisVariableScores execute(AxisVariableScores fpo, int count);
 	
 }
