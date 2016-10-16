@@ -76,6 +76,8 @@ public class VisualComponentNode extends QueryNode{
 		
 		// CHECK THIS OUTPUT
 		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
+		System.out.println("vcList for node "+ name);
+		System.out.println(sqlQueryExecutor.getVisualComponentList());
 	}
 
 	public VisualComponentQuery getVc() {
@@ -92,7 +94,7 @@ public class VisualComponentNode extends QueryNode{
 	 * Column has variable and values. Can use as is.
 	 * Column has variable, but no values. Need to fill in values from lookup
 	 * Column hs no variable name, but values. Can use as is
-	 * Column has no variable name, and no value. Skip row???
+	 * Column has no variable name, and no value. Send as is (columns may be optional)
 	 */
 	public ZQLRow buildRowFromNode() {
 		XColumn x = vc.getX();		

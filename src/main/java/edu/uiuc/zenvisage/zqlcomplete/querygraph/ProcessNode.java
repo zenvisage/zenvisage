@@ -49,21 +49,14 @@ public class ProcessNode extends QueryNode {
 		
 		this.state = State.RUNNING;
 		ZQLRow row = buildRowFromNode();
-		ZQLRowResult rowResult = new ZQLRowResult();
-		ZQLTableResult tableResult = new ZQLTableResult();
-		try {
-			ZQLExecutor.executeProcess(row, rowResult, tableResult);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		// TODO: only supports 1 output z1 <- Similar
-		String name = rowResult.getZqlProcessResult().getzType();
+		
+		//String name = rowResult.getZqlProcessResult().getzType();
 		if(!name.equals("")) {
 			AxisVariable axisVar = new AxisVariable(name, rowResult.getZqlProcessResult().getzValues());
 			this.getLookUpTable().put(name, axisVar);
 		}
 		
+		// mock 
 	}
 	
 	@Override
