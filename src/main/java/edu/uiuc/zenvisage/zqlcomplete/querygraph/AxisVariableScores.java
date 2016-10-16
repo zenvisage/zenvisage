@@ -9,7 +9,19 @@ import java.util.List;
  */
 public class AxisVariableScores {
  private ArrayList<ArrayList<String>> axisvars;
- private double [] score;
+ public ArrayList<ArrayList<String>> getAxisvars() {
+	return axisvars;
+}
+public void setAxisvars(ArrayList<ArrayList<String>> axisvars) {
+	this.axisvars = axisvars;
+}
+public double[] getScore() {
+	return score;
+}
+public void setScore(double[] score) {
+	this.score = score;
+}
+private double [] score;
  AxisVariableScores(ArrayList<ArrayList<String>> axisvars, double[] score) {
 	 this.axisvars = axisvars;
 	 this.score = score;

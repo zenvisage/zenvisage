@@ -40,6 +40,7 @@ public class ProcessNode extends QueryNode {
 		this.process = process_;
 	}
 	
+	
 	@Override
 	public void execute() {
 		// MAKE this argument something for VCNode only! in constructor!
@@ -49,39 +50,11 @@ public class ProcessNode extends QueryNode {
 		}
 		
 		this.state = State.RUNNING;
-
-		if(process.getMethod().equals("D")) {
-			DEuclidean d = new DEuclidean();
-			
-			// Cannot process D on this incorrect input
-			if (process.getArguments().size() != 2) {
-				// TODO Just returning for now
-				return;
-			}
-			String name1 = process.getArguments().get(0);
-			String name2 = process.getArguments().get(1);
-			// Basic user error checking
-			if(name1.equals("") || name2.equals("")){
-				return;
-			}
-			Object object1 = lookuptable.get(name1);
-			if (! (object1 instanceof VisualComponentList)) {
-				return;
-			}
-			Object object2 = lookuptable.get(name2);
-			if (! (object2 instanceof VisualComponentList)) {
-				return;
-			}
-			VisualComponentList f1 = (VisualComponentList) lookuptable.get(process.getArguments().get(0));
-			VisualComponentList f2 = (VisualComponentList) lookuptable.get(process.getArguments().get(1));
-			
-			AxisVariableScores axisVariableScores = d.execute(f1, f2, process.getAxis());
-			
-			if (process.getMetric().equals("argmax")) {
-				ArgMaxSortFilterPrimitive argmaxFilter = new ArgMaxSortFilterPrimitive();
-				// TODO: count is stored as? "10"? "k=10"?
-				axisVariableScores = argmaxFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
-			}
+		
+		AxisVariableScores axisVariableScores = executeProcess();
+		
+		for (String variable: process.getVariables()) {
+			//AxisVariable axisVar = new AxisVariable(variable, axisVariableScores.getAxisvars());
 		}
 		
 		/**
@@ -94,6 +67,73 @@ public class ProcessNode extends QueryNode {
 		**/
 		// mock 
 	}
+	
+	public AxisVariableScores executeProcess() {
+		AxisVariableScores axisVariableScores = null;
+		if (process.getMethod().equals("D")) {
+			axisVariableScores = executeDMethod();
+		}
+		if (process.getMethod().equals("T")) {
+			axisVariableScores = executeTMethod();
+		}
+		if (axisVariableScores == null) {
+			return null;
+		}
+		
+		axisVariableScores = filterScores(axisVariableScores);
+		
+		return axisVariableScores;
+	}	
+	
+	private AxisVariableScores executeDMethod() {
+		DEuclidean d = new DEuclidean();
+		
+		// Cannot process D on this incorrect input
+		if (process.getArguments().size() != 2) {
+			// TODO Just returning for now
+			return null;
+		}
+		String name1 = process.getArguments().get(0);
+		String name2 = process.getArguments().get(1);
+		// Basic user error checking
+		if(name1.equals("") || name2.equals("")){
+			return null;
+		}
+		Object object1 = lookuptable.get(name1);
+		if (! (object1 instanceof VisualComponentList)) {
+			return null;
+		}
+		Object object2 = lookuptable.get(name2);
+		if (! (object2 instanceof VisualComponentList)) {
+			return null;
+		}
+		VisualComponentList f1 = (VisualComponentList) lookuptable.get(process.getArguments().get(0));
+		VisualComponentList f2 = (VisualComponentList) lookuptable.get(process.getArguments().get(1));
+		
+		return d.execute(f1, f2, process.getAxis());		
+	}
+	
+	// TODO
+	private AxisVariableScores executeTMethod() {
+		return null;
+	}
+	private AxisVariableScores filterScores(AxisVariableScores axisVariableScores) {
+		if (process.getMetric().equals("argmax")) {
+			ArgMaxSortFilterPrimitive argmaxFilter = new ArgMaxSortFilterPrimitive();
+			// TODO: count is stored as? "10"? "k=10"?
+			axisVariableScores = argmaxFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
+		}
+		if (process.getMetric().equals("argmin")) {
+			ArgMinSortFilterPrimitive argminFilter = new ArgMinSortFilterPrimitive();
+			axisVariableScores = argminFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
+		}
+		if (process.getMetric().equals("argany")) {
+			ArgAnySortFilterPrimitive arganyFilter = new ArgAnySortFilterPrimitive();
+			axisVariableScores = arganyFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
+			
+		}
+		return axisVariableScores;
+	}	
 	
 	@Override
 	public ZQLRow buildRowFromNode() {
