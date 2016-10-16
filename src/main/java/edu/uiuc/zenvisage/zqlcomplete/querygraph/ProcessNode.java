@@ -82,6 +82,13 @@ public class ProcessNode extends QueryNode {
 		
 		axisVariableScores = filterScores(axisVariableScores);
 		
+		// Every variable of a process statement should have a corresponding list of variables in axisVariableScores
+		for (int i = 0; i < process.getVariables().size(); i++) {
+			String varName = process.getVariables().get(i);
+			List<String> values = axisVariableScores.getAxisvars().get(i);
+			AxisVariable axisVar = new AxisVariable(varName, values);
+			lookuptable.put(varName, axisVar);
+		}
 		return axisVariableScores;
 	}	
 	
@@ -110,6 +117,7 @@ public class ProcessNode extends QueryNode {
 		VisualComponentList f1 = (VisualComponentList) lookuptable.get(process.getArguments().get(0));
 		VisualComponentList f2 = (VisualComponentList) lookuptable.get(process.getArguments().get(1));
 		
+		// axis: eg v1
 		return d.execute(f1, f2, process.getAxis());		
 	}
 	
