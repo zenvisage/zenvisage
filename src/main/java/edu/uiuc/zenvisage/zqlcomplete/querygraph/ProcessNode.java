@@ -58,6 +58,20 @@ public class ProcessNode extends QueryNode {
 				// TODO Just returning for now
 				return;
 			}
+			String name1 = process.getArguments().get(0);
+			String name2 = process.getArguments().get(1);
+			// Basic user error checking
+			if(name1.equals("") || name2.equals("")){
+				return;
+			}
+			Object object1 = lookuptable.get(name1);
+			if (! (object1 instanceof VisualComponentList)) {
+				return;
+			}
+			Object object2 = lookuptable.get(name2);
+			if (! (object2 instanceof VisualComponentList)) {
+				return;
+			}
 			VisualComponentList f1 = (VisualComponentList) lookuptable.get(process.getArguments().get(0));
 			VisualComponentList f2 = (VisualComponentList) lookuptable.get(process.getArguments().get(1));
 			
