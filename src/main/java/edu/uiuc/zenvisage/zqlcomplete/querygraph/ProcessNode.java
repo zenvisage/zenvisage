@@ -52,29 +52,22 @@ public class ProcessNode extends QueryNode {
 		this.state = State.RUNNING;
 		
 		AxisVariableScores axisVariableScores = executeProcess();
-		
-		for (String variable: process.getVariables()) {
-			//AxisVariable axisVar = new AxisVariable(variable, axisVariableScores.getAxisvars());
-		}
-		
-		/**
-		 * update with all process variables
-		//String name = rowResult.getZqlProcessResult().getzType();
-		if(!name.equals("")) {
-			AxisVariable axisVar = new AxisVariable(name, rowResult.getZqlProcessResult().getzValues());
-			this.getLookUpTable().put(name, axisVar);
-		}
-		**/
+
 		// mock 
 	}
 	
 	public AxisVariableScores executeProcess() {
 		AxisVariableScores axisVariableScores = null;
+		
+		// TODO: handle different types of D, T, and R
 		if (process.getMethod().equals("D")) {
 			axisVariableScores = executeDMethod();
 		}
 		if (process.getMethod().equals("T")) {
 			axisVariableScores = executeTMethod();
+		}
+		if (process.getMethod().equals("R")){
+			axisVariableScores = executeRMethod();
 		}
 		if (axisVariableScores == null) {
 			return null;
@@ -114,16 +107,41 @@ public class ProcessNode extends QueryNode {
 		if (! (object2 instanceof VisualComponentList)) {
 			return null;
 		}
-		VisualComponentList f1 = (VisualComponentList) lookuptable.get(process.getArguments().get(0));
-		VisualComponentList f2 = (VisualComponentList) lookuptable.get(process.getArguments().get(1));
+		VisualComponentList f1 = (VisualComponentList) object1;
+		VisualComponentList f2 = (VisualComponentList) object2;
 		
 		// axis: eg v1
 		return d.execute(f1, f2, process.getAxis());		
 	}
 	
-	// TODO
 	private AxisVariableScores executeTMethod() {
+		TIncreasingness t = new TIncreasingness();
+		
+		if (process.getArguments().size() != 1) {
+			return null;
+		}
+		String name1 = process.getArguments().get(0);
+		
+		if(name1.equals("")) {
+			return null;
+		}
+		Object object1 = lookuptable.get(name1);
+		if (! (object1 instanceof VisualComponentList)) {
+			return null;
+		}
+		VisualComponentList f1 = (VisualComponentList) object1;
+		
+		return t.execute(f1, process.getAxis());
+	}
+	
+	// TODO: complete
+	private AxisVariableScores executeRMethod() {
+		//R(k,v,f)
+		//compute set of k-representative viz (int)
+		// axisvar = v (string? one axisvar?)
+		// visualcomponentlist = f
 		return null;
+		
 	}
 	private AxisVariableScores filterScores(AxisVariableScores axisVariableScores) {
 		if (process.getMetric().equals("argmax")) {
