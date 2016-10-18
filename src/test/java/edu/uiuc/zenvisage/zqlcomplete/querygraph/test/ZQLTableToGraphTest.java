@@ -149,8 +149,13 @@ public class ZQLTableToGraphTest {
 		// count?
 		// metric?
 		// arguments?
-		process.getParameters().put("f1","1");
-		process.getParameters().put("f2","2");
+		//process.getParameters().put("f1","1");
+		//process.getParameters().put("f2","2");
+		// process.setAxis("z1");
+		process.setCount("7");
+		process.setMetric("argmin");
+		process.getArguments().add("f1");
+		process.getArguments().add("f2");
 		
 		ZQLRow row2 = new ZQLRow(x2, y2, z2, null, null);
 		row2.setProcesse(process);
