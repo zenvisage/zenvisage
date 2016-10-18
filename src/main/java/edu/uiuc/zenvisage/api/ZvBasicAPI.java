@@ -140,7 +140,9 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/executeZQLComplete", method = RequestMethod.GET)
 	@ResponseBody
 	public String executeZQLComplete(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
-		return zvMain.runZQLCompleteQuery(arg);
+		// return zvMain.runZQLCompleteQuery(arg);
+		// for testing my query graph executor with zql.html
+		return zvMain.runQueryGraph(arg);
 	}
 
 

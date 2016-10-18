@@ -61,6 +61,8 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 import edu.uiuc.zenvisage.service.distance.*;
 
 /**
@@ -171,6 +173,22 @@ public class ZvMain {
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
 
 		}
+
+   public String runQueryGraph(String zqlQuery) throws IOException, InterruptedException{
+	   System.out.println(zqlQuery);
+	   inMemoryDatabase = inMemoryDatabases.get("real_estate");
+	   executor = new Executor(inMemoryDatabase);
+	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
+	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+
+	   ZQLParser parser = new ZQLParser();
+	   QueryGraph graph = parser.processZQLTable(zqlTable);
+	   
+	   String result = new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph));
+	   System.out.println(" Query Graph Execution Results Are:");
+	   System.out.println(result);
+	   return result;
+   }
 
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 //		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
