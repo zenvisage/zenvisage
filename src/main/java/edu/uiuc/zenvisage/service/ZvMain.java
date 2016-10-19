@@ -179,7 +179,6 @@ public class ZvMain {
 
    public String runQueryGraph(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
-	   inMemoryDatabase = inMemoryDatabases.get("real_estate");
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
 	   ZQLParser parser = new ZQLParser();
 	   QueryGraph graph = parser.processZQLTable(zqlTable);

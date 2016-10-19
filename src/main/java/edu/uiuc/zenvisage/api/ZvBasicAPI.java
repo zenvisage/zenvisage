@@ -144,7 +144,9 @@ public class ZvBasicAPI {
 		// for testing my query graph executor with zql.html
 		String outputExecutor = zvMain.runZQLCompleteQuery(arg);
 		String outputGraphExecutor = zvMain.runQueryGraph(arg);
-		return outputGraphExecutor;
+		
+		// TODO change to graph executor
+		return outputExecutor;
 	}
 
 
