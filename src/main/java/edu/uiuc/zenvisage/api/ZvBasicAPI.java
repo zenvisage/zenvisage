@@ -142,7 +142,9 @@ public class ZvBasicAPI {
 	public String executeZQLComplete(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
 		// return zvMain.runZQLCompleteQuery(arg);
 		// for testing my query graph executor with zql.html
-		return zvMain.runQueryGraph(arg);
+		String outputExecutor = zvMain.runZQLCompleteQuery(arg);
+		String outputGraphExecutor = zvMain.runQueryGraph(arg);
+		return outputGraphExecutor;
 	}
 
 

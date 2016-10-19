@@ -3,7 +3,7 @@ package edu.uiuc.zenvisage.data.remotedb;
 import java.util.ArrayList;		
  		
 public class Points {		
-	private ArrayList <WrapperType> xList;		
+	private ArrayList <WrapperType> xList;	// chart xData	
 	private ArrayList <WrapperType> yList;
 	public Points (ArrayList <WrapperType> xList, ArrayList <WrapperType> yList){
 		this.xList = xList; this.yList = yList;

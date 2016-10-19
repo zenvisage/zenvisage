@@ -2,7 +2,7 @@ package edu.uiuc.zenvisage.data.remotedb;
 
 public class VisualComponent {		
 	
-	private WrapperType zValue;		
+	private WrapperType zValue; // get the string, that is chart ztype
 	private Points points;
 	
 	/*Empty Constructor*/
