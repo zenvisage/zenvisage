@@ -89,7 +89,6 @@ public class ZvMain {
 	public ZvMain() throws IOException, InterruptedException{
 		System.out.println("ZVMAIN LOADED");
 		loadData();
-
 	}
 
 	public  void loadData() throws IOException, InterruptedException{

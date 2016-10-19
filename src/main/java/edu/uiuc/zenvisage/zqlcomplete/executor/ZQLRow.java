@@ -22,6 +22,17 @@ public class ZQLRow {
 	private VizColumn viz;
 	public Sketch sketchPoints;
 	
+	// Needed for jackson mapping from json to object
+	public ZQLRow() {
+		name = new Name();
+		x = new XColumn();
+		y= new YColumn();
+		z= new ZColumn();
+		constraints= new ArrayList<Constraints>();
+		processe = new Processe();
+		viz = new VizColumn();
+	}
+	
 	public ZQLRow(XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
 		this.x = x;
 		this.y = y;
