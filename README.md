@@ -20,6 +20,7 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 
 * Install Postgresql database
 
+* (https://github.com/zenvisage/zenvisage/blob/feature/QueryGraph/src/main/java/edu/uiuc/zenvisage/data/remotedb/readme.md)
 
 
 ## Building Code and Deployment
@@ -33,8 +34,8 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 
 (2) Postgres server must contain a user with:
 
-username  postgres
-password: zenvisage
+username:postgres
+password:(not listed here, you know what it is for our server)
 
 (3) Run clean up query and setup query:
 
