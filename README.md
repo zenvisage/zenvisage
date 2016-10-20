@@ -12,7 +12,8 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
   * For Linux: sudo apt-get install maven
   * For Mac OS-X with Homebrew installed: brew install maven
 
-* Install Java 1.8
+* Install Java 1.8, 
+
   UPDATE JAVA_HOME to your installed java folder.
 
 * Install [eclipse J2EE] (http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/mars2) (Optional: for development) 
