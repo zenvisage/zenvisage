@@ -134,8 +134,10 @@ public class SQLQueryExecutor {
 		
 		databaseName = databaseName.toLowerCase();
 		String z = zqlRow.getZ().getColumn().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String x = zqlRow.getX().getValuesi().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+//		String x = zqlRow.getX().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String x = zqlRow.getX().getValues().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+//		String y = zqlRow.getY().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String y = zqlRow.getY().getValues().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
@@ -150,6 +152,12 @@ public class SQLQueryExecutor {
 					+ " FROM " + databaseName
 					+ " GROUP BY " + z + ", "+ x
 					+ " ORDER BY " + z + ", "+ x;
+/*=======
+			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getValues().get(0) + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getValues().get(0) + ")" //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + databaseName
+					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0)
+					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0);
+>>>>>>> Updating ZvMain to handle QueryGraph. Making some basic changed to SQLQueryExecutor (should be grabbing value instead of variable)*/
 		} else {
 			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 			+ " FROM " + databaseName
