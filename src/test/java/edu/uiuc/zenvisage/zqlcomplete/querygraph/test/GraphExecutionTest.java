@@ -10,7 +10,7 @@ public class GraphExecutionTest {
 
 	@Test
 	public void TestBasicQueryExecution() {
-		String arg = "{\"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"values\":[\"'year'\"]},\"y\":{\"values\":[\"'soldprice'\"]},\"z\":{\"column\":\"'state'\",\"values\":[\"*\"]}}]}";
+		String arg = "{\"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"values\":[\"'Year'\"]},\"y\":{\"values\":[\"'SoldPrice'\"]},\"z\":{\"column\":\"'State'\",\"values\":[\"*\"]}}]}";
 
 		try {
 			ZvMain zvMain = new ZvMain();

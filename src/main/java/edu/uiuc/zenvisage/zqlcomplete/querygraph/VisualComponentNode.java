@@ -78,6 +78,7 @@ public class VisualComponentNode extends QueryNode{
 		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
 		System.out.println("vcList for node "+ name);
 		System.out.println(sqlQueryExecutor.getVisualComponentList());
+		System.out.println("hi");
 	}
 
 	public VisualComponentQuery getVc() {
