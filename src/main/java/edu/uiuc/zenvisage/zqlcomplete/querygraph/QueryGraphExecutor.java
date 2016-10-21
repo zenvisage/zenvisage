@@ -1,9 +1,12 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+
+import org.apache.commons.collections.MapUtils;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
@@ -39,6 +42,11 @@ public class QueryGraphExecutor {
 				currNode = (QueryNode) nodeQueue.remove();
 				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
+					outputList = (VisualComponentList) (currNode).lookuptable.get("f1");
+					System.out.println(" My map");
+					MapUtils.debugPrint(System.out, "myMap", currNode.lookuptable.getVariables());
+					System.out.println(" My map");
+					System.out.println(Arrays.toString(currNode.lookuptable.getVariables().entrySet().toArray()));
 					// Add result node to contain the executed data
 					for (Node parent : currNode.getParents()) {
 						if (parent instanceof VisualComponentNode) {
@@ -78,7 +86,6 @@ public class QueryGraphExecutor {
 			// from every entry node, keep traveling down to children.
 			// each children keeps going until we are all finished, or we are blocked (waiting on another path)
 		}
-		
 		return outputList;
 	}
 }

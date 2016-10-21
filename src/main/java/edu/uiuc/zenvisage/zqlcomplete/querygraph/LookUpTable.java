@@ -18,5 +18,11 @@ public class LookUpTable {
 	public Object get(String name){
 		return variables.get(name);
 	}
+	public HashMap<String, Object> getVariables() {
+		return variables;
+	}
+	public void setVariables(HashMap<String, Object> variables) {
+		this.variables = variables;
+	}
 
 }

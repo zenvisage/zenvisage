@@ -140,10 +140,10 @@ public class SQLQueryExecutor {
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
 		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
-			sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
+			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getValues().get(0) + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getValues().get(0) + ")" //zqlRow.getViz() should replace the avg() function
 					+ " FROM " + databaseName
-					+ " GROUP BY " + z + ", "+ x
-					+ " ORDER BY " + z + ", "+ x;
+					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0)
+					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0);
 		} else {
 			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 			+ " FROM " + databaseName

@@ -39,9 +39,11 @@ import com.google.common.collect.HashBiMap;
 import edu.uiuc.zenvisage.data.Query;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.SchemeToMetatable;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.roaringdb.db.Column;
 import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
@@ -184,68 +186,82 @@ public class ZvMain {
 	   QueryGraph graph = parser.processZQLTable(zqlTable);
 	   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
 	   //convert it into front-end format.
-	   String result = new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph));
+	   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
 	   System.out.println(" Query Graph Execution Results Are:");
 	   System.out.println(result);
 	   return result;
    }
 
    
-   public String convertVCListtoVisualOutput(){
-	/*		Result finalOutput=new Result();
+   public Result convertVCListtoVisualOutput(VisualComponentList vcList){
+			Result finalOutput=new Result();
 			int outputLength = 50;
-			List<ZQLRowVizResult> orig = zqlRowResult.getZqlRowVizResults() ;
+			// List<ZQLRowVizResult> orig = zqlRowResult.getZqlRowVizResults() ;
 			Normalization outputNormalization = new Original();
 			 // reformat database data
 			 DataReformation dataReformatter = new DataReformation(outputNormalization);
-			 double[][] output  = dataReformatter.reformatData(orig);
-			
-			List<Iterator<Entry<String, LinkedHashMap<Float, Float>>>> iteratorList= new ArrayList<>();
-			List<String> xs= new ArrayList<>();
-			List<String> ys= new ArrayList<>();
-			List<String> zs= new ArrayList<>();
-			
-			
-			for (ZQLRowVizResult output  : orig) {
-				xs.add(output.getX());
-				ys.add(output.getY());
-				zs.add(output.getZ());
-				Set<Entry<String, LinkedHashMap<Float, Float>>> vizentryset = output.getVizData().entrySet();
-				Iterator<Entry<String, LinkedHashMap<Float, Float>>> it = vizentryset.iterator();
-				iteratorList.add(it);
-			}
-					
-				
-			for(int i = 0; i < Math.min(orig.get(0).getVizData().size(), outputLength); i++) {
-					// initialize a new chart
-				int j = 0;
-				
-			
-				for(Iterator<Entry<String, LinkedHashMap<Float, Float>>> it:iteratorList){
-					Entry<String, LinkedHashMap<Float, Float>> entry = it.next();
-					String zvalue=entry.getKey();
-					Set<Entry<Float, Float>> innerkeyset = entry.getValue().entrySet();
-					if(innerkeyset.size()<0)
-						continue;
-					Iterator<Entry<Float, Float>> innerit = innerkeyset.iterator();
-					Chart chartOutput = new Chart();
-					chartOutput.setxType((i+1)+" : "+zvalue);
-					chartOutput.setyType("avg"+"("+ys.get(j)+")");
-					while(innerit.hasNext()){
-						Entry<Float, Float> innerentry = innerit.next();
-						Float xvalue=innerentry.getKey();		
-						Float yvalue=innerentry.getValue();		
-						chartOutput.xData.add(Float.toString(xvalue));
-						chartOutput.yData.add(Float.toString(yvalue));
-					}
-
-					j++;
-					finalOutput.outputCharts.add(chartOutput);
-					
-				}
-			}
-			return finalOutput;*/
-	   return null;
+//			 // double[][] output  = dataReformatter.reformatData(orig);
+//			
+//			List<Iterator<Entry<String, LinkedHashMap<Float, Float>>>> iteratorList= new ArrayList<>();
+//			List<String> xs= new ArrayList<>();
+//			List<String> ys= new ArrayList<>();
+//			List<String> zs= new ArrayList<>();
+//			
+//			
+//			for (ZQLRowVizResult output  : orig) {
+//				xs.add(output.getX());
+//				ys.add(output.getY());
+//				zs.add(output.getZ());
+//				Set<Entry<String, LinkedHashMap<Float, Float>>> vizentryset = output.getVizData().entrySet();
+//				Iterator<Entry<String, LinkedHashMap<Float, Float>>> it = vizentryset.iterator();
+//				iteratorList.add(it);
+//			}
+//					
+//				
+//			for(int i = 0; i < Math.min(orig.get(0).getVizData().size(), outputLength); i++) {
+//					// initialize a new chart
+//				int j = 0;
+//				
+//			
+//				for(Iterator<Entry<String, LinkedHashMap<Float, Float>>> it:iteratorList){
+//					Entry<String, LinkedHashMap<Float, Float>> entry = it.next();
+//					String zvalue=entry.getKey();
+//					Set<Entry<Float, Float>> innerkeyset = entry.getValue().entrySet();
+//					if(innerkeyset.size()<0)
+//						continue;
+//					Iterator<Entry<Float, Float>> innerit = innerkeyset.iterator();
+//					Chart chartOutput = new Chart();
+//					chartOutput.setxType((i+1)+" : "+zvalue);
+//					chartOutput.setyType("avg"+"("+ys.get(j)+")");
+//					while(innerit.hasNext()){
+//						Entry<Float, Float> innerentry = innerit.next();
+//						Float xvalue=innerentry.getKey();		
+//						Float yvalue=innerentry.getValue();		
+//						chartOutput.xData.add(Float.toString(xvalue));
+//						chartOutput.yData.add(Float.toString(yvalue));
+//					}
+//
+//					j++;
+//					finalOutput.outputCharts.add(chartOutput);
+//					
+//				}
+//			}
+		//VisualComponentList -> Result. Only care about the outputcharts
+		int i = 0;
+	    for(VisualComponent viz : vcList.getVisualComponentList()) {
+	    	Chart outputChart = new Chart();
+	    	outputChart.setxType((++i) + " : " + viz.getZValue().getStrValue());
+	    	outputChart.setyType("avg" + "(" + vcList.getYtype() + ")");
+	    	outputChart.title = "From Query Graph";
+	    	for(WrapperType xValue : viz.getPoints().getXList()) {
+	    		outputChart.xData.add(xValue.getStrValue());
+	    	}
+	    	for(WrapperType yValue : viz.getPoints().getYList()) {
+	    		outputChart.yData.add(yValue.getStrValue());
+	    	}
+	    	finalOutput.outputCharts.add(outputChart);
+	    }
+		return finalOutput;
 		
 	 }
 

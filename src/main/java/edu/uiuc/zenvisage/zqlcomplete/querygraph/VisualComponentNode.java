@@ -65,7 +65,7 @@ public class VisualComponentNode extends QueryNode{
 		// call SQL backend
 		ZQLRow row = buildRowFromNode();
 		try {
-			sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
+			sqlQueryExecutor.ZQLQueryEnhanced(row, "realestate");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -97,12 +97,20 @@ public class VisualComponentNode extends QueryNode{
 	 * Column has no variable name, and no value. Send as is (columns may be optional)
 	 */
 	public ZQLRow buildRowFromNode() {
-		XColumn x = vc.getX();		
+		XColumn x = vc.getX();	
+		System.out.println("x information:");
+		System.out.println(x.getVariable());
+		System.out.println(x.getValues());
+		System.out.println(x.getValues().get(0));
 		// x1 (variable, no values)
 		if(!x.getVariable().equals("") && x.getValues().isEmpty()) {
 			List<String> values = (List<String>) lookuptable.get(x.getVariable());
 			x.setValues(values);
 		}
+		// Stripping out '' from first value
+		String var = x.getValues().get(0);
+		var = var.replace("'", "");
+		x.getValues().set(0, var);
 		
 		YColumn y = vc.getY();		
 		// y1 (variable, no values)
@@ -110,14 +118,28 @@ public class VisualComponentNode extends QueryNode{
 			List<String> values = (List<String>) lookuptable.get(y.getVariable());
 			y.setValues(values);
 		}		
+
+		// Stripping out '' from first value
+		var = y.getValues().get(0);
+		var = var.replace("'", "");
+		y.getValues().set(0, var);
 		
 		ZColumn z = vc.getZ();		
 		// z1 (variable, no values)
+		System.out.println("z information:");
+		System.out.println(z.getVariable());
+		System.out.println(z.getValues());
+		System.out.println(z.getColumn());
+		String str = z.getColumn();
+		str = str.replace("'", "");
+		z.setColumn(str);
+		System.out.println(str);
+		System.out.println(z.getColumn());
 		if(!z.getVariable().equals("") && z.getValues().isEmpty()) {
 			List<String> values = (List<String>) lookuptable.get(z.getVariable());
 			z.setValues(values);
 		}
-		
+		vc.getViz().setVariable("AVG");
 		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)
 		return result;
