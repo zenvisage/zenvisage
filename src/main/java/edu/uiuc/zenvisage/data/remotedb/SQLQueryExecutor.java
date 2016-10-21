@@ -180,16 +180,16 @@ public class SQLQueryExecutor {
 		String zType = null, xType = null, yType = null;
 		while (rs.next())
 		{
+/*
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable().toLowerCase(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable().toLowerCase(), databaseName);
+*/			
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
 			//TODO: supports only 1 column value
 			if(xType == null) xType = getMetaType(zqlRow.getX().getValues().get(0).toLowerCase(), databaseName);
 			if(yType == null) yType = getMetaType(zqlRow.getY().getValues().get(0).toLowerCase(), databaseName);
-/*=======
-			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
-			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable().toLowerCase(), databaseName);
-			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable().toLowerCase(), databaseName);
-			
->>>>>>> BugFix:Cast SQL variables to lowercase for both columnsName&&tableName;Strip inverted commas*/
+
 			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
 			if(tempZValue.equals(zValue)){
