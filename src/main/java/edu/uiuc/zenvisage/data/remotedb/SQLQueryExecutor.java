@@ -134,16 +134,22 @@ public class SQLQueryExecutor {
 		
 		databaseName = databaseName.toLowerCase();
 		String z = zqlRow.getZ().getColumn().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String x = zqlRow.getX().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String x = zqlRow.getX().getValuesi().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String y = zqlRow.getY().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String y = zqlRow.getY().getValues().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
 		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
+/*<<<<<<< 73307f7cc0c1baf67332fa0e6cb799b7e4e70391
 			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getValues().get(0) + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getValues().get(0) + ")" //zqlRow.getViz() should replace the avg() function
 					+ " FROM " + databaseName
 					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0)
 					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0);
+=======*/
+			sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + databaseName
+					+ " GROUP BY " + z + ", "+ x
+					+ " ORDER BY " + z + ", "+ x;
 		} else {
 			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 			+ " FROM " + databaseName
@@ -166,10 +172,16 @@ public class SQLQueryExecutor {
 		String zType = null, xType = null, yType = null;
 		while (rs.next())
 		{
-			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn(), databaseName);
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
 			//TODO: supports only 1 column value
-			if(xType == null) xType = getMetaType(zqlRow.getX().getValues().get(0), databaseName);
-			if(yType == null) yType = getMetaType(zqlRow.getY().getValues().get(0), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getValues().get(0).toLowerCase(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getValues().get(0).toLowerCase(), databaseName);
+/*=======
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable().toLowerCase(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable().toLowerCase(), databaseName);
+			
+>>>>>>> BugFix:Cast SQL variables to lowercase for both columnsName&&tableName;Strip inverted commas*/
 			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
 			if(tempZValue.equals(zValue)){
