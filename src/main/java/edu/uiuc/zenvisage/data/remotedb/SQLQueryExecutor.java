@@ -76,7 +76,7 @@ public class SQLQueryExecutor {
 	
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
-		String sql = null;	
+		String sql = null;
 		
 		if (whereCondition == null) {
 			sql = "SELECT " + Z + "," + X + "," + "avg(" + Y + ")"
@@ -130,21 +130,26 @@ public class SQLQueryExecutor {
 	
 	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
 		Statement st = c.createStatement();
-		String sql = null;	
+		String sql = null;
 		
+		databaseName = databaseName.toLowerCase();
+		String z = zqlRow.getZ().getColumn().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String x = zqlRow.getX().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String y = zqlRow.getY().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
 		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
-			sql = "SELECT " + zqlRow.getZ().getColumn() + "," + zqlRow.getX().getVariable() + " ," + zqlRow.getViz().getVariable() + "(" + zqlRow.getY().getVariable() + ")" //zqlRow.getViz() should replace the avg() function
+			sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
 					+ " FROM " + databaseName
-					+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
-					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
+					+ " GROUP BY " + z + ", "+ x
+					+ " ORDER BY " + z + ", "+ x;
 		} else {
-			sql = "SELECT " + zqlRow.getZ().getColumn()+ "," + zqlRow.getX().getVariable()
+			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 			+ " FROM " + databaseName
 			+ " WHERE " + zqlRow.getConstraint() //zqlRow.getConstraint() has replaced the whereCondiditon
-			+ " GROUP BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable()
-			+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getVariable();
+			+ " GROUP BY " + z + ", "+ x
+			+ " ORDER BY " + z + ", "+ x;
 		}
 		System.out.println("Running ZQL Query :"+sql);
 		ResultSet rs = st.executeQuery(sql);
@@ -161,9 +166,9 @@ public class SQLQueryExecutor {
 		String zType = null, xType = null, yType = null;
 		while (rs.next())
 		{
-			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn(), databaseName);
-			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable(), databaseName);
-			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable(), databaseName);
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable().toLowerCase(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable().toLowerCase(), databaseName);
 			
 			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
@@ -190,7 +195,7 @@ public class SQLQueryExecutor {
 	
 	public String getMetaType(String variable, String table) throws SQLException{
 		Statement st = c.createStatement();
-		String sql = null;	
+		String sql = null;
 		sql = "SELECT " + "type"
 			+ " FROM " + "zenvisage_metatable"
 			+ " WHERE " + "tablename = '" + table
@@ -266,27 +271,28 @@ public class SQLQueryExecutor {
 	    stmt.close();
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		try {
 			sqlQueryExecutor.dropTable("COMPANY");
+			
+			//sqlQueryExecutor.query("SELECT * FROM COMPANY");
+			
+			//sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
+			
+			
+		} catch (PSQLException e) {
+			// TODO Auto-generated catch block
 			sqlQueryExecutor.createTable("CREATE TABLE COMPANY " +
 	                "(ID INT PRIMARY KEY     NOT NULL," +
 	                " NAME           TEXT    NOT NULL, " +
 	                " AGE            INT     NOT NULL, " +
 	                " ADDRESS        CHAR(50), " +
 	                " SALARY         REAL)");
-			//sqlQueryExecutor.query("SELECT * FROM COMPANY");
-			
-			//sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
-			List<Constraints> constraints = new ArrayList<Constraints>();
-			ZQLRow zqlRow = new ZQLRow(new XColumn("Quarter"), new YColumn("SoldPrice"), new ZColumn("State"), constraints, new VizColumn("avg"));
-			sqlQueryExecutor.ZQLQueryEnhanced(zqlRow, "real_estate");
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		List<Constraints> constraints = new ArrayList<Constraints>();
+		ZQLRow zqlRow = new ZQLRow(new XColumn("Quarter"), new YColumn("SoldPrice"), new ZColumn("State"), constraints, new VizColumn("avg"));
+		sqlQueryExecutor.ZQLQueryEnhanced(zqlRow, "real_estate");
 	}
 
 	public VisualComponentList getVisualComponentList() {
