@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SchemeToMetatable {
 	
-	public StringBuilder createTableSQL;
+	public String createTableSQL;
 	public List<String> columns;
 	
 	public SchemeToMetatable(){
@@ -44,8 +44,8 @@ public class SchemeToMetatable {
 		System.out.println(filePath);
 		System.out.println(tablename);
 //		InputStream is = getClass().getResourceAsStream(filePath);
-		
-		this.createTableSQL = new StringBuilder("Create table " + tablename + "(");
+		tablename = tablename.toLowerCase();
+		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
 		
 	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
@@ -54,15 +54,15 @@ public class SchemeToMetatable {
 			System.out.println(sCurrentLine);
 			String split1[] = sCurrentLine.split(":");
 			String split2[] = split1[1].split(",");
-			sql.append("('" + tablename + "', '" + split1[0] + "', '" + split2[0] + "'), ");
-			this.createTableSQL.append(split1[0] + " " + typeToPostgresType(split2[0]) + ", ");
-			this.columns.add(split1[0]);
+			sql.append("('" + tablename + "', '" + split1[0].toLowerCase().replaceAll("-", "") + "', '" + split2[0] + "'), ");
+			createTableSQLBuilder.append(split1[0].toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(split2[0]) + ", ");
+			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
 		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
-		this.createTableSQL.replace(this.createTableSQL.length()-2,this.createTableSQL.length(), ");");
-		
-		System.out.println(this.createTableSQL);
+		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");
+		this.createTableSQL = createTableSQLBuilder.toString();
+		System.out.println(createTableSQL);
 		return sql.toString();
 	}
 	

@@ -144,14 +144,16 @@ public class ZvMain {
 			
 			/*create csv table*/
 			if(!sqlQueryExecutor.isTableExists(names.get(0))){
-				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL.toString());
+				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
 				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
 				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
 			} else {
 				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));
 			}
 			
+			System.out.println("HERE:"+names.get(0) +" "+ names.get(2) + " "+ names.get(1));
 			inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
+			
 			
 //			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}

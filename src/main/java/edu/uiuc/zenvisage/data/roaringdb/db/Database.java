@@ -43,6 +43,13 @@ public class Database {
 
 	private void addValue(String columnName,int row,String value){
 		Column column=columns.get(columnName);
+		
+//		System.out.println(columns.size());
+//		System.out.println(columnName);
+//		for(String key:columns.keySet()){
+//			System.out.print(key +" ");
+//		}
+		//System.out.println();
 		column.add(row, value);
  	}
 
@@ -58,7 +65,7 @@ public class Database {
 	 while ((line = bufferedReader.readLine()) != null){
 			 ColumnMetadata columnMetadata= new ColumnMetadata();
 			 String[] sections=line.split(":");
-			 columnMetadata.name=sections[0];
+			 columnMetadata.name=sections[0].toLowerCase().replaceAll("-", "");
 			 String[] terms=sections[1].split(",");
 			 columnMetadata.isIndexed=true;
 			 columnMetadata.dataType=terms[0];
@@ -105,6 +112,9 @@ public class Database {
 		String line;
 		line = bufferedReader.readLine();
 		String[] header=line.split(",");
+		for(int i=0;i<header.length;i++){
+			header[i]=header[i].toLowerCase().replaceAll("-", "");
+		}
 		int count=0;
 		 String[] terms;
 		while ((line = bufferedReader.readLine()) != null){

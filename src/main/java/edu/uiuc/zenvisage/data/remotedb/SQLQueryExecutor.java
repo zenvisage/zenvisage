@@ -228,6 +228,8 @@ public class SQLQueryExecutor {
 	public boolean insert(String sql, String tablename, String tablenameVariable, String databasename) throws SQLException{
 		int count = 0;
 		Statement st0 = c.createStatement();
+		tablename = tablename.toLowerCase();
+		databasename = databasename.toLowerCase();
 		String sql0 = "SELECT COUNT(*) FROM "
 				+ tablename
 	 			+ " WHERE " + tablenameVariable + " = '" + databasename + "'";
