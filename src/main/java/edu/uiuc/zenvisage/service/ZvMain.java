@@ -254,10 +254,10 @@ public class ZvMain {
 	    	outputChart.setyType("avg" + "(" + vcList.getYtype() + ")");
 	    	outputChart.title = "From Query Graph";
 	    	for(WrapperType xValue : viz.getPoints().getXList()) {
-	    		outputChart.xData.add(xValue.getStrValue());
+	    		outputChart.xData.add(xValue.toString());
 	    	}
 	    	for(WrapperType yValue : viz.getPoints().getYList()) {
-	    		outputChart.yData.add(yValue.getStrValue());
+	    		outputChart.yData.add(yValue.toString());
 	    	}
 	    	finalOutput.outputCharts.add(outputChart);
 	    }

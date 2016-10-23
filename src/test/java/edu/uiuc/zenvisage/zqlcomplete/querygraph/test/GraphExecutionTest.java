@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph.test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.junit.Test;
 
@@ -19,7 +20,12 @@ public class GraphExecutionTest {
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
 			
-		} catch (IOException | InterruptedException e) {
+			
+			String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
+			System.out.println("Old Output");
+			System.out.println(outputOldExecutor);
+			
+		} catch (IOException | InterruptedException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
