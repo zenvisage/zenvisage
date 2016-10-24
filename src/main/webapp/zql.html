@@ -3,6 +3,7 @@
 	<head lang="en">
 		<meta charset="UTF-8">
 		<title>ZQLTable</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="zqltable.css">
 		<script src="zql/jquery.min.js"></script>
    <!--      <script src="js/vdb.js"></script>-->
@@ -22,7 +23,7 @@
 
 	<body ng-app="myApp">
 		<div ng-controller="MyController">
-			<table class="table">
+			<table class="table table-bordered table-hover">
 				<caption>ZQL Query Table</caption>
 				<col width="5%">
 				<col width="10%">
@@ -52,30 +53,30 @@
 				</tr>
 				<tr>
 					<td>
-						<input ng-model="input.name" type=text/>
+						<input class="form-control" ng-model="input.name" type=text/>
 					</td>
 					<td>
-						<input ng-model="input.x" type=text/>
+						<input class="form-control" ng-model="input.x" type=text/>
 					</td>
 					<td>
-						<input ng-model="input.y" type=text/>
+						<input class="form-control" ng-model="input.y" type=text/>
 					</td>
 					<td>
-						<input ng-model="input.z" type=text/>
+						<input class="form-control" ng-model="input.z" type=text/>
 					</td>
 					<td>
-						<input ng-model="input.constraints" type=text/>
+						<input class="form-control" ng-model="input.constraints" type=text/>
 					</td>					
 					<td>
-						<input ng-model="input.viz" type=text/>
+						<input class="form-control" ng-model="input.viz" type=text/>
 					</td>
 					<td>
-						<input ng-model="input.processe" type=text/>
+						<input class="form-control" ng-model="input.processe" type=text/>
 					</td>					
 				</tr>
 			</table>
-			<button ng-click="addRow()">Add Row</button>
-			<button ng-click="submitZQL()">Submit</button>
+			<button class="btn btn-default" ng-click="addRow()">Add Row</button>
+			<button class="btn btn-primary" ng-click="submitZQL()">Submit</button>
 		</div>
 		 <div class="scrollbar" id="scrollbar">
     	 <div class="force-overflow">
