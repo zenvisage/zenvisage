@@ -58,8 +58,9 @@ public class VisualComponentNode extends QueryNode{
 			AxisVariable axisVar = new AxisVariable(y.getVariable(), y.getValues());
 			lookuptable.put(y.getVariable(), axisVar);
 		}
+		// For z, use type variable = z.getColumn!
 		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable(z.getVariable(), z.getValues());
+			AxisVariable axisVar = new AxisVariable(z.getColumn(), z.getValues());
 			lookuptable.put(z.getVariable(), axisVar);
 		}
 		// call SQL backend
@@ -99,15 +100,17 @@ public class VisualComponentNode extends QueryNode{
 	 */
 	public ZQLRow buildRowFromNode() {
 		XColumn x = vc.getX();	
+		// x1 (variable, no values)
+		if(!x.getVariable().equals("") && x.getValues().isEmpty()) {
+			// The lookup table for x should have value = AxisVariable
+			List<String> values = ((AxisVariable) lookuptable.get(x.getVariable())).getValues();
+			x.setValues(values);
+		}
 		System.out.println("x information:");
 		System.out.println(x.getVariable());
 		System.out.println(x.getValues());
 		System.out.println(x.getValues().get(0));
-		// x1 (variable, no values)
-		if(!x.getVariable().equals("") && x.getValues().isEmpty()) {
-			List<String> values = (List<String>) lookuptable.get(x.getVariable());
-			x.setValues(values);
-		}
+		
 		// Stripping out '' from first value
 		String var = x.getValues().get(0);
 		var = var.replace("'", "");
@@ -116,7 +119,7 @@ public class VisualComponentNode extends QueryNode{
 		YColumn y = vc.getY();		
 		// y1 (variable, no values)
 		if(!y.getVariable().equals("") && y.getValues().isEmpty()) {
-			List<String> values = (List<String>) lookuptable.get(y.getVariable());
+			List<String> values = ((AxisVariable) lookuptable.get(y.getVariable())).getValues();
 			y.setValues(values);
 		}		
 
@@ -127,19 +130,24 @@ public class VisualComponentNode extends QueryNode{
 		
 		ZColumn z = vc.getZ();		
 		// z1 (variable, no values)
-		System.out.println("z information:");
-		System.out.println(z.getVariable());
-		System.out.println(z.getValues());
-		System.out.println(z.getColumn());
 		String str = z.getColumn();
 		str = str.replace("'", "");
 		z.setColumn(str);
 		System.out.println(str);
 		System.out.println(z.getColumn());
+		AxisVariable zAxisVariable = (AxisVariable) lookuptable.get(z.getVariable());
 		if(!z.getVariable().equals("") && z.getValues().isEmpty()) {
-			List<String> values = (List<String>) lookuptable.get(z.getVariable());
+			List<String> values = zAxisVariable.getValues();
 			z.setValues(values);
 		}
+		// if z is missing column information, grab from axisVariable type! (Special case!)
+		if(!z.getVariable().equals("") && z.getColumn().isEmpty()) {
+			z.setColumn(zAxisVariable.getType());
+		}
+		System.out.println("z information:");
+		System.out.println(z.getVariable());
+		System.out.println(z.getValues());
+		System.out.println(z.getColumn());
 		vc.getViz().setVariable("AVG");
 		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)

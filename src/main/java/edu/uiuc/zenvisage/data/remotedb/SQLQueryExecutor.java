@@ -161,7 +161,7 @@ public class SQLQueryExecutor {
 		} else {
 			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 			+ " FROM " + databaseName
-			+ " WHERE " + zqlRow.getConstraint() //zqlRow.getConstraint() has replaced the whereCondiditon
+			+ " WHERE " + zqlRow.getConstraint().get(0) //zqlRow.getConstraint() has replaced the whereCondiditon
 			+ " GROUP BY " + z + ", "+ x
 			+ " ORDER BY " + z + ", "+ x;
 		}

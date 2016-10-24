@@ -40,6 +40,7 @@ public class QueryGraphExecutor {
 			
 			while(!nodeQueue.isEmpty()) {
 				currNode = (QueryNode) nodeQueue.remove();
+				System.out.println("Processing Node: "+ currNode.toString());
 				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
 					outputList = (VisualComponentList) (currNode).lookuptable.get("f1");
