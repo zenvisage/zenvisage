@@ -6,6 +6,14 @@ import java.util.List;
 public class YColumn {
 	
 	private String variable;
+	private String attribute;
+	public String getAttribute() {
+		return attribute;
+	}
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
+	}
+
 	private List<String> values;
 	
 	public YColumn(String variable){

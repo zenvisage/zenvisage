@@ -60,7 +60,7 @@ public class VisualComponentNode extends QueryNode{
 		}
 		// For z, use type variable = z.getColumn!
 		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable(z.getColumn(), z.getValues());
+			AxisVariable axisVar = new AxisVariable(z.getAttribute(), z.getValues());
 			lookuptable.put(z.getVariable(), axisVar);
 		}
 		// call SQL backend
@@ -129,7 +129,8 @@ public class VisualComponentNode extends QueryNode{
 		var = var.replace("'", "");
 		y.getValues().set(0, var);
 		
-		ZColumn z = vc.getZ();		
+		ZColumn z = vc.getZ();	
+		System.out.println("Checking: " + z.getVariable());
 		// z1 (variable, no values)
 		AxisVariable zAxisVariable = (AxisVariable) lookuptable.get(z.getVariable());
 		if(!z.getVariable().equals("") && z.getValues().isEmpty()) {
@@ -137,18 +138,18 @@ public class VisualComponentNode extends QueryNode{
 			z.setValues(values);
 		}
 		// if z is missing column information, grab from axisVariable type! (Special case!)
-		if(!z.getVariable().equals("") && z.getColumn().isEmpty()) {
-			z.setColumn(zAxisVariable.getType());
+		if(!z.getVariable().equals("") && z.getAttribute().isEmpty()) {
+			z.setAttribute(zAxisVariable.getType());
 		}
 		// update the z column to make sure it strips extra '' out (so will be state, not 'state')
-		String str = z.getColumn();
+		String str = z.getAttribute();
 		str = str.replace("'", "");
-		z.setColumn(str);
+		z.setAttribute(str);
 
 		System.out.println("z information:");
 		System.out.println(z.getVariable());
 		System.out.println(z.getValues());
-		System.out.println(z.getColumn());
+		System.out.println(z.getAttribute());
 		vc.getViz().setVariable("AVG");
 		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)

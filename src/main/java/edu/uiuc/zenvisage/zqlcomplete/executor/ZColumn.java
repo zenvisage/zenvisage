@@ -6,20 +6,20 @@ import java.util.List;
 public class ZColumn {
 	
 	private String variable;
-	private String column; //put z here
+	private String attribute; //put z here
 	private List<String> values;
 	private String expression;
 	
 	// after executing expression, implement after set operation is implemented
 	// private List<String> parsedValues;
 	
-	public ZColumn(String column) {
-		this.column = column;
+	public ZColumn(String attribute) {
+		this.attribute = attribute;
 	}
 	
 	public ZColumn() {
 		variable = "";
-		column = "";
+		attribute = "";
 		values = new ArrayList<String>();
 		expression = "";
 		// parsedValues = new ArrayList<String>();
@@ -40,11 +40,11 @@ public class ZColumn {
 		expression = source;
 	}
 	
-	public String getColumn() {
-		return column;
+	public String getAttribute() {
+		return attribute;
 	}
-	public void setColumn(String source) {
-		column = source;
+	public void setAttribute(String source) {
+		attribute = source;
 	}
 	
 	public List<String> getValues() {

@@ -170,7 +170,7 @@ public class ZQLExecutor {
 		PSQLDatabase zenvisageDB = new PSQLDatabase();
 
 		// get the z axis
-		String zColumn = zqlRow.getZ().getColumn().replace("'","");
+		String zColumn = zqlRow.getZ().getAttribute().replace("'","");
 		String zVariable = zqlRow.getZ().getVariable();
 		List<String> zValues = zqlRow.getZ().getValues();
 
@@ -188,7 +188,7 @@ public class ZQLExecutor {
 			System.out.println(zqlRow.getName().getName()+" "+zqlRow.getZ().getVariable());
 			zValues = zQLTableResult.getVariable(zqlRow.getZ().getVariable()).getValues();
 			zColumn = zQLTableResult.getVariable(zqlRow.getZ().getVariable()).getName();
-			zqlRow.getZ().setColumn(zColumn);
+			zqlRow.getZ().setAttribute(zColumn);
 		}
 		
 		// empty the list to specify all z values
@@ -333,7 +333,7 @@ public class ZQLExecutor {
 		 * Store the process result values into corresponding variable in ZQLRow
 		 */
 		ZQLVariable processResult = new ZQLVariable();
-		processResult.setName(zQLRow.getZ().getColumn()); //bug here, need to find column name by visualization given
+		processResult.setName(zQLRow.getZ().getAttribute()); //bug here, need to find column name by visualization given
 		processResult.setValues(zqlRowResult.getZqlProcessResult().getzValues());
 		zQLTableResult.setVariable(zQLRow.getProcesse().getVariables().get(0), processResult);
 

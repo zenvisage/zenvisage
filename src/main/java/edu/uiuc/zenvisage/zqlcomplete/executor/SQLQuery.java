@@ -36,11 +36,11 @@ public class SQLQuery {
 		
 		boolean isVariable = false;
 		// check if input is a column or varible, infer column from variable
-		if (zQLRow.getZ().getColumn().equals("")) {
-			zQLRow.getZ().setColumn(zQLTableResult.getVariable(zQLRow.getZ().getVariable()).getName().replace("'",""));
+		if (zQLRow.getZ().getAttribute().equals("")) {
+			zQLRow.getZ().setAttribute(zQLTableResult.getVariable(zQLRow.getZ().getVariable()).getName().replace("'",""));
 			isVariable = true;
 		}
-		select(zQLRow.getZ().getColumn().replace("'",""));
+		select(zQLRow.getZ().getAttribute().replace("'",""));
 		
 		from("realestate");
 		
@@ -50,13 +50,13 @@ public class SQLQuery {
 				where(zQLRow.getConstraint().get(i).toString());
 		}
 		
-		groupBy(zQLRow.getZ().getColumn().replace("'", ""));
-		orderBy(zQLRow.getZ().getColumn().replace("'", ""));
+		groupBy(zQLRow.getZ().getAttribute().replace("'", ""));
+		orderBy(zQLRow.getZ().getAttribute().replace("'", ""));
 		
 		
 		// Redundant convert to empty again if it is variable only since the executor only uses variable result if it is empty
 		if (isVariable) {
-			zQLRow.getZ().setColumn("");
+			zQLRow.getZ().setAttribute("");
 		}
 	}
 	

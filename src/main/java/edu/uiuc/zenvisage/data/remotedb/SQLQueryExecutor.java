@@ -133,7 +133,7 @@ public class SQLQueryExecutor {
 		String sql = null;
 		
 		databaseName = databaseName.toLowerCase();
-		String z = zqlRow.getZ().getColumn().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 //		String x = zqlRow.getX().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String x = zqlRow.getX().getValues().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
@@ -185,7 +185,7 @@ public class SQLQueryExecutor {
 			if(xType == null) xType = getMetaType(zqlRow.getX().getVariable().toLowerCase(), databaseName);
 			if(yType == null) yType = getMetaType(zqlRow.getY().getVariable().toLowerCase(), databaseName);
 */			
-			if(zType == null) zType = getMetaType(zqlRow.getZ().getColumn().toLowerCase(), databaseName);
+			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
 			//TODO: supports only 1 column value
 			if(xType == null) xType = getMetaType(zqlRow.getX().getValues().get(0).toLowerCase(), databaseName);
 			if(yType == null) yType = getMetaType(zqlRow.getY().getValues().get(0).toLowerCase(), databaseName);
