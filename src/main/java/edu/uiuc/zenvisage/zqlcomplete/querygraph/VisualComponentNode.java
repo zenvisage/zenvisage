@@ -99,6 +99,7 @@ public class VisualComponentNode extends QueryNode{
 	 * Column has no variable name, and no value. Send as is (columns may be optional)
 	 */
 	public ZQLRow buildRowFromNode() {
+		
 		XColumn x = vc.getX();	
 		// x1 (variable, no values)
 		if(!x.getVariable().equals("") && x.getValues().isEmpty()) {
@@ -106,15 +107,16 @@ public class VisualComponentNode extends QueryNode{
 			List<String> values = ((AxisVariable) lookuptable.get(x.getVariable())).getValues();
 			x.setValues(values);
 		}
-		System.out.println("x information:");
-		System.out.println(x.getVariable());
-		System.out.println(x.getValues());
-		System.out.println(x.getValues().get(0));
-		
 		// Stripping out '' from first value
 		String var = x.getValues().get(0);
 		var = var.replace("'", "");
 		x.getValues().set(0, var);
+		
+		// Some debuf info
+		System.out.println("x information:");
+		System.out.println(x.getVariable());
+		System.out.println(x.getValues());
+		System.out.println(x.getValues().get(0));
 		
 		YColumn y = vc.getY();		
 		// y1 (variable, no values)
@@ -122,7 +124,6 @@ public class VisualComponentNode extends QueryNode{
 			List<String> values = ((AxisVariable) lookuptable.get(y.getVariable())).getValues();
 			y.setValues(values);
 		}		
-
 		// Stripping out '' from first value
 		var = y.getValues().get(0);
 		var = var.replace("'", "");
@@ -130,11 +131,6 @@ public class VisualComponentNode extends QueryNode{
 		
 		ZColumn z = vc.getZ();		
 		// z1 (variable, no values)
-		String str = z.getColumn();
-		str = str.replace("'", "");
-		z.setColumn(str);
-		System.out.println(str);
-		System.out.println(z.getColumn());
 		AxisVariable zAxisVariable = (AxisVariable) lookuptable.get(z.getVariable());
 		if(!z.getVariable().equals("") && z.getValues().isEmpty()) {
 			List<String> values = zAxisVariable.getValues();
@@ -144,6 +140,11 @@ public class VisualComponentNode extends QueryNode{
 		if(!z.getVariable().equals("") && z.getColumn().isEmpty()) {
 			z.setColumn(zAxisVariable.getType());
 		}
+		// update the z column to make sure it strips extra '' out (so will be state, not 'state')
+		String str = z.getColumn();
+		str = str.replace("'", "");
+		z.setColumn(str);
+
 		System.out.println("z information:");
 		System.out.println(z.getVariable());
 		System.out.println(z.getValues());

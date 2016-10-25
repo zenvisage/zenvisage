@@ -25,11 +25,7 @@ public class QueryGraphExecutor {
 	 * @return What to visualize
 	 */
 	public static VisualComponentList execute(QueryGraph queryGraph) {
-		// TODO: design decision: casting and instanceof?
-		ResultGraph resultGraph = new ResultGraph();
-		// hash table representation of the nodes in resultGraph
-		Map<String, Node> resultNodeMap = new HashMap<String, Node>();
-		
+		// TODO: design decision: casting and instanceof?		
 		VisualComponentList outputList = new VisualComponentList();
 
 		Queue<Node> nodeQueue = new ArrayDeque<Node>();
@@ -43,35 +39,13 @@ public class QueryGraphExecutor {
 				System.out.println("Processing Node: "+ currNode.toString());
 				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
+					// TODO: currently always outputs result of final node!
 					outputList = (VisualComponentList) (currNode).lookuptable.get("f1");
 					System.out.println(" My map");
 					MapUtils.debugPrint(System.out, "myMap", currNode.lookuptable.getVariables());
 					System.out.println(" My map");
 					System.out.println(Arrays.toString(currNode.lookuptable.getVariables().entrySet().toArray()));
-					// Add result node to contain the executed data
-					for (Node parent : currNode.getParents()) {
-						if (parent instanceof VisualComponentNode) {
-							// grab the corresponding resultgraph node
-							
-							// TODO: IS USING NAME AS ID OK? 
-							String parentName = ((VisualComponentNode) parent).getVc().getName().getName();
-							if(resultNodeMap.containsKey(parentName)) {
-								Node resultNodeParent = resultNodeMap.get(parentName);
-								resultNodeParent.addChild(currNode);
-								currNode.addParent(resultNodeParent);
-							}
-						} else if (parent instanceof ProcessNode) {
-							
-						}
-					}
-					// add currNode to hashmap
-					if (currNode instanceof VisualComponentNode) {
-						String currName = ((VisualComponentNode) currNode).getVc().getName().getName();
-						resultNodeMap.put(currName, currNode);
-					} else if (currNode instanceof ProcessNode){
-						
-					}
-					
+
 					// add children to queue
 					nodeQueue.addAll(currNode.getChildren());
 					
