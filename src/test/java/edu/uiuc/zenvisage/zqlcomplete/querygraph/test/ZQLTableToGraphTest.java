@@ -37,12 +37,12 @@ public class ZQLTableToGraphTest {
 		XColumn x1 = new XColumn("x1");
 		ArrayList<String> x1Values = new ArrayList<String>();
 		x1Values.add("year");
-		x1.setValues(x1Values);
+		x1.setAttributes(x1Values);
 		
 		YColumn y1 = new YColumn("y1");
 		ArrayList<String> y1Values = new ArrayList<String>();
 		y1Values.add("soldprice");
-		y1.setValues(y1Values);
+		y1.setAttributes(y1Values);
 		
 		// Z column has slightly different syntax
 		ZColumn z1 = new ZColumn("z");
@@ -103,12 +103,12 @@ public class ZQLTableToGraphTest {
 		XColumn x1 = new XColumn("x1");
 		ArrayList<String> x1Values = new ArrayList<String>();
 		x1Values.add("year");
-		x1.setValues(x1Values);
+		x1.setAttributes(x1Values);
 		
 		YColumn y1 = new YColumn("y1");
 		ArrayList<String> y1Values = new ArrayList<String>();
 		y1Values.add("soldprice");
-		y1.setValues(y1Values);
+		y1.setAttributes(y1Values);
 		
 		// Z column has slightly different syntax
 		ZColumn z1 = new ZColumn("z");

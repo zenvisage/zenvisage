@@ -55,11 +55,11 @@ public class ZQLParser {
 			System.out.println(name);
 			System.out.println(name.getName());
 			nodeMap.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
-			if (x.getValues() != null && !x.getValues().isEmpty()) {
+			if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 				nodeMap.put(x.getVariable(), vcNode);
 				updatedX = true;
 			}
-			if (y.getValues() != null && !y.getValues().isEmpty()) {
+			if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 				nodeMap.put(y.getVariable(), vcNode);
 				updatedY = true;
 			}

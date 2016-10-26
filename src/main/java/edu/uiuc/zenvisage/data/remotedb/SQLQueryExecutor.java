@@ -128,6 +128,8 @@ public class SQLQueryExecutor {
 		st.close();
 	}
 	
+	
+	//TODO: we assume x and y columns have just one attribute. please fix
 	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;
@@ -135,10 +137,10 @@ public class SQLQueryExecutor {
 		databaseName = databaseName.toLowerCase();
 		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 //		String x = zqlRow.getX().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String x = zqlRow.getX().getValues().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String x = zqlRow.getX().getAttributes().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 //		String y = zqlRow.getY().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String y = zqlRow.getY().getValues().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		String y = zqlRow.getY().getAttributes().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		
 		//zqlRow.getConstraint() has replaced the whereCondiditon
 		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
@@ -159,9 +161,10 @@ public class SQLQueryExecutor {
 					+ " ORDER BY " + zqlRow.getZ().getColumn() + ", "+ zqlRow.getX().getValues().get(0);
 >>>>>>> Updating ZvMain to handle QueryGraph. Making some basic changed to SQLQueryExecutor (should be grabbing value instead of variable)*/
 		} else {
+			
 			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 			+ " FROM " + databaseName
-			+ " WHERE " + zqlRow.getConstraint().get(0) //zqlRow.getConstraint() has replaced the whereCondiditon
+			+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
 			+ " GROUP BY " + z + ", "+ x
 			+ " ORDER BY " + z + ", "+ x;
 		}
@@ -187,8 +190,8 @@ public class SQLQueryExecutor {
 */			
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
 			//TODO: supports only 1 column value
-			if(xType == null) xType = getMetaType(zqlRow.getX().getValues().get(0).toLowerCase(), databaseName);
-			if(yType == null) yType = getMetaType(zqlRow.getY().getValues().get(0).toLowerCase(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getAttributes().get(0).toLowerCase(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getAttributes().get(0).toLowerCase(), databaseName);
 
 			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
@@ -213,6 +216,29 @@ public class SQLQueryExecutor {
 		st.close();
 	}
 	
+	
+	
+	
+	/**
+	 * @param constraint
+	 * @return
+	 */
+	private String appendConstraints(List<Constraints> constraints) {
+		// TODO Auto-generated method stub
+		String appendedConstraints = "";
+		boolean flag=false;
+		for(Constraints constraint: constraints){
+			if(flag){
+				appendedConstraints+=" AND ";
+				flag=true;
+			}
+			appendedConstraints+=constraint.toString();
+		}
+		appendedConstraints+=" ";
+		
+		return appendedConstraints;
+	}
+
 	public String getMetaType(String variable, String table) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;

@@ -10,18 +10,23 @@ import java.util.List;
  * @author tarique
  *
  */
+
+
+// for x and y, attribute is empty and values can contain attribute names
+// for z, attribute is actual attribute and values contains values of the specified attribute.
 public class AxisVariable {
-	private String type;
+
+	private String attribute;
 	private List<String> values=new ArrayList<String>();
 	
 	
-	public String getType() {
-		return type;
+	public String getAttribute() {
+		return attribute;
 	}
 
 
-	public void setType(String type) {
-		this.type = type;
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
 	}
 
 
@@ -35,8 +40,8 @@ public class AxisVariable {
 	}
 
 
-	public AxisVariable(String type, List<String> values) {
-		this.type = type;
+	public AxisVariable(String attribute, List<String> values) {
+		this.attribute = attribute;
 		// by reference ok?
 		this.values = values;
 	}

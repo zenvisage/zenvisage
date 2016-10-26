@@ -92,7 +92,7 @@ function parseX(input) {
     try {
         var x = {
             variable: found[2] || found[4],
-            values: parseList(found[1] || found[3] || found[5])
+            attributes: parseList(found[1] || found[3] || found[5])
         };
     }
     catch(err) {
@@ -116,7 +116,7 @@ function parseY(input) {
     try {
         var y = {
             variable: found[2] || found[4],
-            values: parseList(found[1] || found[3] || found[5])
+            attributes: parseList(found[1] || found[3] || found[5])
         };
     }
     catch(err) {
@@ -157,7 +157,7 @@ function parseZ(input) {
     try {
         var z = {
             variable: found[1] || found[6] || found[7],
-            column: found[2] || found[4] || found[8] || found[12],
+            attribute: found[2] || found[4] || found[8] || found[12],
             values: parseList(found[3] || found[5] || found[9] || found[10] || found[11] || found[13] || found[14]),
             expression: undefined //need to add parser for expression later
         };

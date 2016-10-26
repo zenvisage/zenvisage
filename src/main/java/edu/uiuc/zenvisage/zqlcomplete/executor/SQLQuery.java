@@ -24,14 +24,14 @@ public class SQLQuery {
 	
 	// supports only one element in each column, fix later
 	public void constructFromZQL(ZQLRow zQLRow, ZQLTableResult zQLTableResult) {
-		for (String x : zQLRow.getX().getValues()) {
+		for (String x : zQLRow.getX().getAttributes()) {
 			select(x.toLowerCase().replace("'",""));
 			groupBy(x.replace("'", ""));
 			orderBy(x.replace("'", ""));
 		}
 		
-		for (String y : zQLRow.getY().getValues()) {
-			select("AVG("+y.toLowerCase().replace("'", "")+") AS "+zQLRow.getY().getValues().get(0).toLowerCase().replace("'",""));
+		for (String y : zQLRow.getY().getAttributes()) {
+			select("AVG("+y.toLowerCase().replace("'", "")+") AS "+zQLRow.getY().getAttributes().get(0).toLowerCase().replace("'",""));
 		}
 		
 		boolean isVariable = false;

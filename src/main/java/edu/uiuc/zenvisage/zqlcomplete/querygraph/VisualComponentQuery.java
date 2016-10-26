@@ -87,6 +87,8 @@ public class VisualComponentQuery {
 	public void setConstraints(List<Constraints> constraints) {
 		this.constraints = constraints;
 	}
+	
+	
 
 	public VizColumn getViz() {
 		return viz;
