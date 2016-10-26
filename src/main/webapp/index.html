@@ -1,240 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="zenvisage">
-  <head>
-    <meta charset="utf-8">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Data Exploration</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href="css/custom.css" rel="stylesheet">
-    <link href="css/draw.css" rel="stylesheet">
-  </head>
-  <body>
-    <!-- this div contains everything in the body -->
+    <meta name="description" content="Zenvisage - a powerful and intuitive way to explore data">
+    <meta name="keywords" content="Zenvisage, UIUC, Data Visualization, data viz">
+    <meta name="author" content="Anurag Choudhary">
+    <title>Zenvisage</title>
+</head>
 
-    <div id="everything">
-      <!-- Modal -->
-      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
-        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
-              </div>
-              <div class="modal-body">
-                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
-                <div class="row">
-                  <div class="col-md-5">
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
-                  </div>
-                  <div class="col-md-5 col-md-offset-1">
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema">
-                  </div>
-                </div>
-              </div>
-                <div class="modal-footer">
-                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
-                </div>
-            </div>
-          </div>
-        </div>
-      </form>
 
-      <!-- this div contains the left-bar with the data information -->
-      <div id="left-bar">
-        <div id="sidebar" class="interface" ng-controller="datasetController">
-          <h4>
-            ZenVisage
-          </h4>
-          <div class="dropdown" id="dataset">
-            <h5><b>Dataset</b><button type="button" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
-            <!-- Button trigger modal -->
+<!--JQuery-->
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"
+        integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
 
-            <select class="form-control" ng-change="onDatasetChange()" ng-model="selectedDataset" id="dataset-form-control">
-              <option value="real_estate">Real Estate</option>
-              <option value="cmu">cmu</option>
-              <option value="sales">sales</option>
-            </select>
-          </div>
-          <div>
-            <h5><b>Category</b></h5>
-            <div ng-repeat="category in categories">
-              <label>
-                <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
-              </label>
-            </div>
-          </div>
-          <div>
-            <h5><b>X-axis</b></h5>
-            <div ng-repeat="xAxisItem in xAxisItems">
-              <label>
-                  <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
-              </label>
-            </div>
-          </div>
-          <div>
-            <h5><b>Y-axis</b></h5>
-            <div ng-repeat="yAxisItem in yAxisItems">
-              <label>
-                  <input type="radio" ng-change="onDataAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedYAxis"/><span>{{yAxisItem}}</span>
-              </label>
-            </div>
-          </div>
-        </div> <!-- end side bar -->
-      </div> <!-- end left bar -->
+<!--Google Fonts-->
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet">
 
-      <!-- this div contains the everything in the middle (aside from the left nav bar) -->
-      <div id="middle-bar">
+<!--Materialize-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
 
-        <!-- this div contains the drawng interface and the zql table -->
-        <div class="row" id="top-middle-bar">
+<!--Icons-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-          <!-- drawing interface -->
-          <div class="col-md-4">
-            <!--
-            <div class="input-group" id="graph-buttons" >
-              <div class="btn-group btn-group-xs" ng-controller="buttonsController" id="left-button-group">
-                <label class="btn btn-default" >
-                  <input type="radio" ng-model="sketchpadSetting" ng-change="onSketchpadSettingChange( sketchpadSetting )" value="draw"/><span>Draw</span>
-                </label>
-                <label class="btn btn-default">
-                  <input type="radio" ng-model="sketchpadSetting" ng-change="onSketchpadSettingChange( sketchpadSetting )" value="zoom"/><span>Zoom</span>
-                </label>
-              </div>
-            </div>
-            -->
-            <div id="draw-div"></div>
-          </div>
-          <!-- drawing interface END-->
+<!--Font awesome-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
-          <div class="col-md-8" id="table-div" ng-controller="options-controller">
-            <div class="row">
-              <div class="col-md-3">
-                <b>Similarity</b>
-                <div class="radio">
-                  <form>
-                    <input ng-model="similarity" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
-                    <input ng-model="similarity" id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
-                    <input ng-model="similarity" id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label><br>
-                    <input ng-model="similarity" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
-                  </form>
-                </div>
-                <b>Representative/Outlier</b>
-                <div class="radio">
-                  <form>
-                    <input ng-model="representative" id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
-                  </form>
-                </div>
+<!--Stylesheets-->
+<link rel="stylesheet" href="./css/global.css">
 
-                <div>
-                  <div class="info-text"><b>Input equation</b></div>
-                  <div class="input-group">
-                    <input ng-model="equation" type="text" class="form-control">
-                    <div class="input-group-btn">
-                      <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
-                    </div>
-                  </div>
-                </div>
-                <!--
-                <div class="info-text"><b>Number of Segments</b></div>
-                  <div>
-                    <input class="num-segments" type="text" name="number-of-segments" value="30">
-                  </div>
-                -->
-              </div>
-              <div class="col-md-3">
-                <div class="info-text"><b>Aggregation Method</b></div>
-                <div class="radio">
-                  <form>
-                    <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
-                    <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
-                  </form>
-                </div>
+<body ng-app="zenvisageApp">
 
-                <div id="num-results">
-                  <div class="info-text"><b>Number of Results</b></div>
-                  <div>
-                    <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
-                  </div>
-                </div>
+<!--    The view -->
+<div ui-view></div>
 
-                <br>
-                <div class="info-text"><b>Options</b></div>
-                <div class="checkbox">
-                  <form>
-                    <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
-                  </form>
-                  <form>
-                    <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
-                  </form>
-                </div>
+<!--Scripts-->
 
-                <!--
-                <div id="math-equation">
-                  <div class="info-text"><b>Custom Equation</b></div>
-                  <div>
-                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
-                  </div>
-                </div>
-                -->
-              </div>
-            </div>
-          </div>
+<!-- Angular Scripts (add .min for production) -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.min.js"></script>-->
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>-->
 
-        </div>
-        <!-- drawng interface + zql table END-->
+<!-- Materlialize -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
 
-        <hr>
-        <div id="bottom-middle-bar">
-          <div class="col-md-12" id="tree-div">
-          </div>
-          <div id="middle-left" class="col-md-6">
-            <h5><b>Results</b></h5>
-            <div>
-              <table id="results-table"></table>
-            </div>
-          </div>
-          <div id="middle-right" class="col-md-6">
-            <div>
-              <table id="representative-table">
-                <tr class="middle-right-headers">
-                  <td><h5><b>Representative patterns </b><span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span></h5>
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <div>
-              <table id="outlier-table">
-                <tr class="middle-right-headers">
-                  <td><h5><b>Outliers </b><span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span></h5></td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--
-    <script>
-      var tree = tree();
-    </script>
-    -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="js/bootstrap-filestyle.min.js"> </script>
-    <script src="js/math.min.js"> </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="js/app.js"></script>
-    <!-- <script src="chi-js/graph.js"></script> -->
-    <script src="js/draw.js"></script>
-    <script src="js/query.js"></script>
-    <script src="js/helper.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/fileUploader.js"></script>
-  </body>
+<script src="js/app.js"></script>
+<script src="js/services/services.js"></script>
+<!--<script src="js/script.js"></script>-->
+
+<!--Controllers-->
+<script src="js/controllers/input-controller.js"></script>
+<script src="js/controllers/output-controller.js"></script>
+
+</body>
+
 </html>

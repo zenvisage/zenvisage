@@ -1,0 +1,6 @@
+#welcome-page{
+  @include fullSizeBackground($welcomeBackgroundImage);
+  min-height: 100vh;
+  min-width: 100vw;
+  color: white;
+}
