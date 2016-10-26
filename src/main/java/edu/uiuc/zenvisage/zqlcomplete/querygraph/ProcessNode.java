@@ -82,8 +82,12 @@ public class ProcessNode extends QueryNode {
 		// Every variable of a process statement should have a corresponding list of variables in axisVariableScores
 		for (int i = 0; i < process.getVariables().size(); i++) {
 			String varName = process.getVariables().get(i);
-			List<String> values = axisVariableScores.getAxisvars().get(i);
-			AxisVariable axisVar = new AxisVariable(varName, values);
+			// get the axivariable in the z column, 
+			
+		    List<String> values = axisVariableScores.getAxisvars().get(i);
+		    
+		    //TODO fix state to actual axis variable
+			AxisVariable axisVar = new AxisVariable("state", values);
 			lookuptable.put(varName, axisVar);
 		}
 		return axisVariableScores;
