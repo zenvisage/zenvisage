@@ -7,7 +7,7 @@ var myApp = angular.module('zenvisageApp', ['ui.router', 'zenvisageControllers']
 
 myApp.config(function ($stateProvider, $urlRouterProvider) {
     // For any unmatched url, redirect to welcome page
-    $urlRouterProvider.otherwise("/main");
+    $urlRouterProvider.otherwise("/main/line");
 
     // Now set up the states
     $stateProvider
@@ -30,8 +30,8 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
                     templateUrl: "partials/components/matches.html",
                     controller: "OutputController"
                 },
-                'options-panel': {
-                    templateUrl: "partials/components/options-panel.html",
+                'attribute-panel': {
+                    templateUrl: "partials/components/attribute-panel.html",
                     controller: "InputController"
                 },
                 'trends': {
@@ -55,8 +55,8 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
                     templateUrl: "partials/components/matches.html",
                     controller: "OutputController"
                 },
-                'options-panel': {
-                    templateUrl: "partials/components/options-panel.html",
+                'attribute-panel': {
+                    templateUrl: "partials/components/attribute-panel.html",
                     controller: "InputController"
                 },
                 'trends': {
@@ -80,8 +80,8 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
                     templateUrl: "partials/components/matches.html",
                     controller: "OutputController"
                 },
-                'options-panel': {
-                    templateUrl: "partials/components/options-panel.html",
+                'attribute-panel': {
+                    templateUrl: "partials/components/attribute-panel.html",
                     controller: "InputController"
                 },
                 'trends': {

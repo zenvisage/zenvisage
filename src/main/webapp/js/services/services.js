@@ -1,3 +1,4 @@
-/**
- * Created by an5ra on 10/25/2016.
- */
+app.service('serverCalls', function() {
+  this.myFunc = function (x) {
+  }
+});
