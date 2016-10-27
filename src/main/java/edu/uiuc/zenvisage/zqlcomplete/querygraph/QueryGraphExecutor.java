@@ -40,7 +40,12 @@ public class QueryGraphExecutor {
 				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
 					// TODO: currently always outputs result of final node!
-					outputList = (VisualComponentList) (currNode).lookuptable.get("f1");
+					if (currNode instanceof VisualComponentNode) {
+						VisualComponentNode temp = (VisualComponentNode) currNode;
+						// gets the f1, f2, or so on...
+						outputList = (VisualComponentList) (currNode).lookuptable.get(temp.getVc().getName().getName());
+					
+					}
 					System.out.println(" My map");
 					MapUtils.debugPrint(System.out, "myMap", currNode.lookuptable.getVariables());
 					System.out.println(" My map");

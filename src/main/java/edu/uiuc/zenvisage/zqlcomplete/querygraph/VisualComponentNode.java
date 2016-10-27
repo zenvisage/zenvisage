@@ -139,11 +139,11 @@ public class VisualComponentNode extends QueryNode{
 		if(!z.getVariable().equals("") && z.getAttribute().isEmpty()) {
 			z.setAttribute(zAxisVariable.getAttribute());
 			List<String> values = zAxisVariable.getValues();
-			if(!values.isEmpty()){
+			if(!values.isEmpty() && !values.get(0).equals("") && !values.get(0).equals("*")){
 				String parentheSizedValues = generateParenthesizedList(values);
 				edu.uiuc.zenvisage.zqlcomplete.executor.Constraints constraints = new edu.uiuc.zenvisage.zqlcomplete.executor.Constraints();
 				constraints.setKey(z.getAttribute());
-				constraints.setOperator("IN");
+				constraints.setOperator(" IN");
 				constraints.setValue(parentheSizedValues);		
 				vc.getConstraints().add(constraints);
 			}

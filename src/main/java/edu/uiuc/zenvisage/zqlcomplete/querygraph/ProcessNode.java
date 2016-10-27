@@ -62,7 +62,7 @@ public class ProcessNode extends QueryNode {
 		
 		// TODO: Handling "dissimilar" as method input for now
 		// probably should be parsed to D?
-		if (process.getMethod().toLowerCase().equals("dissimilar") || process.getMethod().equals("D")) {
+		if (process.getMethod().toLowerCase().equals("similar") || process.getMethod().toLowerCase().equals("dissimilar") || process.getMethod().equals("D")) {
 			axisVariableScores = executeDMethod();
 		}
 		if (process.getMethod().equals("T")) {
@@ -158,12 +158,12 @@ public class ProcessNode extends QueryNode {
 		
 	}
 	private AxisVariableScores filterScores(AxisVariableScores axisVariableScores) {
-		if (process.getMetric().equals("argmax")) {
+		if (process.getMethod().toLowerCase().equals("dissimilar") || process.getMetric().equals("argmax")) {
 			ArgMaxSortFilterPrimitive argmaxFilter = new ArgMaxSortFilterPrimitive();
 			// TODO: count is stored as? "10"? "k=10"?
 			axisVariableScores = argmaxFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
 		}
-		if (process.getMetric().equals("argmin")) {
+		if (process.getMethod().toLowerCase().equals("similar") || process.getMetric().equals("argmin")) {
 			ArgMinSortFilterPrimitive argminFilter = new ArgMinSortFilterPrimitive();
 			axisVariableScores = argminFilter.execute(axisVariableScores, Integer.parseInt(process.getCount()));
 		}
