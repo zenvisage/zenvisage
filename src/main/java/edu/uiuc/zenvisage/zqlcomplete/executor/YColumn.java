@@ -23,7 +23,9 @@ public class YColumn {
 		this.attributes = attributes;
 	}
 	public YColumn(String variable){
-		this.variable = variable;
+		//this.variable = variable;
+		this.attributes = new ArrayList<String>();
+		this.attributes.add(variable);
 	}
 	public YColumn() {
 		variable = "";

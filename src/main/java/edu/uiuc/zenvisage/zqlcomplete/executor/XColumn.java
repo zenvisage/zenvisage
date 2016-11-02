@@ -24,7 +24,9 @@ public class XColumn {
 		this.attributes = attributes;
 	}
 	public XColumn(String variable) {
-		this.variable = variable;
+		//this.variable = variable;
+		this.attributes = new ArrayList<String>();
+		attributes.add(variable);
 	}
 	public XColumn() {
 		variable = "";
