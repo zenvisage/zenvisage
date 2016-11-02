@@ -36,22 +36,38 @@ public class DEuclidean implements D {
 		
 		if (axisVariables.size() == 1) {
 			ArrayList<String> singleAxisvarsList = new ArrayList<String>();
-			for (int i = 0, j = 0; i < f1List.size() && j < f2List.size(); ) {
-				int zCompare = f1List.get(i).getZValue().getStrValue().compareTo(f2List.get(j).getZValue().getStrValue());
-				if (zCompare == 0) {
-					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
-					singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
-					i++;
-					j++;
-				}
-				else if (zCompare < 0) {
-					i++;
-				}
-				else {
-					j++;
+			
+			// Compare say f1 = ['CA'] with f2 = ['CA','MN', 'FL'] (want to see how different other states are from 'CA'
+			if (f1List.size() == 1) {
+				for (int j = 0; j < f2List.size(); j++) {
+					scores.add(calculateEuclideanDistance(f1List.get(0), f2List.get(j)));
+					singleAxisvarsList.add(f2List.get(j).getZValue().getStrValue());
 				}
 			}
-			
+			else if (f2List.size() == 1) {
+				for (int i = 0; i < f1List.size(); i++) {
+					scores.add(calculateEuclideanDistance(f1List.get(i), f2List.get(0)));
+					singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());					
+				}
+			}
+			else {
+				// Want to compare the same Z, like 'CA' vs 'CA', but different X and Y for each
+				for (int i = 0, j = 0; i < f1List.size() && j < f2List.size(); ) {
+					int zCompare = f1List.get(i).getZValue().getStrValue().compareTo(f2List.get(j).getZValue().getStrValue());
+					if (zCompare == 0) {
+						scores.add(calculateEuclideanDistance(f1List.get(i), f2List.get(j)));
+						singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
+						i++;
+						j++;
+					}
+					else if (zCompare < 0) {
+						i++;
+					}
+					else {
+						j++;
+					}
+				}
+			}
 			axisvars.add(singleAxisvarsList);
 //			Double[] scoreArray = scores.toArray(new Double[scores.size()]);
 			axisVariableScores = new AxisVariableScores(axisvars, scores);
