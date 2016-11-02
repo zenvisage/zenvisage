@@ -37,8 +37,7 @@ public class DEuclidean implements D {
 		if (axisVariables.size() == 1) {
 			ArrayList<String> singleAxisvarsList = new ArrayList<String>();
 			for (int i = 0, j = 0; i < f1List.size() && j < f2List.size(); ) {
-				int zCompare = f1List.get(i).getZValue().getStrValue().compareTo(f2List.get(i).getZValue().getStrValue());
-				
+				int zCompare = f1List.get(i).getZValue().getStrValue().compareTo(f2List.get(j).getZValue().getStrValue());
 				if (zCompare == 0) {
 					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
 					singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
