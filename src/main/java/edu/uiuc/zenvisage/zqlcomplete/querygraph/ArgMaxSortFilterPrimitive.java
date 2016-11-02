@@ -12,7 +12,8 @@ import java.util.List;
  */
 public class ArgMaxSortFilterPrimitive implements SortFilterPrimitive {
 
-	int maxOrMin = 1;
+	// with this as -1, we sort in decreasing order
+	int maxOrMin = -1;
 	
 	/* (non-Javadoc)
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.SortFilterPrimitive#execute(edu.uiuc.zenvisage.zqlcomplete.querygraph.FunctionalPrimitiveOutput)
