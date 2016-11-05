@@ -13,7 +13,7 @@ public class GraphExecutionTest {
 
 	@Test
 	public void TestBasicQueryExecution() {
-		String arg = "{\"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'Year'\"]},\"y\":{\"attributes\":[\"'SoldPrice'\"]},\"z\":{\"attribute\":\"'State'\",\"values\":[\"*\"]}}]}";
+		String arg = "{\"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'Year'\"]},\"y\":{\"attributes\":[\"'SoldPrice'\"]},\"z\":{\"attribute\":\"'State'\",\"values\":[\"*\"]}}]}";
 		//String arg = "{\"zqlRows\":[{\"name\":{\"name\":\"f1\",\"output\":false,\"sketch\":false},\"x\":{\"variable\":\"\",\"attributes\":\"Year\",\"values\":[\"'Year'\"]},\"y\":{\"variable\":\"\",\"attribute\":\"SoldPrice\",\"values\":[\"'SoldPrice'\"]},\"z\":{\"variable\":\"\",\"attribute\":\"State\",\"values\":[\"*\"],\"expression\":\"\"},\"processe\":{\"variables\":[],\"method\":\"\",\"axis\":[],\"count\":\"\",\"metric\":\"\",\"arguments\":[],\"parameters\":{}},\"viz\":{\"variable\":\"\",\"type\":[],\"parameters\":[]},\"sketchPoints\":null,\"output\":false,\"constraint\":[]}]}";
 
 		try {
