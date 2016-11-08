@@ -5,7 +5,7 @@ public class VisualComponent {
 	private WrapperType zValue; // get the string, that is chart ztype
 	private Points points;
 	private String xAttribute;
-	private String yAtribute;
+	private String yAttribute;
 	
 	/*Empty Constructor*/
 	public VisualComponent(WrapperType zValue, Points points){
@@ -44,6 +44,22 @@ public class VisualComponent {
 	    
 		return ret.toString();
 		
+	}
+
+	public String getxAttribute() {
+		return xAttribute;
+	}
+
+	public void setxAttribute(String xAttribute) {
+		this.xAttribute = xAttribute;
+	}
+
+	public String getyAttribute() {
+		return yAttribute;
+	}
+
+	public void setyAttribute(String yAttribute) {
+		this.yAttribute = yAttribute;
 	}
 		
 }
