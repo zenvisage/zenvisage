@@ -3,6 +3,13 @@ html, body {
   margin:0;
 }
 
+.line {
+  fill: none;
+  stroke: teal;
+  stroke-width: 1px;
+  clip-path: url(#clip);
+}
+
 hr {
   margin-top: 5px !important;
   margin-bottom: 5px !important;
@@ -14,8 +21,8 @@ hr {
 }
 
 .user-query-results, .representative-results, .outlier-results{
- width: 200px;
- height: 85px;
+ width: 220px;
+ height: 105px;
 }
 
 .radio input[type=radio]{

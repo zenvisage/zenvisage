@@ -1,5 +1,5 @@
 var app = angular.module('zenvisage', []);
-var globalDatasetInfo; //remove after fixing sketchpad controller
+var globalDatasetInfo;
 
 app.factory('datasetInfo', function() {
   var categoryData;
@@ -32,17 +32,20 @@ app.factory('plotResults', function() {
     var plottingService = {};
     plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults )
     {
-      displayUserQueryResultsHelper( userQueryResults );
+      displayUserQueryResultsHelperNew( userQueryResults );
+      //displayUserQueryResultsHelper( userQueryResults );
     }
 
     plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
     {
-      displayRepresentativeResultsHelper( representativePatternResults )
+      displayRepresentativeResultsHelperNew( representativePatternResults )
+      //displayRepresentativeResultsHelper( representativePatternResults )
     }
 
     plottingService.displayOutlierResults = function displayOutlierResults( outlierResults )
     {
-      displayOutlierResultsHelper( outlierResults )
+      displayOutlierResultsHelperNew( outlierResults )
+      //displayOutlierResultsHelper( outlierResults )
     }
 
     return plottingService;
@@ -102,7 +105,6 @@ app.controller('options-controller', [
       var y = math.eval( eq, scope )
       if( eq.includes("x") )
       {
-
         for (i = 0; i < xval.length; i++) {
           plotData.push( [ xval[i], y[i] ] )
         }
@@ -139,14 +141,17 @@ app.controller('options-controller', [
 app.controller('datasetController', [
   '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults',
   function($scope, $rootScope, $http, datasetInfo, plotResults){
-    //goes to draw.js
 
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
     {
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
-      initializeSketchpad(
+      // initializeSketchpad(
+      //   xdata["min"],xdata["max"],ydata["min"],ydata["max"],
+      //   xdata["name"],ydata["name"],zdata["name"]
+      //  );
+      initializeSketchpadNew(
         xdata["min"],xdata["max"],ydata["min"],ydata["max"],
         xdata["name"],ydata["name"],zdata["name"]
        );
@@ -156,10 +161,10 @@ app.controller('datasetController', [
     $scope.getUserQueryResults = function getUserQueryResults()
     {
       clearUserQueryResultsTable();
-
       var q = constructUserQuery(); //goes to query.js
       var data = q;
 
+      console.log("calling getUserQueryResults");
       $http.post('/zv/postSimilarity', data).
       success(function(response) {
         console.log("getUserQueryResults: success");
@@ -186,6 +191,7 @@ app.controller('datasetController', [
       var q = constructRepresentativeTrendQuery(); //goes to query.js
       var data = q;
 
+      console.log("calling getRepresentativeTrends");
       $http.post('/zv/postRepresentative', data).
       success(function(response) {
         console.log("getRepresentativeTrends: success");
@@ -205,6 +211,7 @@ app.controller('datasetController', [
       var q = constructOutlierTrendQuery(); //goes to query.js
       var data = q;
 
+      console.log("calling getOutlierTrends");
       $http.post('/zv/postOutlier', data).
       success(function(response) {
         console.log("getOutlierTrends: success");

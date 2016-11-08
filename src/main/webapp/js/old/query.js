@@ -34,13 +34,15 @@ function Query( searchMethod ) {
   this.yMax = null; // fix to dynamically fetch. is this field necessary?
   this.yMin = null; // fix to dynamically fetch. is this field necessary?
   var points = []
-  for(var i = 0; i < sketchpad.rawData_.length; i++){
-    var xp = sketchpad.rawData_[i][0];
-    var yp = sketchpad.rawData_[i][1];
+
+  for(var i = 0; i < sketchpadData.length; i++){
+    var xp = sketchpadData[i]["xval"];
+    var yp = sketchpadData[i]["yval"];
     points.push(new Point( xp, yp ));
     this.dataX.push( xp );
     this.dataY.push( yp );
   }
+
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
   this.distanceNormalized = false; // fix to dynamically fetch
   this.outputNormalized = false; // fix to dynamically fetch
@@ -86,7 +88,8 @@ function getSelectedCategory()
 
 function getXRange() //when zoomed in
 {
-  return sketchpad.xAxisRange()
+  return xrangeNew;
+  // return sketchpad.xAxisRange()
 }
 
 function getAggregationMethod()

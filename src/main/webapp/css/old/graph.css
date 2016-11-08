@@ -9,34 +9,34 @@ line{
   stroke-width:3px;
 }
 .incRect{
-	stroke:grey;
-	shape-rendering:crispEdges;
+  stroke:grey;
+  shape-rendering:crispEdges;
 }
 #incMatx text{
-	text-anchor:middle;
-	cursor:default;
+  text-anchor:middle;
+  cursor:default;
 }
 #treesvg g text:hover, #treesvg g circle:hover{
-	cursor:pointer;
+  cursor:pointer;
 }
 #navdiv{
-	background:#555;
+  background:#555;
 }
 #treesvg{
 
 }
 
 #labelpos{
-	color:white;
+  color:white;
 }
 #navdiv button, #navdiv textarea{
-	vertical-align:middle;
+  vertical-align:middle;
 }
 #g_labels text{
-	text-anchor:middle;
+  text-anchor:middle;
 }
 #g_elabels text{
-	text-anchor:middle;
-	fill:red;
-	font-weight:bold;
+  text-anchor:middle;
+  fill:red;
+  font-weight:bold;
 }
