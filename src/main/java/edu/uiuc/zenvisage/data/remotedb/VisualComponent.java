@@ -4,6 +4,8 @@ public class VisualComponent {
 	
 	private WrapperType zValue; // get the string, that is chart ztype
 	private Points points;
+	private String xAttribute;
+	private String yAtribute;
 	
 	/*Empty Constructor*/
 	public VisualComponent(WrapperType zValue, Points points){

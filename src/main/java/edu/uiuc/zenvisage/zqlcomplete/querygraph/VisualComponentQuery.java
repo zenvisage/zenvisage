@@ -88,8 +88,6 @@ public class VisualComponentQuery {
 		this.constraints = constraints;
 	}
 	
-	
-
 	public VizColumn getViz() {
 		return viz;
 	}

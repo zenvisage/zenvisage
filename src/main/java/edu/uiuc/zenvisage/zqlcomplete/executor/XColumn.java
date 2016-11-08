@@ -28,6 +28,12 @@ public class XColumn {
 		this.attributes = new ArrayList<String>();
 		attributes.add(variable);
 	}
+	
+	public XColumn(List<String> attributes) {
+		//this.variable = variable;
+		this.attributes = attributes;
+	}
+	
 	public XColumn() {
 		variable = "";
 		attributes = new ArrayList<String>();
