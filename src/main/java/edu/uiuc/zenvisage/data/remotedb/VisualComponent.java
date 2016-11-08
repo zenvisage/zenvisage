@@ -13,6 +13,13 @@ public class VisualComponent {
 		this.points = points;
 	};
 	
+	public VisualComponent(WrapperType zValue, Points points, String xAttribute, String yAttribute){
+		this.zValue = zValue;
+		this.points = points;
+		this.xAttribute = xAttribute;
+		this.yAttribute = yAttribute;
+	};
+	
 	
 	/**
 	 * @return the xAttribute
