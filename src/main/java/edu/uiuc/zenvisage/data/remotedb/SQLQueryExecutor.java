@@ -128,42 +128,52 @@ public class SQLQueryExecutor {
 		st.close();
 	}
 	
-	public String convertListToPartialSQL(List<String> list){
-		StringBuilder sb = new StringBuilder();
-		for(String s: list){
-			sb.append(s.toLowerCase().replaceAll("'", "").replaceAll("\"", ""));
-			sb.append(",");
-		}
-		sb.deleteCharAt(sb.length()-1);
-		return sb.toString();
-	}
-	
-	//TODO: we assume x and y columns have just one attribute. please fix
+	/*This is the main ZQL->SQLExcecution query*/
 	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
-		Statement st = c.createStatement();
+		
 		String sql = null;
 		
 		databaseName = databaseName.toLowerCase();
 		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String x = convertListToPartialSQL(zqlRow.getX().getAttributes());
 		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String y = zqlRow.getY().getAttributes().get(0).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		
-		//zqlRow.getConstraint() has replaced the whereCondiditon
-		if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
-			sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
+		
+		//support list of x, y values, general all possible x,y combinations, generate sql
+		int xLen = zqlRow.getX().getAttributes().size();
+		int yLen = zqlRow.getY().getAttributes().size();
+		for(int i = 0; i < xLen; i++){
+			for(int j = 0; j < yLen; j++){
+				String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+				String y = zqlRow.getY().getAttributes().get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+				
+				//zqlRow.getConstraint() has replaced the whereCondiditon
+				if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
+					sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
+							+ " FROM " + databaseName
+							+ " GROUP BY " + z + ", "+ x
+							+ " ORDER BY " + z + ", "+ x;
+				} else {
+					
+					sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 					+ " FROM " + databaseName
+					+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
 					+ " GROUP BY " + z + ", "+ x
 					+ " ORDER BY " + z + ", "+ x;
-		} else {
+				}
 			
-			sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
-			+ " FROM " + databaseName
-			+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
-			+ " GROUP BY " + z + ", "+ x
-			+ " ORDER BY " + z + ", "+ x;
+				System.out.println("Running ZQL Query :"+sql);
+				//excecute sql and put into VisualComponentList
+				executeSQL(sql, zqlRow, databaseName, i, j);
+			}
 		}
-		System.out.println("Running ZQL Query :"+sql);
+
+
+		/* Testing below */
+        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
+	}
+	
+	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, int i, int j) throws SQLException{
+		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		
 		
@@ -179,8 +189,8 @@ public class SQLQueryExecutor {
 		while (rs.next())
 		{
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
-			if(xType == null) xType = getMetaType(zqlRow.getX().getAttributes().get(0).toLowerCase(), databaseName);
-			if(yType == null) yType = getMetaType(zqlRow.getY().getAttributes().get(0).toLowerCase(), databaseName);
+			if(xType == null) xType = getMetaType(zqlRow.getX().getAttributes().get(i).toLowerCase(), databaseName);
+			if(yType == null) yType = getMetaType(zqlRow.getY().getAttributes().get(j).toLowerCase(), databaseName);
 
 			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
@@ -198,13 +208,9 @@ public class SQLQueryExecutor {
 			}
 
 		}
-
-		/* Testing below */
-        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 		rs.close();
 		st.close();
 	}
-	
 	
 	
 	
