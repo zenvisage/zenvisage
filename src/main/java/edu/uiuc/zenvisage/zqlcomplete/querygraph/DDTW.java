@@ -10,12 +10,15 @@ import java.util.List;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
+import net.sf.javaml.distance.fastdtw.dtw.DTW;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 
 /**
  * @author tarique
  *
  */
-public class DEuclidean implements D {
+public class DDTW implements D {
 
 	/* (non-Javadoc)
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.D#execute(edu.uiuc.zenvisage.data.remotedb.VisualComponentList, edu.uiuc.zenvisage.data.remotedb.VisualComponentList, java.util.List)
@@ -89,15 +92,46 @@ public class DEuclidean implements D {
 		ArrayList<WrapperType> y1 = v1.getPoints().getYList();
 		ArrayList<WrapperType> y2 = v2.getPoints().getYList();
 		
-		if (y1.size() == y2.size()) {
-			double distance = 0.0;
-			for (int i = 0; i < y1.size(); i++) {
-				distance += Math.sqrt(Math.pow(y1.get(i).getNumberValue() - y2.get(i).getNumberValue(), 2));
-			}
-			return distance;
+		if (y1.size() != y2.size() || y1.size() == 0) {
+			return 0.0;
 		}
-		else
-			return Double.MAX_VALUE;
+		
+		double[] src = new double[y1.size()];
+		double[] tar = new double[y2.size()];
+		
+		for (int i = 0; i < y1.size(); i++) {
+			src[i] = y1.get(i).getNumberValue();
+			tar[i] = y2.get(i).getNumberValue();
+		}
+		
+		TimeSeries ts1 = new TimeSeries(1);
+		TimeSeries ts2 = new TimeSeries(1);
+		
+		for (int i = 0; i < src.length; i++) {
+			double [] point = new double[1];
+			point[0] = src[i];
+			TimeSeriesPoint tp = new TimeSeriesPoint(point);
+			if (i == 0) {
+				ts1.addLast(i, tp);
+			}
+			else {
+				ts1.addLast(i, tp);
+			}
+		}
+		
+		for(int i = 0; i < tar.length; i++) {
+			double[] point = new double[1];
+			point[0] = tar[i];
+			TimeSeriesPoint tp = new TimeSeriesPoint(point);
+			if (i == 0) {
+				ts2.addLast(i, tp);
+			}
+			else {
+				ts2.addLast(i, tp);
+			}
+		}
+		
+		return DTW.getWarpInfoBetween(ts1, ts2).getDistance();
 	}
 
 	

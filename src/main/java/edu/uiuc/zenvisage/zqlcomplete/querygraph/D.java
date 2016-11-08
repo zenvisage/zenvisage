@@ -5,6 +5,7 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.List;
 
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 
 /**
@@ -13,4 +14,5 @@ import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
  */
 public interface D {
 	public  AxisVariableScores  execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables);
+	public double calculateDistance(VisualComponent v1, VisualComponent v2);
 }
