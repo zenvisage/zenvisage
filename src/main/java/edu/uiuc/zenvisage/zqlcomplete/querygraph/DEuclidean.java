@@ -162,7 +162,7 @@ public class DEuclidean implements D {
 		public String extractAttribute(VisualComponent v1,int order){
 			  if(axisVariables.get(order).getAttributeType().equals("Z"))
 				 return v1.getZValue().toString();
-			  else if(axisVariables.get(order).getAttributeType().equals("Z"))
+			  else if(axisVariables.get(order).getAttributeType().equals("Y"))
 				 return v1.getyAttribute();
 			  else {
 				return v1.getxAttribute();
