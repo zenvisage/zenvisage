@@ -3,18 +3,44 @@ package edu.uiuc.zenvisage.data.remotedb;
 public class VisualComponent {		
 	
 	private WrapperType zValue; // get the string, that is chart ztype
-	private Points points;
 	private String xAttribute;
-	private String yAttribute;
+	private String yAttribute;	
+	private Points points;
 	
 	/*Empty Constructor*/
-	public VisualComponent(WrapperType zValue, Points points, String xAttribute, String yAttribute){
+	public VisualComponent(WrapperType zValue, Points points){
 		this.zValue = zValue;
 		this.points = points;
-		this.xAttribute = xAttribute;
-		this.yAttribute = yAttribute;
 	};
 	
+	
+	/**
+	 * @return the xAttribute
+	 */
+	public String getxAttribute() {
+		return xAttribute;
+	}
+
+	/**
+	 * @param xAttribute the xAttribute to set
+	 */
+	public void setxAttribute(String xAttribute) {
+		this.xAttribute = xAttribute;
+	}
+
+	/**
+	 * @return the yAttribute
+	 */
+	public String getyAttribute() {
+		return yAttribute;
+	}
+
+	/**
+	 * @param yAttribute the yAttribute to set
+	 */
+	public void setyAttribute(String yAttribute) {
+		this.yAttribute = yAttribute;
+	}
 	public WrapperType getZValue() {		
 		return zValue;		
 	}
@@ -46,22 +72,6 @@ public class VisualComponent {
 	    
 		return ret.toString();
 		
-	}
-
-	public String getxAttribute() {
-		return xAttribute;
-	}
-
-	public void setxAttribute(String xAttribute) {
-		this.xAttribute = xAttribute;
-	}
-
-	public String getyAttribute() {
-		return yAttribute;
-	}
-
-	public void setyAttribute(String yAttribute) {
-		this.yAttribute = yAttribute;
 	}
 		
 }
