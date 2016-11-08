@@ -116,7 +116,7 @@ public class SQLQueryExecutor {
 				yList = new ArrayList<WrapperType>();
 				xList.add(new WrapperType(rs.getString(2)));
 				yList.add(new WrapperType(rs.getString(3)));
-				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
+				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList), X, Y);
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
 			}
 
@@ -163,7 +163,7 @@ public class SQLQueryExecutor {
 			
 				System.out.println("Running ZQL Query :"+sql);
 				//excecute sql and put into VisualComponentList
-				executeSQL(sql, zqlRow, databaseName, i, j);
+				executeSQL(sql, zqlRow, databaseName, i, j, x, y);
 			}
 		}
 
@@ -172,7 +172,7 @@ public class SQLQueryExecutor {
         System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 	}
 	
-	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, int i, int j) throws SQLException{
+	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, int i, int j, String x, String y) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		
@@ -203,7 +203,7 @@ public class SQLQueryExecutor {
 				yList = new ArrayList<WrapperType>();
 				xList.add(new WrapperType(rs.getString(2), xType));
 				yList.add(new WrapperType(rs.getString(3), yType));
-				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList));
+				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList), x, y);
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
 			}
 
