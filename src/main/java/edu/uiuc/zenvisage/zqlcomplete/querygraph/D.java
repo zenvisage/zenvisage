@@ -13,6 +13,6 @@ import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
  *
  */
 public interface D {
-	public  AxisVariableScores  execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables);
+	public  AxisVariableScores  execute(VisualComponentList f1, VisualComponentList f2, List<List<AxisVariable>> axisVariables);
 	public double calculateDistance(VisualComponent v1, VisualComponent v2);
 }

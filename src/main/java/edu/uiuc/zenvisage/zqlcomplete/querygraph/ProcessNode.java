@@ -123,9 +123,21 @@ public class ProcessNode extends QueryNode {
 		
 		// axis: eg v1
 		System.out.println(process.getAxis());
-		List<String> something = new ArrayList<String>();
-		something.add("something");
+	
+		//Tarique: I changed it to list of lists. If there are two lists we need to take
+		// the cross-product for comparisons across f1,f2; for one list we should do the point-wise comparison across f1 and f2.
+		// for multiple values in one list -- we take the cross-product, but compare point-wise if there is one list.
+		
+		//We need to fix the next few lines, after we have the parsing working.
+		List<List<AxisVariable>> something = new ArrayList<List<AxisVariable>>();
+		List<AxisVariable> firstAxisVarible =  new ArrayList<AxisVariable>();
+		firstAxisVarible.add(new AxisVariable("aa","aa", new ArrayList<>())); //to fix
+		List<AxisVariable> secondAxisVarible =  new ArrayList<AxisVariable>();
+		something.add(firstAxisVarible);
+		
+		
 		return d.execute(f1, f2, something);		
+
 	}
 	
 	private AxisVariableScores executeTMethod() {
@@ -145,7 +157,10 @@ public class ProcessNode extends QueryNode {
 		}
 		VisualComponentList f1 = (VisualComponentList) object1;
 		
-		return t.execute(f1, process.getAxis());
+		//TO fix
+		List<AxisVariable> something = new ArrayList<AxisVariable>();
+		
+		return t.execute(f1, something);
 	}
 	
 	// TODO: complete

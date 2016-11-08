@@ -20,28 +20,47 @@ public class DEuclidean implements D {
 	/* (non-Javadoc)
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.D#execute(edu.uiuc.zenvisage.data.remotedb.VisualComponentList, edu.uiuc.zenvisage.data.remotedb.VisualComponentList, java.util.List)
 	 */
+	
+	//Tarique: I have changes the type of axisvariables to a class instead of a string, so that we can also see attrubute type, i.e, x,y, or z.
+	
 	@Override
-	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables) {
+	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2,List<List<AxisVariable>> axisVariables) {
 		// TODO Auto-generated method stub
 
 		List<VisualComponent> f1List = f1.getVisualComponentList();
 		List<VisualComponent> f2List = f2.getVisualComponentList();
 		
-		f1List.sort(new VCComparator());
-		f2List.sort(new VCComparator());
-		
+		//Tarique: currently we are sorting only by z, we should be able to sort it by x, y or z, I have now provided 
+		// the attribute type details in the Axisvariable as well
+		VCComparator VC1 = new VCComparator(axisVariables.get(0));	
+		VCComparator VC2= new VCComparator(axisVariables.get(1));
+		f1List.sort(VC1);
+		if(axisVariables.size()<2)
+		f2List.sort(VC1);
+		else
+		f2List.sort(VC2);
+	
 		ArrayList<ArrayList<String>> axisvars = new ArrayList<ArrayList<String>>();;
 		List<Double> scores = new ArrayList<Double>();
 		AxisVariableScores axisVariableScores;
 		
 		if (axisVariables.size() == 1) {
-			ArrayList<String> singleAxisvarsList = new ArrayList<String>();
 			
-			// Compare say f1 = ['CA'] with f2 = ['CA','MN', 'FL'] (want to see how different other states are from 'CA'
-			if (f1List.size() == 1) {
-				for (int j = 0; j < f2List.size(); j++) {
-					scores.add(calculateEuclideanDistance(f1List.get(0), f2List.get(j)));
-					singleAxisvarsList.add(f2List.get(j).getZValue().getStrValue());
+			//TOFIXL: instead of two,make this generic 
+			ArrayList<String> singleAxisvarsList = new ArrayList<String>();
+			ArrayList<String> secondAxisvarsList = new ArrayList<String>();
+		
+			for (int i = 0, j = 0; i < f1List.size() && j < f2List.size(); ) {
+				int zCompare = VC1.compare(f1List.get(i),f2List.get(i));
+				if (zCompare == 0) {
+					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
+					singleAxisvarsList.add(VC1.extractAttribute(f1List.get(i),0));
+					if(axisVariables.get(0).size()==2)
+					{
+						secondAxisvarsList.add(VC1.extractAttribute(f1List.get(i),1));
+					}
+					i++;
+					j++;
 				}
 			}
 			else if (f2List.size() == 1) {
@@ -69,6 +88,10 @@ public class DEuclidean implements D {
 				}
 			}
 			axisvars.add(singleAxisvarsList);
+			if(axisVariables.get(0).size()==2)
+			{
+			 axisvars.add(secondAxisvarsList);
+			}
 //			Double[] scoreArray = scores.toArray(new Double[scores.size()]);
 			axisVariableScores = new AxisVariableScores(axisvars, scores);
 			return axisVariableScores;
@@ -80,8 +103,8 @@ public class DEuclidean implements D {
 			for (int i = 0; i < f1List.size(); i++) {
 				for (int j = 0; j < f2List.size(); j++) {
 					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
-					firstAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
-					secondAxisvarsList.add(f2List.get(j).getZValue().getStrValue());
+					firstAxisvarsList.add(VC1.extractAttribute(f1List.get(i),0));
+					secondAxisvarsList.add(VC1.extractAttribute(f2List.get(i),0));
 				}
 			}
 		
@@ -94,10 +117,58 @@ public class DEuclidean implements D {
 		return null;
 	}
 	
-	public static class VCComparator implements Comparator<VisualComponent> {
+	
+	
+	
+	public  class VCComparator implements Comparator<VisualComponent> {
+		List<AxisVariable> axisVariables;
+		public VCComparator(List<AxisVariable>  axisVariables)
+		{
+			this.axisVariables=axisVariables;
+		}
+		
 		public int compare(VisualComponent v1, VisualComponent v2) {
+			int cmp=0;
+			for(AxisVariable axisVariabe: axisVariables)
+			{
+				if(axisVariabe.getAttributeType().equals("Z"))
+				 cmp=comparealongZ(v1, v2);
+				else if(axisVariabe.getAttributeType().equals("Y"))
+				{
+				cmp=comparealongY(v1, v2);
+				}
+				else{
+					cmp=comparealongX(v1, v2);
+				}
+				if(cmp!=0)
+					break;
+					
+			}
+			return cmp;
+		}
+		
+		public int comparealongX(VisualComponent v1, VisualComponent v2){
+			return v1.getxAttribute().compareToIgnoreCase(v2.getxAttribute());
+		}
+		
+		public int comparealongY(VisualComponent v1, VisualComponent v2){
+		    return v1.getyAttribute().compareToIgnoreCase(v2.getyAttribute());
+		}
+		
+		public int comparealongZ(VisualComponent v1, VisualComponent v2){
 			return v1.getZValue().getStrValue().compareToIgnoreCase(v2.getZValue().getStrValue());
 		}
+		
+		public String extractAttribute(VisualComponent v1,int order){
+			  if(axisVariables.get(order).getAttributeType().equals("Z"))
+				 return v1.getZValue().toString();
+			  else if(axisVariables.get(order).getAttributeType().equals("Z"))
+				 return v1.getyAttribute();
+			  else {
+				return v1.getxAttribute();
+				}		
+		}
+
 	}
 	
 	public double calculateDistance(VisualComponent v1, VisualComponent v2) {

@@ -12,5 +12,5 @@ import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
  *
  */
 public interface T {
-	public AxisVariableScores execute(VisualComponentList f1, List<String> axisVariables);
+	public AxisVariableScores execute(VisualComponentList f1, List<AxisVariable> axisVariables);
 }

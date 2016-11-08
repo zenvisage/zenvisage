@@ -20,7 +20,7 @@ public class TIncreasingness implements T {
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.T#T(edu.uiuc.zenvisage.data.remotedb.VisualComponentList, java.util.List)
 	 */
 	@Override
-	public AxisVariableScores execute(VisualComponentList f1, List<String> axisVariables) {
+	public AxisVariableScores execute(VisualComponentList f1, List<AxisVariable> axisVariables) {
 		// TODO Auto-generated method stub
 		
 		List<VisualComponent> f1List = f1.getVisualComponentList();

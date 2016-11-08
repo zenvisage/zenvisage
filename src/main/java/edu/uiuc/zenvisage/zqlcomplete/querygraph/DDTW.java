@@ -24,7 +24,7 @@ public class DDTW implements D {
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.D#execute(edu.uiuc.zenvisage.data.remotedb.VisualComponentList, edu.uiuc.zenvisage.data.remotedb.VisualComponentList, java.util.List)
 	 */
 	@Override
-	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables) {
+	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2, List<List<AxisVariable>> axisVariables) {
 		// TODO Auto-generated method stub
 
 		List<VisualComponent> f1List = f1.getVisualComponentList();

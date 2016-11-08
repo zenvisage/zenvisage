@@ -27,17 +27,20 @@ public class DSegmentation implements D {
 	/* (non-Javadoc)
 	 * @see edu.uiuc.zenvisage.zqlcomplete.querygraph.D#execute(edu.uiuc.zenvisage.data.remotedb.VisualComponentList, edu.uiuc.zenvisage.data.remotedb.VisualComponentList, java.util.List)
 	 */
+	
+	//Tarique: I have changes the type of axisvariables to a class instead of a string, so that we can also see attrubute type, i.e, x,y, or z.
 	@Override
-	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2, List<String> axisVariables) {
+	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2, List<List<AxisVariable>> axisVariables) {
 		// TODO Auto-generated method stub
 
 		List<VisualComponent> f1List = f1.getVisualComponentList();
 		List<VisualComponent> f2List = f2.getVisualComponentList();
 		
+	
 		f1List.sort(new VCComparator());
 		f2List.sort(new VCComparator());
 		
-		ArrayList<ArrayList<String>> axisvars = new ArrayList<ArrayList<String>>();;
+		ArrayList<ArrayList<String>> axisvars = new ArrayList<ArrayList<String>>();
 		List<Double> scores = new ArrayList<Double>();
 		AxisVariableScores axisVariableScores;
 		
@@ -86,7 +89,7 @@ public class DSegmentation implements D {
 		return null;
 	}
 	
-	public static class VCComparator implements Comparator<VisualComponent> {
+	public  class VCComparator implements Comparator<VisualComponent> {
 		public int compare(VisualComponent v1, VisualComponent v2) {
 			return v1.getZValue().getStrValue().compareToIgnoreCase(v2.getZValue().getStrValue());
 		}
