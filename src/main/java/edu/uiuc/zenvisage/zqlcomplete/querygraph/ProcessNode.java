@@ -58,14 +58,17 @@ public class ProcessNode extends QueryNode {
 	public AxisVariableScores executeProcess() {
 		AxisVariableScores axisVariableScores = null;
 		System.out.println(process.getMethod());
+		if (process.getMethod().isEmpty()) {
+			return null;
+		}
 		// TODO: handle different types of D, T, and R
 		
-		// TODO: Handling "dissimilar" as method input for now
-		// probably should be parsed to D?
-		if (process.getMethod().toLowerCase().equals("similar") || process.getMethod().toLowerCase().equals("dissimilar") || process.getMethod().equals("D")) {
+		// TODO: Remove handling of "similar" and "dissimilar" as method input
+		// Supports D and DEuclidean and so on
+		if (process.getMethod().charAt(0) == 'D' || process.getMethod().toLowerCase().equals("similar") || process.getMethod().toLowerCase().equals("dissimilar")) {
 			axisVariableScores = executeDMethod();
 		}
-		if (process.getMethod().equals("T")) {
+		if (process.getMethod().charAt(0) == 'T') {
 			axisVariableScores = executeTMethod();
 		}
 		if (process.getMethod().equals("R")){
@@ -79,16 +82,23 @@ public class ProcessNode extends QueryNode {
 		System.out.println("Process information:");
 		System.out.println(process.getVariables());
 		System.out.println(process.getArguments());
+		
+		// axisNames and getVariables() and getAxisvars() should have same size!!
+		ArrayList<String> axisNames = new ArrayList<String>();
+		axisNames.addAll(process.getAxisList1());
+		axisNames.addAll(process.getAxisList2());
 		// Every variable of a process statement should have a corresponding list of variables in axisVariableScores
 		for (int i = 0; i < process.getVariables().size(); i++) {
 			String varName = process.getVariables().get(i);
 			// get the axivariable in the z column, 
 			
 		    List<String> values = axisVariableScores.getAxisvars().get(i);
-		    
-		    //TODO fix state to actual axis variable
-			AxisVariable axisVar = new AxisVariable("state", values);
-			lookuptable.put(varName, axisVar);
+		    String axisName = axisNames.get(i);
+			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
+
+		    //TODO check correctness
+			AxisVariable newAxisVar = new AxisVariable(axisVar.getAttributeType(), axisVar.getAttribute(), values);
+			lookuptable.put(varName, newAxisVar);
 		}
 		return axisVariableScores;
 	}	
@@ -122,20 +132,32 @@ public class ProcessNode extends QueryNode {
 		VisualComponentList f2 = (VisualComponentList) object2;
 		
 		// axis: eg v1
-		System.out.println(process.getAxis());
+		System.out.println("axis: ");
+		System.out.println(process.getAxisList1());
+		System.out.println(process.getAxisList2());
 	
 		//Tarique: I changed it to list of lists. If there are two lists we need to take
 		// the cross-product for comparisons across f1,f2; for one list we should do the point-wise comparison across f1 and f2.
 		// for multiple values in one list -- we take the cross-product, but compare point-wise if there is one list.
 		
-		//We need to fix the next few lines, after we have the parsing working.
 		List<List<AxisVariable>> something = new ArrayList<List<AxisVariable>>();
-		List<AxisVariable> firstAxisVarible =  new ArrayList<AxisVariable>();
-		firstAxisVarible.add(new AxisVariable("aa","aa", new ArrayList<>())); //to fix
-		List<AxisVariable> secondAxisVarible =  new ArrayList<AxisVariable>();
-		something.add(firstAxisVarible);
-		
-		
+		List<AxisVariable> firstAxisVariable =  new ArrayList<AxisVariable>();
+		if (process.getAxisList1() != null) {
+			for(String axis : process.getAxisList1()) {
+				AxisVariable axisVar = (AxisVariable) lookuptable.get(axis);
+				firstAxisVariable.add(axisVar);
+			}
+		}
+		something.add(firstAxisVariable);
+		// firstAxisVariable.add(new AxisVariable("aa","aa", new ArrayList<>())); //to fix
+		List<AxisVariable> secondAxisVariable =  new ArrayList<AxisVariable>();
+		if (process.getAxisList2() != null) {
+			for(String axis : process.getAxisList2()) {
+				AxisVariable axisVar = (AxisVariable) lookuptable.get(axis);
+				secondAxisVariable.add(axisVar);
+			}
+			something.add(secondAxisVariable);
+		}			
 		return d.execute(f1, f2, something);		
 
 	}

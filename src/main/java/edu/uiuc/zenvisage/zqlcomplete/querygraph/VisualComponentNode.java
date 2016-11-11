@@ -52,16 +52,16 @@ public class VisualComponentNode extends QueryNode{
 		
 		// e.g., x1 <- 'year'
 		if (!x.getVariable().equals("") && !x.getAttributes().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable("", x.getAttributes());
+			AxisVariable axisVar = new AxisVariable("X", "", x.getAttributes());
 			lookuptable.put(x.getVariable(), axisVar);
 		}
 		if (!y.getVariable().equals("") && !y.getAttributes().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable("", y.getAttributes());
+			AxisVariable axisVar = new AxisVariable("Y", "", y.getAttributes());
 			lookuptable.put(y.getVariable(), axisVar);
 		}
 		// For z, use type variable = z.getColumn!
 		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable(z.getAttribute(), z.getValues());
+			AxisVariable axisVar = new AxisVariable("Z", z.getAttribute(), z.getValues());
 			lookuptable.put(z.getVariable(), axisVar);
 		}
 		// call SQL backend
