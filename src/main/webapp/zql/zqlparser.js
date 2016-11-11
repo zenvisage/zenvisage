@@ -135,7 +135,7 @@ function parseZ(input) {
 					getExp(orExp([
 								lstExp(varVal()),
 								recExp(varVal()+'.'+varVal())
-							]), 
+							]),
 							orExp([
 								recExp(conVal())+'.'+orExp([
 												recExp(symVal('\\*')),
@@ -239,16 +239,40 @@ function parseProcess(input) {
 
 	var re = new RegExp(restr);
     var found = input.match(re);
+	console.log("process");
     console.log(found);
     try {
-        var processe = {
-            variables: parseList(found[1]),
-            method: found[2] || found[4],
-            axis: found[5],
-            count: found[9],
-            metric: found[13],
-            arguments: parseList(found[3]||found[14])
-        }
+		var processe = undefined;
+
+		if (found[4] != undefined) {
+	        processe = {
+				/*
+	            variables: parseList(found[1]),
+	            method: found[2] || found[4],
+	            axis: found[5],
+	            count: found[9],
+	            metric: found[13],
+	            arguments: parseList(found[3]||found[14])
+				*/
+				variables: parseList(found[1]),
+				method: found[13],
+				axisList1: parseList(found[5]),
+				axisList2: null,
+				count: found[9],
+				metric: found[2] || found[4], // found[2] should support IncTrends, found[4] supports DEuclidean
+				arguments: parseList(found[3]||found[14]) // found[3] = (f1) found[14] = (f1,f2)
+	        }
+		}
+		else if (found[15] != undefined) {
+			// cross product case!
+			variables: parseList(found[1]),
+			method: found[25],
+			axisList1: parseList(found[16]),
+			axisList2: parseList(found[17]),
+			count: found[21],
+			metric: found[15],
+			arguments: parseList(found[26])
+		}
     }
     catch(err) {
         console.error("Process Column Syntax Error: "+err);
