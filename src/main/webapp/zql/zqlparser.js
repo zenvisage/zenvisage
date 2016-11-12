@@ -264,14 +264,16 @@ function parseProcess(input) {
 	        }
 		}
 		else if (found[15] != undefined) {
-			// cross product case!
-			variables: parseList(found[1]),
-			method: found[25],
-			axisList1: parseList(found[16]),
-			axisList2: parseList(found[17]),
-			count: found[21],
-			metric: found[15],
-			arguments: parseList(found[26])
+			processe = {
+				// cross product case!
+				variables: parseList(found[1]),
+				method: found[25],
+				axisList1: parseList(found[16]),
+				axisList2: parseList(found[17]),
+				count: found[21],
+				metric: found[15],
+				arguments: parseList(found[26])
+			}
 		}
     }
     catch(err) {

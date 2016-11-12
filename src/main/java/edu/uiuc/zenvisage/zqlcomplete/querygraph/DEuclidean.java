@@ -33,12 +33,15 @@ public class DEuclidean implements D {
 		//Tarique: currently we are sorting only by z, we should be able to sort it by x, y or z, I have now provided 
 		// the attribute type details in the Axisvariable as well
 		VCComparator VC1 = new VCComparator(axisVariables.get(0));	
-		VCComparator VC2= new VCComparator(axisVariables.get(1));
+		VCComparator VC2= null;
 		f1List.sort(VC1);
-		if(axisVariables.size()<2)
-		f2List.sort(VC1);
-		else
-		f2List.sort(VC2);
+		if(axisVariables.size()<2) {
+			f2List.sort(VC1);
+			VC2 = new VCComparator(null);
+		} else {
+			VC2 = new VCComparator(axisVariables.get(1));
+			f2List.sort(VC2);
+		}
 	
 		ArrayList<ArrayList<String>> axisvars = new ArrayList<ArrayList<String>>();;
 		List<Double> scores = new ArrayList<Double>();
@@ -104,7 +107,7 @@ public class DEuclidean implements D {
 				for (int j = 0; j < f2List.size(); j++) {
 					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
 					firstAxisvarsList.add(VC1.extractAttribute(f1List.get(i),0));
-					secondAxisvarsList.add(VC1.extractAttribute(f2List.get(i),0));
+					secondAxisvarsList.add(VC1.extractAttribute(f2List.get(j),0));
 				}
 			}
 		
