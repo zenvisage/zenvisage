@@ -38,6 +38,7 @@ public class SQLQueryExecutor {
 	
 	// Initialize connection
 	public SQLQueryExecutor() {
+
 	      try {
 		         Class.forName("org.postgresql.Driver");
 		         c = DriverManager
@@ -143,6 +144,10 @@ public class SQLQueryExecutor {
 		//support list of x, y values, general all possible x,y combinations, generate sql
 		int xLen = zqlRow.getX().getAttributes().size();
 		int yLen = zqlRow.getY().getAttributes().size();
+		
+		this.visualComponentList = new VisualComponentList();
+		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
+		
 		for(int i = 0; i < xLen; i++){
 			for(int j = 0; j < yLen; j++){
 				String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
@@ -177,10 +182,6 @@ public class SQLQueryExecutor {
 	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, String y) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
-		
-		
-		//this.visualComponentList = new VisualComponentList();
-		//this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
 		
 		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
