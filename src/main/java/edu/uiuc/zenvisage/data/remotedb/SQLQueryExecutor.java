@@ -123,14 +123,16 @@ public class SQLQueryExecutor {
 		}
 
 		/* Testing below */
-        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
+        //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 		rs.close();
 		st.close();
 	}
 	
 	/*This is the main ZQL->SQLExcecution query*/
 	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
-		
+		this.visualComponentList = new VisualComponentList();
+		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
+
 		String sql = null;
 		
 		databaseName = databaseName.toLowerCase();
@@ -163,22 +165,22 @@ public class SQLQueryExecutor {
 			
 				System.out.println("Running ZQL Query :"+sql);
 				//excecute sql and put into VisualComponentList
-				executeSQL(sql, zqlRow, databaseName, i, j, x, y);
+				executeSQL(sql, zqlRow, databaseName, x, y);
 			}
 		}
 
 
 		/* Testing below */
-        System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
+        //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 	}
 	
-	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, int i, int j, String x, String y) throws SQLException{
+	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, String y) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		
 		
-		this.visualComponentList = new VisualComponentList();
-		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
+		//this.visualComponentList = new VisualComponentList();
+		//this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
 		
 		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
@@ -189,8 +191,8 @@ public class SQLQueryExecutor {
 		while (rs.next())
 		{
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
-			if(xType == null) xType = getMetaType(zqlRow.getX().getAttributes().get(i).toLowerCase(), databaseName);
-			if(yType == null) yType = getMetaType(zqlRow.getY().getAttributes().get(j).toLowerCase(), databaseName);
+			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
+			if(yType == null) yType = getMetaType(y, databaseName);
 
 			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
 
@@ -224,10 +226,10 @@ public class SQLQueryExecutor {
 		boolean flag=false;
 		for(Constraints constraint: constraints){
 			if(flag){
-				appendedConstraints+=" AND ";
-				flag=true;
+				appendedConstraints+=" OR "; // TODO: Support OR AND AND constraints
 			}
 			appendedConstraints+=constraint.toString();
+			flag=true;
 		}
 		appendedConstraints+=" ";
 		
