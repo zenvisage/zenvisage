@@ -257,7 +257,7 @@ function parseProcess(input) {
 				variables: parseList(found[1]),
 				method: found[13],
 				axisList1: parseList(found[5]),
-				axisList2: null,
+				axisList2: [],
 				count: found[9],
 				metric: found[2] || found[4], // found[2] should support IncTrends, found[4] supports DEuclidean
 				arguments: parseList(found[3]||found[14]) // found[3] = (f1) found[14] = (f1,f2)
