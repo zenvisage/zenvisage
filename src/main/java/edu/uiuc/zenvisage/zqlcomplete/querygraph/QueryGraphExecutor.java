@@ -36,6 +36,12 @@ public class QueryGraphExecutor {
 			
 			while(!nodeQueue.isEmpty()) {
 				currNode = (QueryNode) nodeQueue.remove();
+				if (currNode.state == State.FINISHED) {
+					// this means we enqueued this node twice by accident
+					// eg two parents have this as a child.
+					// probably needs to be fixed with some "visited" state 
+					continue;
+				}
 				System.out.println("Processing Node: "+ currNode.toString());
 				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
@@ -51,9 +57,9 @@ public class QueryGraphExecutor {
 						System.out.println("To output = " + temp.getVc().getName().getOutput());
 					}
 					System.out.println(" My map");
-					MapUtils.debugPrint(System.out, "myMap", currNode.lookuptable.getVariables());
-					System.out.println(" My map");
-					System.out.println(Arrays.toString(currNode.lookuptable.getVariables().entrySet().toArray()));
+					//MapUtils.debugPrint(System.out, "myMap", currNode.lookuptable.getVariables());
+					//System.out.println(" My map");
+					//System.out.println(Arrays.toString(currNode.lookuptable.getVariables().entrySet().toArray()));
 
 					// add children to queue
 					nodeQueue.addAll(currNode.getChildren());

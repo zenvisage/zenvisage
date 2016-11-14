@@ -51,7 +51,7 @@ public class ProcessNode extends QueryNode {
 		
 		this.state = State.RUNNING;
 		AxisVariableScores axisVariableScores = executeProcess();
-
+		this.state = State.FINISHED;
 		// mock 
 	}
 	
@@ -151,7 +151,7 @@ public class ProcessNode extends QueryNode {
 		something.add(firstAxisVariable);
 		// firstAxisVariable.add(new AxisVariable("aa","aa", new ArrayList<>())); //to fix
 		List<AxisVariable> secondAxisVariable =  new ArrayList<AxisVariable>();
-		if (process.getAxisList2() != null) {
+		if (process.getAxisList2() != null && !process.getAxisList2().isEmpty()) {
 			for(String axis : process.getAxisList2()) {
 				AxisVariable axisVar = (AxisVariable) lookuptable.get(axis);
 				secondAxisVariable.add(axisVar);
