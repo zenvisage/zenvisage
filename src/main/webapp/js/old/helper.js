@@ -68,6 +68,8 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     var width = 220//200// - m[1] - m[3]; // width
     var height = 105//85// - m[0] - m[2]; // height
 
+
+
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
     var y = d3.scaleLinear().range([height-20, 20]);
@@ -85,9 +87,24 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#result-" + count.toString())
           .append("svg")
+          .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
+
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+    graph.append("rect")
+        .attr("width", (xRange[0]-xmin)/(xmax-xmin)*(width-40) )
+        .attr("height", height-40)
+        .attr("transform", "translate(20,20)")
+        .attr("fill", "grey");
+
+    var newLoc = (xRange[1])/(xmax-xmin)*(width-40)+20
+    graph.append("rect")
+        .attr("width", (xmax-xRange[1])/(xmax-xmin)*(width-40))
+        .attr("height", height-40)
+        .attr("transform", "translate(" + newLoc.toString() + ",20)")
+        .attr("fill", "grey");
 
     var trans = height-20
     // create yAxis
@@ -95,6 +112,13 @@ function displayUserQueryResultsHelperNew( userQueryResults )
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
         .call(d3.axisBottom(x));
+
+    graph.append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+                           (trans + m[0] + 30) + ")")
+      .style("text-anchor", "middle")
+      .text(xlabel);
 
     // Add the Y Axis
     graph.append("g")
@@ -187,126 +211,6 @@ function displayUserQueryResultsHelperNew( userQueryResults )
 
 }
 
-
-
-function displayUserQueryResultsHelper( userQueryResults )
-{
-  clearUserQueryResultsTable();
-  var resultsDiv = $("#results-table");
-  var current = 0;
-  var connectSeparatedPoints = true;
-  var pointSize = 1.0;
-  var drawPoints = false;
-  var strokeWidth = 1.0;
-  if ( getScatterplotOption() )
-  {
-    connectSeparatedPoints = false;
-    pointSize = 1;
-    drawPoints = true;
-    strokeWidth = 0;
-  }
-  for (var count = 0; count < userQueryResults.length; count++)
-  {
-    if (count % 2 == 0)
-    {
-      var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
-      current = count;
-    }
-    $("#row-" + current.toString()).append("<td><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></td>");
-  }
-  for (var count = 0; count < userQueryResults.length; count++)
-  {
-    var xData = userQueryResults[count]["xData"];
-    var yData = userQueryResults[count]["yData"];
-
-    var xlabel = userQueryResults[count]["xType"];
-    var ylabel = userQueryResults[count]["yType"];
-    var xRange = userQueryResults[count]["xRange"];
-
-    var xmin = Math.min.apply(Math, xData);
-    var xmax = Math.max.apply(Math, xData);
-    var ymin = Math.min.apply(Math, yData);
-    var ymax = Math.max.apply(Math, yData);
-
-    var considerRange = userQueryResults[count]["considerRange"];
-    var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
-
-    var valueRange = [ymin, ymax];
-    var tempDygraph;
-
-    if (considerRange)
-    {
-     tempDygraph = new Dygraph(document.getElementById("result-" + count.toString()), data,
-      {
-        valueRange: valueRange,
-        dateWindow: [xmin, xmax],
-        xlabel: xlabel,
-        xLabelHeight: 11,
-        axisLabelWidth: 11,
-        axisLabelFontSize: 9,
-        showLabelsOnHighlight: false,
-        pixelsPerLabel: 20,
-        highlightCircleSize: 0,
-        interactionModel: {},
-        connectSeparatedPoints: connectSeparatedPoints,
-        drawPoints: drawPoints,
-        pointSize: pointSize,
-        strokeWidth: strokeWidth,
-        drawGrid: false,
-        axisLabelWidth: 20,
-        colors: [ "0E3340", "#90C3D4" ],
-        underlayCallback: function(canvas, area, g) {
-            var params = getEvaluatingRange( xmin, xmax, xRange )
-            var first_left = g.toDomCoords(params[0], -20)[0];
-            var first_right = g.toDomCoords(params[1], +20)[0];
-            var second_left = g.toDomCoords(params[2], -20)[0];
-            var second_right = g.toDomCoords(params[3], +20)[0];
-            canvas.fillStyle = "rgba(70, 70, 70, 1.0)";
-            canvas.fillRect(first_left, area.y, first_right - first_left, area.h);
-            canvas.fillRect(second_left, area.y, second_right - second_left, area.h);
-        },
-      });
-    }
-    else
-    {
-     tempDygraph = new Dygraph(document.getElementById("result-" + count.toString()), data,
-      {
-        valueRange: valueRange,
-        dateWindow: [xmin, xmax],
-        xlabel: xlabel,
-        xLabelHeight: 11,
-        axisLabelWidth: 11,
-        axisLabelFontSize: 9,
-        showLabelsOnHighlight: false,
-        pixelsPerLabel: 20,
-        highlightCircleSize: 0,
-        interactionModel: {},
-        drawGrid: false,
-        axisLabelWidth: 20,
-        connectSeparatedPoints: connectSeparatedPoints,
-        drawPoints: drawPoints,
-        pointSize: pointSize,
-        colors: [ "0E3340", "#90C3D4" ],
-      });
-    }
-
-    userQueryDygraphs["result-" + count.toString()] = tempDygraph;
-
-  }
-
-  $(".draggable-graph").draggable({
-    opacity: 0.5,
-    helper: function() {
-      return $(this).clone().css({
-        width: $(event.target).width(),
-        'border-style': "solid",
-        'border-width': 1
-      });
-    }
-  });
-
-}
-
 function displayRepresentativeResultsHelperNew( representativePatternResults )
 {
   clearRepresentativeTable();
@@ -370,6 +274,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#representative-result-" + count.toString())
           .append("svg")
+          .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
@@ -380,6 +285,14 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
         .call(d3.axisBottom(x));
+
+
+    graph.append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+                           (trans + m[0] + 30) + ")")
+      .style("text-anchor", "middle")
+      .text(xlabel);
 
     // Add the Y Axis
     graph.append("g")
@@ -550,6 +463,7 @@ function displayOutlierResultsHelperNew( outlierResults )
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#outlier-result-" + count.toString())
           .append("svg")
+          .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");

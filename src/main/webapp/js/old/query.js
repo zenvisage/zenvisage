@@ -89,7 +89,6 @@ function getSelectedCategory()
 function getXRange() //when zoomed in
 {
   return xrangeNew;
-  // return sketchpad.xAxisRange()
 }
 
 function getAggregationMethod()
