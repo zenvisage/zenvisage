@@ -139,17 +139,20 @@ public class VisualComponentNode extends QueryNode{
 		if(!z.getVariable().equals("") && z.getAttribute().isEmpty()) {
 			z.setAttribute(zAxisVariable.getAttribute());
 			List<String> values = zAxisVariable.getValues();
-			if(!values.isEmpty() && !values.get(0).equals("") && !values.get(0).equals("*")){
-				String parentheSizedValues = generateParenthesizedList(values);
-				edu.uiuc.zenvisage.zqlcomplete.executor.Constraints constraints = new edu.uiuc.zenvisage.zqlcomplete.executor.Constraints();
-				constraints.setKey(z.getAttribute());
-				constraints.setOperator(" IN");
-				constraints.setValue(parentheSizedValues);		
-				vc.getConstraints().add(constraints);
-			}
 			z.setValues(values);
 		}
-	
+		
+		// So either z naturally has values eg from query with z=state.{'CA','NY'}
+		// Or z got values from the lookuptable eg z=v1
+		List<String> values = z.getValues();
+		if(!values.isEmpty() && !values.get(0).equals("") && !values.get(0).equals("*")){
+			String parentheSizedValues = generateParenthesizedList(values);
+			edu.uiuc.zenvisage.zqlcomplete.executor.Constraints constraints = new edu.uiuc.zenvisage.zqlcomplete.executor.Constraints();
+			constraints.setKey(z.getAttribute());
+			constraints.setOperator(" IN");
+			constraints.setValue(parentheSizedValues);		
+			vc.getConstraints().add(constraints);
+		}	
 		
 		// update the z column to make sure it strips extra '' out (so will be state, not 'state')
 		String str = z.getAttribute();
@@ -175,6 +178,7 @@ public class VisualComponentNode extends QueryNode{
 		// TODO Auto-generated method stub
 		String parentheSizedValues="(";
 		for(String value: values){
+			value = value.replaceAll("'", "").replaceAll("\"", "");
 			parentheSizedValues+= " \'"+value+"\',";		
 		}
 		parentheSizedValues=parentheSizedValues.substring(0,parentheSizedValues.length()-1);
