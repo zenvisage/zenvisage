@@ -61,6 +61,9 @@ app.controller('options-controller', [
     $scope.considerRange = true;
     $scope.showScatterplot = false;
     $scope.equation =  '';
+    $scope.zqltable = false;
+    $scope.chartOptions = ["Line", "Bar", "Scatter"];
+    $scope.selectedChartOption = $scope.chartOptions[0];
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -91,6 +94,16 @@ app.controller('options-controller', [
         $scope.callgetRepresentativeTrends();
       }
     });
+
+    $scope.changeChartType = function() {
+       var adsf = $scope.selectedChartOption
+       console.log(adsf)
+    }
+
+    $scope.submitZQLTable = function() {
+      //$(".tabler")
+      console.log("test")
+    }
 
     $scope.drawFunction = function() {
       var xval = [];

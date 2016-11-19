@@ -7,7 +7,7 @@ var myApp = angular.module('zenvisageApp', ['ui.router', 'zenvisageControllers']
 
 myApp.config(function ($stateProvider, $urlRouterProvider) {
     // For any unmatched url, redirect to welcome page
-    $urlRouterProvider.otherwise("/main/line");
+    $urlRouterProvider.otherwise("/index.html");
 
     // Now set up the states
     $stateProvider
