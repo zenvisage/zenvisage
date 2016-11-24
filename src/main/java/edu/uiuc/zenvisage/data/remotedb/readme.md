@@ -29,7 +29,7 @@ Method Two:
 Load zenvisage.sql to your postgres database with databasename: postgres
 
 
-Method Two: (Fast loading 4 databases without uploading schema and files 4 times and wait)
+Method Two: (Fast loading 3 databases without uploading schema and files 4 times and wait)
 
 (1)
 Using Command Line Tools with Postgres.app
