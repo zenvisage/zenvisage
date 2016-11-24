@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visual Data Exploration</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href="chi-css/custom.css" rel="stylesheet">
-    <link href="chi-css/draw.css" rel="stylesheet">
+    <link href="css/old/custom.css" rel="stylesheet">
+    <link href="css/old/draw.css" rel="stylesheet">
   </head>
   <body>
     <!-- this div contains everything in the body -->
@@ -24,7 +24,7 @@
                 <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
               </div>
               <div class="modal-body">
-                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                Dataset name<input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
                 <div class="row">
                   <div class="col-md-5">
                     <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
@@ -55,7 +55,6 @@
             <select class="form-control" ng-change="onDatasetChange()" ng-model="selectedDataset" id="dataset-form-control">
               <option value="real_estate">Real Estate</option>
               <option value="cmu">cmu</option>
-              <option value="cmutesting">cmu testing</option>
               <option value="sales">sales</option>
             </select>
           </div>
@@ -90,28 +89,115 @@
       <div id="middle-bar">
 
         <!-- this div contains the drawng interface and the zql table -->
-        <div class="row" id="top-middle-bar">
+        <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
           <!-- drawing interface -->
           <div class="col-md-4">
-            <!--
             <div class="input-group" id="graph-buttons" >
-              <div class="btn-group btn-group-xs" ng-controller="buttonsController" id="left-button-group">
-                <label class="btn btn-default" >
-                  <input type="radio" ng-model="sketchpadSetting" ng-change="onSketchpadSettingChange( sketchpadSetting )" value="draw"/><span>Draw</span>
-                </label>
-                <label class="btn btn-default">
-                  <input type="radio" ng-model="sketchpadSetting" ng-change="onSketchpadSettingChange( sketchpadSetting )" value="zoom"/><span>Zoom</span>
-                </label>
+              <div class="btn-group" id="left-button-group">
+                <select ng-model="selectedChartOption" ng-options="option for option in chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
+<!--                   <option>Line</option>
+                  <option>Scatter</option>
+                  <option>Bar</option> -->
+                </select>
               </div>
+
+              <div class="btn-group" >
+                <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+              </div>
+
+              <div class="btn-group" >
+                <button type="button" name="options" ng-show="zqltable" ng-click="submitZQLTable()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Submit</button>
+              </div>
+
             </div>
-            -->
-            <div id="draw-div"></div>
+
+            <div id="draw-div" ng-show="!scatterplot"></div>
+<!--             <div class="row" ng-show="scatterplot">
+              <div class="col s11">
+                  <svg id="main-chart">
+                  </svg>
+              </div>
+              <div class="col s1 ">
+                  <div class="col s12 ">
+                      <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col s12 ">
+                      <div class="buttons-for-drawing btn undo disabled" ng-click="scatterService.undoPolyPoints()"><a><i class="fa fa-undo" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col s12 ">
+                      <div class="buttons-for-drawing btn green-polygon disabled" ng-click="scatterService.changePolygonColorGreen()"><a style="color: forestgreen"><i class="fa fa-square" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col s12 ">
+                      <div class="buttons-for-drawing btn red-polygon disabled" ng-click="scatterService.changePolygonColorRed()"><a style="color: indianred"><i class="fa fa-square" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col s12 ">
+                      <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
+                  </div>
+              </div>
+          </div>
+ -->
+
+
           </div>
           <!-- drawing interface END-->
 
-          <div class="col-md-8" id="table-div" ng-controller="options-controller">
-            <div class="row">
+          <div class="col-md-8" id="table-div">
+            <div ng-show="zqltable">
+              <table id="zql-table" class="table zql-table">
+                <thead>
+                  <tr>
+                    <td>
+                    </td>
+                    <td><b>X</td>
+                    <td><b>Y</b></td>
+                    <td><b>Z</b></td>
+                    <td><b>Constraints</b></td>
+                    <td><b>Process</b></td>
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="table-row-1" class="tabler">
+                    <td>
+                      <div>
+                        <div class="number">1</div>
+                      </div>
+                    </td>
+                    <td>
+                      <input class="form-control zql-table x-val" type="text" size="10" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table y-val" type="text" size="10" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table z-val" type="text" size="10" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table constraints" type="text" size="20" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table process" type="text" size="25" value=" ">
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <a id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div ng-show="!zqltable" class="row">
               <div class="col-md-3">
                 <b>Similarity</b>
                 <div class="radio">
@@ -167,9 +253,9 @@
                   <form>
                     <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
                   </form>
-                  <form>
-                    <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="considerRange">Show scatterplot</label><br>
-                  </form>
+<!--                   <form>
+                    <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
+                  </form> -->
                 </div>
 
                 <!--
@@ -225,17 +311,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="assets/js/bootstrap-filestyle.min.js"> </script>
-    <script src="assets/js/math.min.js"> </script>
+    <script src="js/old/bootstrap-filestyle.min.js"> </script>
+    <script src="js/old/math.min.js"> </script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="chi-js/app.js"></script>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="js/old/app.js"></script>
     <!-- <script src="chi-js/graph.js"></script> -->
-    <script src="chi-js/draw.js"></script>
-    <script src="chi-js/query.js"></script>
-    <script src="chi-js/helper.js"></script>
-    <script src="chi-js/data.js"></script>
-    <script src="chi-js/fileUploader.js"></script>
+    <script src="js/old/draw.js"></script>
+    <script src="js/old/query.js"></script>
+    <script src="js/old/helper.js"></script>
+    <script src="js/old/data.js"></script>
+    <script src="js/old/fileUploader.js"></script>
   </body>
 </html>

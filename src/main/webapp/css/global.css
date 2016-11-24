@@ -1,0 +1,35 @@
+/* VENDOR - Default fall-backs and external files.
+========================================================================== */
+/* BASE - Base Variable file along with starting point Mixins and Placeholders.
+========================================================================== */
+/* PAGES- Page and Components
+========================================================================== */
+body {
+  background-color: white; }
+
+html, h1, h2, h3, h4, h5, div, span, .row {
+  margin: 0;
+  padding: 0; }
+
+.centeringContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center; }
+
+#welcome-page {
+  background: url("https://media.giphy.com/media/eLhY2D428VdfO/giphy.gif") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 100vh;
+  min-width: 100vw;
+  color: white; }
+
+/* FRAMEWORK - Structure and layout files.
+========================================================================== */
+/* MODULES - Re-usable site elements.
+========================================================================== */
+
+/*# sourceMappingURL=global.css.map */
