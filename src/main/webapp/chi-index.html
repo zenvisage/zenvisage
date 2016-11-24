@@ -143,41 +143,51 @@
           <!-- drawing interface END-->
 
           <div class="col-md-8" id="table-div">
-            <div ng-show="zqltable">
+            <div ng-show="zqltable" ng-controller="zqlTableController">
               <table id="zql-table" class="table zql-table">
                 <thead>
                   <tr>
-                    <td>
-                    </td>
-                    <td><b>X</td>
+                    <td><b>Name</b></td>
+                    <td><b>X</b></td>
                     <td><b>Y</b></td>
                     <td><b>Z</b></td>
                     <td><b>Constraints</b></td>
+                    <td><b>Viz</b></td>
                     <td><b>Process</b></td>
                     <td></td>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr ng-repeat="query in queries['zqlRows']">
+                    <td>{{query.name}}</td>
+                    <td>{{query.x}}</td>
+                    <td>{{query.y}}</td>
+                    <td>{{query.z}}</td>
+                    <td>{{query.constraints}}</td>
+                    <td>{{query.viz}}</td>
+                    <td>{{query.processe}}</td>
+                  </tr>
                   <tr id="table-row-1" class="tabler">
                     <td>
-                      <div>
-                        <div class="number">1</div>
-                      </div>
+                      <input class="form-control zql-table number" ng-model="input.name" type="text" size="5" value=" ">
                     </td>
                     <td>
-                      <input class="form-control zql-table x-val" type="text" size="10" value=" ">
+                      <input class="form-control zql-table x-val" ng-model="input.x" type="text" size="10" value=" ">
                     </td>
                     <td>
-                      <input class="form-control zql-table y-val" type="text" size="10" value=" ">
+                      <input class="form-control zql-table y-val" ng-model="input.y" type="text" size="10" value=" ">
                     </td>
                     <td>
-                      <input class="form-control zql-table z-val" type="text" size="10" value=" ">
+                      <input class="form-control zql-table z-val" ng-model="input.z" type="text" size="10" value=" ">
                     </td>
                     <td>
-                      <input class="form-control zql-table constraints" type="text" size="20" value=" ">
+                      <input class="form-control zql-table constraints" ng-model="input.constraints" type="text" size="20" value=" ">
                     </td>
                     <td>
-                      <input class="form-control zql-table process" type="text" size="25" value=" ">
+                      <input class="form-control zql-table viz" ng-model="input.viz" type="text" size="1" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table process" ng-model="input.processe"type="text" size="25" value=" ">
                     </td>
                     <td></td>
                   </tr>
@@ -187,9 +197,11 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                     <td>
-                      <a id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
+                      <a ng-click="addRow()" id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
+                    </td>
+                    <td>
+                      <a ng-click="submitZQL()">Submit</a>
                     </td>
                     <td></td>
                     <td></td>
@@ -323,5 +335,7 @@
     <script src="js/old/helper.js"></script>
     <script src="js/old/data.js"></script>
     <script src="js/old/fileUploader.js"></script>
+    <script src="zql/parsertypes.js"></script>
+    <script src="zql/zqlparser.js"></script>
   </body>
 </html>

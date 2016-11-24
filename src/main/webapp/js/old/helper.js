@@ -465,15 +465,15 @@ function addRow() {
   var table = $("#zql-table > tbody")[0];
   var rowCount = table.rows.length;
   var rowNumber = (rowCount+1).toString();
-  $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><div><div class=\"number\">" + rowNumber + "</div></div></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
+  $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><input class=\"form-control zql-table number\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
 }
 
 
 $(document).ready(function(){
 
-  $('#add-row').click(function(){
-    addRow();
-  });
+  // $('#add-row').click(function(){
+  //   addRow();
+  // });
 
   $("#draw-div").droppable({
     accept: ".draggable-graph",
