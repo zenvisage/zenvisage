@@ -42,7 +42,9 @@ username  postgres
 
 password: zenvisage
 
-(3) Run the following queries for setting the meta-tables.
+
+Method One:
+Run clean up query and setup query:
 
 DROP schema public cascade;
 
@@ -51,6 +53,8 @@ CREATE schema public;
 CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
 
 CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);
+
+
 
 ## Deploy code
 *  sh run.sh
@@ -65,11 +69,23 @@ The file upload back-end will auto creat csv table, insert metafilelocation tabl
 
 Now you can select the dataset from dropdown on front-end plotting and similarity search;
 
+Method Two: (Fast loading 4 databases without uploading schema and files 4 times and wait)
 
+(1)
+Using Command Line Tools with Postgres.app
+Configure your $PATH
+Postgres.app includes many command line tools. If you want to use them, you must configure the $PATH variable.
 
+If you are using bash (default shell on OS X), add the following line to ~/.bash_profile:
 
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
 
+(2)
+zevisange.sql is at zenvisage project root folder
+use command:
+psql postgres < /path_to_zevnisage.sql/zenvisage.sql
 
+(to dump database: use pg_dump postgres > /path_to_zevnisage.sql/zenvisage.sql)
 
 # Architecture
 
