@@ -4,8 +4,11 @@
 package edu.uiuc.zenvisage.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +16,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,9 +29,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import edu.uiuc.zenvisage.data.Query;
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.SchemeToMetatable;
+import edu.uiuc.zenvisage.data.roaringdb.db.Column;
+import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.data.roaringdb.executor.ExecutorResult;
 import edu.uiuc.zenvisage.model.BaselineQuery;
@@ -60,7 +72,7 @@ public class ZvMain {
 	private Result cachedResult = new Result();
 	private BaselineQuery cachedQuery = new BaselineQuery();
 //	private InMemoryDatabase inMemoryDatabase;
-	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
+//	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
 
 	private Database inMemoryDatabase;
 
@@ -71,30 +83,31 @@ public class ZvMain {
 	public Normalization outputNormalization;
 	public PiecewiseAggregation paa;
 	public ArrayList<List<Double>> data;
+	public String databaseName;
+	public String buffer = null;
 
 	public ZvMain() throws IOException, InterruptedException{
 		System.out.println("ZVMAIN LOADED");
 		loadData();
-
 	}
 
 	public  void loadData() throws IOException, InterruptedException{
 
-		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
-		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-
-		inMemoryDatabase = createDatabase("cmu", "/data/cmu_test.txt", "/data/cmu_test.csv");
-		inMemoryDatabases.put("cmu", inMemoryDatabase);
-		
-/*
-		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-		inMemoryDatabases.put("cmu", inMemoryDatabase);
-		
-*/
-		inMemoryDatabase = createDatabase("sales", "/data/test.txt", "/data/test.csv");
-		inMemoryDatabases.put("sales", inMemoryDatabase);
-	
-		System.out.println("Done loading data");
+//		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
+//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
+//
+//
+//		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
+//		inMemoryDatabases.put("cmu", inMemoryDatabase);
+//
+//
+//		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
+//		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
+//
+//		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
+//		inMemoryDatabases.put("sales", inMemoryDatabase);
+//
+//		System.out.println("Done loading data");
 	}
 
 	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
@@ -103,20 +116,52 @@ public class ZvMain {
 
     }
 
-	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException {
+	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
+
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-
 		if (names.size() == 3) {
-			System.out.println("successful upload!");
-			inMemoryDatabase = createDatabase(names.get(0),"/data/" + names.get(2),"/data/" + names.get(1));
-			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
+			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
+			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+
+			/*insert zenvisage_metafilelocation*/
+
+			String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
+					"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"');";
+			if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
+				System.out.println("Metafilelocation Data successfully inserted into Postgres");
+			} else {
+				System.out.println("Metafilelocation already exists!");
+			}
+
+			/*insert zenvisage_metatable*/
+			SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+			if(sqlQueryExecutor.insert(schemeToMetatable.schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
+				System.out.println("MetaType Data successfully inserted into Postgres");
+			} else {
+				System.out.println("MetaType already exists!");
+			}
+
+			/*create csv table*/
+			if(!sqlQueryExecutor.isTableExists(names.get(0))){
+				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
+				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
+				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
+			} else {
+				System.out.println(names.get(0) + " exists! Can't create " + names.get(0) + " from "+names.get(1));
+			}
+
+			System.out.println("HERE:"+names.get(0) +" "+ names.get(2) + " "+ names.get(1));
+			inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
+
+
+//			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
 	}
 
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);
-	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
+//	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 		  executor = new Executor(inMemoryDatabase);
 		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
 		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
@@ -128,7 +173,7 @@ public class ZvMain {
 		}
 
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
-		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
+//		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 		  executor = new Executor(inMemoryDatabase);
 		  ZQLExecutor.executor=executor;
 		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
@@ -221,7 +266,7 @@ public class ZvMain {
 //	}
 
 
-	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException{
+	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 //		System.out.println(query);
 
@@ -230,9 +275,23 @@ public class ZvMain {
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
-		 ExecutorResult executorResult = executor.getData(q);
-		 if (executorResult == null) return "";
-		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+
+
+//		 ExecutorResult executorResult = executor.getData(q);
+//		 if (executorResult == null) return "";
+//		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+		 /*
+		  * Instead of calling roaring db, we feed in VC output from postgres
+		  * ExecutorResult executorResult = executor.getData(q);
+		  * if (executorResult == null) return "";
+		  * LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
+		  */
+		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+
+
 
 		 // setup result format
 		 Result finalOutput = new Result();
@@ -240,7 +299,14 @@ public class ZvMain {
 		 //finalOutput.xUnit = inMemoryDatabase.getColumnMetaData(args.xAxis).unit;
 		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
 		 // generate new result for query
-		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+
+//		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+		 /*
+		  * We don't have xMap now since we use posgres
+		  * ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
+		  */
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, HashBiMap.create());
+
 		 // generate the corresponding distance metric
 		 if (args.distance_metric.equals("Euclidean")) {
 			 distance = new Euclidean();
@@ -270,7 +336,7 @@ public class ZvMain {
 		 // reformat database data
 		 DataReformation dataReformatter = new DataReformation(normalization);
 		 double[][] normalizedgroups;
-		 
+
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> temp = new LinkedHashMap<String, LinkedHashMap<Float, Float>>();
 		 for (String s: output.keySet()) {
 			 if (output.get(s).size() >= 2) {
@@ -283,8 +349,7 @@ public class ZvMain {
 //			 }
 //		 }
 		 output = temp;
-		 
-		 
+
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
@@ -298,38 +363,38 @@ public class ZvMain {
 		 }
 		 else if (method.equals("SimilaritySearch")) {
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
-			 
+
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
-				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
+				 double[][] overlappedQuery = overlappedDataAndQueries[1];
 				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);
 			 }
 			 else {
 				 normalizedgroups = dataReformatter.reformatData(output);
-				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);			 
+				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);
 				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
 			 }
-			 
+
 			 ((Similarity) analysis).setDescending(false);
 		 }
 		 else { //(method.equals("DissimilaritySearch"))
 			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
-			 
+
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
-				 double[][] overlappedQuery = overlappedDataAndQueries[1]; 
-				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);				 
+				 double[][] overlappedQuery = overlappedDataAndQueries[1];
+				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);
 			 }
 			 else {
 				 normalizedgroups = dataReformatter.reformatData(output);
-				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);			 
+				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);
 				 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
 			 }
 			 ((Similarity) analysis).setDescending(true);
 		 }
-		 
+
 		 analysis.compute(output, normalizedgroups, args);
 		 ObjectMapper mapper = new ObjectMapper();
 
@@ -375,20 +440,26 @@ public class ZvMain {
 	}
 
 
-	public String getDatabaseNames() throws JsonGenerationException, JsonMappingException, IOException{
-		return new ObjectMapper().writeValueAsString(inMemoryDatabases.keySet());
-	}
+//	public String getDatabaseNames() throws JsonGenerationException, JsonMappingException, IOException{
+//		return new ObjectMapper().writeValueAsString(inMemoryDatabases.keySet());
+//	}
 
 
-	public String getInterfaceFomData(String query) throws IOException{
+	public String getInterfaceFomData(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
-		inMemoryDatabase = inMemoryDatabases.get(fq.getDatabasename());
+		this.databaseName = fq.getDatabasename();
+		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		executor = new Executor(inMemoryDatabase);
-		
-		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
-		
-		return new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData());
-	}
+		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
+		System.out.println(locations[0]+"\n"+locations[1]);
+		inMemoryDatabase = createDatabase(this.databaseName, locations[0], locations[1]);
+		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		System.out.println(buffer);
+//		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		return buffer;
+}
+
+
 
 	/**
 	 * @param q
@@ -420,9 +491,5 @@ public class ZvMain {
 	        br.close();
 	    }
 	}
-
-
-
-
 
 }
