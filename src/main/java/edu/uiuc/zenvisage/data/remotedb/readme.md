@@ -38,11 +38,17 @@ Postgres.app includes many command line tools. If you want to use them, you must
 
 If you are using bash (default shell on OS X), add the following line to ~/.bash_profile:
 
+source  ~/.bash_profile:
+
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
 
 (2)
 zevisange.sql is at zenvisage project root folder
-use command:
+
+First drop all schema in postgres terminal: DROP schema public cascade;
+
+use command in regular terminal not in postgres terminal:
+
 psql postgres < /path_to_zevnisage.sql/zenvisage.sql
 
 (to dump database: use pg_dump postgres > /path_to_zevnisage.sql/zenvisage.sql)
