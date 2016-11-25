@@ -147,7 +147,7 @@ app.controller('options-controller', [
       }
     });
 
-    $scope.$watchGroup( ['considerRange', 'showScatterplot'], function( newValue, oldValue ) {
+    $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResults();
@@ -171,8 +171,14 @@ app.controller('options-controller', [
     });
 
     $scope.changeChartType = function() {
-       var adsf = $scope.selectedChartOption
-       console.log(adsf)
+      if ( $scope.selectedChartOption == 'Scatter')
+      {
+        $scope.showScatterplot = true;
+      }
+      else
+      {
+        $scope.showScatterplot = false;
+      }
     }
 
     $scope.submitZQLTable = function() {

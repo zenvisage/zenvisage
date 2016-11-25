@@ -4,3 +4,163 @@
   width: 350px;
   height: 210px;
 }
+
+#main-chart{
+  border-style:1px solid black;
+  border-width: 1px;
+  width: 300px;
+  height: 210px;
+}
+
+.plotsContainer {
+  background-color: #F4F4F4;
+  color: maroon;
+  border: 1px solid black; }
+
+.options {
+  background-color: #2e2e2e;
+  color: #ffe5b4;
+  border: 1px solid black; }
+
+.attribute-panel {
+  min-height: 100vh; }
+  .attribute-panel h1 {
+    margin: 10px; }
+
+.canvas {
+  min-height: 40vh; }
+  .canvas h1 {
+    margin: 10px; }
+
+.zql {
+  min-height: 40vh; }
+  .zql h1 {
+    margin: 10px; }
+
+.matches {
+  min-height: 60vh; }
+  .matches h1 {
+    margin: 10px; }
+
+.trends {
+  min-height: 60vh; }
+  .trends h1 {
+    margin: 10px; }
+
+/* PAGES- Page and Components
+========================================================================== */
+body {
+  background-color: white; }
+
+// html, h1, h2, h3, h4, h5, div, span, .row, .col {
+//   margin: 0;
+//   padding: 0 !important; }
+
+.centeringContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center; }
+
+.pane-section-title {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+  .pane-section-title h1, .pane-section-title h2, .pane-section-title h3 {
+    font-size: 150%; }
+  .pane-section-title hr {
+    width: 40%; }
+
+
+.select-dropdown {
+  color: greenyellow;
+  font-size: 150%; }
+
+.caret {
+  color: white !important; }
+
+.buttons-for-drawing {
+  background-color: #454545;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-left: -25px;
+  margin-right: auto;
+  margin-bottom: 5px;}
+
+  .buttons-for-drawing a {
+    width: 90%;
+    text-decoration: none;
+    color: white; }
+
+.footer-stuff a {
+  color: grey; }
+  .footer-stuff a:visited {
+    color: grey; }
+  .footer-stuff a:hover {
+    color: white; }
+  .footer-stuff a:active {
+    color: white; }
+.footer-stuff a {
+  transition: all 0.2s ease-in-out; }
+  .footer-stuff a i {
+    margin-right: 7px; }
+
+#main {
+  background: rgba(255, 255, 255, 0.5);
+  overflow: auto; }
+
+.axis text {
+  font-size: 10px; }
+
+.axis-label {
+  font-size: 13px; }
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #ddd;
+  shape-rendering: crispEdges;
+  vector-effect: non-scaling-stroke;
+  z-index: 50; }
+
+circle {
+  color: dodgerblue;
+  fill: dodgerblue;
+  radius: 3; }
+
+.hexagon {
+  fill: white;
+  stroke: #000;
+  stroke-width: .5px; }
+
+.brush .extent {
+  stroke: black;
+  fill: green;
+  fill-opacity: .125;
+  shape-rendering: crispEdges; }
+
+.brushRed .extent2 {
+  stroke: black;
+  fill: red;
+  fill-opacity: .2;
+  shape-rendering: crispEdges; }
+
+.chart-title {
+  font-size: 16px; }
+
+.selected {
+  fill: red;
+  fill-opacity: 1; }
+
+.userPolygon {
+  /*z-index: 999;*/
+  fill: green;
+  fill-opacity: .2;
+  stroke: black;
+  /*border: solid black 5px;*/
+  shape-rendering: crispEdges; }
+
+.red-polygon {
+  fill: red; }
+
+.highlightPolygon {
+  fill: blue; }
+
