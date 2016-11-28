@@ -2,7 +2,7 @@ var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
 
 
-app.controller('zqlTableController', ['$scope', '$http', function ($scope, $http) {
+app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function ($scope, $http, plotResults) {
     $scope.input = {};
     $scope.queries = {};
     $scope.queries['zqlRows'] = [];
@@ -32,6 +32,8 @@ app.controller('zqlTableController', ['$scope', '$http', function ($scope, $http
                 console.log("success: ", response);
                 console.log(response);
                 //processBackEndData(response.data);
+                plotResults.displayUserQueryResults(response.outputCharts);
+
                 $scope.queries = {};
                 $scope.queries['zqlRows'] = [];
                 $scope.parsed = {};
