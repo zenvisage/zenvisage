@@ -25,17 +25,17 @@ public class VisualComponentNode extends QueryNode{
 		// should not have the visual componentquery
 	// ProcessResultNode
 		//should have top 5 visualcomponents from list (for now)
-	
+
 	public VisualComponentNode(VisualComponentQuery vc) {
 		this.vc = vc;
 	}
-	
+
 	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor) {
 		super(table);
 		this.vc = vc;
 		this.sqlQueryExecutor = sqlQueryExecutor;
 	}
-	
+
 	@Override
 	public void execute() {
 		if (isBlocked()) {
@@ -43,13 +43,13 @@ public class VisualComponentNode extends QueryNode{
 			return;
 		}
 		this.state = State.RUNNING;
-		
+
 		LookUpTable lookuptable = this.getLookUpTable();
 		// update lookup table with axisvariables
 		XColumn x = this.getVc().getX();
 		YColumn y = this.getVc().getY();
 		ZColumn z = this.getVc().getZ();
-		
+
 		// e.g., x1 <- 'year'
 		if (!x.getVariable().equals("") && !x.getAttributes().isEmpty()) {
 			AxisVariable axisVar = new AxisVariable("X", "", x.getAttributes());
@@ -71,11 +71,11 @@ public class VisualComponentNode extends QueryNode{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		this.state = State.FINISHED;
 		//update the look table with name variable, e.g, f1)
 		String name = this.getVc().getName().getName();
-		
+
 		// CHECK THIS OUTPUT
 		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
 		System.out.println("vcList for node "+ name);
@@ -86,22 +86,22 @@ public class VisualComponentNode extends QueryNode{
 	public VisualComponentQuery getVc() {
 		return vc;
 	}
-	
+
 	public void setVc(VisualComponentQuery vc) {
 		this.vc = vc;
 	}
-	
+
 	@Override
 	/**
-	 * Four cases to deal with: 
+	 * Four cases to deal with:
 	 * Column has variable and values. Can use as is.
 	 * Column has variable, but no values. Need to fill in values from lookup
 	 * Column hs no variable name, but values. Can use as is
 	 * Column has no variable name, and no value. Send as is (columns may be optional)
 	 */
 	public ZQLRow buildRowFromNode() {
-		
-		XColumn x = vc.getX();	
+
+		XColumn x = vc.getX();
 		// x1 (variable, no values)
 		if(!x.getVariable().equals("") && x.getAttributes().isEmpty()) {
 			// The lookup table for x should have value = AxisVariable
@@ -112,36 +112,36 @@ public class VisualComponentNode extends QueryNode{
 		String var = x.getAttributes().get(0);
 		var = var.replace("'", "");
 		x.getAttributes().set(0, var);
-		
+
 		// Some debuf info
 		System.out.println("x information:");
 		System.out.println(x.getVariable());
 		System.out.println(x.getAttributes());
 		System.out.println(x.getAttributes().get(0));
-		
-		YColumn y = vc.getY();		
+
+		YColumn y = vc.getY();
 		// y1 (variable, no values)
 		if(!y.getVariable().equals("") && y.getAttributes().isEmpty()) {
 			List<String> attributes = ((AxisVariable) lookuptable.get(y.getVariable())).getValues();
 			y.setAttributes(attributes);
-		}		
+		}
 		// Stripping out '' from first value
 		var = y.getAttributes().get(0);
 		var = var.replace("'", "");
 		y.getAttributes().set(0, var);
-		
-		ZColumn z = vc.getZ();	
+
+		ZColumn z = vc.getZ();
 		System.out.println("Checking: " + z.getVariable());
 		// z1 (variable, no values)
 		AxisVariable zAxisVariable = (AxisVariable) lookuptable.get(z.getVariable());
-		
+
 		// if z is missing column information, grab from axisVariable type! (Special case!)
 		if(!z.getVariable().equals("") && z.getAttribute().isEmpty()) {
 			z.setAttribute(zAxisVariable.getAttribute());
 			List<String> values = zAxisVariable.getValues();
 			z.setValues(values);
 		}
-		
+
 		// So either z naturally has values eg from query with z=state.{'CA','NY'}
 		// Or z got values from the lookuptable eg z=v1
 		List<String> values = z.getValues();
@@ -150,10 +150,10 @@ public class VisualComponentNode extends QueryNode{
 			edu.uiuc.zenvisage.zqlcomplete.executor.Constraints constraints = new edu.uiuc.zenvisage.zqlcomplete.executor.Constraints();
 			constraints.setKey(z.getAttribute());
 			constraints.setOperator(" IN");
-			constraints.setValue(parentheSizedValues);		
+			constraints.setValue(parentheSizedValues);
 			vc.getConstraints().add(constraints);
-		}	
-		
+		}
+
 		// update the z column to make sure it strips extra '' out (so will be state, not 'state')
 		String str = z.getAttribute();
 		str = str.replace("'", "");
@@ -168,10 +168,10 @@ public class VisualComponentNode extends QueryNode{
 		// null processe and sketchPoints (for now)
 		return result;
 	}
-	
+
 	/**
 	 * @param values
-	 * @return 
+	 * @return
 	 */
 	//TODO: FIX it doesn't work for non-strings
 	private String generateParenthesizedList(List<String> values) {
@@ -179,16 +179,16 @@ public class VisualComponentNode extends QueryNode{
 		String parentheSizedValues="(";
 		for(String value: values){
 			value = value.replaceAll("'", "").replaceAll("\"", "");
-			parentheSizedValues+= " \'"+value+"\',";		
+			parentheSizedValues+= " \'"+value+"\',";
 		}
 		parentheSizedValues=parentheSizedValues.substring(0,parentheSizedValues.length()-1);
 		parentheSizedValues+=")";
 		return parentheSizedValues;
-		
+
 	}
 
 	public void updateAxisVaribles(){
 		//TODO
 	}
-	
+
 }
