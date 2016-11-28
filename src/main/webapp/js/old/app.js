@@ -32,7 +32,7 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
                 console.log("success: ", response);
                 console.log(response);
                 //processBackEndData(response.data);
-                plotResults.displayUserQueryResults(response.outputCharts);
+                plotResults.displayUserQueryResults(response.data.outputCharts);
 
                 $scope.queries = {};
                 $scope.queries['zqlRows'] = [];

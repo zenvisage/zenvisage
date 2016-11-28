@@ -44,10 +44,16 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     var ylabel = userQueryResults[count]["yType"];
     var xRange = userQueryResults[count]["xRange"];
 
+
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
     var ymin = Math.min.apply(Math, yData);
     var ymax = Math.max.apply(Math, yData);
+
+    if (xRange == null)
+    {
+      xRange = [xmin,xmax]
+    }
 
     var considerRange = userQueryResults[count]["considerRange"];
     //var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
@@ -130,11 +136,13 @@ function displayUserQueryResultsHelperNew( userQueryResults )
                         .attr("stroke", "black")
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
-    graph.append("path").attr("d", valueline(data2))
+    if (data2 != null && data2 != undefined)
+    {
+      graph.append("path").attr("d", valueline(data2))
                         .attr("stroke", "teal")
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
-
+    }
   }
 
   $(".draggable-graph").draggable({
