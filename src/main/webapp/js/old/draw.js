@@ -421,14 +421,13 @@ function createSketchpad( data )
 
 function plotSketchpadNew( data )
 {
-  // NEED TO DEFINE WHAT DATA IS
   $("#draw-div").children().remove();
-  //sketchpad = getSketchpadDygraphObject( data, valueRange, xRange )
   sketchpad = createSketchpad( data )
-
   angular.element($("#sidebar")).scope().getUserQueryResults();
   refreshZoomEventHandler();
 }
+
+// initialize scatter?
 
 function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
 {

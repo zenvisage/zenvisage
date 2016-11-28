@@ -96,7 +96,7 @@
           <div class="col-md-4">
             <div class="input-group" id="graph-buttons" >
               <div class="btn-group" id="left-button-group">
-                <select ng-model="selectedChartOption" ng-options="option for option in chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
+                <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
 <!--                   <option>Line</option>
                   <option>Scatter</option>
                   <option>Bar</option> -->
@@ -113,8 +113,8 @@
  -->
             </div>
 
-            <div id="draw-div" ng-show="!showScatterplot"></div>
-            <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="showScatterplot">
+            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'"></div>
+            <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="chartSettings.selectedChartOption=='Scatter'">
               <div class="col-md-11">
                   <svg id="main-chart">
                   </svg>

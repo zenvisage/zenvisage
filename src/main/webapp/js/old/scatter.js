@@ -12,40 +12,191 @@ app.factory('ScatterService', function () {
             $('.' + buttonId).addClass('disabled');
         }
 
-        factory.drawScatter = function (options) {
+        factory.initializeScatterPlot = function (xmin, xmax, ymin, ymax) {
+            var container = $("#main-chart");
+            $(container).empty();
+            // finding actual dimensions of div
+            var heightOfDiv = container.innerHeight();
+            var widthOfDiv = container.innerWidth();
+            // finding relative point radius
+            var radius = 2;
+            var topMargin = 5;
+            var bottomMargin = 30;
+            var rightMargin = 0;
+            var leftMargin = 30;
+            var margin = {
+                    top: Math.ceil(topMargin),
+                    right: Math.ceil(rightMargin),
+                    bottom: Math.ceil(bottomMargin),
+                    left: Math.ceil(leftMargin)
+                },
+            width = widthOfDiv - margin.left - margin.right,
+            height = heightOfDiv - margin.top - margin.bottom;
+            var xMax = xmax
+            var yMax = ymax
+
+            //setting y-scale to fit in the svg window
+            var yScale = d3.scaleLinear()
+                .domain([0, yMax])
+                .range([height, 0]);
+
+            //setting x-scale to fit in the svg window
+            var xScale = d3.scaleLinear()
+                .domain([0, xMax])
+                .range([0, width]);
+
+            // AXES:
+            // to change tick-sizes: .ticksize(inner, outer) where inner are the normal ticks and outer are the end ticks
+            // here we are keeping the inner ticks to the default value of 6 and the outer to negative extremes to form a box
+
+            var xAxis = d3.axisBottom(xScale).tickSize(6, -height);
+            var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
+
+            // ZOOM VARIABLE
+            var zoom = d3.zoom()
+                .scaleExtent([1, 10])
+                .on("zoom", zoomed);
+
+            var svg = d3.select("#main-chart")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g") //group that will house the plot
+                .attr("id", "main-area")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); //to center the g in the svg
+
+            //////////////////////////////////////////////////////GRID LINES
+            var yAxisTickValues = yAxis.scale().ticks(yAxis.ticks());
+            var xAxisTickValues = xAxis.scale().ticks(xAxis.ticks());
+            var xAxisTickSize = xAxisTickValues[1] - xAxisTickValues[0];
+            var yAxisTickSize = yAxisTickValues[1] - yAxisTickValues[0];
+            svg.append("g")
+                .attr("class", "x axis")
+                .selectAll("line")
+                .data(d3.range(0, xMax, xAxisTickSize / 4))
+                .enter().append("line")
+                .attr("x1", function (d) {
+                    return xScale(d);
+                })
+                .attr("y1", 0)
+                .attr("x2", function (d) {
+                    return xScale(d);
+                })
+                .attr("y2", height);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .selectAll("line")
+                .data(d3.range(0, yMax, yAxisTickSize / 4))
+                .enter().append("line")
+                .attr("x1", 0)
+                .attr("y1", function (d) {
+                    return yScale(d);
+                })
+                .attr("x2", width)
+                .attr("y2", function (d) {
+                    return yScale(d);
+                });
+
+            // ------------------ HEX BIN PROPERTIES --------------------------------------
+            /*
+             Clip-path is made to clip anything that goes out of the svg
+             */
+            svg.append("clipPath")
+                .attr("id", "clip")
+                .append("rect")
+                .attr("class", "mesh")
+                .attr("width", width)
+                .attr("height", height);
+
+            var hexbin = d3_hexbin.hexbin()
+                .radius(10);
+
+            drawHexbin();
+
+            // ------------------- DRAWING PLOTS FUNCTIONS -------------------------------------
+
+            /**
+             * DRAWING A HEXBIN PLOT
+             */
+            function drawHexbin() {
+                var hexbinPlot = svg.append("g")
+                        .attr("clip-path", "url(#clip)")
+                        .selectAll(".hexagon")
+                        //.data(hexbin(points)) // returns an array of bins
+                        .enter().append("path") // enter returns all fictitious elements according to number of data points
+                        .attr("class", "hexagon") // the class hexagon is a custom class made to incorporate stroke and fill
+                        .attr("d", hexbin.hexagon())
+                        .attr("transform", function (d) {
+                            return "translate(" + d.x + "," + d.y + ")"; // Each bin (or d) returned by hexbin(points) is an array containing the bin’s points
+                        })
+                    ;
+
+                //load the points animatedly
+                //reference url for ease: https://github.com/mbostock/d3/wiki/Transitions#d3_ease
+
+                hexbinPlot.transition()
+                    .style("fill", function (d, i) {
+                        return hexColor(d.length);
+                    })
+                    .duration(900)
+            }
+
+            /**
+             * DRAWING A SCATTERPLOT
+             */
+            function drawScatterPlot() {
+                var scatterPlot = svg.append('g')
+                        .attr("clip-path", "url(#clip)")
+                        .selectAll('circle').data(data)
+                        .enter().append('circle')
+                        .attr('r', 0)
+                        .attr('cx', function (d) {
+                            return xScale(d['xval'])
+                        })
+                        .attr('cy', function (d) {
+                            return yScale(d['y'])
+                        })
+                    ;
+
+                //load the points animatedly
+                //reference url for ease: https://github.com/mbostock/d3/wiki/Transitions#d3_ease
+                //load the points animatedly
+                scatterPlot.transition()
+                    .attr('r', radius)
+                    .duration(1000)
+                    .ease('elastic')
+
+            }
+
+
+            // adding the axes
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            function zoomed() {
+                svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            }
+
+        }
+
+        factory.drawScatter = function ( data ) {
+
             var container, data, xlabel, ylabel, title;
             var scaleMultiplier = 1.05;
             var infoToReturn = {};
             //Find an element to render the chart
-            if ($(options['renderTo']) != undefined) {
-                container = $(options['renderTo']);
-                $(container).empty();
-            }
-            else {
-                console.log("Tried to render chart to an unknown or missing element!");
-                return;
-            }
-
-            if ('data' in options) {
-                data = options['data'];
-            }
-            else
-                data = {};
-            var titleExists = true;
-            if (options.title) {
-                title = options['title'];
-            }
-            else {
-                titleExists = false;
-            }
-            xlabel = options['x-label'];
-            ylabel = options['y-label'];
+            container = $("#main-chart");
+            $(container).empty();
 
             // finding actual dimensions of div
             var heightOfDiv = container.innerHeight();
-
             var widthOfDiv = container.innerWidth();
-
 
             // finding relative point radius
             var radius = 2;
@@ -73,19 +224,8 @@ app.factory('ScatterService', function () {
                 width = widthOfDiv - margin.left - margin.right,
                 height = heightOfDiv - margin.top - margin.bottom;
 
-
-            //function to get x Value from data
-            var xVals = function (d) {
-                return d['x'];
-            };
-
-            //function to get y Value from data
-            var yVals = function (d) {
-                return d['y'];
-            };
-
-            var yMax = options.yMax? options.yMax : d3.max(data, yVals) * scaleMultiplier;
-            var xMax = options.xMax? options.xMax : d3.max(data, xVals) * scaleMultiplier;
+            var yMax = d3.max(data, function(d) {return Math.max(d.yval); })
+            var xMax = d3.max(data, function(d) {return Math.max(d.xval); })
 
             //setting y-scale to fit in the svg window
             var yScale = d3.scaleLinear()
@@ -106,21 +246,24 @@ app.factory('ScatterService', function () {
             // to change tick-sizes: .ticksize(inner, outer) where inner are the normal ticks and outer are the end ticks
             // here we are keeping the inner ticks to the default value of 6 and the outer to negative extremes to form a box
 
+            // var xAxis = d3.svg.axis()
+            //     .scale(xScale)
+            //     .orient("bottom")
+            //     .tickSize(6, -height);
             var xAxis = d3.axisBottom(xScale).tickSize(6, -height);
             var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
 
-            // ZOOM VARIABLE
-            var zoom = d3.zoom()
-                .scaleExtent([1, 10])
-                .on("zoom", zoomed);
+            // var yAxis = d3.svg.axis()
+            //     .scale(yScale)
+            //     .orient("left")
+            //     .tickSize(6, -width);
 
-            var svg = d3.select(options['renderTo'])
+            var svg = d3.select("#main-chart")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g") //group that will house the plot
                 .attr("id", "main-area")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); //to center the g in the svg
-
 
             //////////////////////////////////////////////////////GRID LINES
             var yAxisTickValues = yAxis.scale().ticks(yAxis.ticks());
@@ -161,7 +304,7 @@ app.factory('ScatterService', function () {
 
             // converting to array of points
             for (var i = 0; i < data.length; i++) {
-                var point = [xScale(data[i]['x']), yScale(data[i]['y'])]
+                var point = [xScale(data[i]['xval']), yScale(data[i]['yval'])]
                 points[i] = point;
             }
 
@@ -181,10 +324,11 @@ app.factory('ScatterService', function () {
                 .range(["white", "maroon"]);
 
             var hexbin = d3_hexbin.hexbin()
+                //.size([width, height])
                 .radius(10);
 
 
-            var binLengths = hexbin(points).map(function (elem) {
+            var binLengths = hexbin( points ).map(function (elem) {
                 return elem.length;
             });
 
@@ -225,34 +369,6 @@ app.factory('ScatterService', function () {
                     //.ease('sin');
             }
 
-            /**
-             * DRAWING A SCATTERPLOT
-             */
-            function drawScatterPlot() {
-                var scatterPlot = svg.append('g')
-                        .attr("clip-path", "url(#clip)")
-                        .selectAll('circle').data(data)
-                        .enter().append('circle')
-                        .attr('r', 0)
-                        .attr('cx', function (d) {
-                            return xScale(d['x'])
-                        })
-                        .attr('cy', function (d) {
-                            return yScale(d['y'])
-                        })
-                    ;
-
-                //load the points animatedly
-                //reference url for ease: https://github.com/mbostock/d3/wiki/Transitions#d3_ease
-                //load the points animatedly
-                scatterPlot.transition()
-                    .attr('r', radius)
-                    .duration(1000)
-                    .ease('elastic')
-
-            }
-
-
             // adding the axes
             svg.append("g")
                 .attr("class", "y axis")
@@ -262,34 +378,10 @@ app.factory('ScatterService', function () {
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
-
-            // adding the axes labels
-            svg.append("text")
-                .attr("class", "axis-label")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate(" + (-(leftMargin / 2) - 4) + "," + (height / 2) + ")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
-                .text(ylabel);
-
-            svg.append("text")
-                .attr("class", "axis-label")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate(" + (width / 2) + "," + (height + 10 + (bottomMargin / 2)) + ")")  // centre below axis
-                .text(xlabel);
-
-            // title
-            svg.append("text")
-                .attr("class", "chart-title")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate(" + (width / 2) + "," + ( -20 + ")"))  // text is drawn off the screen top left, move down and out and rotate
-                .text(title);
-
-
-            function zoomed() {
-                svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-            }
-
+            currentRepresentativePlot = infoToReturn;
             return infoToReturn;
         };
+
         factory.drawPolygon = function (){
             drawPolygonFlag = true;
             enableButton('undo');
@@ -411,14 +503,6 @@ app.factory('ScatterService', function () {
             polygon.attr('points', polypoints);
             //console.log(polygon.attr('points'));
         }
-        factory.drawRandom = function () {
-            var options = {
-                'renderTo': "#main-chart",
-                'data': [{'x': 4, 'y': 55.5}, {'x': 3, 'y': 5}, {'x': 4, 'y': 2}, {'x': 5, 'y': 7}],
-            };
-            currentRepresentativePlot = factory.drawScatter(options);
-            return currentRepresentativePlot;
-        };
 
         factory.getPolygons = function() {
             var result = [];
@@ -453,8 +537,8 @@ app.factory('ScatterService', function () {
     });
 
 app.controller('scatterController', ['$scope', '$rootScope', 'ScatterService', function ($scope, $rootScope, ScatterService) {
-
-        ScatterService.drawRandom();
+        //var data = [{'xval': 4, 'yval': 55.5}, {'xval': 3, 'yval': 5}, {'xval': 4, 'yval': 2}, {'xval': 5, 'yval': 7}]
+        //currentRepresentativePlot = ScatterService.drawScatter( data );
         $scope.scatterService = ScatterService;
         $scope.submit = function (){
             var polygons = ScatterService.getPolygons();

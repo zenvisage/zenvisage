@@ -3,7 +3,6 @@ var globalDatasetInfo;
 
 
 app.controller('zqlTableController', ['$scope', '$http', function ($scope, $http) {
-
     $scope.input = {};
     $scope.queries = {};
     $scope.queries['zqlRows'] = [];
@@ -127,18 +126,18 @@ app.factory('plotResults', function() {
 });
 
 app.controller('options-controller', [
-  '$scope', '$rootScope', '$http',
-  function($scope, $rootScope, $http){
+  '$scope', '$rootScope', '$http', 'ChartSettings',
+  function($scope, $rootScope, $http, ChartSettings){
     $scope.similarity = 'Euclidean';
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
     $scope.numResults = 50;
     $scope.considerRange = true;
-    $scope.showScatterplot = false;
     $scope.equation =  '';
     $scope.zqltable = false;
-    $scope.chartOptions = ["Line", "Bar", "Scatter"];
-    $scope.selectedChartOption = $scope.chartOptions[0];
+    $scope.chartSettings = ChartSettings;
+    $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
+    $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -169,17 +168,6 @@ app.controller('options-controller', [
         $scope.callgetRepresentativeTrends();
       }
     });
-
-    $scope.changeChartType = function() {
-      if ( $scope.selectedChartOption == 'Scatter')
-      {
-        $scope.showScatterplot = true;
-      }
-      else
-      {
-        $scope.showScatterplot = false;
-      }
-    }
 
     $scope.submitZQLTable = function() {
       //$(".tabler")
@@ -233,22 +221,31 @@ app.controller('options-controller', [
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
-  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults',
-  function($scope, $rootScope, $http, datasetInfo, plotResults){
+  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
+  function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
 
+    $scope.chartSettings = ChartSettings;
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
     {
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
-      // initializeSketchpad(
-      //   xdata["min"],xdata["max"],ydata["min"],ydata["max"],
-      //   xdata["name"],ydata["name"],zdata["name"]
-      //  );
-      initializeSketchpadNew(
-        xdata["min"],xdata["max"],ydata["min"],ydata["max"],
-        xdata["name"],ydata["name"],zdata["name"]
-       );
+
+      switch( $scope.chartSettings.selectedChartOption ) {
+          case 'Bar':
+              break;
+          case 'Scatter':
+              scatterService.initializeScatterPlot(xdata["min"],xdata["max"],ydata["min"],ydata["max"]);
+              break;
+          default: // Line
+              initializeSketchpadNew(
+                xdata["min"],xdata["max"],ydata["min"],ydata["max"],
+                xdata["name"],ydata["name"],zdata["name"]
+               );
+              break;
+      }
+
+
     }
 
     // for all other normal queries
@@ -395,3 +392,8 @@ app.controller('datasetController', [
       $scope.getRepresentativeTrendsWithoutCallback();
     });
   }]);
+
+app.service('ChartSettings', function () {
+    return {};
+})
+
