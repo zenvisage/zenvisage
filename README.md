@@ -45,7 +45,7 @@ password: zenvisage
 
 Method One:
 Run clean up query and setup query:
-
+\connect postgres;
 DROP schema public cascade;
 
 CREATE schema public;
@@ -70,7 +70,7 @@ The file upload back-end will auto creat csv table, insert metafilelocation tabl
 Now you can select the dataset from dropdown on front-end plotting and similarity search;
 
 
-Method Two: (Fast loading 3 databases without uploading schema and files 3 times and wait)
+Method Two:(Need Revamp, don't use this for now) (Fast loading 3 databases without uploading schema and files 3 times and wait)
 
 (1)
 Using Command Line Tools with Postgres.app

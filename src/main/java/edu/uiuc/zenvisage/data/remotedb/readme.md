@@ -10,7 +10,7 @@ password:(not listed here, you know what it is for our server)
 
 Method One:
 (1) Run clean up query and setup query:
-
+/connect postgres;
 DROP schema public cascade;
 CREATE schema public;
 CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
@@ -25,11 +25,11 @@ The file upload back-end will auto creat csv table, insert metafilelocation tabl
 
 (4) Now you can select the dataset from dropdown on front-end plotting and similarity search;
 
-Method Two:
+Method Two:(Don't use this for now, need revamp)
 Load zenvisage.sql to your postgres database with databasename: postgres
 
 
-Method Two: (Fast loading 3 databases without uploading schema and files 3 times and wait)
+Fast loading 3 databases without uploading schema and files 3 times and wait)
 
 (1)
 Using Command Line Tools with Postgres.app
