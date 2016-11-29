@@ -35,13 +35,17 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 (2) Postgres server must contain a user with:
 
 username  postgres
+
 password: zenvisage
 
-(3) Run clean up query and setup query:
+(3) Run the following queries for setting the meta-tables.
 
 DROP schema public cascade;
+
 CREATE schema public;
+
 CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
+
 CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);
 
 ## Deploy code
