@@ -97,6 +97,7 @@ public class ChartOutputUtil {
 			RepresentativeTrend repTrend = representativeTrends.get(i);
 			/*Separate this call to rank and x axix and return separately*/
 			//chartOutput.setxType((i+1)+" : "+repTrend.getKey());
+			//chartOutput.setxType(repTrend.getKey());
 			chartOutput.setxType(repTrend.getKey());
 			chartOutput.setRank(i+1);
 			

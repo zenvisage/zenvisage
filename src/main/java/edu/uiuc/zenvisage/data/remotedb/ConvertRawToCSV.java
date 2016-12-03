@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ConvertRawToCSV {
-	private static final String READFILENAME = "flight-random2M.csv";
+	private static final String READFILENAME = "flight-random200k.csv";
 	private static final String WriteFILENAME ="flights.csv";
 
 	public static void main(String[] args) throws IOException {
