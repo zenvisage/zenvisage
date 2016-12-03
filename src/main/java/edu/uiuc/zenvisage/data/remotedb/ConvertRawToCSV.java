@@ -25,13 +25,16 @@ public class ConvertRawToCSV {
 		String sCurrentLine;
 		bw.write("year,month,day,weekday,carrier,origin,destination,arrivaldelay,departuredelay,weatherdelay,distance\n");
 		while ((sCurrentLine = br.readLine()) != null) {
+			String[] sArr = sCurrentLine.split(",");
+			//7,8,9,arrivaldelay,departuredelay,weatherdelay
+			if (Integer.parseInt(sArr[7]) < 0 || Integer.parseInt(sArr[8]) < 0 || Integer.parseInt(sArr[9]) < 0 || Integer.parseInt(sArr[10]) < 0){
+				continue;
+			}			
 			bw.write(sCurrentLine+"\n");
 		}
 		br.close();
 		fr.close();
 		bw.close();
 		fw.close();
-		
-		//
 	}
 }

@@ -108,14 +108,14 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
 	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
-		System.out.println(arg);
+//		System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}
 
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)
 	@ResponseBody
 	public String getformdata(@RequestParam(value="query") String arg) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException, SQLException {
-		System.out.println(arg);
+//		System.out.println(arg);
 		return zvMain.getInterfaceFomData(arg);
 	}
 

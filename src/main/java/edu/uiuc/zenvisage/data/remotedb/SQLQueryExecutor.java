@@ -71,7 +71,7 @@ public class SQLQueryExecutor {
 		Statement stmt = c.createStatement();
 		String sql = "DROP TABLE " + tableName;
 	    stmt.executeUpdate(sql);
-	    System.out.println("Table " + tableName + " deleted in given database...");
+//	    System.out.println("Table " + tableName + " deleted in given database...");
 	    stmt.close();
 	}	
 	
@@ -93,7 +93,7 @@ public class SQLQueryExecutor {
 		}
 		
 		ResultSet rs = st.executeQuery(sql);
-		System.out.println("Running ZQL Query ...");
+//		System.out.println("Running ZQL Query ...");
 		
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
@@ -168,7 +168,7 @@ public class SQLQueryExecutor {
 					+ " ORDER BY " + z + ", "+ x;
 				}
 			
-				System.out.println("Running ZQL Query :"+sql);
+//				System.out.println("Running ZQL Query :"+sql);
 				//excecute sql and put into VisualComponentList
 				executeSQL(sql, zqlRow, databaseName, x, y);
 			}
@@ -244,7 +244,7 @@ public class SQLQueryExecutor {
 			+ " FROM " + "zenvisage_metatable"
 			+ " WHERE " + "tablename = '" + table
 			+ "' AND attribute = '" + variable + "'";
-		System.out.println(sql);
+//		System.out.println(sql);
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next())
 		{
@@ -259,11 +259,11 @@ public class SQLQueryExecutor {
  		sql = "SELECT " + "metafilelocation, "+"csvfilelocation"
  			+ " FROM " + "zenvisage_metafilelocation"
  			+ " WHERE " + "database = '" + database + "'";
- 		System.out.println(sql);
+// 		System.out.println(sql);
  		ResultSet rs = st.executeQuery(sql);
  		while (rs.next())
  		{
- 			System.out.println( rs.getString(1) + "\n" + rs.getString(2));
+// 			System.out.println( rs.getString(1) + "\n" + rs.getString(2));
  			return new String[]{ rs.getString(1), rs.getString(2)};
  		}
  		return null;
@@ -288,7 +288,7 @@ public class SQLQueryExecutor {
 		
 		Statement st = c.createStatement();
 	
-		System.out.println(sql);
+//		System.out.println(sql);
 		count = st.executeUpdate(sql);
 
 		return count > 0;

@@ -57,8 +57,8 @@ public class Database {
 //   	 BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
 //   	 String in = getClass().getClassLoader().getResource(schemafilename).getPath();
 //     BufferedReader bufferedReader = new BufferedReader(new FileReader(in));
-		System.out.println(schemafilename);
-		System.out.println(this.databaseMetaData.dataset);
+//		System.out.println(schemafilename);
+//		System.out.println(this.databaseMetaData.dataset);
 //   	InputStream is = getClass().getResourceAsStream(schemafilename);
    	BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
 	 String line;
