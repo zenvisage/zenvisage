@@ -18,7 +18,6 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
             console.log("request: ",$scope.copy);
             // Add to rows for front-end display
             $scope.queries['zqlRows'].push($scope.input);
-
             $scope.parsed['zqlRows'].push($scope.copy);
             $scope.input = {};
         }
@@ -30,10 +29,7 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
         ).then(
             function (response) {
                 console.log("success: ", response);
-                console.log(response);
-                //processBackEndData(response.data);
                 plotResults.displayUserQueryResults(response.data.outputCharts);
-
                 $scope.queries = {};
                 $scope.queries['zqlRows'] = [];
                 $scope.parsed = {};

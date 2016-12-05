@@ -115,7 +115,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).ticks(4));
 
     graph.append("text")
       .attr("transform",
@@ -128,7 +128,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y).ticks(4));
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -231,7 +231,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).ticks(4));
 
 
     graph.append("text")
@@ -245,7 +245,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y).ticks(4));
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -257,55 +257,6 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
   }
 }
 
-// function displayRepresentativeResultsHelper( representativePatternResults )
-// {
-//   clearRepresentativeTable();
-//   var resultsDiv = $("#representative-table");
-//   var varFinalArray = []
-//   var arrLength = representativePatternResults.length < 4 ? representativePatternResults.length : 4
-
-//   for(var count = 0; count < arrLength; count++) //need to fix count
-//   {
-//     var newRow = resultsDiv.append("<tr id=\"representative-row-" + count.toString() + "\"></tr>")
-//     $("#representative-row-" + count.toString()).append("<td><div class=\"representative-results draggable-graph\" data-graph-type=\"representativeQuery\" id=\"representative-result-" + count.toString() + "\"></div></td>");
-//     varFinalArray.push(representativePatternResults[count]);
-//   }
-
-//   for (var count = 0; count < varFinalArray.length; count++)
-//   {
-//     var xData = varFinalArray[count]["xData"];
-//     var yData = varFinalArray[count]["yData"];
-
-//     var xlabel = varFinalArray[count]["xType"];
-//     var ylabel = varFinalArray[count]["yType"];
-
-//     var xmin = Math.min.apply(Math, xData);
-//     var xmax = Math.max.apply(Math, xData);
-//     var ymin = Math.min.apply(Math, yData);
-//     var ymax = Math.max.apply(Math, yData);
-//     var representativeCount = " (" + varFinalArray[count]["count"] + ")";
-
-//     var data = [];
-//     var arrayLength = xData.length;
-//     for (var i = 0; i < arrayLength; i++ ) {
-//       data.push( [ Number(xData[i]), Number(yData[i]) ] );
-//     }
-//     var valueRange = [ymin, ymax];
-//     var xRange = [xmin, xmax];
-//     representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xlabel, count, "representative-result-", representativeCount );
-//   }
-
-//   $(".draggable-graph").draggable({
-//     opacity: 0.5,
-//     helper: function() {
-//       return $(this).clone().css({
-//         width: $(event.target).width(),
-//         'border-style': "solid",
-//         'border-width': 1
-//       });
-//     }
-//   });
-// }
 
 function displayOutlierResultsHelper( outlierResults )
 {
@@ -420,13 +371,13 @@ function displayOutlierResultsHelperNew( outlierResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).ticks(4));
 
     // Add the Y Axis
     graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y).ticks(4));
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -434,11 +385,13 @@ function displayOutlierResultsHelperNew( outlierResults )
                         .attr("stroke", "black")
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
+
     graph.append("text")
-        .attr("x", width / 2 )
-        .attr("y",  height + 10)
-        .style("text-anchor", "middle")
-        .text("State");
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+                           (trans + m[0] + 30) + ")")
+      .style("text-anchor", "middle")
+      .text(xlabel);
   }
 
   $(".draggable-graph").draggable({
