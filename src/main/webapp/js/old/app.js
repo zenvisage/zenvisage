@@ -9,6 +9,10 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
     $scope.parsed = {};
     $scope.parsed['zqlRows'] = [];
 
+  $scope.removeRow = function ( index ) {
+    $scope.queries['zqlRows'].splice( index , 1);
+  };
+
   $scope.addRow = function () {
         // console.log(checkConstraints($scope.input.constraints));
         // Create a copy of parsed version of input for backend
@@ -30,10 +34,6 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
             function (response) {
                 console.log("success: ", response);
                 plotResults.displayUserQueryResults(response.data.outputCharts);
-                $scope.queries = {};
-                $scope.queries['zqlRows'] = [];
-                $scope.parsed = {};
-                $scope.parsed['zqlRows'] = [];
             },
             function (response) {
                 console.log("failed: ", escape(response));

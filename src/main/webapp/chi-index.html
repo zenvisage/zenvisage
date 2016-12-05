@@ -58,7 +58,7 @@
               <option value="flights">flights</option>
               <option value="cmu">cmu</option>
               <option value="sales">sales</option>
-              
+
             </select>
           </div>
           <div>
@@ -150,6 +150,7 @@
               <table id="zql-table" class="table zql-table">
                 <thead>
                   <tr>
+                    <td><b></b></td>
                     <td><b>Name</b></td>
                     <td><b>X</b></td>
                     <td><b>Y</b></td>
@@ -162,6 +163,9 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="query in queries['zqlRows']">
+                    <td>
+                      <a ng-click="removeRow($index)" id="remove-row"><span class="glyphicon glyphicon glyphicon-minus-sign"></span></a>
+                    </td>
                     <td>{{query.name}}</td>
                     <td>{{query.x}}</td>
                     <td>{{query.y}}</td>
@@ -171,6 +175,8 @@
                     <td>{{query.processe}}</td>
                   </tr>
                   <tr id="table-row-1" class="tabler">
+                    <td>
+                    </td>
                     <td>
                       <input class="form-control zql-table number" ng-model="input.name" type="text" size="5" value=" ">
                     </td>
