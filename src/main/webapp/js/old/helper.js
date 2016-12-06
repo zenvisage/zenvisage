@@ -147,6 +147,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
 
   $(".draggable-graph").draggable({
     opacity: 0.5,
+    appendTo: 'body',
     helper: function() {
       return $(this).clone().css({
         width: $(event.target).width(),
