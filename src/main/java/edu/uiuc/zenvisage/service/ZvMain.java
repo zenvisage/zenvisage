@@ -251,7 +251,7 @@ public class ZvMain {
 	    for(VisualComponent viz : vcList.getVisualComponentList()) {
 	    	Chart outputChart = new Chart();
 	    	outputChart.setxType((++i) + " : " + viz.getZValue().getStrValue());
-	    	outputChart.setyType("avg" + "(" + vcList.getYtype() + ")");
+	    	outputChart.setyType("avg" + "(" + viz.getyAttribute() + ")");
 	    	outputChart.title = "From Query Graph";
 	    	for(WrapperType xValue : viz.getPoints().getXList()) {
 	    		outputChart.xData.add(xValue.toString());
