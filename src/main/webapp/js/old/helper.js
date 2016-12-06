@@ -180,6 +180,8 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
 
+    var clusterCount = varFinalArray[count]["count"];
+
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
     var ymin = Math.min.apply(Math, yData);
@@ -239,7 +241,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .text(xlabel);
+      .text(xlabel + " (" + clusterCount + ")");
 
     // Add the Y Axis
     graph.append("g")
@@ -326,6 +328,8 @@ function displayOutlierResultsHelperNew( outlierResults )
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
 
+    var clusterCount = varFinalArray[count]["count"];
+
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
     var ymin = Math.min.apply(Math, yData);
@@ -391,7 +395,7 @@ function displayOutlierResultsHelperNew( outlierResults )
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .text(xlabel);
+      .text(xlabel + " (" + clusterCount + ")");
   }
 
   $(".draggable-graph").draggable({
