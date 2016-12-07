@@ -52,6 +52,8 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
           }
         });
 
+        $scope.queries['db'] = getSelectedDataset();
+
         $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
         ).then(
             function (response) {
