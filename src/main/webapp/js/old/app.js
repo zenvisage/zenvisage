@@ -29,6 +29,8 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
 
     $scope.submitZQL = function () {
       $("#views_table").empty();
+      $scope.parsed['db'] = getSelectedDataset();
+      console.log("sending to backend ", $scope.parsed);
         $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify($scope.parsed)}}
         ).then(
             function (response) {
@@ -394,4 +396,3 @@ app.controller('datasetController', [
 app.service('ChartSettings', function () {
     return {};
 })
-

@@ -18,6 +18,8 @@ public class VisualComponentNode extends QueryNode{
 
 	private VisualComponentQuery vc;
 	private SQLQueryExecutor sqlQueryExecutor;
+	private String db;
+	
 	// private vc output
 	//TODO: build separate result node
 	// call QueryGraphResults
@@ -25,6 +27,14 @@ public class VisualComponentNode extends QueryNode{
 		// should not have the visual componentquery
 	// ProcessResultNode
 		//should have top 5 visualcomponents from list (for now)
+
+	public String getDb() {
+		return db;
+	}
+
+	public void setDb(String db) {
+		this.db = db;
+	}
 
 	public VisualComponentNode(VisualComponentQuery vc) {
 		this.vc = vc;
@@ -67,7 +77,12 @@ public class VisualComponentNode extends QueryNode{
 		// call SQL backend
 		ZQLRow row = buildRowFromNode();
 		try {
-			sqlQueryExecutor.ZQLQueryEnhanced(row, "realestate");
+			// run zqlquery on this ZQLRow on the database table db
+			if(this.db == null || this.db.equals("")) {
+				// default case
+				sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
+			}
+			sqlQueryExecutor.ZQLQueryEnhanced(row, this.db);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

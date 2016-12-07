@@ -23,14 +23,11 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
  * Nodes are of type QueryNode
  */
 public class QueryGraph extends Graph {
-		
+
 	public QueryGraph () {
 		// so we have an entryList which is an ArrayList<Node>
 		// the nodes we put in the list are of type QueryNode
 	}
-	
-
-
 	
 	public void printString() {
 		StringBuilder result = new StringBuilder();
