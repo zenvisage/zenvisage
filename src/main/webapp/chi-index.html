@@ -107,8 +107,14 @@
 
               <div class="btn-group" >
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+
               </div>
 
+              <div class="btn-group" ng-show="zqltable">
+                <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
+                <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
+              </div>
 <!--               <div class="btn-group" >
                 <button type="button" name="options" ng-show="zqltable" ng-click="submitZQLTable()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Submit</button>
               </div>
@@ -162,7 +168,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="query in queries['zqlRows']">
+<!--                   <tr ng-repeat="query in queries['zqlRows']">
                     <td>
                       <a ng-click="removeRow($index)" id="remove-row"><span class="glyphicon glyphicon glyphicon-minus-sign"></span></a>
                     </td>
@@ -173,12 +179,13 @@
                     <td>{{query.constraints}}</td>
                     <td>{{query.viz}}</td>
                     <td>{{query.processe}}</td>
-                  </tr>
+                  </tr> -->
                   <tr id="table-row-1" class="tabler">
                     <td>
+
                     </td>
                     <td>
-                      <input class="form-control zql-table number" ng-model="input.name" type="text" size="5" value=" ">
+                      <input class="form-control zql-table name" ng-model="input.name" type="text" size="5" value=" ">
                     </td>
                     <td>
                       <input class="form-control zql-table x-val" ng-model="input.x" type="text" size="10" value=" ">

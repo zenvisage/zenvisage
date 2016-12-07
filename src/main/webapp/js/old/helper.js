@@ -43,7 +43,8 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     var xlabel = userQueryResults[count]["xType"];
     var ylabel = userQueryResults[count]["yType"];
     var xRange = userQueryResults[count]["xRange"];
-
+    var similarityDistance = userQueryResults[count]["distance"];
+    // var similarityDistance = userQueryResults[count]["normalizedDistance"];
 
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
@@ -97,6 +98,13 @@ function displayUserQueryResultsHelperNew( userQueryResults )
 
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
+    graph.append("defs").append("clipPath")
+        .attr("id", "clip-" + count.toString())
+        .append("rect")
+        .attr("width", 180)
+        .attr("height", 65)
+        .attr("transform", "translate(20,20)");
+
     graph.append("rect")
         .attr("width", (xRange[0]-xmin)/(xmax-xmin)*(width-40) )
         .attr("height", height-40)
@@ -122,7 +130,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .text(xlabel);
+      .text(xlabel + " (" + similarityDistance.toFixed(2) + ")");
 
     // Add the Y Axis
     graph.append("g")
@@ -138,7 +146,8 @@ function displayUserQueryResultsHelperNew( userQueryResults )
                         .attr("fill", "none");
     if (data2 != null && data2 != undefined)
     {
-      graph.append("path").attr("d", valueline(data2))
+      graph.append("g").attr("clip-path", "url(#clip-" + count.toString() + ")")
+                        .append("path").attr("d", valueline(data2))
                         .attr("stroke", "teal")
                         .attr("stroke-width", 1)
                         .attr("fill", "none");

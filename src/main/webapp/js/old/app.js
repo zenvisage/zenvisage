@@ -2,7 +2,7 @@ var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
 
 
-app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function ($scope, $http, plotResults) {
+app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
     $scope.input = {};
     $scope.queries = {};
     $scope.queries['zqlRows'] = [];
@@ -10,28 +10,49 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', function
     $scope.parsed['zqlRows'] = [];
 
   $scope.removeRow = function ( index ) {
-    $scope.queries['zqlRows'].splice( index , 1);
+    $("#table-row-" + index).remove();
   };
 
   $scope.addRow = function () {
-        // console.log(checkConstraints($scope.input.constraints));
-        // Create a copy of parsed version of input for backend
-        $scope.copy = angular.copy($scope.input);
 
-        if (checkInput($scope.copy)) {
-            console.log("request: ",$scope.copy);
-            // Add to rows for front-end display
-            $scope.queries['zqlRows'].push($scope.input);
-            $scope.parsed['zqlRows'].push($scope.copy);
-            $scope.input = {};
-        }
+    var table = $("#zql-table > tbody")[0];
+    var rowCount = table.rows.length;
+    var rowNumber = (rowCount+1).toString();
+    //$("#zql-table").append
+    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"25\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    $compile($el)($scope);
+
+        // console.log(checkConstraints($scope.input.constraints));
+        // //Create a copy of parsed version of input for backend
+        // $scope.copy = angular.copy($scope.input);
+
+        // if (checkInput($scope.copy)) {
+        //     console.log("request: ",$scope.copy);
+        //     // Add to rows for front-end display
+        //     $scope.queries['zqlRows'].push($scope.input);
+        //     $scope.parsed['zqlRows'].push($scope.copy);
+        //     $scope.input = {};
+        // }
   };
 
     $scope.submitZQL = function () {
-      $("#views_table").empty();
-      $scope.parsed['db'] = getSelectedDataset();
-      console.log("sending to backend ", $scope.parsed);
-        $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify($scope.parsed)}}
+        $("#views_table").empty();
+
+        $( ".tabler" ).each(function( index ) {
+          var name = $(this).find(".name").val()
+          var x = $(this).find(".x-val").val()
+          var y = $(this).find(".y-val").val()
+          var z = $(this).find(".z-val").val()
+          var constraints = $(this).find(".constraints").val()
+          var viz = $(this).find(".viz").val()
+          var processe = $(this).find(".process").val()
+          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": viz, "processe": processe };
+          if (checkInput(input)) {
+            $scope.queries['zqlRows'].push(input);
+          }
+        });
+
+        $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
         ).then(
             function (response) {
                 console.log("success: ", response);
@@ -126,8 +147,8 @@ app.factory('plotResults', function() {
 });
 
 app.controller('options-controller', [
-  '$scope', '$rootScope', '$http', 'ChartSettings',
-  function($scope, $rootScope, $http, ChartSettings){
+  '$scope', '$rootScope', '$http', 'ChartSettings', '$compile',
+  function($scope, $rootScope, $http, ChartSettings, $compile){
     $scope.similarity = 'Euclidean';
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
@@ -169,9 +190,96 @@ app.controller('options-controller', [
       }
     });
 
-    $scope.submitZQLTable = function() {
-      //$(".tabler")
-      console.log("test")
+    $scope.removerAndInsertRows = function( n )
+    {
+      var table = $("#zql-table > tbody")[0];
+      var rowCount = table.rows.length;
+      for (i = 1; i < rowCount; i++) {
+        $("#table-row-" + i).remove();
+      }
+
+      for (i = 1; i < n; i++) {
+        var rowNumber = (i).toString();
+        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"25\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+        $compile($el)($scope);
+      }
+    }
+
+
+    $scope.populateQuery1 = function() {
+
+      $scope.removerAndInsertRows( 2 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      $($( ".tabler" )[0]).find(".viz").val("")
+      $($( ".tabler" )[0]).find(".process").val("")
+
+      $($( ".tabler" )[1]).find(".name").val("*f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val("z1")
+      $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
+      $($( ".tabler" )[1]).find(".viz").val("")
+      $($( ".tabler" )[1]).find(".process").val("")
+    }
+
+    $scope.populateQuery2 = function() {
+
+      $scope.removerAndInsertRows( 3 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
+      $($( ".tabler" )[0]).find(".viz").val("")
+      $($( ".tabler" )[0]).find(".process").val("")
+
+      $($( ".tabler" )[1]).find(".name").val("f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val("z1")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      $($( ".tabler" )[1]).find(".viz").val("")
+      $($( ".tabler" )[1]).find(".process").val("v1<-Dissimilar[k=7]D(f1,f2)")
+
+      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y1")
+      $($( ".tabler" )[2]).find(".z-val").val("v1")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+      $($( ".tabler" )[2]).find(".viz").val("")
+      $($( ".tabler" )[2]).find(".process").val("")
+    }
+
+    $scope.populateQuery3 = function() {
+
+      $scope.removerAndInsertRows( 3 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      $($( ".tabler" )[0]).find(".viz").val("")
+      $($( ".tabler" )[0]).find(".process").val("")
+
+      $($( ".tabler" )[1]).find(".name").val("*f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1")
+      $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
+      $($( ".tabler" )[1]).find(".z-val").val("z1")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      $($( ".tabler" )[1]).find(".viz").val("")
+      $($( ".tabler" )[1]).find(".process").val("v1<-argmin_{y1,y2}[k=7]DEuclidean(f1,f2)")
+
+      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
+      $($( ".tabler" )[2]).find(".z-val").val("v1")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+      $($( ".tabler" )[2]).find(".viz").val("")
+      $($( ".tabler" )[2]).find(".process").val("")
     }
 
     $scope.drawFunction = function() {
@@ -396,3 +504,4 @@ app.controller('datasetController', [
 app.service('ChartSettings', function () {
     return {};
 })
+
