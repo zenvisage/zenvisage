@@ -78,8 +78,11 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
     var y = d3.scaleLinear().range([height-20, 20]);
-    x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
-    y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
+    x.domain([xmin, xmax]);
+    y.domain([ymin, ymax]);
+    // x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
+    // y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
+
 
     var valueline = d3.line()
     .x(function(d) {
@@ -123,7 +126,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(4));
+        .call(d3.axisBottom(x).ticks(5));
 
     graph.append("text")
       .attr("transform",
@@ -219,8 +222,8 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
     var y = d3.scaleLinear().range([height-20, 20]);
-    x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
-    y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
+    x.domain([xmin, xmax]);
+    y.domain([ymin, ymax]);
 
     var valueline = d3.line()
     .x(function(d) {
@@ -243,7 +246,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(4));
+        .call(d3.axisBottom(x).ticks(5));
 
 
     graph.append("text")
@@ -361,8 +364,8 @@ function displayOutlierResultsHelperNew( outlierResults )
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
     var y = d3.scaleLinear().range([height-20, 20]);
-    x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
-    y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
+    x.domain([xmin, xmax]);
+    y.domain([ymin, ymax]);
 
     var valueline = d3.line()
     .x(function(d) {
@@ -385,7 +388,7 @@ function displayOutlierResultsHelperNew( outlierResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(4));
+        .call(d3.axisBottom(x).ticks(5));
 
     // Add the Y Axis
     graph.append("g")

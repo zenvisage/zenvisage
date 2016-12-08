@@ -201,10 +201,10 @@ svg#treesvg {
 }
 
 .form-control {
-  padding: 1px 5px !important;
+  padding: 1px 3px !important;
   height: 22px !important;
   line-height: 1.5 !important;
-  font: 12px !important;
+  font-size: 11px !important;
 }
 .glyphicon.glyphicon-flash {
     font-size: 10px;

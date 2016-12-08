@@ -19,8 +19,9 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
     var rowCount = table.rows.length;
     var rowNumber = (rowCount+1).toString();
     //$("#zql-table").append
-    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"25\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     $compile($el)($scope);
+    //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
 
         // console.log(checkConstraints($scope.input.constraints));
         // //Create a copy of parsed version of input for backend
@@ -44,9 +45,9 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
           var y = $(this).find(".y-val").val()
           var z = $(this).find(".z-val").val()
           var constraints = $(this).find(".constraints").val()
-          var viz = $(this).find(".viz").val()
+          // var viz = $(this).find(".viz").val()
           var processe = $(this).find(".process").val()
-          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": viz, "processe": processe };
+          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": "", "processe": processe };
           if (checkInput(input)) {
             $scope.queries['zqlRows'].push(input);
           }
@@ -202,7 +203,8 @@ app.controller('options-controller', [
 
       for (i = 1; i < n; i++) {
         var rowNumber = (i).toString();
-        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"25\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+        //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
         $compile($el)($scope);
       }
     }
@@ -216,7 +218,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
-      $($( ".tabler" )[0]).find(".viz").val("")
+      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("*f2")
@@ -224,7 +226,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z1")
       $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
-      $($( ".tabler" )[1]).find(".viz").val("")
+      //$($( ".tabler" )[1]).find(".viz").val("")
       $($( ".tabler" )[1]).find(".process").val("")
     }
 
@@ -236,7 +238,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
-      $($( ".tabler" )[0]).find(".viz").val("")
+      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -244,7 +246,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z1")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".viz").val("")
+      //$($( ".tabler" )[1]).find(".viz").val("")
       $($( ".tabler" )[1]).find(".process").val("v1<-Dissimilar[k=7]D(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
@@ -252,7 +254,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".y-val").val("y1")
       $($( ".tabler" )[2]).find(".z-val").val("v1")
       $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".viz").val("")
+      //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")
     }
 
@@ -264,7 +266,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
-      $($( ".tabler" )[0]).find(".viz").val("")
+      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("*f2")
@@ -272,7 +274,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
       $($( ".tabler" )[1]).find(".z-val").val("z1")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".viz").val("")
+      //$($( ".tabler" )[1]).find(".viz").val("")
       $($( ".tabler" )[1]).find(".process").val("v1<-argmin_{y1,y2}[k=7]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
@@ -280,7 +282,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
       $($( ".tabler" )[2]).find(".z-val").val("v1")
       $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".viz").val("")
+      //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")
     }
 
