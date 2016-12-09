@@ -48,7 +48,8 @@ public class ChartOutputUtil {
 		
 		Double range = 0.0;
 		if(orderedDistances != null && orderedDistances.size()!= 0){
-			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+//			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+			range = orderedDistances.get(orderedDistances.size()-1);
 		}
 		
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
@@ -86,7 +87,10 @@ public class ChartOutputUtil {
 	
 	/*z= (xi-min(x)) /(max(x)-min(x))*/
 	public double normalize(List<Double> orderedDistances, double range, int i){
-		return (orderedDistances.get(i) - orderedDistances.get(orderedDistances.size()-1)) / range;
+		if (range == 0)
+			return 1.0;
+		else
+			return (range - orderedDistances.get(i)) / range;
 	}
 	
 	public void chartOutput(List<RepresentativeTrend> representativeTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput) throws JsonProcessingException{
