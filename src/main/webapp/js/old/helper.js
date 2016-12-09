@@ -124,7 +124,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(5));
+        .call(d3.axisBottom(x).ticks(5, "s"));
 
     graph.append("text")
       .attr("transform",
@@ -137,7 +137,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4));
+        .call(d3.axisLeft(y).ticks(4, "s"));
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -259,7 +259,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(5));
+        .call(d3.axisBottom(x).ticks(5, "s"));
 
 
     graph.append("text")
@@ -273,7 +273,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4));
+        .call(d3.axisLeft(y).ticks(4, "s"));
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -413,13 +413,13 @@ function displayOutlierResultsHelperNew( outlierResults )
     graph.append("g")
       .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(5));
+        .call(d3.axisBottom(x).ticks(5, "s"));
 
     // Add the Y Axis
     graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4));
+        .call(d3.axisLeft(y).ticks(4, "s"));
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines

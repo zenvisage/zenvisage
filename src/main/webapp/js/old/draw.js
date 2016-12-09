@@ -103,12 +103,12 @@ function createSketchpad( data )
   focus.append("g")
     .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).ticks(8, "s"));
 
   // Add the Y Axis
   focus.append("g")
       .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(y).ticks(8, "s"));
 
   context.append("path")
       .data([data])
