@@ -209,6 +209,16 @@ app.controller('options-controller', [
       }
     }
 
+    $scope.clearQuery = function() {
+      $scope.removerAndInsertRows( 1 );
+      $($( ".tabler" )[0]).find(".name").val("")
+      $($( ".tabler" )[0]).find(".x-val").val("")
+      $($( ".tabler" )[0]).find(".y-val").val("")
+      $($( ".tabler" )[0]).find(".z-val").val("")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      //$($( ".tabler" )[0]).find(".viz").val("")
+      $($( ".tabler" )[0]).find(".process").val("")
+    }
 
     $scope.populateQuery1 = function() {
 
@@ -289,33 +299,33 @@ app.controller('options-controller', [
     $scope.drawFunction = function() {
       var xval = [];
       var plotData = [];
-      for (i = 0; i < sketchpad.rawData_.length; i++) {
-        xval.push( sketchpad.rawData_[i][0] )
+
+      for(var i = 0; i < sketchpadData.length; i++){
+        var xp = sketchpadData[i]["xval"];
+        //var yp = sketchpadData[i]["yval"];
+        xval.push( xp )
       }
+
       var scope = {
         x: xval,
       };
+
       var eq = $scope.equation.replace("^", ".^");
       var y = math.eval( eq, scope )
       if( eq.includes("x") )
       {
         for (i = 0; i < xval.length; i++) {
-          plotData.push( [ xval[i], y[i] ] )
+          plotData.push( { "xval": xval[i], "yval":y[i] } )
         }
       }
       else
       {
         for (i = 0; i < xval.length; i++) {
-          plotData.push( [ xval[i], y ] )
+          plotData.push( { "xval": xval[i], "yval": y } )
         }
       }
-      sketchpad.updateOptions(
-        {
-          'file': plotData,
-           valueRange: [null, null],
-        }
-      );
-      angular.element($("#sidebar")).scope().getUserQueryResults();
+      plotSketchpadNew( plotData )
+      //angular.element($("#sidebar")).scope().getUserQueryResults();
     }
 
     $scope.callGetUserQueryResults = function() {

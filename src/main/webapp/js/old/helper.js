@@ -83,7 +83,6 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     // x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
     // y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
 
-
     var valueline = d3.line()
     .x(function(d) {
       return x(d.xval);
@@ -98,7 +97,6 @@ function displayUserQueryResultsHelperNew( userQueryResults )
           .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
-
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     graph.append("defs").append("clipPath")
@@ -109,14 +107,14 @@ function displayUserQueryResultsHelperNew( userQueryResults )
         .attr("transform", "translate(20,20)");
 
     graph.append("rect")
-        .attr("width", (xRange[0]-xmin)/(xmax-xmin)*(width-40) )
+        .attr("width", Math.abs( (xRange[0]-xmin)/(xmax-xmin)*(width-40) ) )
         .attr("height", height-40)
         .attr("transform", "translate(20,20)")
         .attr("fill", "grey");
 
     var newLoc = (xRange[1])/(xmax-xmin)*(width-40)+20
     graph.append("rect")
-        .attr("width", (xmax-xRange[1])/(xmax-xmin)*(width-40))
+        .attr("width", Math.abs( (xmax-xRange[1])/(xmax-xmin)*(width-40) ) )
         .attr("height", height-40)
         .attr("transform", "translate(" + newLoc.toString() + ",20)")
         .attr("fill", "grey");

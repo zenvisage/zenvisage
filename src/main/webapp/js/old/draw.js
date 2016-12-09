@@ -147,7 +147,7 @@ function createSketchpad( data )
     var yclickedval = y.invert(d3.mouse(ref)[1]-topMargin);
     var closestRow = -1;
 
-    var dataOjb = d3.select("path").data();
+    //var dataOjb = d3.select("path").data();
     var currentData = d3.select("path").data()[0];
     var numPoints = currentData.length;
     var diff = -1;
