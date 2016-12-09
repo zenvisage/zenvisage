@@ -43,8 +43,8 @@ function displayUserQueryResultsHelperNew( userQueryResults )
     var xlabel = userQueryResults[count]["xType"];
     var ylabel = userQueryResults[count]["yType"];
     var xRange = userQueryResults[count]["xRange"];
-    var similarityDistance = userQueryResults[count]["distance"];
-    // var similarityDistance = userQueryResults[count]["normalizedDistance"];
+    //var similarityDistance = userQueryResults[count]["distance"];
+    var similarityDistance = userQueryResults[count]["normalizedDistance"];
 
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);

@@ -6,8 +6,8 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
     $scope.input = {};
     $scope.queries = {};
     $scope.queries['zqlRows'] = [];
-    $scope.parsed = {};
-    $scope.parsed['zqlRows'] = [];
+    // $scope.parsed = {};
+    // $scope.parsed['zqlRows'] = [];
 
   $scope.removeRow = function ( index ) {
     $("#table-row-" + index).remove();
@@ -38,6 +38,7 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
 
     $scope.submitZQL = function () {
         $("#views_table").empty();
+        $scope.queries['zqlRows'] = [];
 
         $( ".tabler" ).each(function( index ) {
           var name = $(this).find(".name").val()
@@ -54,6 +55,8 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
         });
 
         $scope.queries['db'] = getSelectedDataset();
+
+        console.log($scope.queries);
 
         $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
         ).then(
@@ -254,7 +257,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
-      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".z-val").val(" z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
       //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
@@ -262,15 +265,15 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".name").val("f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1")
       $($( ".tabler" )[1]).find(".y-val").val("y1")
-      $($( ".tabler" )[1]).find(".z-val").val("z1")
+      $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
       //$($( ".tabler" )[1]).find(".viz").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1<-Dissimilar[k=7]D(f1,f2)")
+      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmin_{z1}x{z2}[k=7]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
       $($( ".tabler" )[2]).find(".x-val").val("x1")
       $($( ".tabler" )[2]).find(".y-val").val("y1")
-      $($( ".tabler" )[2]).find(".z-val").val("v1")
+      $($( ".tabler" )[2]).find(".z-val").val("v2")
       $($( ".tabler" )[2]).find(".constraints").val("")
       //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")
@@ -287,7 +290,7 @@ app.controller('options-controller', [
       //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
-      $($( ".tabler" )[1]).find(".name").val("*f2")
+      $($( ".tabler" )[1]).find(".name").val("f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1")
       $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
       $($( ".tabler" )[1]).find(".z-val").val("z1")
