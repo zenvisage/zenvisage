@@ -198,12 +198,12 @@ function createSketchpad( data )
 
     sketchpadData = currentData;
 
-    d3.select(".focus").selectAll("path")
+    d3.select("#draw-div .focus").selectAll("path")
           .data([currentData])
           .attr("class", "line")
           .attr("d", valueline);
 
-    d3.select(".context").selectAll("path")
+    d3.select("#draw-div .context").selectAll("path")
           .data([currentData])
           .attr("class", "line")
           .attr("d", valueline2);
