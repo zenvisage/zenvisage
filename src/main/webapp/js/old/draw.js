@@ -145,9 +145,9 @@ function createSketchpad( data )
   {
     var xclickedval = x.invert(d3.mouse(ref)[0]-leftMargin);
     var yclickedval = y.invert(d3.mouse(ref)[1]-topMargin);
-    var closestRow = -1;
 
-    //var dataOjb = d3.select("path").data();
+    valueRange = [y.domain()[0], y.domain()[1]]
+
     var currentData = d3.select("path").data()[0];
     var numPoints = currentData.length;
     var diff = -1;
@@ -156,15 +156,34 @@ function createSketchpad( data )
     for (var point = 0; point < numPoints; point++) {
       var xval = currentData[point]["xval"];
       var diff = Math.abs(xval - xclickedval);
-
       if (diff < smallestDiff) {
         smallestDiff = diff;
-        closestRow = xval;
         selectedPoint = point;
       }
     }
 
     if(selectedPoint != -1){
+      if (lastDrawRow === null) {
+        lastDrawRow = selectedPoint;
+        lastDrawValue = yclickedval;
+      }
+      var coeff = (yclickedval - lastDrawValue) / (selectedPoint - lastDrawRow);
+      if (selectedPoint == lastDrawRow) coeff = 0.0;
+      var minRow = Math.min(lastDrawRow, selectedPoint);
+      var maxRow = Math.max(lastDrawRow, selectedPoint)
+
+      for (var row = minRow; row <= maxRow; row++) {
+        var val = lastDrawValue + coeff * (row - lastDrawRow);
+        val = Math.max(valueRange[0], Math.min(val, valueRange[1]));
+        currentData[row]["yval"] = val;
+        if (val === null || yclickedval === undefined || isNaN(val)) {
+          console.log(val);
+        }
+      }
+
+      lastDrawRow = selectedPoint;
+      lastDrawValue = yclickedval;
+
       var newPoint = yclickedval;
       if ( yclickedval > y.domain()[1] )
       {
