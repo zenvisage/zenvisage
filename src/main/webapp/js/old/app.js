@@ -170,6 +170,14 @@ app.controller('options-controller', [
       }
     });
 
+    $scope.$watch('showScatterplot', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        $scope.callGetUserQueryResults();
+        $scope.callgetRepresentativeTrends();
+      }
+    });
+
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {

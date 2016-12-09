@@ -141,10 +141,25 @@ function displayUserQueryResultsHelperNew( userQueryResults )
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
-    graph.append("path").attr("d", valueline(data))
-                        .attr("stroke", "black")
-                        .attr("stroke-width", 1)
-                        .attr("fill", "none");
+
+    if (getScatterplotOption())
+    {
+      graph.selectAll("dot")
+          .data(data)
+          .enter().append("circle")
+          .attr("r", 1)
+          .attr("cx", function(d) { return x(d.xval); })
+          .attr("cy", function(d) { return y(d.yval); })
+          .style("fill", "black");
+    }
+    else
+    {
+      graph.append("path").attr("d", valueline(data))
+          .attr("stroke", "black")
+          .attr("stroke-width", 1)
+          .attr("fill", "none");
+    }
+
     if (data2 != null && data2 != undefined)
     {
       graph.append("g").attr("clip-path", "url(#clip-" + count.toString() + ")")
@@ -262,11 +277,23 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
-    graph.append("path").attr("d", valueline(data))
-                        .attr("stroke", "black")
-                        .attr("stroke-width", 1)
-                        .attr("fill", "none");
-
+    if (getScatterplotOption())
+    {
+      graph.selectAll("dot")
+          .data(data)
+          .enter().append("circle")
+          .attr("r", 1)
+          .attr("cx", function(d) { return x(d.xval); })
+          .attr("cy", function(d) { return y(d.yval); })
+          .style("fill", "black");
+    }
+    else
+    {
+      graph.append("path").attr("d", valueline(data))
+          .attr("stroke", "black")
+          .attr("stroke-width", 1)
+          .attr("fill", "none");
+    }
   }
 }
 
@@ -396,10 +423,23 @@ function displayOutlierResultsHelperNew( outlierResults )
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
-    graph.append("path").attr("d", valueline(data))
-                        .attr("stroke", "black")
-                        .attr("stroke-width", 1)
-                        .attr("fill", "none");
+    if (getScatterplotOption())
+    {
+      graph.selectAll("dot")
+          .data(data)
+          .enter().append("circle")
+          .attr("r", 1)
+          .attr("cx", function(d) { return x(d.xval); })
+          .attr("cy", function(d) { return y(d.yval); })
+          .style("fill", "black");
+    }
+    else
+    {
+      graph.append("path").attr("d", valueline(data))
+          .attr("stroke", "black")
+          .attr("stroke-width", 1)
+          .attr("fill", "none");
+    }
 
     graph.append("text")
       .attr("transform",
