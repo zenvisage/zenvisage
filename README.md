@@ -1,5 +1,8 @@
 # Overview
-zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
+Zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
+
+Zenvisage is being developed by a team of undergraduate and graduate students headed by Prof. Aditya Parameswaran, along with a number of collaborators, including Prof. Karrie Karahalios and Prof. Samuel Madden. The list of contributors includes: Tarique Siddiqui, John Lee, Albert Kim, Edward Xue, Charaon Wang, Yuxuan Zou, and Changfeng Liu.
+
 
 For more details, please look at our [Project Webpage] (http://zenvisage.github.io/)
 
