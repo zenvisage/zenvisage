@@ -3,6 +3,7 @@ Zenvisage is designed as a lightweight web-based client application. It provides
 
 Zenvisage is being developed by a team of undergraduate and graduate students headed by Prof. Aditya Parameswaran, along with a number of collaborators, including Prof. Karrie Karahalios and Prof. Samuel Madden. The list of contributors includes: Tarique Siddiqui, John Lee, Albert Kim, Edward Xue, Charaon Wang, Yuxuan Zou, and Changfeng Liu.
 
+Please reach out to the lead PhD student, Tarique Siddiqui (tsiddiq2@illinois.edu) if you'd like to either contribute, or be a beta tester of Zenvisage!
 
 For more details, please look at our [Project Webpage] (http://zenvisage.github.io/)
 
