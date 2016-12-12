@@ -9,7 +9,7 @@ var outlierDygraphsNew = {};
 
 //displays user results
 
-function displayUserQueryResultsHelperNew( userQueryResults )
+function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = true )
 {
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
@@ -42,6 +42,8 @@ function displayUserQueryResultsHelperNew( userQueryResults )
 
     var xlabel = userQueryResults[count]["xType"];
     var ylabel = userQueryResults[count]["yType"];
+    var zlabel = userQueryResults[count]["zType"];
+
     var xRange = userQueryResults[count]["xRange"];
     //var similarityDistance = userQueryResults[count]["distance"];
     var similarityDistance = userQueryResults[count]["normalizedDistance"];
@@ -132,6 +134,8 @@ function displayUserQueryResultsHelperNew( userQueryResults )
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
       .text(xlabel + " (" + similarityDistance.toFixed(2) + ")");
+    //.text(xlabel + " (" + similarityDistance.toFixed(2) + ")" + zlabel);
+
 
     // Add the Y Axis
     graph.append("g")
@@ -160,7 +164,7 @@ function displayUserQueryResultsHelperNew( userQueryResults )
           .attr("fill", "none");
     }
 
-    if (data2 != null && data2 != undefined)
+    if (data2 != null && data2 != undefined && includeSketch)
     {
       graph.append("g").attr("clip-path", "url(#clip-" + count.toString() + ")")
                         .append("path").attr("d", valueline(data2))
@@ -481,7 +485,7 @@ function addRow() {
   var table = $("#zql-table > tbody")[0];
   var rowCount = table.rows.length;
   var rowNumber = (rowCount+1).toString();
-  $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><input class=\"form-control zql-table number\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
+  $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><input class=\"form-control zql-table number\" type=\"text\" size=\"3\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
 }
 
 

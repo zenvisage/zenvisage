@@ -62,7 +62,7 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
         ).then(
             function (response) {
                 console.log("success: ", response);
-                plotResults.displayUserQueryResults(response.data.outputCharts);
+                plotResults.displayUserQueryResults(response.data.outputCharts, false);
             },
             function (response) {
                 console.log("failed: ", escape(response));
@@ -131,9 +131,9 @@ app.factory('datasetInfo', function() {
 app.factory('plotResults', function() {
 
     var plottingService = {};
-    plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults )
+    plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults, includeSketch = true )
     {
-      displayUserQueryResultsHelperNew( userQueryResults );
+      displayUserQueryResultsHelperNew( userQueryResults, includeSketch );
       //displayUserQueryResultsHelper( userQueryResults );
     }
 
@@ -283,25 +283,25 @@ app.controller('options-controller', [
 
       $scope.removerAndInsertRows( 3 );
       $($( ".tabler" )[0]).find(".name").val("f1")
-      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
-      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
-      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year','month'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice','listingprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.'CA'")
       $($( ".tabler" )[0]).find(".constraints").val("")
       //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1")
-      $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
-      $($( ".tabler" )[1]).find(".z-val").val("z1")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.'NY'")
       $($( ".tabler" )[1]).find(".constraints").val("")
       //$($( ".tabler" )[1]).find(".viz").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1<-argmin_{y1,y2}[k=7]DEuclidean(f1,f2)")
+      $($( ".tabler" )[1]).find(".process").val("x2,y2<-argmin_{x1,y1}[k=1]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
-      $($( ".tabler" )[2]).find(".x-val").val("x1")
-      $($( ".tabler" )[2]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
-      $($( ".tabler" )[2]).find(".z-val").val("v1")
+      $($( ".tabler" )[2]).find(".x-val").val("x2")
+      $($( ".tabler" )[2]).find(".y-val").val("y2")
+      $($( ".tabler" )[2]).find(".z-val").val("'state'.{'CA','NY'}")
       $($( ".tabler" )[2]).find(".constraints").val("")
       //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")

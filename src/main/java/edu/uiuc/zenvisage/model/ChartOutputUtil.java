@@ -18,7 +18,7 @@ public class ChartOutputUtil {
 	public Result finalOutput;
 	public ZvQuery args;
 	public BiMap<Float, String> xMap;
-	
+
 	/**
 	 * @param finalOutput
 	 * @param args
@@ -28,7 +28,7 @@ public class ChartOutputUtil {
 		this.args = args;
 		this.xMap = xMap.inverse();
 	}
-		
+
 	/**
 	 * @param result
 	 * @param orig
@@ -45,13 +45,13 @@ public class ChartOutputUtil {
 		if(output != null && !output.isEmpty()){
 			outputLength = output.get(0).length;
 		}
-		
+
 		Double range = 0.0;
 		if(orderedDistances != null && orderedDistances.size()!= 0){
 //			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
 			range = orderedDistances.get(orderedDistances.size()-1);
 		}
-		
+
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
 			// initialize a new chart
 			int j = 0;
@@ -59,14 +59,17 @@ public class ChartOutputUtil {
 				Chart chartOutput = new Chart();
 				/*Separate this call to rank and x axix and return separately*/
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
-				chartOutput.setxType(mappings.get(orders.get(i)));
+				chartOutput.setxType(args.getSketchPoints()[j].xAxis);
+				chartOutput.setyType(args.getSketchPoints()[j].yAxis);
+				chartOutput.setzType(mappings.get(orders.get(i)));
+
 				chartOutput.setRank(i+1);
 				chartOutput.setNormalizedDistance(normalize(orderedDistances, range, i));
-				chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
+				// chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				chartOutput.setDistance(orderedDistances.get(i));
 				chartOutput.setXRange(args.xRange);
 				chartOutput.setConsiderRange(args.considerRange);
-				
+
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
 				LinkedHashMap<Float,Float> points = orig.get(j).get(key);
@@ -82,9 +85,9 @@ public class ChartOutputUtil {
 			}
 		}
 
-		return;	
+		return;
 	}
-	
+
 	/*z= (xi-min(x)) /(max(x)-min(x))*/
 	public double normalize(List<Double> orderedDistances, double range, int i){
 		if (range == 0)
@@ -92,9 +95,9 @@ public class ChartOutputUtil {
 		else
 			return (range - orderedDistances.get(i)) / range;
 	}
-	
+
 	public void chartOutput(List<RepresentativeTrend> representativeTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput) throws JsonProcessingException{
-			
+
 		for(int i = 0; i < representativeTrends.size() - 1; i++) {
 			// initialize a new chart
 			Chart chartOutput = new Chart();
@@ -102,10 +105,16 @@ public class ChartOutputUtil {
 			/*Separate this call to rank and x axix and return separately*/
 			//chartOutput.setxType((i+1)+" : "+repTrend.getKey());
 			//chartOutput.setxType(repTrend.getKey());
+
+			// chartOutput.setxType(repTrend.getKey());
+			// chartOutput.setRank(i+1);
+			// chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
+
 			chartOutput.setxType(repTrend.getKey());
+			chartOutput.setyType(args.yAxis);
+			chartOutput.setzType(args.groupBy);
 			chartOutput.setRank(i+1);
-			
-			chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
+
 			// fill in chart data
 			LinkedHashMap<Float,Float> points = orig.get(repTrend.getKey());
 			int c = 0;
@@ -119,9 +128,9 @@ public class ChartOutputUtil {
 			finalOutput.outputCharts.add(chartOutput);
 		}
 
-		return;	
+		return;
 	}
-	
+
 	// all baseline one time stuff...
 	public void baselineOutput(List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> output, BaselineQuery bq, Result finalOutput) {
 		for (String zAxis : output.get(0).keySet()) {
@@ -131,8 +140,11 @@ public class ChartOutputUtil {
 				LinkedHashMap<Float,Float> trend = output.get(index).get(zAxis);
 				// can add more logic here -- filter some trends
 				outputArray[index] = new Chart();
-				outputArray[index].setxType(zAxis);
-				outputArray[index].setyType(bq.aggrFunc+"("+bq.yAxis.get(index)+")");
+				// outputArray[index].setxType(zAxis);
+				// outputArray[index].setyType(bq.aggrFunc+"("+bq.yAxis.get(index)+")");
+				outputArray[index].setxType(bq.xAxis);
+				outputArray[index].setyType(bq.yAxis.get(index));
+				outputArray[index].setzType(zAxis);
 				List<String> yOperators;
 				List<Float> yValues;
 				if (index == 0) {
@@ -162,14 +174,14 @@ public class ChartOutputUtil {
 				}
 				if (filtered) break;
 			}
-			
+
 			if (!filtered) {
 				for (int i = 0; i < output.size(); i++)
 				finalOutput.outputCharts.add(outputArray[i]);
 			}
 		}
 	}
-	
+
 	public enum Operator
 	{
 		EQUAL("=") {
@@ -181,22 +193,22 @@ public class ChartOutputUtil {
 			@Override public boolean filter(float constraint, float value) {
 				return value > constraint;
 			}
-		}, 
+		},
 		GREATER_THAN_OR_EQUAL(">=") {
 			@Override public boolean filter(float constraint, float value) {
 				return value >= constraint;
 			}
-		}, 
+		},
 		LESS_THAN("<") {
 			@Override public boolean filter(float constraint, float value) {
 				return value < constraint;
 			}
-		}, 
+		},
 		LESS_THAN_OR_EQUAL("<=") {
 			@Override public boolean filter(float constraint, float value) {
 				return value <= constraint;
 			}
-		}, 
+		},
 		NOT_EQUAL("!=") {
 			@Override public boolean filter(float constraint, float value) {
 				return (int) constraint != (int) value;
@@ -216,7 +228,7 @@ public class ChartOutputUtil {
 	    @Override public String toString() {
 	        return text;
 	    }
-	    
+
 	    public static Operator getValue(String text) {
 	    	for (Operator op : Operator.values()) {
 	    		if (op.text.equals(text)) {
@@ -226,5 +238,5 @@ public class ChartOutputUtil {
 	    	return null;
 	    }
 	}
-	
+
 }
