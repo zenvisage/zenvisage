@@ -131,10 +131,18 @@ function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = tru
     graph.append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
-                           (trans + m[0] + 30) + ")")
+           (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .text(xlabel + " (" + similarityDistance.toFixed(2) + ")");
-    //.text(xlabel + " (" + similarityDistance.toFixed(2) + ")" + zlabel);
+      .text(zlabel + " (" + similarityDistance.toFixed(2) + ")" );
+
+    graph.append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+           15 + ")")
+      .attr("font-size", 8)
+      .style("text-anchor", "middle")
+      .text(ylabel + " by " + xlabel);
+
 
 
     // Add the Y Axis
