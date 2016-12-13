@@ -61,8 +61,8 @@ public class ChartOutputUtil {
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
 				chartOutput.setxType(args.getSketchPoints()[j].xAxis);
 				chartOutput.setyType(args.getSketchPoints()[j].yAxis);
-				chartOutput.setzType(mappings.get(orders.get(i)));
-
+				chartOutput.setzType(args.groupBy);
+				chartOutput.title = mappings.get(orders.get(i));
 				chartOutput.setRank(i+1);
 				chartOutput.setNormalizedDistance(normalize(orderedDistances, range, i));
 				// chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");

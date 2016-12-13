@@ -70,7 +70,7 @@ function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = tru
     }
 
     var data2 = sketchpadData;
-    userQueryDygraphsNew["result-" + count.toString()] = data;
+    userQueryDygraphsNew["result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
 
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
@@ -217,6 +217,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
 
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
+    var zlabel = varFinalArray[count]["zType"];
 
     var clusterCount = varFinalArray[count]["count"];
 
@@ -228,8 +229,6 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
 
     var valueRange = [ymin, ymax];
     var xRange = [xmin, xmax];
-    //representativeDygraphs["representative-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xlabel, count, "representative-result-", representativeCount );
-
 
     // START HERE
     var data = [];
@@ -237,8 +236,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
     for (var i = 0; i < arrayLength; i++ ) {
       data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
     }
-    representativeDygraphsNew["representative-result-" + count.toString()] = data;
-
+    representativeDygraphsNew["representative-result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
     var width = 220//200// - m[1] - m[3]; // width
@@ -377,6 +375,7 @@ function displayOutlierResultsHelperNew( outlierResults )
 
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
+    var zlabel = varFinalArray[count]["zType"];
 
     var clusterCount = varFinalArray[count]["count"];
 
@@ -391,7 +390,7 @@ function displayOutlierResultsHelperNew( outlierResults )
       data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
     }
 
-    outlierDygraphsNew["outlier-result-" + count.toString()] = data;
+    outlierDygraphsNew["outlier-result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
 
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
@@ -476,17 +475,28 @@ function displayOutlierResultsHelperNew( outlierResults )
 function uploadToSketchpadNew( draggableId, graphType )
 {
   var draggedGraph;
+  //var xType, yType, zType;
   switch( graphType ) {
     case "representativeQuery":
-      draggedGraph = representativeDygraphsNew[draggableId];
+      draggedGraph = representativeDygraphsNew[draggableId]["data"];
+      // xType = representativeDygraphsNew[draggableId]["xType"];
+      // yType = representativeDygraphsNew[draggableId]["yType"];
+      // zType = representativeDygraphsNew[draggableId]["zType"];
       break;
     case "outlierQuery":
-      draggedGraph = outlierDygraphsNew[draggableId];
+      draggedGraph = outlierDygraphsNew[draggableId]["data"];
+      // xType = outlierDygraphsNew[draggableId]["xType"];
+      // yType = outlierDygraphsNew[draggableId]["yType"];
+      // zType = outlierDygraphsNew[draggableId]["zType"];
       break;
     default: //userQuery
-      draggedGraph = userQueryDygraphsNew[draggableId];
+      draggedGraph = userQueryDygraphsNew[draggableId]["data"];
+      // xType = userQueryDygraphsNew[draggableId]["xType"];
+      // yType = userQueryDygraphsNew[draggableId]["yType"];
+      // zType = userQueryDygraphsNew[draggableId]["zType"];
+
   }
-  plotSketchpadNew( draggedGraph );
+  plotSketchpadNew( draggedGraph )//, xType, yType, zType);
 }
 
 function addRow() {

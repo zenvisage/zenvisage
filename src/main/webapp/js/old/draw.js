@@ -237,10 +237,15 @@ function createSketchpad( data )
   }
 }
 
-function plotSketchpadNew( data )
+function plotSketchpadNew( data )//, xType, yType, zType)
 {
   $("#draw-div").children().remove();
   sketchpad = createSketchpad( data )
+
+  // angular.element($("#sidebar")).scope().selectedCategory = zType;
+  // angular.element($("#sidebar")).scope().selectedXAxis = xType;
+  // angular.element($("#sidebar")).scope().selectedYAxis = yType;
+
   angular.element($("#sidebar")).scope().getUserQueryResults();
   refreshZoomEventHandler();
 }

@@ -335,6 +335,11 @@ app.controller('options-controller', [
           plotData.push( { "xval": xval[i], "yval": y } )
         }
       }
+
+      var zType = angular.element($("#sidebar")).scope().selectedCategory;
+      var xType = angular.element($("#sidebar")).scope().selectedXAxis;
+      var yType = angular.element($("#sidebar")).scope().selectedYAxis;
+
       plotSketchpadNew( plotData )
       //angular.element($("#sidebar")).scope().getUserQueryResults();
     }

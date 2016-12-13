@@ -194,12 +194,12 @@ public class ZvMain {
 
 
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
-			Result finalOutput=new Result();
+			Result finalOutput = new Result();
 			int outputLength = 50;
 			// List<ZQLRowVizResult> orig = zqlRowResult.getZqlRowVizResults() ;
 			Normalization outputNormalization = new Original();
 			 // reformat database data
-			 DataReformation dataReformatter = new DataReformation(outputNormalization);
+			DataReformation dataReformatter = new DataReformation(outputNormalization);
 //			 // double[][] output  = dataReformatter.reformatData(orig);
 //
 //			List<Iterator<Entry<String, LinkedHashMap<Float, Float>>>> iteratorList= new ArrayList<>();
@@ -254,7 +254,7 @@ public class ZvMain {
 	    	outputChart.setzType( viz.getZValue().getStrValue() );
 	    	outputChart.setxType( viz.getxAttribute() );
 	    	outputChart.setyType( viz.getyAttribute() );
-	    	outputChart.title = "From Query Graph";
+	    	outputChart.title = viz.getZValue().getStrValue();
 
 	    	// outputChart.setxType((++i) + " : " + viz.getZValue().getStrValue());
 	    	// outputChart.setyType("avg" + "(" + viz.getyAttribute() + ")");
