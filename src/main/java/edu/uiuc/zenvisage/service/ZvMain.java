@@ -429,8 +429,8 @@ public class ZvMain {
 //			 normalization = new Original();
 		 }
 		 else {
-			 normalization = new Zscore();
-//			 normalization = new Original();
+//			 normalization = new Zscore();
+			 normalization = new Original();
 		 }
 		 // generate the corresponding output normalization
 
