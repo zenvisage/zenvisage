@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -78,6 +79,9 @@ public class ProcessNode extends QueryNode {
 			return null;
 		}
 		
+	    double[] all_scores1 = axisVariableScores.getScore();
+	    System.out.println(Arrays.toString(all_scores1));
+	    
 		axisVariableScores = filterScores(axisVariableScores);
 		System.out.println("Process information:");
 		System.out.println(process.getVariables());
@@ -93,11 +97,16 @@ public class ProcessNode extends QueryNode {
 			// get the axivariable in the z column, 
 			
 		    List<String> values = axisVariableScores.getAxisvars().get(i);
+		    double[] scores = axisVariableScores.getScore();
+		    System.out.println(values);
+		    System.out.println(Arrays.toString(scores));
+		    System.out.println(values.size());
+		    
 		    String axisName = axisNames.get(i);
 			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
 
 		    //TODO check correctness
-			AxisVariable newAxisVar = new AxisVariable(axisVar.getAttributeType(), axisVar.getAttribute(), values);
+			AxisVariable newAxisVar = new AxisVariable(axisVar.getAttributeType(), axisVar.getAttribute(), values, scores);
 			lookuptable.put(varName, newAxisVar);
 		}
 		return axisVariableScores;

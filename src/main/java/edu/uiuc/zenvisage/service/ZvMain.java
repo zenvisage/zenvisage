@@ -251,11 +251,11 @@ public class ZvMain {
 	    for(VisualComponent viz : vcList.getVisualComponentList()) {
 	    	Chart outputChart = new Chart();
 
-	    	outputChart.setzType( viz.getZValue().getStrValue() );
+	    	outputChart.setzType( viz.getzAttribute() );
 	    	outputChart.setxType( viz.getxAttribute() );
 	    	outputChart.setyType( viz.getyAttribute() );
 	    	outputChart.title = viz.getZValue().getStrValue();
-
+	    	outputChart.setNormalizedDistance(viz.getScore());
 	    	// outputChart.setxType((++i) + " : " + viz.getZValue().getStrValue());
 	    	// outputChart.setyType("avg" + "(" + viz.getyAttribute() + ")");
 	    	// outputChart.title = "From Query Graph";

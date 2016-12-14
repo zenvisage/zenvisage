@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.util.FastMath;
+
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
@@ -56,7 +59,7 @@ public class DEuclidean implements D {
 			for (int i = 0, j = 0; i < f1List.size() && j < f2List.size(); ) {
 				int zCompare = VC1.compare(f1List.get(i),f2List.get(i));
 				if (zCompare == 0) {
-					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
+					scores.add(calculateNormalizedDistance(f1List.get(i), f2List.get(j)));
 					singleAxisvarsList.add(VC1.extractAttribute(f1List.get(i),0));
 					if(axisVariables.get(0).size()==2)
 					{
@@ -105,7 +108,7 @@ public class DEuclidean implements D {
 			ArrayList<String> secondAxisvarsList = new ArrayList<String>();	
 			for (int i = 0; i < f1List.size(); i++) {
 				for (int j = 0; j < f2List.size(); j++) {
-					scores.add(calculateDistance(f1List.get(i), f2List.get(j)));
+					scores.add(calculateNormalizedDistance(f1List.get(i), f2List.get(j)));
 					firstAxisvarsList.add(VC1.extractAttribute(f1List.get(i),0));
 					secondAxisvarsList.add(VC1.extractAttribute(f2List.get(j),0));
 				}
@@ -189,5 +192,44 @@ public class DEuclidean implements D {
 			return Double.MAX_VALUE;
 	}
 
+	public double calculateNormalizedDistance(VisualComponent v1, VisualComponent v2) {
+		ArrayList<WrapperType> y1 = v1.getPoints().getYList();
+		ArrayList<WrapperType> y2 = v2.getPoints().getYList();
+		
+		if (y1.size() == y2.size()) {
+			
+			// normalize!
+			double[] y1Normalized = normalize(y1);
+			double[] y2Normalized = normalize(y2);
+			
+			double distance = 0.0;
+			for (int i = 0; i < y1Normalized.length; i++) {
+				distance += Math.sqrt(Math.pow(y1Normalized[i] - y2Normalized[i], 2));
+			}
+			return distance;
+		}
+		else
+			return Double.MAX_VALUE;		
+	}
 	
+	// Basic ZScore normalization
+	public double[] normalize(ArrayList<WrapperType> y) {
+		double[] values = new double[y.size()];
+		for(int i = 0; i < y.size(); i++){
+			values[i] = y.get(i).getNumberValue();
+		}
+		
+		double mean = StatUtils.mean(values);
+		double std = FastMath.sqrt(StatUtils.variance(values));
+		
+		for(int i = 0; i < values.length; i++) {
+			if (std == 0) {
+				values[i] = 0;
+			}
+			else {
+				values[i] = (values[i] - mean) / std;
+			}
+		}
+		return values;
+	}
 }

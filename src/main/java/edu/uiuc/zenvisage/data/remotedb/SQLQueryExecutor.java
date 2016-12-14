@@ -168,7 +168,7 @@ public class SQLQueryExecutor {
 					+ " ORDER BY " + z + ", "+ x;
 				}
 			
-//				System.out.println("Running ZQL Query :"+sql);
+				System.out.println("Running ZQL Query :"+sql);
 				//excecute sql and put into VisualComponentList
 				executeSQL(sql, zqlRow, databaseName, x, y);
 			}

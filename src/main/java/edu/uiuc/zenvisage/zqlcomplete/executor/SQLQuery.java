@@ -42,7 +42,7 @@ public class SQLQuery {
 		}
 		select(zQLRow.getZ().getAttribute().replace("'",""));
 		
-		from("realestate");
+		from("real_estate");
 		
 		
 		if (zQLRow.getConstraint().size() > 0) {

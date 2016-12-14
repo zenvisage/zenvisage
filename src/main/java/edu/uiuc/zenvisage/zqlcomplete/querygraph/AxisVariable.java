@@ -17,28 +17,32 @@ import java.util.List;
 public class AxisVariable {
 	private String attributeType;  // either X, Y or Z
 	private String attribute;
-	private List<String> values=new ArrayList<String>();
+	private List<String> values = new ArrayList<String>();
+	private double[] scores;
 	
-	
+	public double[] getScores() {
+		return scores;
+	}
+
+	public void setScores(double[] scores) {
+		this.scores = scores;
+	}
+
 	public String getAttribute() {
 		return attribute;
 	}
-
 
 	public void setAttribute(String attribute) {
 		this.attribute = attribute;
 	}
 
-
 	public List<String> getValues() {
 		return values;
 	}
 
-
 	public void setValues(List<String> values) {
 		this.values = values;
 	}
-
 
 	public AxisVariable(String attribute, List<String> values) {
 		this.attribute = attribute;
@@ -52,7 +56,13 @@ public class AxisVariable {
 		// by reference ok?
 		this.values = values;
 	}
-	
+
+	public AxisVariable(String attributeType,String attribute, List<String> values, double[] scores) {
+		this.attributeType=attributeType;
+		this.attribute = attribute;
+		this.values = values;
+		this.scores = scores;
+	}
 	/**
 	 * @return the attributeType
 	 */

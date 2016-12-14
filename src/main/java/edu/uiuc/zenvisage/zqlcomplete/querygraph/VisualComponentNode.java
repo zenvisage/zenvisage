@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.zql.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
@@ -92,7 +94,17 @@ public class VisualComponentNode extends QueryNode{
 		String name = this.getVc().getName().getName();
 
 		// CHECK THIS OUTPUT
-		this.getLookUpTable().put(name, sqlQueryExecutor.getVisualComponentList());
+		AxisVariable axisVar = (AxisVariable) lookuptable.get(z.getVariable());
+		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
+		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length >0) {
+			double[] scores = axisVar.getScores();
+			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
+				VisualComponent vc = vcList.getVisualComponentList().get(i);
+				vc.setScore(scores[i]);
+				vc.setzAttribute(z.getAttribute());
+			}
+		}
+		this.getLookUpTable().put(name, vcList);
 		System.out.println("vcList for node "+ name);
 		System.out.println(sqlQueryExecutor.getVisualComponentList());
 		System.out.println("hi");
