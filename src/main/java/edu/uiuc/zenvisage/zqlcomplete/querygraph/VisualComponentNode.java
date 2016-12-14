@@ -101,8 +101,14 @@ public class VisualComponentNode extends QueryNode{
 			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
 				VisualComponent vc = vcList.getVisualComponentList().get(i);
 				vc.setScore(scores[i]);
-				vc.setzAttribute(z.getAttribute());
+				vc.setzAttribute(axisVar.getAttribute());
 			}
+		}
+		else {
+			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
+				VisualComponent vc = vcList.getVisualComponentList().get(i);;
+				vc.setzAttribute(z.getAttribute());
+			}			
 		}
 		this.getLookUpTable().put(name, vcList);
 		System.out.println("vcList for node "+ name);
