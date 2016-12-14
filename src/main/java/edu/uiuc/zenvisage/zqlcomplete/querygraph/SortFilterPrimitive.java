@@ -30,7 +30,14 @@ public interface SortFilterPrimitive {
 			this.maxOrMin = maxOrMin;
 		}
 		public int compare(ScoreAndIndex si1, ScoreAndIndex si2) {
-			return (int) ((maxOrMin ) * (si1.score - si2.score));
+			double value = ((maxOrMin ) * (si1.score - si2.score));
+			if (value > 0) {
+				return 1;
+			}
+			else if (value < 0) {
+				return -1;
+			}
+			return 0;
 		}
 	}
 }
