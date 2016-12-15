@@ -1,5 +1,5 @@
-location:string,indexed,F,F,T,F,F,0,Q
-month:float,unindexed,T,F,F,F,F,0,Q
-dayofyear:float,unindexed,T,F,F,F,F,0,Q
-year:float,unindexed,T,F,F,F,F,0,Q
-temperature:float,unindexed,F,T,F,F,F,0,Q
+location:string,indexed,F,F,T,F,F,0,C
+month:int,indexed,T,F,F,F,F,0,O
+dayofyear:int,indexed,T,F,F,F,F,0,O
+year:int,indexed,T,F,F,F,F,0,O
+temperature:float,indexed,T,F,F,F,F,0,O
