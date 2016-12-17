@@ -39,9 +39,9 @@ public class Outlier extends Analysis {
 	 */
 	public Clustering cluster;
 	
-	public Outlier(Executor executor, Database inMemoryDatabase,
-			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, Clustering cluster, ZvQuery args) {
-		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
+	public Outlier(Executor executor, ChartOutputUtil chartOutput, 
+			Distance distance, Normalization normalization, Clustering cluster, ZvQuery args) {
+		super(executor, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.cluster = cluster;
 	}

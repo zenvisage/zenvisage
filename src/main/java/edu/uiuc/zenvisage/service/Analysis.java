@@ -22,7 +22,6 @@ public abstract class Analysis {
 	 * Variables of analysis class
 	 */
 	public Executor executor;
-	public Database inMemoryDatabase;
 	public ChartOutputUtil chartOutput;
 	public Distance distance;
 	public Normalization normalization;
@@ -30,16 +29,13 @@ public abstract class Analysis {
 
 	/**
 	 * @param executor
-	 * @param inMemoryDatabase
 	 * @param chartOutput
 	 * @param distance
 	 * @param normalization
 	 */
-	public Analysis(Executor executor, Database inMemoryDatabase,
-			ChartOutputUtil chartOutput, Distance distance,
+	public Analysis(Executor executor, ChartOutputUtil chartOutput, Distance distance,
 			Normalization normalization, ZvQuery args) {
 		this.executor = executor;
-		this.inMemoryDatabase = inMemoryDatabase;
 		this.chartOutput = chartOutput;
 		this.distance = distance;
 		this.normalization = normalization;
@@ -66,20 +62,6 @@ public abstract class Analysis {
 	 */
 	public void setExecutor(Executor executor) {
 		this.executor = executor;
-	}
-
-	/**
-	 * @return the inMemoryDatabase
-	 */
-	public Database getInMemoryDatabase() {
-		return inMemoryDatabase;
-	}
-
-	/**
-	 * @param inMemoryDatabase the inMemoryDatabase to set
-	 */
-	public void setInMemoryDatabase(Database inMemoryDatabase) {
-		this.inMemoryDatabase = inMemoryDatabase;
 	}
 
 	/**
