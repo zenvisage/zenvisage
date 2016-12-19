@@ -1,6 +1,8 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
@@ -96,13 +98,10 @@ public class VisualComponentNode extends QueryNode{
 		// CHECK THIS OUTPUT
 		AxisVariable axisVar = (AxisVariable) lookuptable.get(z.getVariable());
 		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
-		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length >0) {
+		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length > 0) {
 			double[] scores = axisVar.getScores();
-			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
-				VisualComponent vc = vcList.getVisualComponentList().get(i);
-				vc.setScore(scores[i]);
-				vc.setzAttribute(axisVar.getAttribute());
-			}
+			List<String> values = axisVar.getValues();
+			sortVisualComponentList(vcList, scores, values, axisVar.getAttribute());
 		}
 		else {
 			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
@@ -114,6 +113,33 @@ public class VisualComponentNode extends QueryNode{
 		System.out.println("vcList for node "+ name);
 		System.out.println(sqlQueryExecutor.getVisualComponentList());
 		System.out.println("hi");
+	}
+	
+	/**
+	 * SQLExecutor will return vcList, with the visualComponents in alphabetical order.
+	 * We want to return the list of VisualComponents in the same order as the scores.
+	 * First, I create a hashmap of (value, VC) eg (NY, VisualComponent)
+	 * Then, I used the sorted scores and values arrays to grab the correct VC to create a new vcList of correct order
+	 * This would be O(n), and would not require resorting
+	 * @param vcList
+	 * @param scores sorted list of scores eg [0.0, 0.1, 0.2] 
+	 * @param values sorted list of values eg [CA, MA, NY]	 */
+	public void sortVisualComponentList(VisualComponentList vcList, double[] scores, List<String> values, String zAttribute) {
+		HashMap<String, VisualComponent> mapping = new HashMap<String, VisualComponent>();
+		ArrayList<VisualComponent> outputList = new ArrayList<VisualComponent>();
+		
+		for (VisualComponent vc : vcList.getVisualComponentList()) {
+			mapping.put(vc.getZValue().getStrValue(), vc);		// NOTE: if we have multiple of same zvalue, this keeps latest one
+		}
+		
+		for (int i = 0; i < scores.length; i++) {
+			VisualComponent vc = mapping.get(values.get(i));
+			vc.setScore(scores[i]);
+			vc.setzAttribute(zAttribute);
+			outputList.add(vc);
+		}
+		
+		vcList.setVisualComponentList(outputList);
 	}
 
 	public VisualComponentQuery getVc() {
