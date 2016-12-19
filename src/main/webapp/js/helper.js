@@ -40,10 +40,11 @@ function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = tru
     var xData = userQueryResults[count]["xData"];
     var yData = userQueryResults[count]["yData"];
 
-    var xlabel = userQueryResults[count]["xType"];
-    var ylabel = userQueryResults[count]["yType"];
-    var zlabel = userQueryResults[count]["zType"];
-
+    var xlabel = replaceAll(userQueryResults[count]["xType"], "'", "");
+    var ylabel = replaceAll(userQueryResults[count]["yType"], "'", "");
+    var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", "");
+    var zlabel = replaceAll(userQueryResults[count]["title"], "'", "");
+    
     var xRange = userQueryResults[count]["xRange"];
     //var similarityDistance = userQueryResults[count]["distance"];
     var similarityDistance = userQueryResults[count]["normalizedDistance"];
@@ -133,7 +134,7 @@ function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = tru
             "translate(" + (width/2) + " ," +
            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .text(zlabel + " (" + similarityDistance.toFixed(2) + ")" );
+      .text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
 
     graph.append("text")
       .attr("transform",
@@ -194,6 +195,10 @@ function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = tru
     }
   });
 
+}
+
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
 }
 
 function displayRepresentativeResultsHelperNew( representativePatternResults )
