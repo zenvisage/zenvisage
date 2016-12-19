@@ -34,6 +34,30 @@ public class GraphExecutionTest {
 		}
 		
 	}
+
+	@Test
+	public void TestIncreasingQueryExecution() {
+		//String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'Year'\"]},\"y\":{\"attributes\":[\"'SoldPrice'\"]},\"z\":{\"attribute\":\"'State'\",\"values\":[\"*\"]}}]}";
+		//String arg = "{\"zqlRows\":[{\"name\":{\"name\":\"f1\",\"output\":false,\"sketch\":false},\"x\":{\"variable\":\"\",\"attributes\":\"Year\",\"values\":[\"'Year'\"]},\"y\":{\"variable\":\"\",\"attribute\":\"SoldPrice\",\"values\":[\"'SoldPrice'\"]},\"z\":{\"variable\":\"\",\"attribute\":\"State\",\"values\":[\"*\"],\"expression\":\"\"},\"processe\":{\"variables\":[],\"method\":\"\",\"axis\":[],\"count\":\"\",\"metric\":\"\",\"arguments\":[],\"parameters\":{}},\"viz\":{\"variable\":\"\",\"type\":[],\"parameters\":[]},\"sketchPoints\":null,\"output\":false,\"constraint\":[]}]}";
+		String arg = "{\"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"processe\":{\"variables\":[\"v1\"],\"method\":\"T\",\"axisList1\":[\"z1\"],\"axisList2\":[],\"count\":\"40\",\"metric\":\"argmax\",\"arguments\":[\"f1\"]}},{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"v1\",\"values\":[]}}],\"db\":\"real_estate\"}";
+		try {
+			ZvMain zvMain = new ZvMain();
+			System.out.println("testing Increasing query");
+			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			System.out.println("Output");
+			System.out.println(outputGraphExecutor);
+			
+			
+			//String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
+			//System.out.println("Old Output");
+			//System.out.println(outputOldExecutor);
+			
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	@Test
 	public void TestCrossProductProcessQueryExecution() {

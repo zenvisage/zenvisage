@@ -4,7 +4,11 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.util.FastMath;
 
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
@@ -30,7 +34,7 @@ public class TIncreasingness implements T {
 		ArrayList<String> singleAxisvarsList = new ArrayList<String>();		
 		for (int i = 0; i < f1List.size(); i++) {
 			singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
-			scores.add(getTValue(f1List.get(i)));
+			scores.add(getTestValue(f1List.get(i)));
 		}
 		axisvars.add(singleAxisvarsList);
 		AxisVariableScores axisVariableScores = new AxisVariableScores(axisvars, scores);
@@ -61,5 +65,59 @@ public class TIncreasingness implements T {
 		
 		double slope = (xValues.size()*1.0 * sumXY - sumX*sumY) / (xValues.size()*1.0*sumXSquare - Math.pow(sumX, 2));
 		return slope;
+	}
+	
+	public double getTestValue(VisualComponent v) {
+		ArrayList <WrapperType> xValues = v.getPoints().getXList();
+		ArrayList <WrapperType> yValues = v.getPoints().getYList();
+		
+		if (xValues.size() == 0 || xValues.size() != yValues.size()) {
+			return Double.MIN_VALUE;
+		}
+		
+		double[] xNormalized = normalize(xValues);
+		double[] yNormalized = normalize(yValues);
+		
+		double sumSlope = 0;
+		for (int i = 0; i < xValues.size() - 1; i += 1) {
+			double x = xNormalized[i];
+			double y = yNormalized[i];
+
+			double x2 = xNormalized[i+1];
+			double y2 = yNormalized[i+1];
+			
+			sumSlope += (y2 - y) / (x2 - x);
+		}
+		
+		double temp = sumSlope / xValues.size();
+		System.out.println(v.getZValue());
+		System.out.println("TStuff");
+		System.out.println(xValues.toString());
+		System.out.println(Arrays.toString(xNormalized));
+		System.out.println(yValues.toString());
+		System.out.println(Arrays.toString(yNormalized));
+		System.out.println(temp);
+		return temp;
+	}
+	
+	// Basic ZScore normalization
+	public double[] normalize(ArrayList<WrapperType> y) {
+		double[] values = new double[y.size()];
+		for(int i = 0; i < y.size(); i++){
+			values[i] = y.get(i).getNumberValue();
+		}
+		
+		double mean = StatUtils.mean(values);
+		double std = FastMath.sqrt(StatUtils.variance(values));
+		
+		for(int i = 0; i < values.length; i++) {
+			if (std == 0) {
+				values[i] = 0;
+			}
+			else {
+				values[i] = (values[i] - mean) / std;
+			}
+		}
+		return values;
 	}
 }
