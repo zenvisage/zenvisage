@@ -55,7 +55,7 @@ function conVal() {
 	return restr;
 }
 
-// a valid operator symbol 
+// a valid operator symbol
 function opVal() {
 	var restr = orExp([
 			symVal('\\+'),
@@ -120,7 +120,7 @@ function orExp(expressions) {
 		for (var i = 1; i < expressions.length; i++) {
 			restr += ")|(?:";
 			restr += expressions[i];
-		}	
+		}
 	}
 	return restr+"))";
 }
@@ -139,7 +139,7 @@ function setExp(expression) {
 
 }
 
-// a list or just one expressions, will reocrd
+// a list or just one expressions, will record
 function lstExp(expression) {
 
 	var restr = "(?:("+expression+"(?:,"+expression+")*))";
@@ -156,7 +156,10 @@ function funExp(expression) {
 
 // process expression will record
 function proExp(expression) {
-	var restr = "(?:("+proVal()+")(?:_"+lstExp(varVal())+")*(?:\\["+lstExp(opExp(recExp(orExp([intVal(), conVal()]))))+"\\])*"+funExp(expression)+")";
+	var restr_pairwise = "(?:("+proVal()+")(?:_\\{"+lstExp(varVal())+"\\})*(?:\\["+lstExp(opExp(recExp(orExp([intVal(), conVal()]))))+"\\])*"+funExp(expression)+")";
+	var restr_cross = "(?:("+proVal()+")(?:_\\{"+lstExp(varVal())+"\\}x)(?:\\{"+lstExp(varVal())+"\\})*(?:\\["+lstExp(opExp(recExp(orExp([intVal(), conVal()]))))+"\\])*"+funExp(expression)+")";
+	var restr = orExp([restr_pairwise, restr_cross]);
+	//var restr = restr_pairwise;
 	return restr;
 }
 
@@ -171,8 +174,3 @@ function opExp(expression) {
 function recExp(expression) {
 	return "("+expression+")";
 }
-
-
-
-
-

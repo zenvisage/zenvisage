@@ -110,8 +110,8 @@ public class ZQLExecutor {
 					z.substring(1, z.length() - 1));
 		}
 
-		for (String x : zqlRow.getX().getValues())
-			for (String y : zqlRow.getY().getValues()) {
+		for (String x : zqlRow.getX().getAttributes())
+			for (String y : zqlRow.getY().getAttributes()) {
 				ZQLRowVizResult zQLRowVizResult = new ZQLRowVizResult();
 				Query q = new Query("query").setGrouby(z + "," + x)
 						.setAggregationFunc("avg").setAggregationVaribale(y);
@@ -170,7 +170,7 @@ public class ZQLExecutor {
 		PSQLDatabase zenvisageDB = new PSQLDatabase();
 
 		// get the z axis
-		String zColumn = zqlRow.getZ().getColumn().replace("'","");
+		String zColumn = zqlRow.getZ().getAttribute().replace("'","");
 		String zVariable = zqlRow.getZ().getVariable();
 		List<String> zValues = zqlRow.getZ().getValues();
 
@@ -188,7 +188,7 @@ public class ZQLExecutor {
 			System.out.println(zqlRow.getName().getName()+" "+zqlRow.getZ().getVariable());
 			zValues = zQLTableResult.getVariable(zqlRow.getZ().getVariable()).getValues();
 			zColumn = zQLTableResult.getVariable(zqlRow.getZ().getVariable()).getName();
-			zqlRow.getZ().setColumn(zColumn);
+			zqlRow.getZ().setAttribute(zColumn);
 		}
 		
 		// empty the list to specify all z values
@@ -199,8 +199,8 @@ public class ZQLExecutor {
 		String xVariable = zqlRow.getX().getVariable();
 		String yVariable = zqlRow.getY().getVariable();
 		
-		List<String> xValues = zqlRow.getX().getValues();
-		List<String> yValues = zqlRow.getY().getValues();
+		List<String> xValues = zqlRow.getX().getAttributes();
+		List<String> yValues = zqlRow.getY().getAttributes();
 		
 		if (!xVariable.equals("")) {
 			if (xValues.isEmpty()) {
@@ -229,8 +229,8 @@ public class ZQLExecutor {
 			for (String y : yValues) {
 				// construct an sql query from zql row
 				ZQLRow tempRow = new ZQLRow(zqlRow);
-				tempRow.getX().setValues(new ArrayList<String>(Arrays.asList(x)));
-				tempRow.getY().setValues(new ArrayList<String>(Arrays.asList(y)));
+				tempRow.getX().setAttributes((new ArrayList<String>(Arrays.asList(x))));
+				tempRow.getY().setAttributes(new ArrayList<String>(Arrays.asList(y)));
 				SQLQuery query = new SQLQuery();
 				query.constructFromZQL(tempRow, zQLTableResult);
 
@@ -333,7 +333,7 @@ public class ZQLExecutor {
 		 * Store the process result values into corresponding variable in ZQLRow
 		 */
 		ZQLVariable processResult = new ZQLVariable();
-		processResult.setName(zQLRow.getZ().getColumn()); //bug here, need to find column name by visualization given
+		processResult.setName(zQLRow.getZ().getAttribute()); //bug here, need to find column name by visualization given
 		processResult.setValues(zqlRowResult.getZqlProcessResult().getzValues());
 		zQLTableResult.setVariable(zQLRow.getProcesse().getVariables().get(0), processResult);
 

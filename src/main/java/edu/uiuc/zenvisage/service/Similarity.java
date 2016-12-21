@@ -43,9 +43,9 @@ public class Similarity extends Analysis {
 	double[][] overlappedAndInterpolatedQuery = null;
 	boolean considerRange;
 
-	public Similarity(Executor executor, Database inMemoryDatabase,
-			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
-		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
+	public Similarity(Executor executor, ChartOutputUtil chartOutput, 
+			Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
+		super(executor, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;
@@ -53,9 +53,8 @@ public class Similarity extends Analysis {
 		this.considerRange = false;
 	}
 	
-	public Similarity(Executor executor, Database inMemoryDatabase,
-			ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[][] overlappedAndInterpolatedQuery) {
-		super(executor, inMemoryDatabase, chartOutput, distance, normalization, args);
+	public Similarity(Executor executor, ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[][] overlappedAndInterpolatedQuery) {
+		super(executor, chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.paa = paa;
 		this.dataReformatter = dataReformatter;

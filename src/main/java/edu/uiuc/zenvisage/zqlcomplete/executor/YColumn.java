@@ -6,14 +6,35 @@ import java.util.List;
 public class YColumn {
 	
 	private String variable;
-	private List<String> values;
+
+
+	private List<String> attributes;
 	
-	public YColumn(String variable){
-		this.variable = variable;
+	/**
+	 * @return the attributes
+	 */
+	public List<String> getAttributes() {
+		return attributes;
 	}
+	/**
+	 * @param attributes the attributes to set
+	 */
+	public void setAttributes(List<String> attributes) {
+		this.attributes = attributes;
+	}
+	public YColumn(String variable){
+		//this.variable = variable;
+		this.attributes = new ArrayList<String>();
+		this.attributes.add(variable);
+	}
+	
+	public YColumn(List<String> attributes){
+		this.attributes = attributes;
+	}
+	
 	public YColumn() {
 		variable = "";
-		values = new ArrayList<String>();
+		attributes = new ArrayList<String>();
 	}
 	
 	public String getVariable() {
@@ -22,12 +43,5 @@ public class YColumn {
 	public void setVariable(String source) {
 		variable = source;
 	}
-	
-	public List<String> getValues() {
-		return values;
-	}
-	
-	public void setValues(List<String> source) {
-		values = source;
-	}
+
 }

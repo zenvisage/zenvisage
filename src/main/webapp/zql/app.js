@@ -14,7 +14,7 @@ app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
         //console.log(checkConstraints($scope.input.constraints));
         // Create a copy of parsed version of input for backend
         $scope.copy = angular.copy($scope.input);
-        
+
         if (checkInput($scope.copy)) {
             console.log("request: ",$scope.copy);
             // Add to rows for front-end display
@@ -52,13 +52,13 @@ function checkInput(input) {
     if (essentialColumns === undefined) {
         console.error("X or Y or Z Column cannot be empty.");
         return false;
-    }    
+    }
 
     input.name = parseName(input.name);
     input.x = parseX(input.x);
     input.y = parseY(input.y);
 
-    
+
     var constraints = null, viz = null, processe = null, z = null;
     if (input.z !== undefined) {
         input.z = parseZ(input.z);
@@ -67,11 +67,11 @@ function checkInput(input) {
         input.constraints = parseConstraints(input.constraints);
     }
     if (input.viz !== undefined) {
-        input.viz = parseViz(input.viz);  
+        input.viz = parseViz(input.viz);
     }
     if (input.processe !== undefined) {
         input.processe = parseProcess(input.processe);
     }
-    
+
     return (name && x && y && z && constraints && viz && processe) !== undefined;
 }

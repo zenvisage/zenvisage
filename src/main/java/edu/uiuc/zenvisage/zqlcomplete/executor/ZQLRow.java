@@ -32,7 +32,7 @@ public class ZQLRow {
 		processe = new Processe();
 		viz = new VizColumn();
 	}
-	
+
 	public ZQLRow(XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
 		this.x = x;
 		this.y = y;
@@ -51,14 +51,6 @@ public class ZQLRow {
 		viz = source.viz;
 		sketchPoints = source.sketchPoints;
 		
-	}
-	public ZQLRow(Name name, XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz){
-		this.name = name;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.constraints = constraints;
-		this.viz = viz;
 	}
 	
 	/**

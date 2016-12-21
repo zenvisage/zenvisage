@@ -92,7 +92,7 @@ function parseX(input) {
     try {
         var x = {
             variable: found[2] || found[4],
-            values: parseList(found[1] || found[3] || found[5])
+            attributes: parseList(found[1] || found[3] || found[5])
         };
     }
     catch(err) {
@@ -116,7 +116,7 @@ function parseY(input) {
     try {
         var y = {
             variable: found[2] || found[4],
-            values: parseList(found[1] || found[3] || found[5])
+            attributes: parseList(found[1] || found[3] || found[5])
         };
     }
     catch(err) {
@@ -135,7 +135,7 @@ function parseZ(input) {
 					getExp(orExp([
 								lstExp(varVal()),
 								recExp(varVal()+'.'+varVal())
-							]), 
+							]),
 							orExp([
 								recExp(conVal())+'.'+orExp([
 												recExp(symVal('\\*')),
@@ -157,7 +157,7 @@ function parseZ(input) {
     try {
         var z = {
             variable: found[1] || found[6] || found[7],
-            column: found[2] || found[4] || found[8] || found[12],
+            attribute: found[2] || found[4] || found[8] || found[12],
             values: parseList(found[3] || found[5] || found[9] || found[10] || found[11] || found[13] || found[14]),
             expression: undefined //need to add parser for expression later
         };
@@ -239,16 +239,42 @@ function parseProcess(input) {
 
 	var re = new RegExp(restr);
     var found = input.match(re);
+	console.log("process");
     console.log(found);
     try {
-        var processe = {
-            variables: parseList(found[1]),
-            method: found[2] || found[4],
-            axis: found[5],
-            count: found[9],
-            metric: found[13],
-            arguments: parseList(found[3]||found[14])
-        }
+		var processe = undefined;
+
+		if (found[4] != undefined) {
+	        processe = {
+				/*
+	            variables: parseList(found[1]),
+	            method: found[2] || found[4],
+	            axis: found[5],
+	            count: found[9],
+	            metric: found[13],
+	            arguments: parseList(found[3]||found[14])
+				*/
+				variables: parseList(found[1]),
+				method: found[13],
+				axisList1: parseList(found[5]),
+				axisList2: [],
+				count: found[9],
+				metric: found[2] || found[4], // found[2] should support IncTrends, found[4] supports DEuclidean
+				arguments: parseList(found[3]||found[14]) // found[3] = (f1) found[14] = (f1,f2)
+	        }
+		}
+		else if (found[15] != undefined) {
+			processe = {
+				// cross product case!
+				variables: parseList(found[1]),
+				method: found[25],
+				axisList1: parseList(found[16]),
+				axisList2: parseList(found[17]),
+				count: found[21],
+				metric: found[15],
+				arguments: parseList(found[26])
+			}
+		}
     }
     catch(err) {
         console.error("Process Column Syntax Error: "+err);

@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class ZQLTable {
 	private List<ZQLRow> zqlRows;
+	private String db;
 	
 	public ZQLTable() {
 		zqlRows=new ArrayList<>();
@@ -20,6 +21,14 @@ public class ZQLTable {
 
 	public void setZqlRows(List<ZQLRow> zqlRows) {
 		this.zqlRows = zqlRows;
+	}
+	
+	public String getDb() {
+		return db;
+	}
+
+	public void setDb(String db) {
+		this.db = db;
 	}
 
 }

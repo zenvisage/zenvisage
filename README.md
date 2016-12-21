@@ -1,9 +1,5 @@
 # Overview
-Zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
-
-Zenvisage is being developed by a team of undergraduate and graduate students headed by Prof. Aditya Parameswaran, along with a number of collaborators, including Prof. Karrie Karahalios and Prof. Samuel Madden. The list of contributors includes: Tarique Siddiqui, John Lee, Albert Kim, Edward Xue, Charaon Wang, Yuxuan Zou, and Changfeng Liu.
-
-Please reach out to the lead PhD student, Tarique Siddiqui (tsiddiq2@illinois.edu) if you'd like to either contribute, or be a beta tester of Zenvisage!
+zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
 
 For more details, please look at our [Project Webpage] (http://zenvisage.github.io/)
 
@@ -39,18 +35,18 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 (2) Postgres server must contain a user with:
 
 username  postgres
-
 password: zenvisage
 
-(3) Run the following queries for setting the meta-tables.
 
+Method One:
+Run clean up query and setup query:
+\connect postgres;
 DROP schema public cascade;
-
 CREATE schema public;
-
 CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
-
 CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);
+
+
 
 ## Deploy code
 *  sh run.sh
@@ -66,10 +62,29 @@ The file upload back-end will auto creat csv table, insert metafilelocation tabl
 Now you can select the dataset from dropdown on front-end plotting and similarity search;
 
 
+Method Two:(Need Revamp, don't use this for now) (Fast loading 3 databases without uploading schema and files 3 times and wait)
 
+(1)
+Using Command Line Tools with Postgres.app
+Configure your $PATH
+Postgres.app includes many command line tools. If you want to use them, you must configure the $PATH variable.
 
+If you are using bash (default shell on OS X), add the following line to ~/.bash_profile:
 
+source  ~/.bash_profile:
 
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+
+(2)
+zevisange.sql is at zenvisage project root folder
+
+First drop all schema in postgres terminal: DROP schema public cascade;
+
+use command in regular terminal not in postgres terminal:
+
+psql postgres < /path_to_zevnisage.sql/zenvisage.sql
+
+(to dump database: use pg_dump postgres > /path_to_zevnisage.sql/zenvisage.sql)
 
 # Architecture
 

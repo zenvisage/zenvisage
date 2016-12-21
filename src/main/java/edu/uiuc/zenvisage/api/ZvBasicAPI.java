@@ -108,14 +108,14 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
 	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
-		System.out.println(arg);
+//		System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}
 
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)
 	@ResponseBody
 	public String getformdata(@RequestParam(value="query") String arg) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException, SQLException {
-		System.out.println(arg);
+//		System.out.println(arg);
 		return zvMain.getInterfaceFomData(arg);
 	}
 
@@ -140,7 +140,13 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/executeZQLComplete", method = RequestMethod.GET)
 	@ResponseBody
 	public String executeZQLComplete(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
-		return zvMain.runZQLCompleteQuery(arg);
+		// return zvMain.runZQLCompleteQuery(arg);
+		// for testing my query graph executor with zql.html
+		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
+		String outputGraphExecutor = zvMain.runQueryGraph(arg);
+		
+		// TODO change to graph executor
+		return outputGraphExecutor;
 	}
 
 

@@ -36,7 +36,7 @@ public class UploadHandleServlet extends HttpServlet {
                 return;
             }
             this.fileList = upload.parseRequest(request);
-            System.out.println(fileList.size());
+//            System.out.println(fileList.size());
             for(FileItem item : fileList){
                	if(item.isFormField()){
                   String value = item.getString("UTF-8");
@@ -46,7 +46,7 @@ public class UploadHandleServlet extends HttpServlet {
             		String filename = item.getName();
             		if(filename==null) continue;
             		File newFile = new File(filename);
-            		System.out.println(newFile.getCanonicalPath());
+//            		System.out.println(newFile.getCanonicalPath());
             		item.write(newFile);
                     message = "success";
                     this.names.add(newFile.getAbsolutePath().toString());
@@ -58,7 +58,7 @@ public class UploadHandleServlet extends HttpServlet {
             e.printStackTrace();
             
         }
-        System.out.println(message);
+//        System.out.println(message);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -1,1214 +1,359 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="vdb">
+<html lang="en" ng-app="zenvisage">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Tarique,Lijin,Xiaofo,John,Edward">
-
     <title>Visual Data Exploration</title>
-
-    <!-- CSS libs -->
-    <link href="dist/css/bootstrap.css" rel="stylesheet">
-    <link href="dist/css/font-awesome.min.css" rel="stylesheet">
-    <link href="dist/css/bootstrap-theme.min.css" rel="stylesheet" >
-    <link href="assets/magicsuggest/magicsuggest-min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="custom.css" rel="stylesheet">
-    <script src="js/globalvars.js"></script>
-
-    <!-- Liraries required to load -->
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script src="assets/js/jquery.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
-
-    <!-- My External Files -->
-    <script src="js/vdb.js"></script>
-
-    <!-- Vega Files -->
-    <!--<script src="vega-master/examples/lib/d3.v3.min.js"></script>-->
-    <script src="vega-master/vega.js"></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/draw.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
   </head>
-
   <body>
-  <!--
-  <div class = "nav_before">
-    <p id= "zenvisage">zenvisage</p>
-    <div class = "textbox">
-    Please select dataset:
-      <ul id="front_dataset">
-        <li class="front_dataset" id="INCOME">Income</li>
-        <li class="front_dataset" id="REAL_ESTATE">Real Estate</li>
-        <li class="front_dataset" id="IRIS">Iris</li>
-      </ul>
-    </div>
-  </div>
-  -->
+    <!-- this div contains everything in the body -->
 
-
-  <div id="everything">
-    <div id="left-bar">
-      <div id="sidebar" class="interface">
-        <h4>
-      zenvisage
-        </h4>
-        <hr>
-        <div>
-          <h5 id="dataset-header">Datasets <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
-          <ul id="dataset">
-            <li class="dataset" id="income">Income</li>
-            <li class="dataset" id="real_estate">Real Estate</li>
-            <li class="dataset" id="iris">Iris</li>
-          </ul>
-        </div>
-
-        <hr>
-
-        <div>
-          <h5 id="category-list-header">Category <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
-          <ul id="category-list">
-          </ul>
-        </div>
-
-        <hr>
-
-        <div>
-          <h5 id="x-axis-header">X-axis <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
-          <ul id="x-axis">
-          </ul>
-        </div>
-
-        <hr>
-
-        <div>
-          <h5 id="y-axis-header">Y-axis <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
-          <ul id="y-axis"></ul>
-        </div>
-        <hr>
-        <div class="info-text"><b>Aggregation Method</b></div>
-        <div class="radio">
-          <form>
-            <input type="radio" name="aggregation-method" value="sum"><label>Sum</label><br>
-            <input type="radio" name="aggregation-method" value="avg" checked><label>Average</label>
-          </form>
-        </div>
-        <hr>
-      </div> <!-- end side bar -->
-
-      <div id="predicate-col">
-        <div>
-          <h5 id="predicate-column-header">Predicate <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h5>
-          <ul id="predicate-column"></ul>
-        </div>
-
-        <div class = "row">
-          <div class = "col-md-5">
-            <div class="dropdown" >
-            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" onclick= "fillPredicateDropdown()">Value
-            <span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-              <li role="presentation"><a role="menuitem" tabindex="-1" id = "category"></a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" id = "xaxis"></a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" id = "yaxis"></a></li>
-            </ul>
+    <div id="everything">
+      <!-- Modal -->
+      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
+        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+              </div>
+              <div class="modal-body">
+                Dataset name<input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                <div class="row">
+                  <div class="col-md-5">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
+                  </div>
+                  <div class="col-md-5 col-md-offset-1">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema">
+                  </div>
+                </div>
+              </div>
+                <div class="modal-footer">
+                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                </div>
             </div>
           </div>
-          <div class = "col-md-2">
-            <select id="selection">
-              <ul>
-                <option><li class="operator active" id="="> = </li></option>
-                <option><li class="operator" id="!="> != </li></option>
-              </ul>
+        </div>
+      </form>
+
+      <!-- this div contains the left-bar with the data information -->
+      <div id="left-bar">
+        <div id="sidebar" class="interface" ng-controller="datasetController">
+          <h4>
+            ZenVisage
+          </h4>
+          <div class="dropdown" id="dataset">
+            <h5><b>Dataset</b><button type="button" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <!-- Button trigger modal -->
+
+            <select class="form-control" ng-change="onDatasetChange()" ng-model="selectedDataset" id="dataset-form-control">
+              <option value="real_estate">Real Estate</option>
+              <option value="flights">flights</option>
+              <option value="cmu">cmu</option>
+              <option value="sales">sales</option>
+              <option value="weather">weather</option>
             </select>
           </div>
-
-          <div class = "col-md-1"  id="predicate-value">
-            <div>
-              <input class="predicate-value" type="text" size = "10" name="predicate-value" value="" onchange = "onSubmit()">
+          <div>
+            <h5><b>Category</b></h5>
+            <div ng-repeat="category in categories">
+              <label>
+                <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
+              </label>
             </div>
           </div>
-        </div>
-        <div class = "row"></div>
-      </div>
-
-    </div> <!-- end left bar -->
-
-    <div id="trend-bar">
-      <div>
-        <h5 id="exTrendTitle">Existing Trends
-            <span data-toggle="modal" data-target="#right-bar"class="glyphicon glyphicon-cog cog" aria-hidden="true"></span>&nbsp;
-        </h5>
-          <div class="btn-group" role="group" aria-label="..." id="changeButtons" style="display : none">
-          <button type="button" class="btn btn-default" onclick = "changeExistingTrends(0)" id = "0">Column-A</button>
-          <button type="button" class="btn btn-default" onclick = "changeExistingTrends(1)" id = "1">Column-B</button>
-        </div>
-        <div id="existing-trends"></div>
-      </div>
-    </div>
-
-    <!-- Modal content-->
-    <div class="modal fade" id="right-bar" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Select Search Method</h4>
+          <div>
+            <h5><b>X-axis</b></h5>
+            <div ng-repeat="xAxisItem in xAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
+              </label>
+            </div>
           </div>
-          <div class="modal-body">
-            <div class="info-text"><b>Select Search Method</b></div>
-            <div class="radio">
-              <form id="search-method">
-                <input class="active" type="radio" name="search-method" value="SimilaritySearch" checked onclick=updateBothTrends(true)><label>Similarity Search</label><br>
-                <input type="radio" name="search-method" value="Outlier" onclick=updateBothTrends(true)><label> Dissimilar Search</label>
-              </form>
+          <div>
+            <h5><b>Y-axis</b></h5>
+            <div ng-repeat="yAxisItem in yAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDataAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedYAxis"/><span>{{yAxisItem}}</span>
+              </label>
             </div>
-            <hr>
-            <div class = "checkbox">
-              <label><input type = "checkbox" id = "ignoreX" onclick=updateBothTrends()>Ignore X axis scale</label>
+          </div>
+        </div> <!-- end side bar -->
+      </div> <!-- end left bar -->
+
+      <!-- this div contains the everything in the middle (aside from the left nav bar) -->
+      <div id="middle-bar">
+
+        <!-- this div contains the drawng interface and the zql table -->
+        <div class="row" id="top-middle-bar" ng-controller="options-controller">
+
+          <!-- drawing interface -->
+          <div class="col-md-4">
+            <div class="input-group" id="graph-buttons" >
+              <div class="btn-group" id="left-button-group">
+                <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
+<!--                   <option>Line</option>
+                  <option>Scatter</option>
+                  <option>Bar</option> -->
+                </select>
+              </div>
+
+              <div class="btn-group" >
+                <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+
+              </div>
+
+              <div class="btn-group" ng-show="zqltable">
+                <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
+                <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
+                <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
+              </div>
+<!--               <div class="btn-group" >
+                <button type="button" name="options" ng-show="zqltable" ng-click="submitZQLTable()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Submit</button>
+              </div>
+ -->
             </div>
-            <div class = "checkbox">
-              <label><input type = "checkbox" id = "ignoreY" checked onclick=updateBothTrends(true)>Ignore Y axis scale</label>
+
+            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'"></div>
+            <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="chartSettings.selectedChartOption=='Scatter'">
+              <div class="col-md-11">
+                  <svg id="main-chart">
+                  </svg>
+              </div>
+              <div class="row col-md-1">
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn undo disabled" ng-click="scatterService.undoPolyPoints()"><a><i class="fa fa-undo" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn green-polygon disabled" ng-click="scatterService.changePolygonColorGreen()"><a style="color: forestgreen"><i class="fa fa-square" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn red-polygon disabled" ng-click="scatterService.changePolygonColorRed()"><a style="color: indianred"><i class="fa fa-square" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
+                  </div>
+              </div>
+          </div>
+
+
+
+          </div>
+          <!-- drawing interface END-->
+
+          <div class="col-md-8" id="table-div">
+            <div ng-show="zqltable" ng-controller="zqlTableController">
+              <table id="zql-table" class="table zql-table">
+                <thead>
+                  <tr>
+                    <td><b></b></td>
+                    <td><b>Name</b></td>
+                    <td><b>X</b></td>
+                    <td><b>Y</b></td>
+                    <td><b>Z</b></td>
+                    <td><b>Constraints</b></td>
+                    <td><b>Process</b></td>
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody>
+<!--                   <tr ng-repeat="query in queries['zqlRows']">
+                    <td>
+                      <a ng-click="removeRow($index)" id="remove-row"><span class="glyphicon glyphicon glyphicon-minus-sign"></span></a>
+                    </td>
+                    <td>{{query.name}}</td>
+                    <td>{{query.x}}</td>
+                    <td>{{query.y}}</td>
+                    <td>{{query.z}}</td>
+                    <td>{{query.constraints}}</td>
+                    <td>{{query.viz}}</td>
+                    <td>{{query.processe}}</td>
+                  </tr> -->
+                  <tr id="table-row-1" class="tabler">
+                    <td>
+
+                    </td>
+                    <td>
+                      <input class="form-control zql-table name" ng-model="input.name" type="text" size="3" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table x-val" ng-model="input.x" type="text" size="15" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table y-val" ng-model="input.y" type="text" size="15" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table z-val" ng-model="input.z" type="text" size="15" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table constraints" ng-model="input.constraints" type="text" size="10" value=" ">
+                    </td>
+                    <!-- <td>
+                      <input class="form-control zql-table viz" ng-model="input.viz" type="text" size="1" value=" ">
+                    </td> -->
+                    <td>
+                      <input class="form-control zql-table process" ng-model="input.processe"type="text" size="20" value=" ">
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <a ng-click="addRow()" id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
+                    </td>
+                    <td>
+                      <a ng-click="submitZQL()">Submit</a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
-            <hr>
-            <div id="num-results">
-              <div class="info-text"><b>Number of Results</b></div>
-              <div>
-                <input class="num-results" type="text" name="number-of-results" value="50" onchange = "onSubmit()">
+            <div ng-show="!zqltable" class="row">
+              <div class="col-md-3">
+                <b>Similarity</b>
+                <div class="radio">
+                  <form>
+                    <input ng-model="similarity" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
+                    <input ng-model="similarity" id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
+                    <input ng-model="similarity" id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label><br>
+                    <input ng-model="similarity" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
+                  </form>
+                </div>
+                <b>Representative/Outlier</b>
+                <div class="radio">
+                  <form>
+                    <input ng-model="representative" id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
+                  </form>
+                </div>
+
+                <div>
+                  <div class="info-text"><b>Input equation</b></div>
+                  <div class="input-group">
+                    <input ng-model="equation" type="text" class="form-control">
+                    <div class="input-group-btn">
+                      <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
+                    </div>
+                  </div>
+                </div>
+                <!--
+                <div class="info-text"><b>Number of Segments</b></div>
+                  <div>
+                    <input class="num-segments" type="text" name="number-of-segments" value="30">
+                  </div>
+                -->
+              </div>
+              <div class="col-md-3">
+                <div class="info-text"><b>Aggregation Method</b></div>
+                <div class="radio">
+                  <form>
+                    <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
+                    <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
+                  </form>
+                </div>
+
+                <div id="num-results">
+                  <div class="info-text"><b>Number of Results</b></div>
+                  <div>
+                    <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
+                  </div>
+                </div>
+
+                <br>
+                <div class="info-text"><b>Options</b></div>
+                <div class="checkbox">
+                  <form>
+                    <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
+                  </form>
+                  <form>
+                    <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
+                  </form>
+                </div>
+
+                <!--
+                <div id="math-equation">
+                  <div class="info-text"><b>Custom Equation</b></div>
+                  <div>
+                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
+                  </div>
+                </div>
+                -->
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+
         </div>
-      </div>
-    </div>
+        <!-- drawng interface + zql table END-->
 
-    <div id="middle-bar">
-      <div id="buttons">
-        <div class = "row">
-          <div class = "col-md-5">
-            <div class="btn-group" role="group" aria-label="...">
-              <button type="button" class = "btn btn-info btn-s" id = "cqb-1" >Custom Query Builder</button>
-              <script>
-              $('#cqb-1').on('click', function (){
-                if(!customQuery){
-                    $('#cqb-1').text("Hide Query Builder");
-                    customQuery = true;
-                    $('#new-table').show();
-                    $('#axesChart0').hide();
-                    $('#graphChanger').hide();
-                    if(graphChanger.attr("adder") == "false"){
-                        hideSecondChartElement();
-                    }
-                    if(tableHasSketch){
-                        setNoDataMainChartAxes(tableX,tableY, "");
-                    }
-                }
-                else{
-                    $("#cqb-1").text("Custom Query Builder");
-                    customQuery = false;
-                    $('#new-table').hide();
-                    $('#axesChart0').show();
-                    $('#graphChanger').show();
-                    if(graphChanger.attr("adder") == "false"){
-                        showSecondChartElement();
-                    }
-                    setNoDataMainChartAxes(getXAxis(),getYAxis(), "");
-                }
-              })
-              </script>
-              <button type="button" class = "btn btn-default btn-xs" id = "line-1" >draw</button>
-              <button type="button" class = "btn btn-default btn-xs" id = "modify-1">modify</button>
-              <button type="button" class = "btn btn-default btn-xs" id = "clear-1">clear</button>
-              <button type="button" class = "btn btn-default btn-xs" id = "search">search</button>
-              <button type="button" class = "btn btn-default btn-xs" id = "rect" style= "display: none">rectangle</button>
-              <button type="button" class = "btn btn-default btn-xs" id = "circle" style= "display: none">scatter</button>
-              <button type="button" class = "btn btn-default btn-xs" id = " singlecircle" style= "display: none">circle</button>
-
+        <hr>
+        <div id="bottom-middle-bar">
+          <div class="col-md-12" id="tree-div">
+          </div>
+          <div id="middle-left" class="col-md-6">
+            <h5><b>Results</b></h5>
+            <div>
+              <table id="results-table"></table>
             </div>
-            <select id="sel">
-              <option id ="auto" value="Auto">Recommended</option>
-              <option id ="lineChart" value="Line Chart">Line Chart</option>
-              <option id="barChart" value="Bar Chart">Bar Chart</option>
-              <option id ="scatter" value= "Scatter">Scatter Plot</option>
-            </select>
           </div>
-          <div class="col-md-5" id="search-value">
-            <div id="submit-info-text"><h5>Predicate = </h5></div>
-            <input id="submit-form-1"class="form-control search-value" type="text" size = "10" name="search-value" onchange = "onSubmit()" value="" >
-            <button type="button" class = "btn btn-default btn-s" id="submit-button" onclick = "onSubmit()">Submit</button>
+          <div id="middle-right" class="col-md-6">
+            <div>
+              <table id="representative-table">
+                <tr class="middle-right-headers">
+                  <td><h5><b>Representative patterns </b><span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span></h5>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <table id="outlier-table">
+                <tr class="middle-right-headers">
+                  <td><h5><b>Outliers </b><span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span></h5></td>
+                </tr>
+              </table>
+            </div>
           </div>
-
-          <!-- drawing tools for the second graph (keep these hidden) -->
-          <div class = "col-md-5" ></div>
-          <div class="btn-group" role="group" aria-label="..." id = "drawing-tool2" style="display: none">
-            <button type="button" class = "btn btn-default btn-xs" id = "line-2" >draw</button>
-            <button type="button" class = "btn btn-default btn-xs" id = "modify-2">modify</button>
-            <button type="button" class = "btn btn-default btn-xs" id = "clear-2" >clear</button>
-            <button type="button" class = "btn btn-default btn-xs" id = "rect" style= "display: none">rectangle</button>
-            <button type="button" class = "btn btn-default btn-xs" id = "circle" style= "display: none">scatter</button>
-            <button type="button" class = "btn btn-default btn-xs" id = " singlecircle" style= "display: none">circle</button>
-           </div>
         </div>
       </div>
-
-      <div id="table">
-        <table id="main-graph-area" class="table">
-              <!-- Create Query -->
-          <div class = "row">
-          <tr>
-            <!--  td id="firstDrawChartColumn" style="overflow: hidden;"-->
-            <td id="firstDrawChartColumn">
-              <div id = "scatter"><svg id="scatterplot" style = "width:400; height: 302; z-index:6; display:none; position: absolute;margin-top:6px;"></svg></div>
-
-              <div class="col-md-4" id = "mainChart" style="z-index:6; position:relative;">
-                <div id = "draganddrop" ondrop="drop(event)" ondragover="allowDrop(event)" style="display:none;position: absolute;margin-top:6px;margin-left:60px;z-index:40 ;"></div>
-                <canvas id="tools_sketch" style="display:block;position: absolute; margin-top:6px;margin-left:60px; z-index:1; "></canvas>
-                <!--<div class = "scrollbar-x" id="scrollbar-x">
-                  <div class="force-overflow"> -->
-                    <div id = "bar"><svg id="visualisation" style = "z-index:5; display:none; position: absolute;margin-top:6px;margin-left:60px;"></svg></div>
-                  <!--</div>
-                </div> scrollbar -->
-                <div id ="svgLayer" style="display:none;position: absolute;margin-top:5px; margin-left:60px; z-index:2;">
-                  <svg id="mySvg" style="display:block" viewBox="0 0 409 210">
-                    <path id = "myPath" d="" stroke="#14a9a1" stroke-width="3" fill="none" />
-                    <circle id = "point0" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point1" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point2" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point3" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point4" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point5" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point6" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point7" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point8" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point9" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point10" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point11" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point12" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point13" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point14" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point15" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point16" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point17" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point18" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point19" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point20" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point21" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point22" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point23" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point24" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point25" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point26" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point27" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point28" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <circle id = "point29" class="userPoint" transform="translate(0,0)" r="0"></circle>
-                    <!-- circle id = "point30" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point31" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point32" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point33" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point34" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point35" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point36" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point37" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point38" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point39" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point40" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point41" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point42" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point43" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point44" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point45" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point46" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point47" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point48" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point49" class="userPoint" transform="translate(0,0)" r="2"></circle>
-                    <circle id = "point50" class="userPoint" transform="translate(0,0)" r="2"></circle-->
-
-                  </svg>
-                </div>
-              </div> <!-- mainChart -->
-
-              </td>
-              <td style="vertical-align: middle">
-                <button id="graphChanger" type="button" class="btn btn-default btn-sm" adder = "true">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-              </td>
-              <td id="secondDrawChartColumn" class="secondDrawColumn">
-                <div id = "mainChart1" ></div>
-              <td >
-              <td id="extraSpace">
-              </td>
-            <tr>
-            <td id="axesChart0">
-              <div id="x-axis-select-0"></div>
-              <div id="y-axis-select-0"></div>
-            </td>
-            <td>
-            </td>
-            <td id="axesChart1" class="secondDrawColumn">
-              <div id="x-axis-select-1"></div>
-              <div id="y-axis-select-1"></div>
-
-            </td>
-            <td id="extraSpaceRow2">
-            </td>
-          </tr>
-          </div> <!-- end row -->
-        </table> <!-- END TABLE -->
-
-      <div id="new-table" style="display:none" >
-        <table id="cqbtable" class="table table-bordered table-condensed" >
-          <tr>
-            <td>ID</td>
-            <td align="center">X</td>
-            <td align="center">Y</td>
-            <td align="center">Z</td>
-            <td align="center">Constraints</td>
-            <td align="center">Process</td>
-            <td align="center">Delete?</td>
-          </tr>
-          <tr>
-             <td>0</td>
-             <td><div id="x-table-select-0"></div></td>
-             <td><div id="y-table-select-0"></div></td>
-             <td><div id="z-table-select-0"></div></td>
-             <td>
-               <div id="constraint-table-select-0"></div>
-               <div id="constraint-predicate-select-0"></div>
-               <div id="constraint-field-select-0"></div>
-             </td>
-             <td>
-                 <div id="process-table-select-0"></div>
-                 <div id="process-params-select-0"></div>
-             </td>
-             <td>
-              <!-- <input type="button" class = "btn btn-danger btn-s" id="deleterow" value="Delete" onclick="deleteRow(this)"/> -->
-             </td>
-          </tr>
-       </table>
-
-     <br>
-     <div class = "row">
-        <div class = "col-md-4"></div>
-        <div class = "col-md-4"><input type="button" class = "btn btn-info btn-xs" id = "submit-cqb" onclick="submitTable()" value="Submit"></input></div>
-        <div class = "col-md-3"><input type="button" class = "btn btn-default btn-xs" id="addrow" value="Add Rows" onclick="insRow()"></input></div>
     </div>
-   </div>
-  </div>
-<script>
-/*
-    saves the magicSuggest objects for use later
-*/
-function saveRowData(index){
-    var xComboBox = $('#x-table-select-'+index).magicSuggest({allowFreeEntries:false, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput", placeholder: 'Pick X'  });
-    var yComboBox = $('#y-table-select-'+index).magicSuggest({allowFreeEntries:false, maxSelection :2 , toggleOnClick:true, infoMsgCls: "axesInput", placeholder: 'Pick Y'  });
-    var zComboBox = $('#z-table-select-'+index).magicSuggest({allowFreeEntries:true, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput", placeholder: 'Pick Z' });
-    $(xComboBox).on('selectionchange', function(e,m){
-        if(zComboBox.getValue() == "sketch"){
-            setNoDataMainChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
-        }
-        tableX = xComboBox.getValue();
-    });
-    $(yComboBox).on('selectionchange', function(e,m){
-        if(zComboBox.getValue() == "sketch"){
-            setNoDataMainChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
-        }
-        tableY = yComboBox.getValue();
-    });
-    $(zComboBox).on('selectionchange', function(e,m){
-        setNoDataMainChartAxes(xComboBox.getValue(), yComboBox.getValue(), "")
-        if(zComboBox.getValue() =="sketch"){
-            tableHasSketch = true;
-        }
-        else{
-            tableHasSketch = false;
-        }
-    });
-    var constraintComboBox = $('#constraint-table-select-'+index).magicSuggest({allowFreeEntries:false, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput" });
-    var constraintPredicate = $('#constraint-predicate-select-'+index).magicSuggest({allowFreeEntries:false, maxSelection :1 , toggleOnClick:true, infoMsgCls: "axesInput" });
-    constraintPredicate.setData(["=", "!="])
-    var constraintField = $('#constraint-field-select-'+index).magicSuggest({maxSelection :1 , toggleOnClick:true,  hideTrigger:true, maxDropHeight:0, infoMsgCls: "axesInput" }); //special for only text fields
-    var constraint = [constraintComboBox, constraintPredicate, constraintField];
-    var processComboBox = $('#process-table-select-'+index).magicSuggest({maxSelection :1 , toggleOnClick:true, placeholder: 'Enter function', infoMsgCls: "axesInput" });
-    var processParams = $('#process-params-select-'+index).magicSuggest({maxSelection :null , toggleOnClick:true, placeholder: 'Enter parameters',hideTrigger:true, maxDropHeight:0, infoMsgCls: "axesInput" });
-    var processes = [processComboBox, processParams];
-    $('#x-table-select-'+index).width(150);
-    $('#y-table-select-'+index).width(150);
-    $('#z-table-select-'+index).width(150);
-    $('#constraint-table-select-'+index).width(100);
-    $('#constraint-predicate-select-'+index).width(100);
-    $('#constraint-field-select-'+index).width(220);
-    $('#process-table-select-'+index).width(220);
-    $('#process-params-select-'+index).width(220);
-    var rowData = new magicSuggestStruct(index, xComboBox, yComboBox, zComboBox, constraint, processes);
-    magicSuggestRows.push(rowData)
-}
-function deleteRow(button)
-{
-    var i=button.parentNode.parentNode.rowIndex; //row index to be deleted
-    var rowElement = button.parentNode.parentNode; //actual row element
-    //gets first column value, aka the actual unique ID associated with row we want to delete
-    var name_id = $(rowElement).children(":first").text()
-    document.getElementById('cqbtable').deleteRow(i);
-    //move the result charts up
-    var windowWidth = $("#middle-bar").width()
-    resizeResultsTable($("#scrollbar").height() , windowWidth);
-    deleteRowData(name_id)
-}
-/* Id is not equivalent to array position
-*/
-function deleteRowData(name_id){
-    for(var index = 0; index < magicSuggestRows.length; index++){
-        if(magicSuggestRows[index].id == name_id){
-            magicSuggestRows.splice(index, 1);
-            return;
-        }
-    }
-}
-function insRow()
-{
-    var x=$('#cqbtable');
-    var new_row = $('<tr>')
-    x.append(new_row)
-    var new_td = $('<td>')
-    new_td.append(vqlTablerows)
-    new_row.append(new_td)
-    var x_td = $('<td>')
-    x_td.append("<div id='x-table-select-" + vqlTablerows + "'></div>");
-    new_row.append(x_td)
-    var y_td = $('<td>')
-    y_td.append("<div id='y-table-select-" + vqlTablerows + "'></div>");
-    new_row.append(y_td)
-    var z_td = $('<td>')
-    z_td.append("<div id=z-table-select-" + vqlTablerows + "></div>");
-    new_row.append(z_td)
-    var constraints_td = $('<td>')
-    constraints_td.append("<div id=constraint-table-select-"+ vqlTablerows + "></div> <div id=constraint-predicate-select-"+ vqlTablerows + "></div><div class=\"constraint-field\" id=constraint-field-select-" + vqlTablerows + "></div>");
-    new_row.append(constraints_td)
-    var process_td = $('<td>')
-    process_td.append("<div id=process-table-select-" + vqlTablerows + "></div> <div id=process-params-select-" + vqlTablerows + "></div>");
-    new_row.append(process_td)
-    var delete_td = $('<td>')
-    delete_td.append("<input type='button' class ='btn btn-danger btn-s' id='deleterow' value='X' onclick='deleteRow(this)'/>");
-    new_row.append(delete_td)
-    // var add_td = $('<td>')
-    // add_td.append("<input type='button' id='addrow' value='Add Rows' onclick='insRow()'/>");
-    // new_row.append(add_td)
-    saveRowData(vqlTablerows)
-    addDropDownData()
-    vqlTablerows ++
-    //move results charts down
-    var windowWidth = $("#middle-bar").width()
-    resizeResultsTable($("#scrollbar").height() , windowWidth);
-}
-function addDropDownData(){
-    var schemax = []
-    var schemay = []
-    var schema = []
-    row = magicSuggestRows[magicSuggestRows.length-1];
-    for(xAxis in currentFormData.xAxisColumns){
-      schemax.push(xAxis);
-    }
-      row.x.setData(schemax)
-      //row.x.setValue([xvalues[0]])
-      //row.constraints[0].setData(schemax)
-    for(yAxis in currentFormData.yAxisColumns){
-      schemay.push(yAxis);
-    }
-      row.y.setData(schemay)
-      //row.y.setValue([yvalues[0]])
-    for(zAxis in currentFormData.zAxisColumns){
-      schema.push(zAxis);
-    }
-        //row.z.setValue([zvalues[0]])
-        //var list = schemax.concat(schema)
-    row.constraints[0].setData(schema)
-    schema.push("sketch")
-    for(var i = 0; i < magicSuggestRows.length-1; i++){
-        var curr_row = magicSuggestRows[i];
-        var processes = curr_row.process;
-        var processFunction = processes[0].getValue()[0];
-        schema.push(curr_row.id+".Process.Output")
-    }
-    row.z.setData(schema)
-    row.process[0].setData(["similar", "dissimilar", "increasing", "decreasing"])
-}
-function isNumeric(obj) {
-    return obj - parseFloat(obj) >= 0;
-}
-function submitTable(){
-    $("#views_table").empty();
-    var json = {};
-    json["zqlRows"] = []
-    //console.log(json)
-    //console.log("len",magicSuggestRows.length)
-    for(var i = 0; i < magicSuggestRows.length; i++){
-        var curr_row = magicSuggestRows[i];
-        var row = {};
-        row["name"] = curr_row.id;
-        row["x"] = curr_row.x.getValue(); //[year, month]
-        row["y"] = curr_row.y.getValue();
-        var z = curr_row.z.getValue();
-        for(var j = 0 ; j < z.length; j++){
-            var curr = z[j];
-            if(curr.includes("Output")){
-    //        if(curr.charAt(curr.length-1) == 'p'){
-                var num = curr.substring(0,curr.length-15);
-                 if(isNumeric(num)){
-                    z[j] = "_" +num+"p";
-                }
-            }
-        }
-        row["z"] = z;
-        //if any selection is empty, we get []. Calling [0] on an empty selection returns undefined
-        var constraint_key = curr_row.constraints[0].getValue()[0];
-        var constraint_operator = curr_row.constraints[1].getValue()[0];
-        var constraint_value = curr_row.constraints[2].getValue()[0];
-        if(constraint_key !=undefined && constraint_operator != undefined && constraint_value != undefined){
-            row["constraints"] = [{key : constraint_key, operator : constraint_operator,
-                                value: constraint_value}]
-        }else {
-            row["constraints"] = []
-        }
-        var processes = curr_row.process;
-        var processFunction = processes[0].getValue()[0];
-        var processParams = processes[1].getValue();
-        if(processFunction == "increasing"){
-            processFunction = "incTrends"; //BACKEND
-            row["processe"] =
-            {name: row["name"]+"p", function: processFunction,
-                  parameters: {viz2: null, viz1:row["name"]}
-            }
-        }
-        if(processFunction =="decreasing"){
-            processFunction = "decTrends"; //BACKEND
-            row["processe"] =
-            {name: row["name"]+"p", function: processFunction,
-                  parameters: {viz2: null, viz1:row["name"]}
-            }
-        }
-        if(processFunction =="similar"){
-            processFunction = "similar"; //BACKEND
-            if(processParams.length < 1){
-              alert("similar in Process should compare current row with some above row!")
-            }
-            row["processe"] =
-            {name: row["name"]+"p", function: processFunction,
-                  parameters: {viz2: processParams[0], viz1:row["name"]}
-            }
-        }
-        if(processFunction =="dissimilar"){
-            processFunction = "dissimilar"; //BACKEND
-            row["processe"] =
-            {name: row["name"]+"p", function: processFunction,
-                  parameters: {viz2: processParams[0], viz1:row["name"]}
-            }
-            if(processParams.length < 1){
-              alert("dissimilar in Process should compare current row with some above row!")
-            }
-        }
-        //Processes creation & checks
-/*         var processes = curr_row.process;
-        var processFunction = processes[0].getValue()[0];
-        if(processFunction == "increasing"){
-            processFunction = "incTrends"; //BACKEND
-        }
-        if(processFunction =="decreasing"){
-            processFunction = "decTrends"; //BACKEND
-        }
-        var processParams = processes[1].getValue();
-        if(processParams.length == 2){
-            row["processe"] =
-                {name: i+"p", function: processFunction,
-                parameters: {viz2: processParams[1], viz1: processParams[0]}
-                }
-        }
-        else if(processParams.length == 1){
-            row["processe"] =
-            {name: i+"p", function: processFunction,
-            parameters: {viz2: null, viz1: processParams[0]}
-            }
-        }else{
-            row["processe"] = null;
-        } */
-        row["output"] = false;
-        if(row["z"][0] == "sketch"){
-            sketchs = sketchPointsList[0];
-            sketchs.maxX = drawGraphWidth;
-            sketchs.maxY = drawGraphHeight;
-            sketchs.xAxis = row["x"][0];
-            sketchs.yAxis = row["y"][0];
-            sketchs.aggrVar = row["y"][0];
-            sketchs.groupBy = null;
-            row["sketchPoints"] = sketchPointsList[0];
-        }
-        console.log("row", row)
-        json["zqlRows"].push(row)
-        //console.log(row.x.getSelection())
-        //console.log(row.x.getSelection()[0])
-    }
-    console.log("hi", JSON.stringify(json))
-    if(isZQLValid(json)){
-        getZQLData(json)
-    }
-}
-    // Checks for VQL Table
-    function isZQLValid(json){
-        rows = json["zqlRows"]
-        //Last row should not have process because last row is assumed to be an output visualisation.
-       /*  if (rows[rows.length-1]["processe"] != null){
-            alert("There should not be a process in final row.");
-            return false;
-        } */
-        var xType = rows[0]["x"][0];
-        for(var i = 0; i < rows.length; i++){
-            if(rows[i]["x"][0] == undefined){
-                alert("Missing X value!");
-                return;
-            }
-            if(rows[i]["y"][0] == undefined){
-                alert("Missing Y value!");
-                return;
-            }
-            if(rows[i]["z"][0] == undefined){
-                alert("Missing Z value!");
-                return;
-            }
-            if(rows[i]["x"][0] != xType){
-                alert("All X should have same type");
-                return false;
-            }
-            if(rows[i]["y"].length ==2 && (i != rows.length-1)){
-                alert("Only the last row can have two Y entries");
-            }
-            //check if z process actually exists
-/*             curr = rows[i]["z"][0];
-            if(curr.charAt(curr.length-1) == 'p' && curr.charAt(0) == '_'){
-                var num = curr.substring(1,curr.length-1);
-                //alert(num)
-                if(isNumeric(num)){
-                    var row_id = num;
-                    var correctedIndex = row_id; //we need this because the row_id may not be same as our array id
-                    for(var index = 0; index<rows.length; index++){
-                        if (row_id == rows[index]["name"]){
-                            correctedIndex = row_id;
-                        }
-                    }
-                    if(rows[correctedIndex] == undefined){
-                        alert("Invalid process row");
-                        return false;
-                    }
-                    if(rows[correctedIndex]["processe"] == null){
-                        alert("Selected row does not have a process");
-                        return false;
-                    }
-                    if(correctedIndex == i){
-                        alert("Can't select process of own row");
-                        return false;
-                    }
-                }
-            } */
-            //check if rows exist for process processParams
-            process = rows[i]["processe"]
-            if(process !=null){
-                var row_id = process["parameters"]["viz1"];
-                var func = process["function"]
-                if((func =="similar" || func =="dissimilar") && process["parameters"]["viz2"]==null){
-                  return false;
-                }
-                if((func =="similar" || func =="dissimilar") && process["parameters"]["viz2"]==row_id){
-                  alert("Parameter cannot be current row, You need to compare with some above row")
-                  return false;
-                }
-          /*
-            if(process !=null){
-                var row_id = process["parameters"]["viz1"];
-                var correctedIndex = row_id; //we need this because the row_id may not be same as our array id
-                for(var index = 0; index<rows.length; index++){
-                    if (row_id == rows[index]["name"]){
-                        correctedIndex = row_id;
-                    }
-                }
-                if(rows[correctedIndex] == undefined){
-                    alert("Process Parameter Row does not exist!");
-                    return false;
-                } */
-                row_id = process["parameters"]["viz2"];
-                if(row_id != null){
-                    var correctedIndex = row_id; //we need this because the row_id may not be same as our array id
-                    for(var index = 0; index<rows.length; index++){
-                        if (row_id == rows[index]["name"]){
-                            correctedIndex = row_id;
-                        }
-                    }
-                    if(rows[correctedIndex] == undefined){
-                        alert("Process Parameter does not exist!");
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-</script>
-      <script> // REMEMBER TO MAKE ID DYNAMIC (EG 1,2,3)...
-        //do vega
-        var div = $("#mainChart1")
-        //div.hide();
-        //var dragAndDrop = $("<div>", {id: "dragAndDrop1", width: div.width(), height: div.height()  })
-        var dragAndDrop = $("<div id = 'draganddrop1' ondrop='drop1(event)' ondragover='allowDrop(event)' style='display:none;position: absolute;margin-top:6px;margin-left:60px;z-index:4'></div>")
-        dragAndDrop.width(div.width())
-        dragAndDrop.height(div.height())
-        $("#mainChart1").append(dragAndDrop)
-        var canvas = $('<canvas id="tools_sketch1" style="display:block;position: absolute; margin-top:6px;margin-left:60px; z-index:1; "></canvas>')
-        //canvas.attr("width", div.width())
-        //canvas.attr("height", div.height())
-        $("#mainChart1").append(canvas)
-        var barGraph = $('<div id = "bar1"><svg id="visualisation1" width="' + div.width() + '" height=" ' + div.height() + '" style = "z-index:5; display:none; position: absolute;margin-top:6px;margin-left:60px;"></svg></div>')
-        $("#mainChart1").append(barGraph)
-        var svgLayer = $('<div id ="svgLayer1" style="display:none;position: absolute;margin-top:6px; margin-left:60px; z-index:2;">')
-          var mySvg =  $('<svg id="mySvg1" style="display:block" width="' + div.width() + '" height="' + div.height() + '" viewBox="0 0 ' + div.width() + ' ' + div.height() + '">')
-            var path = $('<path id = "myPath1" d="" stroke="#14a9a1" stroke-width="3" fill="none" />')
-            mySvg.append(path)
-            for(var i = 0; i<30; i++){
-              var point = $('<circle id = "point'+i+'-1" class="userPoint" transform="translate(0,0)" r="0"></circle>')
-              mySvg.append(point)
-            }
-          svgLayer.append(mySvg)
-        $("#mainChart1").append(svgLayer)
-        $("#mySvg1").html($("#mySvg1").html()); //http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
-      </script>
-      <div id="views" class="view">
-      </div>
-      <div class="scrollbar" id="scrollbar">
-        <div class="force-overflow">
-          <table id="views_table" class="table"></table>
-        </div>
-      </div> <!-- end scroll bar-->
-    </div> <!-- end middle bar -->
-</div> <!-- end everything -->
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/main.js"></script>
-    <script src="js/scattersearch.js"></script>
-    <script src="js/rect.js"></script>
-    <script src="js/smartdraw.js"></script>
-    <script src="js/draganddrop.js"></script>
-    <script src="dist/js/bootstrap.min.js"></script>
-    <script src="dist/js/tooltip.js"></script>
-    <script src="dist/js/underscore-min.js"></script>
-    <script src="dist/js/underscore.string.min.js"></script>
-    <script src="dist/js/backbone-min.js"></script>
-    <script src="assets/magicsuggest/magicsuggest-min.js"></script>
-    <script src="js/xdata.js"></script>
-    <script src="js/generate-vega.js"></script>
-    <script src="js/histogram.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <!--script src="js/scatter.js"></script-->
+    <!--
     <script>
-    $.attrHooks['viewbox'] = {
-        set: function(elem, value, name) {
-            elem.setAttributeNS(null, 'viewBox', value + '');
-            return value;
-        }
-    };
-    function updateSizes(){
-      var windowWidth = $("#middle-bar").width()
-      var windowHeight = $("#middle-bar").height()
-      drawGraphWidth = Math.round(windowWidth/3.5);
-      if(graphChanger.attr("adder") == "true"){
-          //one graph case
-          drawGraphWidth = Math.round(windowWidth/1.5);
-      }
-      drawGraphHeight = Math.round(drawGraphWidth/2);
-      resizeSketch(drawGraphHeight, drawGraphWidth); //when we resize, we should also resize the sketch
-      resizePointsAndPath(drawGraphHeight, drawGraphWidth); //when we resize, we should also resize the path and points
-      resizeResultsTable($("#scrollbar").height() , windowWidth);
-      $("#firstDrawChartColumn").width(drawGraphWidth+100); //to support axis title (try to make this not fixed)
-      $("#firstDrawChartColumn").height(drawGraphHeight+50); //to support the axis title
-      $("#mainChart").width(drawGraphWidth);
-      $("#scatterplot").width(drawGraphWidth);
-      $("#scatterplot").height(drawGraphHeight);
-      $("#mainChart").height(drawGraphHeight);
-      chart0Information['dragAndDropObject'].width(drawGraphWidth);
-      chart0Information['dragAndDropObject'].height(drawGraphHeight);
-      chart0Information['tools_sketchObject'].width(drawGraphWidth);
-      chart0Information['tools_sketchObject'].height(drawGraphHeight);
-      chart0Information['visualisationObject'].width(drawGraphWidth); //for bar charts
-      chart0Information['visualisationObject'].height(drawGraphHeight);
-      chart0Information['mySvgObject'].width(drawGraphWidth);
-      chart0Information['mySvgObject'].height(drawGraphHeight);
-      chart0Information['mySvgObject'].attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
-      $("#x-axis-select-0").width(drawGraphWidth);
-      $("#x-axis-select-0").height($("#x-axis-select-0").height());
-      xAxisSelect0.input.width(0);
-      $("#y-axis-select-0").width(drawGraphWidth);
-      $("#y-axis-select-0").height($("#y-axis-select-0").height());
-      yAxisSelect0.input.width(0);
-      $("#secondDrawChartColumn").width(drawGraphWidth+100);
-      $("secondDrawChartColumn").height(drawGraphHeight+50);
-      $("#mainChart1").width(drawGraphWidth);
-      $("#mainChart1").height(drawGraphHeight);
-      chart1Information['dragAndDropObject'].width(drawGraphWidth);
-      chart1Information['dragAndDropObject'].height(drawGraphHeight);
-      chart1Information['tools_sketchObject'].width(drawGraphWidth);
-      chart1Information['tools_sketchObject'].height(drawGraphHeight);
-      chart1Information['visualisationObject'].width(drawGraphWidth);
-      chart1Information['visualisationObject'].height(drawGraphHeight);
-      chart1Information['mySvgObject'].width(drawGraphWidth);
-      chart1Information['mySvgObject'].height(drawGraphHeight);
-      chart1Information['mySvgObject'].attr("viewBox", "0 0 "+ drawGraphWidth + " " + drawGraphHeight);
-      $("#x-axis-select-1").width(drawGraphWidth);
-      $("#x-axis-select-1").height($("#x-axis-select-1").height());
-      xAxisSelect1.input.width(0);
-      $("#y-axis-select-1").width(drawGraphWidth);
-      $("#y-axis-select-1").height($("#y-axis-select-1").height());
-      yAxisSelect1.input.width(0);
-    }
-    function resizeSketch(newHeight, newWidth){
-        ctx.canvas.width = newWidth;
-        ctx.canvas.height = newHeight;
-        ctx1.canvas.width = newWidth;
-        ctx1.canvas.height = newHeight;
-        //
-    }
-    function resizePointsAndPath(newHeight, newWidth){
-        //Resize mainChart
-        var currHeight = $("#mainChart").height();
-        var currWidth = $("#mainChart").width();
-        //want map from 0 -> currHeight => 0 -> newHeight
-        //eg 0 -> 10 => 0 -> 20. So 1(curr) -> 2 (new) = newHeight/currHeight
-        var heightRatio = newHeight/currHeight;
-        var widthRatio = newWidth/currWidth;
-        //list contains the points of mainChart that form element myPath
-        if(clickmodify){
-            //drawTrend();
-            if(chart0Information['chartData'] == null){
-                drawTrend(chart0Information); //update chart1Information and drawData
-            }
-            else{
-                drawData(chart0Information, chart0Information['list'], chart0Information['pathObject']);
-            }
-            updatelist(chart0Information);
-        }
-        if($("#mainChart1").is(':visible')){ //If we are using the second drawing graph
-            //list1 contains the points of mainChart1 that form element myPath
-            if(clickmodify){
-                //drawTrend1();
-                if(chart1Information['chartData'] == 0){
-                    drawTrend(chart1Information); //update chart1Information and drawData
-                }
-                else{
-                    drawData(chart1Information, chart1Information['list'], chart1Information['pathObject']);
-                }
-                updatelist(chart1Information);
-            }
-        }
-    }
-    function resizeResultsTable(newHeight, newWidth){
-        $("#scrollbar").width(newWidth);
-        //$("#scrollbar").height(newHeight);
-        //var height = $("#main-graph-area").height() + 2*(parseInt($("#main-graph-area").css("margin-bottom").replace("px", ""))
-        //            + parseInt($("#main-graph-area").css("margin-top").replace("px", ""))) ;
-        var height = $("#main-graph-area").height() + $("#buttons").height()+ 2*(parseInt($("#buttons").css("margin-bottom").replace("px", "")));
-        height += $("#cqbtable").height() + 70
-        $("#scrollbar").css('top', '' + height + 'px')
-    }
-    //Resizes the margins of the SVG and sketching divs to match the one created by vega
-    //Needs to happen AFTER vega graphs get added (which is asyncronous)
-    function resizeMargins(){
-        var vega = $("#firstDrawChartColumn").find(".vega"); //finds the child div that contains all the vega
-        var vegaWidth = vega.width();
-        var vegaRealWidth = vega.children(":first").width(); //width including offset title
-        //console.log("norm", vegaWidth, "real", vegaRealWidth)
-        //var marginLeft = vegaRealWidth - vegaWidth;
-      //align svg, sketchpad with the chart
-        var spec = createBlankNoScale("");
-      var fontsize = spec["axes"][1]["properties"]["title"]["fontSize"]["value"];
-      var titletochart = spec["axes"][1]["titleOffset"];
-      var result = fontsize+titletochart;
-      chart0Information['tools_sketchObject'].css( { "margin-left" : result} );
-      chart0Information['visualisationObject'].css( { "margin-left" : result} );
-      chart0Information['svgLayerObject'].css( { "margin-left" : result} );
-      $("#draganddrop").css( { "margin-left" : result} );
-        vega = $("#secondDrawChartColumn").find(".vega");
-        vegaWidth = vega.width();
-        vegaRealWidth = vega.children(":first").width(); //width including offset title
-        // marginLeft = vegaRealWidth - vegaWidth;
-        //$("#tools_sketch1").css("margin-left", marginLeft);
-        //$("#svgLayer1").css("margin-left", marginLeft);
-        chart1Information['tools_sketchObject'].css( { "margin-left" : result} );
-      chart0Information['svgLayerObject'].css( { "margin-left" : result} );
-      //$("#draganddrop").css( { "margin-left" : result} );
-    }
-    function populateChartInformation() {
-        chart0Information['dragAndDropObject'] = $("#draganddrop");
-        chart0Information['tools_sketchObject'] = $('#tools_sketch');
-        chart0Information['visualisationObject'] = $('#visualisation');
-        chart0Information['svgLayerObject'] = $('#svgLayer');
-        chart0Information['mySvgObject'] = $('#mySvg');
-        chart0Information['pathObject'] = $('#myPath');
-        // probably should be a global point parameter
-        for(var i = 0; i < 30; i++) {
-          var point = $('#point' + i);
-          chart0Information['points'].push(point);
-        }
-        chart1Information['dragAndDropObject'] = $("#draganddrop1");
-        chart1Information['tools_sketchObject'] = $('#tools_sketch1');
-        chart1Information['visualisationObject'] = $('#visualisation1');
-        chart1Information['svgLayerObject'] = $('#svgLayer1');
-        chart1Information['mySvgObject'] = $('#mySvg1');
-        chart1Information['pathObject'] = $('#myPath1');
-        for (var i = 0; i < 30; i++) {
-          var point = $('#point' + i + '-1')
-          chart1Information['points'].push(point);
-        }
-    }
+      var tree = tree();
     </script>
-    <script>
-        var graphChanger;
-        $(document).ready(function() {
-            populateChartInformation(); // on document load, grab all the jquery objects
-            console.log("chartinfo", chart0Information)
-            console.log(chart0Information['svgLayerObject'].width())
-            saveRowData(vqlTablerows); //for the first row data
-            vqlTablerows ++
-            graphChanger = $("#graphChanger");
-            updateSizes();
-            updateDefaultModify();
-            asyncronousVegaMainCharts().done(function(){
-                resizeResultsTable();
-                resizeMargins();
-            }); //needs to be resized after vega charts added
-            getInterfaceFormData('real_estate');
-            //initialize formdata
-            //getSuggestData(getSimilarTrendData());
-            //getSuggestData(query)
-            $("#secondDrawChartColumn").hide();
-            $("#axesChart1").hide();
-            $("#mainChart1").hide();
-            //$("#axesChart0").hide();
-            //$("#graphChanger").hide();
-            graphChanger.click(function(){
-              if(graphChanger.attr("adder") == "true"){
-                  showSecondChartElement();
-                  graphChanger.attr("adder", "false")
-              }
-               // adder = want to add = false means we are at 2 graph case, and want to be in one graph case
-              else if(graphChanger.attr("adder") == "false"){
-                  hideSecondChartElement();
-                  graphChanger.attr("adder", "true")
-              }
-              updateSizes();
-              //updateDefaultModify(); do we need this?? it zero all the points so after pressing the adder, our old list of points are gone!:(
-              asyncronousVegaMainCharts().done(function(){
-                  resizeResultsTable();
-                  resizeMargins();
-              });
-              existingTrends[1] = existingTrends[0];
-              //console.log("updateTrends");
-              //updateOneTrend("");
-              //updateBothTrends();
-            });
-        });
-      $(window).resize(function() {
-          updateSizes()
-          //updateDefaultModify();
-          asyncronousVegaMainCharts().done(function(){
-              resizeResultsTable();
-              resizeMargins();
-          });
-          existingTrends[1] = existingTrends[0];
-          //updateBothTrends();
-      });
-    function showSecondChartElement() {
-        for(var i = 0; i< 30; i++){   //these following lines hides the points
-            var id = "point"+i;
-            var myCir = document.getElementById(id);
-            id = "point"+i +"-1";
-            var myCir1 = document.getElementById(id);
-            if(myCir != null ){
-                myCir.setAttribute("r", 0);
-                //$("#id").setAttribute("r", 0);
-            }
-            if(myCir1 != null){
-                myCir1.setAttribute("r", 0);
-            }
-        }
-        var child = graphChanger.children(":first")
-        child.attr("class", "glyphicon glyphicon-minus")
-        $("#secondDrawChartColumn").show();
-        $("#axesChart1").show();
-        $("#mainChart1").show();
-        //document.getElementById("changeButtons").style.visibility="visible";
-        //document.getElementById("drawing-tool2").style.visibility="visible";
-        $("#changeButtons").show();
-        $("#drawing-tool2").show();
-    }
-    function hideSecondChartElement() {
-        for(var i = 0; i< 30; i++){   //this following lines hides the points
-            var id = "point"+i;
-            var myCir = document.getElementById(id);
-            id = "point"+i +"-1";
-             var myCir1 = document.getElementById(id);
-             if(myCir != null ){
-                 myCir.setAttribute("r", 0);
-                 //$("#id").setAttribute("r", 0);
-             }
-             if(myCir1 != null){
-                 myCir1.setAttribute("r", 0);
-             }
-        }
-        var child = graphChanger.children(":first")
-        child.attr("class", "glyphicon glyphicon-plus")
-        $("#secondDrawChartColumn").hide();
-        $("#axesChart1").hide();
-        $("#mainChart1").hide();
-        //document.getElementById("changeButtons").style.visibility="hidden";
-        //document.getElementById("drawing-tool2").style.visibility="hidden";
-        $("#changeButtons").hide();
-        $("#drawing-tool2").hide();
-        changeExistingTrends(0);
-    }
-  //Calls vega to update the blank charts. Only returns as DONE if both blank charts are done being created by vega
-    function asyncronousVegaMainCharts() {
-        var dfrd1 = $.Deferred();
-        var dfrd2 = $.Deferred();
-        mainChartAsync(" ","").done(function() {
-            if(chart0Information != null && chart0Information['chartData']!= null){
-                changeScaleMainChart(chart0Information);
-            }
-            dfrd1.resolve();
-        });
-        mainChartAsync(" ","1").done(function(){
-            if(chart1Information != null && chart1Information['chartData'] != null){
-                changeScaleMainChart(chart1Information);
-            }
-            dfrd2.resolve();
-        });
-         return $.when(dfrd1, dfrd2).done(function(){}).promise();
-     }
-    </script>
-    <script>
-      function isGraphVisible(suffix){
-        return $('#mainChart'+suffix).css('display') == 'block'
-      }
-    </script>
-    <script>
-          var scriptChangedX0 = true;
-          var scriptChangedX1 = true;
-          var scriptChangedY0 = true;
-          var scriptChangedY1 = true;
-          var xAxisSelect0 = $('#x-axis-select-0').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput" });
-          var xAxisSelect1 = $('#x-axis-select-1').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput"});
-          var yAxisSelect1 = $('#y-axis-select-1').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput"  });
-          var yAxisSelect0 = $('#y-axis-select-0').magicSuggest({maxSelection :1, toggleOnClick:true, infoMsgCls: "axesInput"});
-      $(xAxisSelect1).on('selectionchange', function(e,m){
-        if (isGraphVisible("1")) {
-            ExTrendindex = 1;
-          }
-        if(!scriptChangedX1){
-          if(xAxisSelect1.getValue().length == 1) {
-            //onSubmit();
-            var x0Value = JSON.stringify(xAxisSelect0.getValue());
-            var x1Value = JSON.stringify(xAxisSelect1.getValue());
-            var y0Value = JSON.stringify(yAxisSelect0.getValue());
-            var y1Value = JSON.stringify(yAxisSelect1.getValue());
-            if (x0Value != x1Value || y0Value != y1Value) {
-                 updateOneTrend(chart1Information, "1", true);
-            }
-            else { // copy existing trend and change
-                existingTrends[1] = existingTrends[0];
-                changeExistingTrends(1);
-            }
-          }
-        }
-          scriptChangedX1 = false;
-      });
-      $(yAxisSelect1).on('selectionchange', function(e,m){
-        //console.log("y1 selection change");
-        //setTimeout(function() {
-        if (isGraphVisible("1")) {
-          ExTrendindex = 1;
-        }
-        if(!scriptChangedY1){
-          if(yAxisSelect1.getValue().length == 1) {
-            //onSubmit();
-            var x0Value = JSON.stringify(xAxisSelect0.getValue());
-            var x1Value = JSON.stringify(xAxisSelect1.getValue());
-            var y0Value = JSON.stringify(yAxisSelect0.getValue());
-            var y1Value = JSON.stringify(yAxisSelect1.getValue());
-            if (x0Value != x1Value || y0Value != y1Value) {
-              updateOneTrend(chart1Information, "1", true);
-            }
-            else { // copy existing trend and change
-              existingTrends[1] = existingTrends[0];
-              changeExistingTrends(1);
-            }
-          }
-        }
-        scriptChangedY1 = false;
-        //  }, 0)
-      });
-$(xAxisSelect0).on('selectionchange', function(e,m){
-    ExTrendindex = 0;
-    // if someone manually changed combobox
-    if (!scriptChangedX0) {
-        if (xAxisSelect0.getValue().length == 1) {//exactly one value in combobox
-            var x0Value = JSON.stringify(xAxisSelect0.getValue());
-            var x1Value = JSON.stringify(xAxisSelect1.getValue());
-            var y0Value = JSON.stringify(yAxisSelect0.getValue());
-            var y1Value = JSON.stringify(yAxisSelect1.getValue());
-            console.log(x0Value, x1Value, y0Value, y1Value)
-            if (x0Value != x1Value || y0Value != y1Value) {
-                updateOneTrend(chart0Information, "", true);
-            } else { // copy existing trend and change
-                //only in 2 graph case do this!
-                if (isGraphVisible("1")) {
-                    existingTrends[0] = existingTrends[1];
-                    changeExistingTrends(0);
-                } else {
-                    updateOneTrend(chart0Information, "", true);
-                }
-            }
-        }
-    }
-    scriptChangedX0 = false;
-});
-$(yAxisSelect0).on('selectionchange', function(e,m){
-    console.log("def");
-    //$("#scatterplot").children().remove();
-    //drawRandomChart();
-    //console.log("y0 selection change");
-    ExTrendindex = 0;
-    if (!scriptChangedY0) {
-        if (yAxisSelect0.getValue().length == 1) {
-        var x0Value = JSON.stringify(xAxisSelect0.getValue());
-        var x1Value = JSON.stringify(xAxisSelect1.getValue());
-        var y0Value = JSON.stringify(yAxisSelect0.getValue());
-        var y1Value = JSON.stringify(yAxisSelect1.getValue());
-            if (x0Value != x1Value || y0Value != y1Value) {
-                updateOneTrend(chart0Information, "", true);
-            } else { // copy existing trend and change
-                //only in 2 graph case do this!
-                if (isGraphVisible("1")) {
-                    existingTrends[0] = existingTrends[1];
-                    changeExistingTrends(0);
-                } else {
-                    updateOneTrend(chart0Information, "", true);
-                }
-            }
-        }
-    }
-    scriptChangedY0 = false;
-});
-    </script>
+    -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="js/bootstrap-filestyle.min.js"> </script>
+    <script src="js/math.min.js"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/scatter.js"></script>
+    <!-- <script src="chi-js/graph.js"></script> -->
+    <script src="js/draw.js"></script>
+    <script src="js/query.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/fileUploader.js"></script>
+    <script src="js/renderplot.js"></script>
+    <script src="zql/parsertypes.js"></script>
+    <script src="zql/zqlparser.js"></script>
   </body>
 </html>
