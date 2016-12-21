@@ -13,6 +13,7 @@ import org.apache.commons.math3.util.FastMath;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.DDTW.VCComparator;
 
 /**
  * @author tarique
@@ -68,31 +69,14 @@ public class DEuclidean implements D {
 					i++;
 					j++;
 				}
-			}
-			else if (f2List.size() == 1) {
-				for (int i = 0; i < f1List.size(); i++) {
-					scores.add(calculateEuclideanDistance(f1List.get(i), f2List.get(0)));
-					singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());					
+				else if (zCompare < 0) {
+					i++;
+				}
+				else {
+					j++;
 				}
 			}
-			else {
-				// Want to compare the same Z, like 'CA' vs 'CA', but different X and Y for each
-				for (int i = 0, j = 0; i < f1List.size() && j < f2List.size(); ) {
-					int zCompare = f1List.get(i).getZValue().getStrValue().compareTo(f2List.get(j).getZValue().getStrValue());
-					if (zCompare == 0) {
-						scores.add(calculateEuclideanDistance(f1List.get(i), f2List.get(j)));
-						singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
-						i++;
-						j++;
-					}
-					else if (zCompare < 0) {
-						i++;
-					}
-					else {
-						j++;
-					}
-				}
-			}
+			
 			axisvars.add(singleAxisvarsList);
 			if(axisVariables.get(0).size()==2)
 			{
@@ -176,6 +160,7 @@ public class DEuclidean implements D {
 		}
 
 	}
+	
 	
 	public double calculateDistance(VisualComponent v1, VisualComponent v2) {
 		ArrayList<WrapperType> y1 = v1.getPoints().getYList();

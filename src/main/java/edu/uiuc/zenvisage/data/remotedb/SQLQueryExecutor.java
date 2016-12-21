@@ -131,9 +131,6 @@ public class SQLQueryExecutor {
 	
 	/*This is the main ZQL->SQLExcecution query*/
 	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
-		this.visualComponentList = new VisualComponentList();
-		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
-
 		String sql = null;
 		
 		databaseName = databaseName.toLowerCase();
