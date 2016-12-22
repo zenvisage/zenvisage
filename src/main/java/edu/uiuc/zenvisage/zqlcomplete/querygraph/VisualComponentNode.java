@@ -112,7 +112,6 @@ public class VisualComponentNode extends QueryNode{
 		this.getLookUpTable().put(name, vcList);
 		System.out.println("vcList for node "+ name);
 		System.out.println(sqlQueryExecutor.getVisualComponentList());
-		System.out.println("hi");
 	}
 	
 	/**
@@ -125,20 +124,35 @@ public class VisualComponentNode extends QueryNode{
 	 * @param scores sorted list of scores eg [0.0, 0.1, 0.2] 
 	 * @param values sorted list of values eg [CA, MA, NY]	 */
 	public void sortVisualComponentList(VisualComponentList vcList, double[] scores, List<String> values, String zAttribute) {
+		/*
+		 * We might have to display multiple axis, using the same set of scores and values
+		 * Eg scores = [0.0, 0.1, 0.2]
+		 * values = [CA, MA, NY]
+		 * For A = {year, soldprice} and B = {year, soldpricepersqft}
+		 * -> This means we would have 6 visual components in vcList, 3 for A and then 3 for B.
+		 */
 		HashMap<String, VisualComponent> mapping = new HashMap<String, VisualComponent>();
+		ArrayList<VisualComponent> inputList = vcList.getVisualComponentList();
 		ArrayList<VisualComponent> outputList = new ArrayList<VisualComponent>();
 		
-		for (VisualComponent vc : vcList.getVisualComponentList()) {
-			mapping.put(vc.getZValue().getStrValue(), vc);		// NOTE: if we have multiple of same zvalue, this keeps latest one
+		int index = 0;
+		while(index < inputList.size()) {
+			// say outputList.size() = 10, scores.length = 5
+			// first iteration would be [0,5)
+			// second iteration would be [5, 10)
+			for(int i = index; i < scores.length + index; i++) {
+				VisualComponent vc = inputList.get(i);
+				mapping.put(vc.getZValue().getStrValue(), vc);		// NOTE: if we have multiple of same zvalue (within the same {x,y} pair), this keeps latest one
+			}
+			index += scores.length;
+			for (int i = 0; i < scores.length; i++) {
+				VisualComponent vc = mapping.get(values.get(i));
+				vc.setScore(scores[i]);
+				vc.setzAttribute(zAttribute);
+				outputList.add(vc);
+			}
+			//mapping.clear();										// I don't believe this is necessary, should be overwritten
 		}
-		
-		for (int i = 0; i < scores.length; i++) {
-			VisualComponent vc = mapping.get(values.get(i));
-			vc.setScore(scores[i]);
-			vc.setzAttribute(zAttribute);
-			outputList.add(vc);
-		}
-		
 		vcList.setVisualComponentList(outputList);
 	}
 
