@@ -233,22 +233,15 @@ app.controller('options-controller', [
 
     $scope.populateQuery1 = function() {
 
-      $scope.removerAndInsertRows( 2 );
-      $($( ".tabler" )[0]).find(".name").val("f1")
+      $scope.removerAndInsertRows( 1 );
+      $($( ".tabler" )[0]).find(".name").val("*f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("")
+      $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
       //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
-      $($( ".tabler" )[1]).find(".name").val("*f2")
-      $($( ".tabler" )[1]).find(".x-val").val("x1")
-      $($( ".tabler" )[1]).find(".y-val").val("y1")
-      $($( ".tabler" )[1]).find(".z-val").val("z1")
-      $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
-      //$($( ".tabler" )[1]).find(".viz").val("")
-      $($( ".tabler" )[1]).find(".process").val("")
     }
 
     $scope.populateQuery2 = function() {
@@ -307,6 +300,53 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".process").val("")
     }
 
+    $scope.populateQuery4 = function() {
+      //TIncreasing Example
+      $scope.removerAndInsertRows( 2 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      //$($( ".tabler" )[0]).find(".viz").val("")
+      $($( ".tabler" )[0]).find(".process").val("v1<-argmax{z1}[k=40]T(f1)")
+
+      $($( ".tabler" )[1]).find(".name").val("*f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val("v1")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      //$($( ".tabler" )[1]).find(".viz").val("")
+      $($( ".tabler" )[1]).find(".process").val("")
+    }
+
+    $scope.populateQuery5 = function() {
+      //Pairwise example
+      $scope.removerAndInsertRows( 3 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      //$($( ".tabler" )[0]).find(".viz").val("")
+      $($( ".tabler" )[0]).find(".process").val("")
+
+      $($( ".tabler" )[1]).find(".name").val("f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1")
+      $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
+      $($( ".tabler" )[1]).find(".z-val").val("z1")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      //$($( ".tabler" )[1]).find(".viz").val("")
+      $($( ".tabler" )[1]).find(".process").val("v1<-argmin_{z1}[k=7]DEuclidean(f1,f2)")
+
+      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
+      $($( ".tabler" )[2]).find(".z-val").val("v1")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+      //$($( ".tabler" )[2]).find(".viz").val("")
+      $($( ".tabler" )[2]).find(".process").val("")
+    }
     $scope.drawFunction = function() {
       var xval = [];
       var plotData = [];
@@ -534,4 +574,3 @@ app.controller('datasetController', [
 app.service('ChartSettings', function () {
     return {};
 })
-
