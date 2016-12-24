@@ -135,23 +135,36 @@ public class VisualComponentNode extends QueryNode{
 		ArrayList<VisualComponent> inputList = vcList.getVisualComponentList();
 		ArrayList<VisualComponent> outputList = new ArrayList<VisualComponent>();
 		
+		// lists is an arraylist of arraylists
+		// outer arraylist corresponds to list over the different X,Y pairs 
+		// inner array list is list over the different VisualComponents for that X,Y pair (aka specific X,Y,Z data)
+		// eg [ [VC-year,soldprice,CA; VC-year,soldprice,NY ] , [VC-year,listingprice,CA; VC-year,listingprice,NY] ]
+		ArrayList<ArrayList<VisualComponent>> lists = new ArrayList<ArrayList<VisualComponent>>();
+		
 		int index = 0;
 		while(index < inputList.size()) {
 			// say outputList.size() = 10, scores.length = 5
 			// first iteration would be [0,5)
 			// second iteration would be [5, 10)
+			lists.add(new ArrayList<VisualComponent>());
 			for(int i = index; i < scores.length + index; i++) {
 				VisualComponent vc = inputList.get(i);
 				mapping.put(vc.getZValue().getStrValue(), vc);		// NOTE: if we have multiple of same zvalue (within the same {x,y} pair), this keeps latest one
 			}
-			index += scores.length;
-			for (int i = 0; i < scores.length; i++) {
+			for(int i = 0; i < scores.length; i++) {
 				VisualComponent vc = mapping.get(values.get(i));
 				vc.setScore(scores[i]);
 				vc.setzAttribute(zAttribute);
-				outputList.add(vc);
+				//outputList.add(vc);
+				lists.get(index/scores.length).add(vc);
 			}
+			index += scores.length;
 			//mapping.clear();										// I don't believe this is necessary, should be overwritten
+		}
+		for(int i = 0; i < scores.length; i++) {
+			for(int xy_pair = 0; xy_pair < lists.size(); xy_pair++) {	
+				outputList.add(lists.get(xy_pair).get(i));
+			}
 		}
 		vcList.setVisualComponentList(outputList);
 	}
