@@ -41,7 +41,8 @@ public class DataReformation {
 		double[][] interpolatedData = new double[data.size()][];
 		
 		int i = 0;
-		for (String s: data.keySet()) {
+		// O(2*V*P)
+		for (String s: data.keySet()) { 
 //			if (data.get(s).size() < 2) {
 //				interpolatedData[i++] = new double[0];
 //				continue;
@@ -49,8 +50,8 @@ public class DataReformation {
 			List<Float> overlappedXValues = new ArrayList<Float>(data.get(s).keySet());
 			List<Float> overlappedYValues = new ArrayList<Float>(data.get(s).values());
 			
-			double[] temp = getInterpolatedData(overlappedXValues, overlappedYValues, maxLength);
-			normalization.normalize(temp);
+			double[] temp = getInterpolatedData(overlappedXValues, overlappedYValues, maxLength); // O(2*P)
+			//normalization.normalize(temp); // We normalize in getInterpolatedData already
 			interpolatedData[i++] = temp;
 		}
 		
@@ -116,7 +117,7 @@ public class DataReformation {
 				interpolatedYValues[i] = inputYValues.get(count - 1) + (interpolatedX - inputXValues.get(count-1)) / xDifference * yDifference;				
 			}
 		}
-		normalization.normalize(interpolatedYValues);		
+		normalization.normalize(interpolatedYValues);	
 		return interpolatedYValues;
 	}
 	
@@ -194,7 +195,9 @@ public class DataReformation {
 		return interpolatedYValues;
 	}
 
-	
+	// Triple Array. [overlappedData or overlappedQuery (0 or 1)][vizIndex][interpolatedYValues]
+	// datInterpolated refers to the interpolated SQL query result
+	// queryInterpolated refers to the interpolated "query" aka user drawn trend
 	public double[][][] getOverlappedData(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, ZvQuery args) {		
 		double[][][] overlappedDataAndQueries = new double[2][output.size()][];
 		float[] xRange = args.xRange;

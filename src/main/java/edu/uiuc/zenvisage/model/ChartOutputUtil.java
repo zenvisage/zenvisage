@@ -38,13 +38,13 @@ public class ChartOutputUtil {
 	 * @param finalOutput
 	 * @throws JsonProcessingException
 	 */
-	public void chartOutput(List<double[][]> output,List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> orig,List<Integer> orders, List<Double> orderedDistances, ArrayList<String> mappings, List<BiMap<Float,String>> xMaps, ZvQuery args, Result finalOutput) throws JsonProcessingException{
+	public void chartOutput(double[][] output,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig,List<Integer> orders, List<Double> orderedDistances, ArrayList<String> mappings, List<BiMap<Float,String>> xMaps, ZvQuery args, Result finalOutput) throws JsonProcessingException{
 		if (args.outlierCount==0)
 			args.setOutlierCount(4);
 		int outputLength = args.outlierCount;
-		if(output != null && !output.isEmpty()){
-			outputLength = output.get(0).length;
-		}
+		//if(output != null && !output.isEmpty()){
+			outputLength = output.length;
+		//}
 
 		Double range = 0.0;
 		if(orderedDistances != null && orderedDistances.size()!= 0){
@@ -54,13 +54,11 @@ public class ChartOutputUtil {
 
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
 			// initialize a new chart
-			int j = 0;
-			for (double[][] result : output) {
 				Chart chartOutput = new Chart();
 				/*Separate this call to rank and x axix and return separately*/
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
-				chartOutput.setxType(args.getSketchPoints()[j].xAxis);
-				chartOutput.setyType(args.getSketchPoints()[j].yAxis);
+				chartOutput.setxType(args.xAxis);
+				chartOutput.setyType(args.yAxis);
 				chartOutput.setzType(args.groupBy);
 				chartOutput.title = mappings.get(orders.get(i));
 				chartOutput.setRank(i+1);
@@ -72,18 +70,14 @@ public class ChartOutputUtil {
 
 				// fill in chart data
 				String key = mappings.get(orders.get(i));
-				LinkedHashMap<Float,Float> points = orig.get(j).get(key);
+				LinkedHashMap<Float,Float> points = orig.get(key);
 				if (points == null) continue;
-				int c = 0;
 				for(Float k : points.keySet()) {
 					chartOutput.xData.add(Double.toString(k));
 					chartOutput.yData.add(Double.toString(points.get(k)));
-					c++;
 				}
 				finalOutput.outputCharts.add(chartOutput);
-				j++;
 			}
-		}
 
 		return;
 	}

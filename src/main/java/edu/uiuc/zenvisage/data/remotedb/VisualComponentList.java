@@ -29,6 +29,9 @@ public class VisualComponentList {
 		LinkedHashMap<String, LinkedHashMap<Float, Float>> output = new LinkedHashMap<String, LinkedHashMap<Float, Float>>();
 		for(VisualComponent i: visualComponentList){
 			List<WrapperType> xList = i.getPoints().getXList();
+			if (xList.size() < 2) {
+				continue; // don't add VisualComponents that are too small
+			}
 			List<WrapperType> yList = i.getPoints().getYList();
 			LinkedHashMap<Float, Float> map = new LinkedHashMap<Float, Float>();
 			for(int j = 0; j < xList.size(); j++) {

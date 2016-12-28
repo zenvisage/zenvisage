@@ -78,10 +78,12 @@ public class Similarity extends Analysis {
 		List<List<Double>> orderedDistances = new ArrayList<List<Double>>();
 
 		List<double[][]> data = new ArrayList<double[][]>();
-		List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> outputs = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
+		
+		// O(N*P^2)
+		//List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> outputs = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
 		List<BiMap<Float,String>> xMaps = new ArrayList<BiMap<Float,String>>();
 
-		for (int i = 0; i < sketchPoints.length; i++) {
+//		for (int i = 0; i < sketchPoints.length; i++) {
 //			if (sketchPoints[i].points.isEmpty()) {
 //				if (i < sketchPoints.length - 1) {
 //					sketchPoints[i] = sketchPoints[i+1];
@@ -100,24 +102,24 @@ public class Similarity extends Analysis {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			outputs.add(output);
+			//outputs.add(output);
 
 //			Set<Float> ignore = new HashSet<Float>();
 //			paa.setPAAwidth(output,sketchPoints[i]);
 //			double[][] normalizedgroup = paa.applyPAAonData(output,ignore,sketchPoints[i]);
-			data.add(normalizedgroups);
+//			data.add(normalizedgroups);
 //			double[] queryTrend = paa.applyPAAonQuery(ignore,sketchPoints[i]);
 
 //			double[][][] overlappedDataAndQueries = getOverlappedData(output, args);
 
 //			ListPair lp = computeOrders(overlappedDataAndQueries[0], overlappedDataAndQueries[1], mappings, args);
 			ListPair lp = computeOrders(normalizedgroups, mappings, args);
-			orders.add(lp.order);
-			orderedDistances.add(lp.distances);
-		}
+			//orders.add(lp.order);
+			//orderedDistances.add(lp.distances);
+//		}
 
-		ListPair lp = computeWeightedRanks(orders, orderedDistances);
-		chartOutput.chartOutput(data, outputs, lp.order, lp.distances, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
+		//ListPair lp = computeWeightedRanks(orders, orderedDistances);
+		chartOutput.chartOutput(normalizedgroups, output, lp.order, lp.distances, mappings, xMaps, chartOutput.args, chartOutput.finalOutput);
 		return;
 	}
 

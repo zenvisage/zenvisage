@@ -378,7 +378,6 @@ public class ZvMain {
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
 
-
 //		 ExecutorResult executorResult = executor.getData(q);
 //		 if (executorResult == null) return "";
 //		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
@@ -388,12 +387,13 @@ public class ZvMain {
 		  * if (executorResult == null) return "";
 		  * LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
 		  */
+		 System.out.println("Before SQL");
 		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
 		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
+		 System.out.println("After SQL");
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
-
-
+		 System.out.println("After To HashMap");
 
 		 // setup result format
 		 Result finalOutput = new Result();
@@ -439,19 +439,7 @@ public class ZvMain {
 		 DataReformation dataReformatter = new DataReformation(normalization);
 		 double[][] normalizedgroups;
 
-		 LinkedHashMap<String, LinkedHashMap<Float, Float>> temp = new LinkedHashMap<String, LinkedHashMap<Float, Float>>();
-		 for (String s: output.keySet()) {
-			 if (output.get(s).size() >= 2) {
-				 temp.put(s, output.get(s));
-			 }
-		 }
-//		 for (String s: output.keySet()) {
-//			 if (s.equals("class-08775001") || s.equals("class-15750001")) {
-//				 temp.put(s, output.get(s));
-//			 }
-//		 }
-		 output = temp;
-
+		 System.out.println("Before Methods");
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
@@ -464,17 +452,17 @@ public class ZvMain {
 			 analysis = new Representative(executor,chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("SimilaritySearch")) {
-			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
+			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase); // O(1)
 
 			 if (args.considerRange) {
-				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
+				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args); // O(V*P)
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1];
 				 analysis = new Similarity(executor,chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);
 			 }
 			 else {
 				 normalizedgroups = dataReformatter.reformatData(output);
-				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length);
+				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length); // O(P)
 				 analysis = new Similarity(executor,chartOutput,distance,normalization,paa,args,dataReformatter, interpolatedQuery);
 			 }
 
@@ -496,11 +484,16 @@ public class ZvMain {
 			 }
 			 ((Similarity) analysis).setDescending(true);
 		 }
+		 System.out.println("After Interpolation and normalization");
 
 		 analysis.compute(output, normalizedgroups, args);
-		 ObjectMapper mapper = new ObjectMapper();
+		 System.out.println("After Distance calulations");
 
-		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+		 ObjectMapper mapper = new ObjectMapper();
+		 System.out.println("After Interpolation and normalization");
+		 String res = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+		 System.out.println("After mapping to output string");
+		 return res;
 	}
 
 
