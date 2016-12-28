@@ -14,26 +14,12 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
   };
 
   $scope.addRow = function () {
-
     var table = $("#zql-table > tbody")[0];
     var rowCount = table.rows.length;
     var rowNumber = (rowCount+1).toString();
     //$("#zql-table").append
     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     $compile($el)($scope);
-    //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
-
-        // console.log(checkConstraints($scope.input.constraints));
-        // //Create a copy of parsed version of input for backend
-        // $scope.copy = angular.copy($scope.input);
-
-        // if (checkInput($scope.copy)) {
-        //     console.log("request: ",$scope.copy);
-        //     // Add to rows for front-end display
-        //     $scope.queries['zqlRows'].push($scope.input);
-        //     $scope.parsed['zqlRows'].push($scope.copy);
-        //     $scope.input = {};
-        // }
   };
 
     $scope.submitZQL = function () {
