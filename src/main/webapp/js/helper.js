@@ -9,7 +9,7 @@ var outlierDygraphsNew = {};
 
 //displays user results
 
-function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = true )
+function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
 {
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
@@ -44,7 +44,7 @@ function displayUserQueryResultsHelperNew( userQueryResults, includeSketch = tru
     var ylabel = replaceAll(userQueryResults[count]["yType"], "'", "");
     var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", "");
     var zlabel = replaceAll(userQueryResults[count]["title"], "'", "");
-    
+
     var xRange = userQueryResults[count]["xRange"];
     //var similarityDistance = userQueryResults[count]["distance"];
     var similarityDistance = userQueryResults[count]["normalizedDistance"];
@@ -201,7 +201,7 @@ function replaceAll(str, find, replace) {
   return str.replace(new RegExp(find, 'g'), replace);
 }
 
-function displayRepresentativeResultsHelperNew( representativePatternResults )
+function displayRepresentativeResultsHelper( representativePatternResults )
 {
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
@@ -312,56 +312,7 @@ function displayRepresentativeResultsHelperNew( representativePatternResults )
   }
 }
 
-
 function displayOutlierResultsHelper( outlierResults )
-{
-  clearOutlierTable();
-  var resultsDiv = $("#outlier-table");
-  var varFinalArray = [];
-  for(var count = 0; count < 4; count++) //need to fix count
-  {
-    var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
-    $("#outlier-row-" + count.toString()).append("<td><div class=\"outlier-results draggable-graph\" data-graph-type=\"outlierQuery\" id=\"outlier-result-" + count.toString() + "\"></div></td>");
-    varFinalArray.push(outlierResults[count]);
-  }
-
-  for (var count = 0; count < varFinalArray.length; count++)
-  {
-    var xData = varFinalArray[count]["xData"];
-    var yData = varFinalArray[count]["yData"];
-
-    var xlabel = varFinalArray[count]["xType"];
-    var ylabel = varFinalArray[count]["yType"];
-
-    var xmin = Math.min.apply(Math, xData);
-    var xmax = Math.max.apply(Math, xData);
-    var ymin = Math.min.apply(Math, yData);
-    var ymax = Math.max.apply(Math, yData);
-
-    var data = [];
-    var arrayLength = xData.length;
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( [ Number(xData[i]), Number(yData[i]) ] );
-    }
-    var valueRange = [ymin, ymax];
-    var xRange = [xmin, xmax];
-    outlierDygraphs["outlier-result-" + count.toString()] = getRepresentativeAndOutlierDygraphObject( data, xRange, valueRange, xlabel, count, "outlier-result-" )
-  }
-
-  $(".draggable-graph").draggable({
-    opacity: 0.5,
-    helper: function() {
-      return $(this).clone().css({
-        width: $(event.target).width(),
-        'border-style': "solid",
-        'border-width': 1
-      });
-    }
-  });
-}
-
-
-function displayOutlierResultsHelperNew( outlierResults )
 {
   clearOutlierTable();
   var resultsDiv = $("#outlier-table");

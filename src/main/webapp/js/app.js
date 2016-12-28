@@ -133,20 +133,17 @@ app.factory('plotResults', function() {
     var plottingService = {};
     plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults, includeSketch = true )
     {
-      displayUserQueryResultsHelperNew( userQueryResults, includeSketch );
-      //displayUserQueryResultsHelper( userQueryResults );
+      displayUserQueryResultsHelper( userQueryResults, includeSketch );
     }
 
     plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
     {
-      displayRepresentativeResultsHelperNew( representativePatternResults )
-      //displayRepresentativeResultsHelper( representativePatternResults )
+      displayRepresentativeResultsHelper( representativePatternResults )
     }
 
     plottingService.displayOutlierResults = function displayOutlierResults( outlierResults )
     {
-      displayOutlierResultsHelperNew( outlierResults )
-      //displayOutlierResultsHelper( outlierResults )
+      displayOutlierResultsHelper( outlierResults )
     }
 
     return plottingService;
