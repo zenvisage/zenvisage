@@ -25,7 +25,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
  *
  */
 public class SQLQueryExecutor {
-	
+
 	/**
 	 * Settings specific to local PSQL database, need to change this!!!!
 	 */
@@ -35,7 +35,7 @@ public class SQLQueryExecutor {
 	private String password = "zenvisage";
 	Connection c = null;
 	private VisualComponentList visualComponentList;
-	
+
 	// Initialize connection
 	public SQLQueryExecutor() {
 
@@ -51,7 +51,7 @@ public class SQLQueryExecutor {
 		      }
 	      System.out.println("Opened database successfully");
 	}
-	
+
 	// Query database and return result
 	public ResultSet query(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
@@ -59,26 +59,26 @@ public class SQLQueryExecutor {
 	      stmt.close();
 	      return ret;
 	}
-	
+
 	public int createTable(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      int ret = stmt.executeUpdate(sQLQuery);
 	      stmt.close();
 	      return ret;
 	}
-	
+
 	public void dropTable(String tableName) throws SQLException {
 		Statement stmt = c.createStatement();
 		String sql = "DROP TABLE " + tableName;
 	    stmt.executeUpdate(sql);
 //	    System.out.println("Table " + tableName + " deleted in given database...");
 	    stmt.close();
-	}	
-	
+	}
+
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
 		String sql = null;
-		
+
 		if (whereCondition == null) {
 			sql = "SELECT " + Z + "," + X + "," + "avg(" + Y + ")"
 					+ " FROM " + table
@@ -91,21 +91,21 @@ public class SQLQueryExecutor {
 			+ " GROUP BY " + Z + ", "+ X
 			+ " ORDER BY " + Z + ", "+ X;
 		}
-		
+
 		ResultSet rs = st.executeQuery(sql);
 //		System.out.println("Running ZQL Query ...");
-		
+
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
-		
+
 		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
 		ArrayList <WrapperType> yList = null;
 		VisualComponent tempVisualComponent = null;
-		
+
 		while (rs.next())
 		{
-			
+
 			WrapperType tempZValue = new WrapperType(rs.getString(1));
 
 			if(tempZValue.equals(zValue)){
@@ -128,28 +128,28 @@ public class SQLQueryExecutor {
 		rs.close();
 		st.close();
 	}
-	
+
 	/*This is the main ZQL->SQLExcecution query*/
 	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
 		String sql = null;
-		
+
 		databaseName = databaseName.toLowerCase();
 		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		
-		
+
+
 		//support list of x, y values, general all possible x,y combinations, generate sql
 		int xLen = zqlRow.getX().getAttributes().size();
 		int yLen = zqlRow.getY().getAttributes().size();
-		
+
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
-		
+
 		for(int i = 0; i < xLen; i++){
 			for(int j = 0; j < yLen; j++){
 				String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 				String y = zqlRow.getY().getAttributes().get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-				
+
 				//zqlRow.getConstraint() has replaced the whereCondiditon
 				if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
 					sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
@@ -157,14 +157,14 @@ public class SQLQueryExecutor {
 							+ " GROUP BY " + z + ", "+ x
 							+ " ORDER BY " + z + ", "+ x;
 				} else {
-					
+
 					sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 					+ " FROM " + databaseName
 					+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
 					+ " GROUP BY " + z + ", "+ x
 					+ " ORDER BY " + z + ", "+ x;
 				}
-			
+
 				System.out.println("Running ZQL Query :"+sql);
 				//excecute sql and put into VisualComponentList
 				executeSQL(sql, zqlRow, databaseName, x, y);
@@ -175,19 +175,20 @@ public class SQLQueryExecutor {
 		/* Testing below */
         //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 	}
-	
+
 	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, String y) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
-		
+
 		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
 		ArrayList <WrapperType> yList = null;
 		VisualComponent tempVisualComponent = null;
-		
+
 		String zType = null, xType = null, yType = null;
 		while (rs.next())
 		{
+			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
 			if(yType == null) yType = getMetaType(y, databaseName);
@@ -211,9 +212,9 @@ public class SQLQueryExecutor {
 		rs.close();
 		st.close();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param constraint
 	 * @return
@@ -230,7 +231,7 @@ public class SQLQueryExecutor {
 			flag=true;
 		}
 		appendedConstraints+=" ";
-		
+
 		return appendedConstraints;
 	}
 
@@ -249,10 +250,10 @@ public class SQLQueryExecutor {
 		}
 		return null;
 	}
-	
+
 	public String[] getMetaFileLocation(String database) throws SQLException {
 		Statement st = c.createStatement();
- 		String sql = null;	
+ 		String sql = null;
  		sql = "SELECT " + "metafilelocation, "+"csvfilelocation"
  			+ " FROM " + "zenvisage_metafilelocation"
  			+ " WHERE " + "database = '" + database + "'";
@@ -265,7 +266,7 @@ public class SQLQueryExecutor {
  		}
  		return null;
  	}
-	
+
 	public boolean insert(String sql, String tablename, String tablenameVariable, String databasename) throws SQLException{
 		int count = 0;
 		Statement st0 = c.createStatement();
@@ -276,21 +277,21 @@ public class SQLQueryExecutor {
 	 			+ " WHERE " + tablenameVariable + " = '" + databasename + "'";
 
 		ResultSet rs0 = st0.executeQuery(sql0);
-		
+
 		//if database already exist return false;
 		while (rs0.next())
  		{
 			if(Integer.parseInt(rs0.getString(1))>0) return false;
  		}
-		
+
 		Statement st = c.createStatement();
-	
+
 //		System.out.println(sql);
 		count = st.executeUpdate(sql);
 
 		return count > 0;
 	}
-	
+
 	public boolean isTableExists(String tableName) throws SQLException{
 		Statement st0 = c.createStatement();
 		String sql0 = "select tablename from pg_tables where schemaname='public'";
@@ -301,7 +302,7 @@ public class SQLQueryExecutor {
  		}
 		return false;
 	}
-	
+
 	public void insertTable(String tableName, String fileName, List<String> columns) throws SQLException{
 		StringBuilder sql = new StringBuilder("COPY "+ tableName + "(");
 		for(String s:columns){
@@ -313,17 +314,17 @@ public class SQLQueryExecutor {
 	    stmt.executeUpdate(sql.toString());
 	    stmt.close();
 	}
-	
+
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		try {
 			sqlQueryExecutor.dropTable("COMPANY");
-			
+
 			//sqlQueryExecutor.query("SELECT * FROM COMPANY");
-			
+
 			//sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
-			
-			
+
+
 		} catch (PSQLException e) {
 			// TODO Auto-generated catch block
 			sqlQueryExecutor.createTable("CREATE TABLE COMPANY " +
