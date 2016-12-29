@@ -189,6 +189,8 @@ public class SQLQueryExecutor {
 		while (rs.next())
 		{
 			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
+			if(rs.getString(2) == null || rs.getString(2).isEmpty()) continue;
+			if(rs.getString(3) == null || rs.getString(3).isEmpty()) continue;
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
 			if(yType == null) yType = getMetaType(y, databaseName);
