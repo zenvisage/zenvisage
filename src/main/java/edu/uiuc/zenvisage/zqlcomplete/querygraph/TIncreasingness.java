@@ -90,13 +90,13 @@ public class TIncreasingness implements T {
 		}
 		
 		double temp = sumSlope / xValues.size();
-		System.out.println(v.getZValue());
-		System.out.println("TStuff");
-		System.out.println(xValues.toString());
-		System.out.println(Arrays.toString(xNormalized));
-		System.out.println(yValues.toString());
-		System.out.println(Arrays.toString(yNormalized));
-		System.out.println(temp);
+//		System.out.println(v.getZValue());
+//		System.out.println("TStuff");
+//		System.out.println(xValues.toString());
+//		System.out.println(Arrays.toString(xNormalized));
+//		System.out.println(yValues.toString());
+//		System.out.println(Arrays.toString(yNormalized));
+//		System.out.println(temp);
 		return temp;
 	}
 	

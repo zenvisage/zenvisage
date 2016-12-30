@@ -53,10 +53,11 @@ console.log(parseProcess(process3));
 
 //==============================================================
 function parseName(input) {
-	var restr = orExp([
-			recExp(symVal('-')),
-			recExp(symVal('\\*'))+recExp(varVal()),
-			recExp(varVal())
+	var restr = orExp([ //found[0] is the entire string itself
+			recExp(symVal('-'))+recExp(varVal()), //if we see -f1: found[1]= -, found[2]= f1
+			recExp(symVal('-\\*'))+recExp(varVal()), //if we see -*f1: found[3]= -*, found[4]= f1
+			recExp(symVal('\\*'))+recExp(varVal()), //if we see *f1: found[5]= *, found[6]= f1
+			recExp(varVal()) //if we see f1: found[7] = f1
 		]);
 
 	var re = new RegExp(restr);
@@ -64,9 +65,9 @@ function parseName(input) {
     console.log(found);
     try {
         var name = {
-            output: (found[2] != undefined),
-            sketch: (found[1] != undefined),
-            name: found[3] || found[4]
+            output: (found[3] != undefined || found[5] != undefined), //either the -*f1 or -f1 cases
+            sketch: (found[1] != undefined || found[3] != undefined), //either the -f1 or -*f1 cases
+            name: found[2] || found[4] || found[6] || found[7]
         };
     }
     catch(err) {

@@ -36,6 +36,22 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
           var processe = $(this).find(".process").val()
           var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": "", "processe": processe };
           if (checkInput(input)) {
+            if (input.name.sketch) {
+              // if this row needs to grab data from the sketch
+              var points = [];
+              this.dataX = [];
+              this.dataY = [];
+              this.xAxis = getSelectedXAxis();
+              this.yAxis = getSelectedYAxis();
+              for(var i = 0; i < sketchpadData.length; i++){
+                var xp = sketchpadData[i]["xval"];
+                var yp = sketchpadData[i]["yval"];
+                points.push(new Point( xp, yp ));
+                this.dataX.push( xp );
+                this.dataY.push( yp );
+              }
+              input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+            }
             $scope.queries['zqlRows'].push(input);
           }
         });
@@ -65,7 +81,6 @@ function checkInput(input) {
         console.error("X or Y or Z Column cannot be empty.");
         return false;
     }
-
     input.name = parseName(input.name);
     input.x = parseX(input.x);
     input.y = parseY(input.y);
@@ -292,7 +307,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
       //$($( ".tabler" )[0]).find(".viz").val("")
-      $($( ".tabler" )[0]).find(".process").val("v1<-argmax{z1}[k=40]T(f1)")
+      $($( ".tabler" )[0]).find(".process").val("v1<-argmax_{z1}[k=40]T(f1)")
 
       $($( ".tabler" )[1]).find(".name").val("*f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1")

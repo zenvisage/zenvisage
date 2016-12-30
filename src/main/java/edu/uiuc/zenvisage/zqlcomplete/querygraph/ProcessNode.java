@@ -80,7 +80,7 @@ public class ProcessNode extends QueryNode {
 		}
 		
 	    double[] all_scores1 = axisVariableScores.getScore();
-	    System.out.println(Arrays.toString(all_scores1));
+	    //System.out.println(Arrays.toString(all_scores1));
 	    
 		axisVariableScores = filterScores(axisVariableScores);
 		System.out.println("Process information:");
@@ -98,9 +98,9 @@ public class ProcessNode extends QueryNode {
 			
 		    List<String> values = axisVariableScores.getAxisvars().get(i);
 		    double[] scores = axisVariableScores.getScore();
-		    System.out.println(values);
-		    System.out.println(Arrays.toString(scores));
-		    System.out.println(values.size());
+		    //System.out.println(values);
+		    //System.out.println(Arrays.toString(scores));
+		    //System.out.println(values.size());
 		    
 		    String axisName = axisNames.get(i);
 			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);

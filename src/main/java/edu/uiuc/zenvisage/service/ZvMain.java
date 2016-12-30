@@ -187,67 +187,15 @@ public class ZvMain {
 	   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
 	   //convert it into front-end format.
 	   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
-	   System.out.println(" Query Graph Execution Results Are:");
-	   System.out.println(result);
+	   //System.out.println(" Query Graph Execution Results Are:");
+	   //System.out.println(result);
+	   System.out.println("Done");
 	   return result;
    }
 
-
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
-			Result finalOutput = new Result();
-			int outputLength = 50;
-			// List<ZQLRowVizResult> orig = zqlRowResult.getZqlRowVizResults() ;
-			Normalization outputNormalization = new Original();
-			 // reformat database data
-			DataReformation dataReformatter = new DataReformation(outputNormalization);
-//			 // double[][] output  = dataReformatter.reformatData(orig);
-//
-//			List<Iterator<Entry<String, LinkedHashMap<Float, Float>>>> iteratorList= new ArrayList<>();
-//			List<String> xs= new ArrayList<>();
-//			List<String> ys= new ArrayList<>();
-//			List<String> zs= new ArrayList<>();
-//
-//
-//			for (ZQLRowVizResult output  : orig) {
-//				xs.add(output.getX());
-//				ys.add(output.getY());
-//				zs.add(output.getZ());
-//				Set<Entry<String, LinkedHashMap<Float, Float>>> vizentryset = output.getVizData().entrySet();
-//				Iterator<Entry<String, LinkedHashMap<Float, Float>>> it = vizentryset.iterator();
-//				iteratorList.add(it);
-//			}
-//
-//
-//			for(int i = 0; i < Math.min(orig.get(0).getVizData().size(), outputLength); i++) {
-//					// initialize a new chart
-//				int j = 0;
-//
-//
-//				for(Iterator<Entry<String, LinkedHashMap<Float, Float>>> it:iteratorList){
-//					Entry<String, LinkedHashMap<Float, Float>> entry = it.next();
-//					String zvalue=entry.getKey();
-//					Set<Entry<Float, Float>> innerkeyset = entry.getValue().entrySet();
-//					if(innerkeyset.size()<0)
-//						continue;
-//					Iterator<Entry<Float, Float>> innerit = innerkeyset.iterator();
-//					Chart chartOutput = new Chart();
-//					chartOutput.setxType((i+1)+" : "+zvalue);
-//					chartOutput.setyType("avg"+"("+ys.get(j)+")");
-//					while(innerit.hasNext()){
-//						Entry<Float, Float> innerentry = innerit.next();
-//						Float xvalue=innerentry.getKey();
-//						Float yvalue=innerentry.getValue();
-//						chartOutput.xData.add(Float.toString(xvalue));
-//						chartOutput.yData.add(Float.toString(yvalue));
-//					}
-//
-//					j++;
-//					finalOutput.outputCharts.add(chartOutput);
-//
-//				}
-//			}
+		Result finalOutput = new Result();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
-		int i = 0;
 	    for(VisualComponent viz : vcList.getVisualComponentList()) {
 	    	Chart outputChart = new Chart();
 

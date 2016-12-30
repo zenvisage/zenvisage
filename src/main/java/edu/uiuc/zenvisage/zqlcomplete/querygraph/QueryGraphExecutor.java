@@ -60,7 +60,7 @@ public class QueryGraphExecutor {
 						}
 						System.out.println("To output = " + temp.getVc().getName().getOutput());
 					}
-					System.out.println(" My map");
+					//System.out.println(" My map");
 					//MapUtils.debugPrint(System.out, "myMap", currNode.lookuptable.getVariables());
 					//System.out.println(" My map");
 					//System.out.println(Arrays.toString(currNode.lookuptable.getVariables().entrySet().toArray()));

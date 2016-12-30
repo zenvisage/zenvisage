@@ -178,7 +178,9 @@ public class SQLQueryExecutor {
 
 	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, String y) throws SQLException{
 		Statement st = c.createStatement();
+		System.out.println("before execute");
 		ResultSet rs = st.executeQuery(sql);
+		System.out.println("after execute");
 
 		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
@@ -186,6 +188,7 @@ public class SQLQueryExecutor {
 		VisualComponent tempVisualComponent = null;
 
 		String zType = null, xType = null, yType = null;
+		System.out.println("before loop");
 		while (rs.next())
 		{
 			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
@@ -213,6 +216,7 @@ public class SQLQueryExecutor {
 		}
 		rs.close();
 		st.close();
+		System.out.println("after loop");
 	}
 
 

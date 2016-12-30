@@ -70,6 +70,7 @@ public class VisualComponentNode extends QueryNode{
 		
 		Name name_obj = this.getVc().getName();
 		// if we are dealing with a row that wants to get sketch data
+		// TODO: FIX Z value (to use sketch for other rows)
 		if (name_obj.getSketch()) {
 			// Thus, the Sketch object should be populated too
 			VisualComponentList vcList = new VisualComponentList();
@@ -148,8 +149,8 @@ public class VisualComponentNode extends QueryNode{
 			}			
 		}
 		this.getLookUpTable().put(name, vcList);
-		System.out.println("vcList for node "+ name);
-		System.out.println(sqlQueryExecutor.getVisualComponentList());
+		//System.out.println("vcList for node "+ name);
+		//System.out.println(sqlQueryExecutor.getVisualComponentList());
 		this.state = State.FINISHED;
 	}
 	
@@ -286,7 +287,7 @@ public class VisualComponentNode extends QueryNode{
 
 		System.out.println("z information:");
 		System.out.println(z.getVariable());
-		System.out.println(z.getValues());
+		//System.out.println(z.getValues());
 		System.out.println(z.getAttribute());
 		vc.getViz().setVariable("AVG");
 		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
