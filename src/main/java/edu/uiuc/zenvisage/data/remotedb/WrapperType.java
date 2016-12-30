@@ -26,6 +26,13 @@ public class WrapperType {
 		}
 	}
 	
+	public WrapperType(int x) {
+		this.intValue = x;
+	}
+	public WrapperType(float x) {
+		this.floatValue = x;
+	}
+
 	public boolean equals(WrapperType input) {
 		
 		if(input == null && this.intValue == null && this.strValue == null && this.floatValue == null) {

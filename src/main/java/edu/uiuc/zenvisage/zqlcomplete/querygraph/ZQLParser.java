@@ -43,7 +43,7 @@ public class ZQLParser {
 			
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
 			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
-			VisualComponentNode vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor);
+			VisualComponentNode vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor, row.getSketchPoints());
 			vcNode.setDb(table.getDb());
 			Processe process = row.getProcesse();
 			ProcessNode processNode = new ProcessNode(process, lookuptable);

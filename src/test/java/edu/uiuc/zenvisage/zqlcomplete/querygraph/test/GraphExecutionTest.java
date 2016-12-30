@@ -28,7 +28,7 @@ public class GraphExecutionTest {
 			String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
 			System.out.println("Old Output");
 			System.out.println(outputOldExecutor);
-			
+						
 		} catch (IOException | InterruptedException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,6 +36,22 @@ public class GraphExecutionTest {
 		
 	}
 
+	@Test
+	public void TestsSketchQueryExecution() {
+		String arg = "{\"db\":\"real_estate\",\"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":true,\"name\":\"f1\"},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"city\",\"points\":[{\"x\":\"5\", \"y\":\"10000\"}, {\"x\":\"7\", \"y\":\"20000\"}, {\"x\":\"9\", \"y\":\"30000\"}]}}]}";
+		
+		try {
+			ZvMain zvMain = new ZvMain();
+			System.out.println("testing Sketech query");
+			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			System.out.println("Output");
+			System.out.println(outputGraphExecutor);
+			
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	@Test
 	public void TestIncreasingQueryExecution() {
 		//Q4

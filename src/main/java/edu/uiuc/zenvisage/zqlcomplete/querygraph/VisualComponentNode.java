@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.uiuc.zenvisage.data.remotedb.Points;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
+import edu.uiuc.zenvisage.model.Point;
+import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.zql.executor.Constraints;
+import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
@@ -23,6 +28,7 @@ public class VisualComponentNode extends QueryNode{
 	private VisualComponentQuery vc;
 	private SQLQueryExecutor sqlQueryExecutor;
 	private String db;
+	private Sketch sketch;
 	
 	// private vc output
 	//TODO: build separate result node
@@ -40,14 +46,16 @@ public class VisualComponentNode extends QueryNode{
 		this.db = db;
 	}
 
-	public VisualComponentNode(VisualComponentQuery vc) {
+	public VisualComponentNode(VisualComponentQuery vc, Sketch sketch) {
 		this.vc = vc;
+		this.sketch = sketch;
 	}
 
-	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor) {
+	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
 		super(table);
 		this.vc = vc;
 		this.sqlQueryExecutor = sqlQueryExecutor;
+		this.sketch = sketch;
 	}
 
 	@Override
@@ -59,6 +67,37 @@ public class VisualComponentNode extends QueryNode{
 		this.state = State.RUNNING;
 
 		LookUpTable lookuptable = this.getLookUpTable();
+		
+		Name name_obj = this.getVc().getName();
+		// if we are dealing with a row that wants to get sketch data
+		if (name_obj.getSketch()) {
+			// Thus, the Sketch object should be populated too
+			VisualComponentList vcList = new VisualComponentList();
+			ArrayList<VisualComponent> list = new ArrayList<VisualComponent>();
+			vcList.setVisualComponentList(list);
+			
+			if(sketch == null || sketch.points.isEmpty()) {
+				this.state = State.FINISHED;
+				return;
+			}
+			ArrayList<WrapperType> xList = new ArrayList<WrapperType>();
+			ArrayList<WrapperType> yList = new ArrayList<WrapperType>();
+			for (Point point : sketch.points) {
+				xList.add(new WrapperType(point.getX()));
+				yList.add(new WrapperType(point.getY()));
+			}
+			
+			VisualComponent vc = new VisualComponent(new WrapperType("sketch", "string"), new Points(xList, yList));
+			vc.setxAttribute(sketch.xAxis);
+			vc.setyAttribute(sketch.yAxis);
+			vc.setzAttribute(sketch.groupBy);
+			vcList.addVisualComponent(vc);
+			
+			this.getLookUpTable().put(name_obj.getName(), vcList);
+			System.out.println("vcList for sketch "+ name_obj.getName());
+			this.state = State.FINISHED;
+			return;
+		}
 		// update lookup table with axisvariables
 		XColumn x = this.getVc().getX();
 		YColumn y = this.getVc().getY();
@@ -90,8 +129,7 @@ public class VisualComponentNode extends QueryNode{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		this.state = State.FINISHED;
+		
 		//update the look table with name variable, e.g, f1)
 		String name = this.getVc().getName().getName();
 
@@ -112,6 +150,7 @@ public class VisualComponentNode extends QueryNode{
 		this.getLookUpTable().put(name, vcList);
 		System.out.println("vcList for node "+ name);
 		System.out.println(sqlQueryExecutor.getVisualComponentList());
+		this.state = State.FINISHED;
 	}
 	
 	/**

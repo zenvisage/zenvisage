@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Queue;
 import org.apache.commons.collections.MapUtils;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
@@ -27,6 +29,7 @@ public class QueryGraphExecutor {
 	public static VisualComponentList execute(QueryGraph queryGraph) {
 		// TODO: design decision: casting and instanceof?		
 		VisualComponentList outputList = new VisualComponentList();
+		outputList.setVisualComponentList(new ArrayList<VisualComponent>());
 
 		Queue<Node> nodeQueue = new ArrayDeque<Node>();
 		for (Node entryNode : queryGraph.entryNodes) {
@@ -50,9 +53,10 @@ public class QueryGraphExecutor {
 						VisualComponentNode temp = (VisualComponentNode) currNode;
 						// gets the f1, f2, or so on...
 						
-						// If this node was selected as an output node (Eg *f2), update the execution output
+						// If this node was selected as an output node (Eg *f2), update the execution output to include this node's output as well
 						if (temp.getVc().getName().getOutput()) {
-							outputList = (VisualComponentList) (currNode).lookuptable.get(temp.getVc().getName().getName());
+							VisualComponentList toAdd = (VisualComponentList) (currNode).lookuptable.get(temp.getVc().getName().getName());
+							outputList.getVisualComponentList().addAll(toAdd.getVisualComponentList());
 						}
 						System.out.println("To output = " + temp.getVc().getName().getOutput());
 					}
