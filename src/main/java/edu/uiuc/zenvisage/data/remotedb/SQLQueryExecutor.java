@@ -50,6 +50,15 @@ public class SQLQueryExecutor {
 		         System.exit(0);
 		      }
 	      System.out.println("Opened database successfully");
+	      
+	      try {
+	    	  Statement s = c.createStatement();
+	    	  s.execute("SET SESSION work_mem = '200MB'");
+	      } catch (SQLException e) {
+	    	  System.out.println("Cannot change work_mem!");
+	    	  e.printStackTrace();
+	    	  System.exit(0);
+	      }
 	}
 
 	// Query database and return result
