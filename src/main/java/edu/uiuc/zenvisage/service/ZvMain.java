@@ -491,11 +491,12 @@ public class ZvMain {
 	public String getInterfaceFomData(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		this.databaseName = fq.getDatabasename();
-		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		executor = new Executor(inMemoryDatabase);
+		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
 		//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = createDatabase(this.databaseName, locations[0], locations[1]);
+
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
 		System.out.println(buffer);
 //		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
