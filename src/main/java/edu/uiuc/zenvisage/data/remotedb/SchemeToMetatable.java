@@ -40,6 +40,28 @@ public class SchemeToMetatable {
 	}
 	
 	
+	public String schemeFileToCreatTableSQL(String filePath, String tablename) throws IOException{
+//		System.out.println(filePath);
+//		System.out.println(tablename);
+//		InputStream is = getClass().getResourceAsStream(filePath);
+		tablename = tablename.toLowerCase();
+		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
+		
+	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
+		String sCurrentLine;
+		while ((sCurrentLine = br.readLine()) != null) {
+//			System.out.println(sCurrentLine);
+			String split1[] = sCurrentLine.split(":");
+			String split2[] = split1[1].split(",");
+			createTableSQLBuilder.append(split1[0].toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(split2[0]) + ", ");
+			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
+		}
+		br.close();
+		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");
+//		System.out.println(createTableSQL);
+		return createTableSQLBuilder.toString();
+	}
+	
 	public String schemeFileToMetaSQLStream(String filePath, String tablename) throws IOException{
 //		System.out.println(filePath);
 //		System.out.println(tablename);

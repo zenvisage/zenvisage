@@ -309,11 +309,19 @@ public class SQLQueryExecutor {
 
 	public boolean isTableExists(String tableName) throws SQLException{
 		Statement st0 = c.createStatement();
-		String sql0 = "select tablename from pg_tables where schemaname='public'";
-		ResultSet rs0 = st0.executeQuery(sql0);
+		String sql0 = "select * from pg_tables where tablename = '" + tableName + "'";
+		ResultSet rs0;
+		try{
+			 rs0 = st0.executeQuery(sql0);
+		}
+		catch(Exception PSQLException){
+
+			return false;
+		}
 		while (rs0.next())
  		{
-			if(rs0.getString(1).equals(tableName)) return true;
+			System.out.println(rs0.getString(2));
+			if(rs0.getString(2).equals(tableName)) return true;
  		}
 		return false;
 	}
