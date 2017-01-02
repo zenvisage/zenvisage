@@ -229,8 +229,72 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".process").val("")
     }
 
-    $scope.populateQuery1 = function() {
+    $scope.populateWeatherQuery1 = function() {
+      $scope.removerAndInsertRows( 3 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
+      $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("location='AUMELBRN'")
+      $($( ".tabler" )[0]).find(".process").val("")
 
+      $($( ".tabler" )[1]).find(".name").val("f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1<-{'month'}")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val(" z2<-'location'.*")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmin_{z1}x{z2}[k=5]DEuclidean(f1,f2)")
+
+      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y1")
+      $($( ".tabler" )[2]).find(".z-val").val("v2")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+      $($( ".tabler" )[2]).find(".process").val("")
+    }
+
+    $scope.populateWeatherQuery2 = function() {
+      $scope.removerAndInsertRows( 3 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
+      $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("location='AUMELBRN'")
+      $($( ".tabler" )[0]).find(".process").val("")
+
+      $($( ".tabler" )[1]).find(".name").val("f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1<-{'month'}")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val(" z2<-'location'.*")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmax_{z1}x{z2}[k=5]DEuclidean(f1,f2)")
+
+      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y1")
+      $($( ".tabler" )[2]).find(".z-val").val("v2")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+      $($( ".tabler" )[2]).find(".process").val("")
+    }
+
+    $scope.populateWeatherQuery3 = function() {
+      $scope.removerAndInsertRows( 2 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
+      $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      $($( ".tabler" )[0]).find(".process").val("v1<-argmax_{z1}[k=5]T(f1)")
+
+      $($( ".tabler" )[1]).find(".name").val("*f2")
+      $($( ".tabler" )[1]).find(".x-val").val("x1")
+      $($( ".tabler" )[1]).find(".y-val").val("y1")
+      $($( ".tabler" )[1]).find(".z-val").val("v1")
+      $($( ".tabler" )[1]).find(".constraints").val("")
+      $($( ".tabler" )[1]).find(".process").val("")
+    }
+
+    $scope.populateQuery1 = function() {
       $scope.removerAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("*f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
@@ -239,7 +303,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
       //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
-
     }
 
     $scope.populateQuery2 = function() {
