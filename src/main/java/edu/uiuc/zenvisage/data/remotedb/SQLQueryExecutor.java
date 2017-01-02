@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
@@ -164,14 +165,14 @@ public class SQLQueryExecutor {
 					sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
 							+ " FROM " + databaseName
 							+ " GROUP BY " + z + ", "+ x
-							+ " ORDER BY " + z + ", "+ x;
+							+ " ORDER BY " + x;
 				} else {
 
 					sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
 					+ " FROM " + databaseName
 					+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
 					+ " GROUP BY " + z + ", "+ x
-					+ " ORDER BY " + z + ", "+ x;
+					+ " ORDER BY " + x;
 				}
 
 				System.out.println("Running ZQL Query :"+sql);
@@ -198,6 +199,9 @@ public class SQLQueryExecutor {
 
 		String zType = null, xType = null, yType = null;
 		System.out.println("before loop");
+		// Since we do not order by Z, we need a hashmap to keep track of all the visualcomponents
+		// Since X is sorted though, the XList and YList are sorted correctly
+		HashMap<String, VisualComponent> vcMap = new HashMap<String, VisualComponent>();
 		while (rs.next())
 		{
 			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
@@ -207,21 +211,21 @@ public class SQLQueryExecutor {
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
 			if(yType == null) yType = getMetaType(y, databaseName);
 
-			WrapperType tempZValue = new WrapperType(rs.getString(1), zType);
-
-			if(tempZValue.equals(zValue)){
-				xList.add(new WrapperType(rs.getString(2), xType));
-				yList.add(new WrapperType(rs.getString(3), yType));
-			} else {
-				zValue = tempZValue;
+			String zStr = rs.getString(1);
+			VisualComponent vc = vcMap.get(zStr);
+			if(vc != null) {
+				vc.getPoints().getXList().add(new WrapperType(rs.getString(2), xType));
+				vc.getPoints().getYList().add(new WrapperType(rs.getString(3), yType));
+			}
+			else {
 				xList = new ArrayList<WrapperType>();
 				yList = new ArrayList<WrapperType>();
 				xList.add(new WrapperType(rs.getString(2), xType));
 				yList.add(new WrapperType(rs.getString(3), yType));
-				tempVisualComponent = new VisualComponent(zValue, new Points(xList, yList), x, y);
+				tempVisualComponent = new VisualComponent(new WrapperType(zStr, zType), new Points(xList, yList), x, y);
 				this.visualComponentList.addVisualComponent(tempVisualComponent);
+				vcMap.put(zStr, tempVisualComponent);
 			}
-
 		}
 		rs.close();
 		st.close();
