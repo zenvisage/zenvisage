@@ -51,6 +51,10 @@ app.controller('zqlTableController', ['$scope', '$http', 'plotResults', '$compil
                 this.dataY.push( yp );
               }
               input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+              input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x"+(index+1)};
+              input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y"+(index+1)};
+              input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z"+(index+1), expression: undefined};
+              "z"+index + "<-'"+ getSelectedCategory() +"'.*";
             }
             $scope.queries['zqlRows'].push(input);
           }

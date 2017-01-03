@@ -65,12 +65,30 @@ public class VisualComponentNode extends QueryNode{
 			return;
 		}
 		this.state = State.RUNNING;
-
 		LookUpTable lookuptable = this.getLookUpTable();
+		
+		// update lookup table with axisvariables
+		XColumn x = this.getVc().getX();
+		YColumn y = this.getVc().getY();
+		ZColumn z = this.getVc().getZ();
+
+		// e.g., x1 <- 'year'
+		if (!x.getVariable().equals("") && !x.getAttributes().isEmpty()) {
+			AxisVariable axisVar = new AxisVariable("X", "", x.getAttributes());
+			lookuptable.put(x.getVariable(), axisVar);
+		}
+		if (!y.getVariable().equals("") && !y.getAttributes().isEmpty()) {
+			AxisVariable axisVar = new AxisVariable("Y", "", y.getAttributes());
+			lookuptable.put(y.getVariable(), axisVar);
+		}
+		// For z, use type variable = z.getColumn!
+		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
+			AxisVariable axisVar = new AxisVariable("Z", z.getAttribute(), z.getValues());
+			lookuptable.put(z.getVariable(), axisVar);
+		}
 		
 		Name name_obj = this.getVc().getName();
 		// if we are dealing with a row that wants to get sketch data
-		// TODO: FIX Z value (to use sketch for other rows)
 		if (name_obj.getSketch()) {
 			// Thus, the Sketch object should be populated too
 			VisualComponentList vcList = new VisualComponentList();
@@ -99,25 +117,7 @@ public class VisualComponentNode extends QueryNode{
 			this.state = State.FINISHED;
 			return;
 		}
-		// update lookup table with axisvariables
-		XColumn x = this.getVc().getX();
-		YColumn y = this.getVc().getY();
-		ZColumn z = this.getVc().getZ();
 
-		// e.g., x1 <- 'year'
-		if (!x.getVariable().equals("") && !x.getAttributes().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable("X", "", x.getAttributes());
-			lookuptable.put(x.getVariable(), axisVar);
-		}
-		if (!y.getVariable().equals("") && !y.getAttributes().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable("Y", "", y.getAttributes());
-			lookuptable.put(y.getVariable(), axisVar);
-		}
-		// For z, use type variable = z.getColumn!
-		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
-			AxisVariable axisVar = new AxisVariable("Z", z.getAttribute(), z.getValues());
-			lookuptable.put(z.getVariable(), axisVar);
-		}
 		// call SQL backend
 		ZQLRow row = buildRowFromNode();
 		try {
@@ -134,15 +134,15 @@ public class VisualComponentNode extends QueryNode{
 		//update the look table with name variable, e.g, f1)
 		String name = this.getVc().getName().getName();
 
-		// CHECK THIS OUTPUT
+		//Fills in missing info into vcList for output purposes
 		AxisVariable axisVar = (AxisVariable) lookuptable.get(z.getVariable());
 		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
+		// If our Z values are from the output of a process, we need to sort the list using the scores
 		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length > 0) {
 			double[] scores = axisVar.getScores();
 			List<String> values = axisVar.getValues();
 			sortVisualComponentList(vcList, scores, values, axisVar.getAttribute());
-		}
-		else {
+		} else {
 			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
 				VisualComponent vc = vcList.getVisualComponentList().get(i);;
 				vc.setzAttribute(z.getAttribute());
