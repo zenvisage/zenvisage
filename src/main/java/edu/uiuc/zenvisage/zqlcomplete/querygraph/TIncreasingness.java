@@ -34,7 +34,7 @@ public class TIncreasingness implements T {
 		ArrayList<String> singleAxisvarsList = new ArrayList<String>();		
 		for (int i = 0; i < f1List.size(); i++) {
 			singleAxisvarsList.add(f1List.get(i).getZValue().getStrValue());
-			scores.add(getTestValue(f1List.get(i)));
+			scores.add(getTValue(f1List.get(i)));
 		}
 		axisvars.add(singleAxisvarsList);
 		AxisVariableScores axisVariableScores = new AxisVariableScores(axisvars, scores);
@@ -49,21 +49,24 @@ public class TIncreasingness implements T {
 		if (xValues.size() == 0 || xValues.size() != yValues.size()) {
 			return Double.MIN_VALUE;
 		}
+
+		double[] xNormalized = normalize(xValues);
+		double[] yNormalized = normalize(yValues);
 		
 		double sumXY = 0.0;
 		double sumX = 0.0;
 		double sumY = 0.0;
 		double sumXSquare = 0.0;
-		for (int i = 0; i < xValues.size(); i++) {
-			double x = xValues.get(i).getNumberValue();
-			double y = yValues.get(i).getNumberValue();
+		for (int i = 0; i < xNormalized.length; i++) {
+			double x = xNormalized[i];
+			double y = yNormalized[i];
 			sumX += x;
 			sumY += y;
 			sumXSquare += Math.pow(x, 2);
 			sumXY += x * y;
 		}
 		
-		double slope = (xValues.size()*1.0 * sumXY - sumX*sumY) / (xValues.size()*1.0*sumXSquare - Math.pow(sumX, 2));
+		double slope = (xNormalized.length*1.0 * sumXY - sumX*sumY) / (xNormalized.length*1.0*sumXSquare - Math.pow(sumX, 2));
 		return slope;
 	}
 	
