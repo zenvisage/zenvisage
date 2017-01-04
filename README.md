@@ -8,35 +8,35 @@ For more details, please look at our [Project Webpage] (http://zenvisage.github.
 ## Requirements
 
 * Install [Apache Maven 3.0.5] (https://maven.apache.org/)
-  * https://maven.apache.org/install.html
-  * For Linux: sudo apt-get install maven
-  * For Mac OS-X with Homebrew installed: brew install maven
+brew install maven
 
-* Install Java 1.8,
-
-  UPDATE JAVA_HOME to your installed java folder.
-
-* Install [eclipse J2EE] (http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/mars2) (Optional: for development)
+* Install Java 1.8
+UPDATE JAVA_HOME to your installed java folder.
 
 * Install Postgresql database
+brew install postgres
 
-* (https://github.com/zenvisage/zenvisage/blob/feature/QueryGraph/src/main/java/edu/uiuc/zenvisage/data/remotedb/readme.md)
-
-
-## Building Code and Deployment
-
-*  git clone https://github.com/zenvisage/zenvisage.git
-*  cd zenvisage
-*  sh build.sh
 
 ## Install Postgres
 (1) Download Postgres server on your local machine;
 
 (2) Postgres server must contain a user with:
 
-username  postgres
+username:  postgres
 password: zenvisage
 
+
+* create a default db with current username
+createdb
+
+* create a specific username with no password
+createuser <username> -w
+
+* create a db for a user
+createdb -O<username> -Eutf8 <dbname>
+
+* log into the db
+psql <dbname>
 
 Method One:
 Run clean up query and setup query:
@@ -47,6 +47,13 @@ CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
 CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);
 
 
+
+
+## Building Code and Deployment
+
+*  git clone https://github.com/zenvisage/zenvisage.git
+*  cd zenvisage
+*  sh build.sh
 
 ## Deploy code
 *  sh run.sh
@@ -85,43 +92,4 @@ use command in regular terminal not in postgres terminal:
 psql postgres < /path_to_zevnisage.sql/zenvisage.sql
 
 (to dump database: use pg_dump postgres > /path_to_zevnisage.sql/zenvisage.sql)
-
-# Architecture
-
-## Back-end
-
-The zenvisage front-end interacts with the back-end via a REST
-protocol. The back-end is implemented in Java and uses embedded Jetty
-for the web server.
-
-The backe-end code is under src/main/java with the parent package edu.uiuc.zenvisage.
-
-* server:
-Contains the class for starting the webserver (embedded Jetty Server)
-
-* api:
-Contains classes for REST Interface (registers request mappings).
-
-* model:
-Contains the classes for key entitites in zenvisage
-
-* service:
-Contains the classes for analysis (e.g., similarity, representative)
-
-* data:
-Contains the classes for data storage and query execution
-
-* zql:
-Contains the classes for zql query execution (currently replicates some of the functionalities of above packages).
-
-
-
-## Front-end
-The front-end code is under src/main/webapp.
-
-* index.html. This is where all the static elements of the webpage are created. In addition, the dynamic elements are initialized in index.html, which are then populated through javscript.
-
-* js/ Our own js files.
-
-* lib/ libraries used for the frontend
 
