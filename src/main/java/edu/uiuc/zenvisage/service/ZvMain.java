@@ -64,6 +64,8 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
+import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowResult;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowVizResult;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
@@ -184,6 +186,13 @@ public class ZvMain {
 
 		}
 
+   /**
+    * 
+    * @param zqlQuery Receives as a string the JSON format of a ZQLTable
+    * @return String representing JSON format of Result (output of running ZQLTable through our query graph)
+    * @throws IOException
+    * @throws InterruptedException
+    */
    public String runQueryGraph(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
@@ -222,11 +231,9 @@ public class ZvMain {
 	    	finalOutput.outputCharts.add(outputChart);
 	    }
 		return finalOutput;
-
 	 }
 
-
-
+   //old
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 //		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 		  executor = new Executor(inMemoryDatabase);
@@ -255,7 +262,34 @@ public class ZvMain {
 		return mapper.writeValueAsString(finalOutput);
 	}
 
-
+	/**
+	 * Given a front end sketch or drag and drop, run similarity search through the query graph backend
+	 * @param zvQuery
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public String runSimilaritySearch(String zvQuery) throws InterruptedException, IOException {
+		String result = "";
+		
+		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
+	   ZQLParser parser = new ZQLParser();
+	   //QueryGraph graph = parser.processZQLTable(zqlTable);
+	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
+		
+		return result;
+	}
+	
+	private ZQLTable createSimilairtySearchTable(ZvQuery args) {
+		ZQLTable table = new ZQLTable();
+		List<ZQLRow> rows = new ArrayList<ZQLRow>();
+		
+		Name name1 = new Name();
+		name1.setName("f1");
+		
+		return null;
+	}
+	
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database
