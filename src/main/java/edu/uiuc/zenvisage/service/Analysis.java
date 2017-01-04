@@ -21,7 +21,6 @@ public abstract class Analysis {
 	/** 
 	 * Variables of analysis class
 	 */
-	public Executor executor;
 	public ChartOutputUtil chartOutput;
 	public Distance distance;
 	public Normalization normalization;
@@ -33,9 +32,8 @@ public abstract class Analysis {
 	 * @param distance
 	 * @param normalization
 	 */
-	public Analysis(Executor executor, ChartOutputUtil chartOutput, Distance distance,
+	public Analysis(ChartOutputUtil chartOutput, Distance distance,
 			Normalization normalization, ZvQuery args) {
-		this.executor = executor;
 		this.chartOutput = chartOutput;
 		this.distance = distance;
 		this.normalization = normalization;
@@ -49,20 +47,6 @@ public abstract class Analysis {
 	 * @throws JsonProcessingException 
 	 */
 	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException;
-
-	/**
-	 * @return the executor
-	 */
-	public Executor getExecutor() {
-		return executor;
-	}
-
-	/**
-	 * @param executor the executor to set
-	 */
-	public void setExecutor(Executor executor) {
-		this.executor = executor;
-	}
 
 	/**
 	 * @return the chartOutput
