@@ -174,8 +174,8 @@ public class ZvMain {
    public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 		  System.out.println(zqlQuery);
 //	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
-		  executor = new Executor(inMemoryDatabase);
-		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
+//		  executor = new Executor(inMemoryDatabase);
+//		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
 		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
      	  String result=new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
      	  System.out.println(result);
@@ -229,8 +229,8 @@ public class ZvMain {
 
    public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 //		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
-		  executor = new Executor(inMemoryDatabase);
-		  ZQLExecutor.executor=executor;
+//		  executor = new Executor(inMemoryDatabase);
+//		  ZQLExecutor.executor=executor;
 		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
 		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
@@ -500,7 +500,7 @@ public class ZvMain {
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = createDatabase(this.databaseName, locations[0], locations[1]);
-		executor = new Executor(inMemoryDatabase);
+		//executor = new Executor(inMemoryDatabase);
 		
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
