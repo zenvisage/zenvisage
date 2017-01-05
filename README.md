@@ -1,95 +1,68 @@
-# Overview
-zenvisage is designed as a lightweight web-based client application. It provides the user an intuitive graphical interface for specifying trends and insights in data, automatically seaches for user-specified insights in data, and encodes the results into the most effective visualizations.
+# Zenvisage: An Interactive and Expressive Visual Analytics System 
+Zenvisage is a visual exploration system that can automatically identify and recommend interesting visualizations. The user can specify at a high level what they are looking for, and the system will do the rest.
 
-For more details, please look at our [Project Webpage] (http://zenvisage.github.io/)
+### Version
+The current version is 0.1.
 
-# Compilation
+### Features
+Zenvisage enables users to effortlessly receive visualization recommendations for interesting trends, patterns, and insights from large datasets. Here are the key features of Zenvisage:
 
-## Requirements
+* Zenvisage users can directly draw the trend-line they are looking for, and then rely on the system to find appropriate matches: for instance, a person browsing a dataset of material properties may be looking for those materials displaying a specific correlation between two properties. Users can also drag-and-drop trends onto the canvas and then subsequently modify the trend. Using this interface, users can specify the insights they are looking for, and expect Zenvisage to find matches, much like a "visualization search engine".
 
-* Install [Apache Maven 3.0.5] (https://maven.apache.org/)
-brew install maven
+* Zenvisage supports a query language, called ZQL (pronounced "zee-quel"), short for Zenvisage Query Language, a flexible and intuitive mechanism to specify desired insights from visualizations. Using a small number of ZQL lines, users can explore trends, patterns, and insights in any which way they desire.
 
-* Install Java 1.8
-UPDATE JAVA_HOME to your installed java folder.
+* In addition to returning results for user-submitted queries, zenvisage runs a host of parallel queries to find the most typical and outlier trends for that subset of data the user is currently viewing and presents them as visualization recommendations.
 
-* Install Postgresql database
-brew install postgres
-
-
-## Install Postgres
-(1) Download Postgres server on your local machine;
-
-(2) Postgres server must contain a user with:
-
-username:  postgres
-password: zenvisage
+### Readings
+* [Project webpage] [zenvisage-website]
+* [VLDB'17 Paper] [zenvisage-vldb]
+* [CIDR'17 Paper] [zenvisage-cidr]
 
 
-* create a default db with current username
-createdb
+### Required Software
+* Java Platform (JDK) >= 8, UPDATE JAVA_HOME to your installed java folder.
+* PostgreSQL >= 9.5
+* Apache Maven 3.0.5, brew install maven
 
-* create a specific username with no password
-createuser <username> -w
+### Installation Instructions
+* Clone the zenvisage repository (Alternatively, you can download the source as a zip.). 
 
-* create a db for a user
-createdb -O<username> -Eutf8 <dbname>
-
-* log into the db
-psql <dbname>
-
-Method One:
-Run clean up query and setup query:
-\connect postgres;
-DROP schema public cascade;
-CREATE schema public;
-CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);
-CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);
+      ...
+        git clone https://github.com/zenvisage/zenvisage.git
+      ...
 
 
+* Configure Postgres.Users need to install PostgresSQL successfully. (A tutorial of installing PostgresSQL on Mac OSX can be found here.) Zenvisage uses the default username -- postgres. Users need to create a password “zenvisage” for the user postgres. Thus, zenvisage uses the following username and password:     
+        ...
+          username: postgres
+          password: zenvisage 
+        ...
+    
+  Next, users need to create a few tables used by zenvisage. They can do so by running the db-setup.sh in zenvisage folder.
 
+* Build and deploy code. Inside zenvisage folder,
+    
+        ...
+          sh build.sh.   
+        ...
+* Run 
+            
+            ...
+            sh run.sh
+            ...
+  
+* Launch http://localhost:8080/ (preferably in chrome). 
 
-## Building Code and Deployment
+### License
+----
+MIT
 
-*  git clone https://github.com/zenvisage/zenvisage.git
-*  cd zenvisage
-*  sh build.sh
+[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
-## Deploy code
-*  sh run.sh
-*  http://localhost:8080/
-*  Launch http://localhost:8080/
-
-## Upload files
-( Be aware that column names of csv&&txt table can not contain '-'
-(e.g.Foreclosures-Ratio, should be ForeclosuresRatio);
-Upload (csv, txt) tuples (e.g. real_estate.csv, real_estate.txt) using the front-end file upload functionality;
-The file upload back-end will auto creat csv table, insert metafilelocation table && metatable;
-
-Now you can select the dataset from dropdown on front-end plotting and similarity search;
-
-
-Method Two:(Need Revamp, don't use this for now) (Fast loading 3 databases without uploading schema and files 3 times and wait)
-
-(1)
-Using Command Line Tools with Postgres.app
-Configure your $PATH
-Postgres.app includes many command line tools. If you want to use them, you must configure the $PATH variable.
-
-If you are using bash (default shell on OS X), add the following line to ~/.bash_profile:
-
-source  ~/.bash_profile:
-
-export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
-
-(2)
-zevisange.sql is at zenvisage project root folder
-
-First drop all schema in postgres terminal: DROP schema public cascade;
-
-use command in regular terminal not in postgres terminal:
-
-psql postgres < /path_to_zevnisage.sql/zenvisage.sql
-
-(to dump database: use pg_dump postgres > /path_to_zevnisage.sql/zenvisage.sql)
-
+   [prof]: http://web.engr.illinois.edu/~adityagp/#
+   [zenvisage-website]: http://zenvisage.github.io/
+   [zenvisage-vldb]: http://data-people.cs.illinois.edu/papers/zenvisage-vldb.pdf
+   [zenvisage-cidr]: http://data-people.cs.illinois.edu/papers/zenvisage-cidr.pdf
+   [postgressite]: https://www.postgresql.org/
+   [postgres-installation]: https://chartio.com/resources/tutorials/how-to-start-postgresql-server-on-mac-os-x/
+   <sup>1</sup>The smart-fuse optimization algorithms are not part of this release.
