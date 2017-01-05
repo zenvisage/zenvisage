@@ -119,17 +119,17 @@ public class ZvBasicAPI {
 		return zvMain.getInterfaceFomData(arg);
 	}
 
-	@RequestMapping(value = "/getBaselineData", method = RequestMethod.GET)
-	@ResponseBody
-	public String getBaselineData(@RequestParam(value="query")String arg) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
-		return zvMain.getBaselineData(arg);
-	}
-
-	@RequestMapping(value = "/getscatterplot", method = RequestMethod.GET)
-	@ResponseBody
-	public String getscatterplot(@RequestParam(value="query") String arg) throws JsonParseException, JsonMappingException, IOException {
-		return zvMain.getScatterPlot(arg);
-	}
+//	@RequestMapping(value = "/getBaselineData", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getBaselineData(@RequestParam(value="query")String arg) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
+//		return zvMain.getBaselineData(arg);
+//	}
+//
+//	@RequestMapping(value = "/getscatterplot", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getscatterplot(@RequestParam(value="query") String arg) throws JsonParseException, JsonMappingException, IOException {
+//		return zvMain.getScatterPlot(arg);
+//	}
 
 	@RequestMapping(value = "/executeZQL", method = RequestMethod.GET)
 	@ResponseBody

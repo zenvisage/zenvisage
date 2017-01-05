@@ -239,7 +239,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("location='AUMELBRN'")
+      $($( ".tabler" )[0]).find(".constraints").val("location='Melbourne'")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -263,7 +263,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("location='AUMELBRN'")
+      $($( ".tabler" )[0]).find(".constraints").val("location='Melbourne'")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -366,23 +366,27 @@ app.controller('options-controller', [
     }
 
     $scope.populateQuery4 = function() {
-      //TIncreasing Example
-      $scope.removerAndInsertRows( 2 );
+      $scope.removerAndInsertRows( 3 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("")
-      //$($( ".tabler" )[0]).find(".viz").val("")
-      $($( ".tabler" )[0]).find(".process").val("v1<-argmax_{z1}[k=40]T(f1)")
+      $($( ".tabler" )[0]).find(".constraints").val("state='NY'")
+      $($( ".tabler" )[0]).find(".process").val("")
 
-      $($( ".tabler" )[1]).find(".name").val("*f2")
+      $($( ".tabler" )[1]).find(".name").val("f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1")
       $($( ".tabler" )[1]).find(".y-val").val("y1")
-      $($( ".tabler" )[1]).find(".z-val").val("v1")
+      $($( ".tabler" )[1]).find(".z-val").val("z2<-'city'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      //$($( ".tabler" )[1]).find(".viz").val("")
-      $($( ".tabler" )[1]).find(".process").val("")
+      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmax_{z1}x{z2}[k=3]DEuclidean(f1,f2)")
+
+      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y1")
+      $($( ".tabler" )[2]).find(".z-val").val("v2")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+      $($( ".tabler" )[2]).find(".process").val("")
     }
 
     $scope.populateQuery5 = function() {

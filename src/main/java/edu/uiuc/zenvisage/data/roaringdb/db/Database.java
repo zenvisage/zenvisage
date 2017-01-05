@@ -30,7 +30,7 @@ public class Database {
 		this.databaseMetaData.dataset = name;
 		readSchema(schemafilename);
 		loadData(datafilename);
-		DatabaseCatalog.addDatabase(name, this);
+		//DatabaseCatalog.addDatabase(name, this);
 	}
 
 	public Map<String, Column> getColumns() {
