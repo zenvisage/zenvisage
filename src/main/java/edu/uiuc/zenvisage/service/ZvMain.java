@@ -197,14 +197,21 @@ public class ZvMain {
 	   System.out.println(zqlQuery);
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
 	   ZQLParser parser = new ZQLParser();
-	   QueryGraph graph = parser.processZQLTable(zqlTable);
-	   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
-	   //convert it into front-end format.
-	   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
-	   //System.out.println(" Query Graph Execution Results Are:");
-	   //System.out.println(result);
-	   System.out.println("Done");
-	   return result;
+	   QueryGraph graph;
+	   try {
+		   graph = parser.processZQLTable(zqlTable);
+		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   //convert it into front-end format.
+		   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
+		   //System.out.println(" Query Graph Execution Results Are:");
+		   //System.out.println(result);
+		   System.out.println("Done");
+		   return result;
+	   } catch (SQLException e) {
+		   // TODO Auto-generated catch block
+		   e.printStackTrace();
+		   return "";
+	   }
    }
 
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){

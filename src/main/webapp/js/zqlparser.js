@@ -80,11 +80,11 @@ function parseName(input) {
 //==============================================================
 function parseX(input) {
 	var restr = orExp([
-			recExp(conVal())+'$',
-			getExp(lstExp(varVal()), setExp(conVal())),
-			recExp(varVal())+'$',
-			lstExp(conVal())
-
+			recExp(conVal())+'$', //found[1]
+			getExp(lstExp(varVal()), setExp(conVal())), //2,3
+			getExp(lstExp(varVal()), recExp(symVal('\\*'))), //4,5
+			recExp(varVal())+'$', //6
+			lstExp(conVal()) //7
 		]);
 
 	var re = new RegExp(restr);
@@ -92,8 +92,8 @@ function parseX(input) {
     console.log(found);
     try {
         var x = {
-            variable: found[2] || found[4],
-            attributes: parseList(found[1] || found[3] || found[5])
+            variable: found[2] || found[4] || found[6],
+            attributes: parseList(found[1] || found[3] || found[5] || found[7])
         };
     }
     catch(err) {
@@ -105,10 +105,11 @@ function parseX(input) {
 //==============================================================
 function parseY(input) {
 	var restr = orExp([
-			recExp(conVal())+'$',
-			getExp(lstExp(varVal()), setExp(conVal())),
-			recExp(varVal())+'$',
-			lstExp(conVal())
+			recExp(conVal())+'$', //found[1]
+			getExp(lstExp(varVal()), setExp(conVal())), //2,3
+			getExp(lstExp(varVal()), recExp(symVal('\\*'))), //4,5
+			recExp(varVal())+'$', //6
+			lstExp(conVal()) //7
 		]);
 
 	var re = new RegExp(restr);
@@ -116,8 +117,8 @@ function parseY(input) {
     console.log(found);
     try {
         var y = {
-            variable: found[2] || found[4],
-            attributes: parseList(found[1] || found[3] || found[5])
+					variable: found[2] || found[4] || found[6],
+					attributes: parseList(found[1] || found[3] || found[5] || found[7])
         };
     }
     catch(err) {

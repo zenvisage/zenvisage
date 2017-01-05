@@ -3,6 +3,8 @@
  */
 package edu.uiuc.zenvisage.zqlcomplete.querygraph.test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,9 +86,19 @@ public class ZQLTableToGraphTest {
 		table.setZqlRows(rows);
 		
 		ZQLParser parser = new ZQLParser();
-		QueryGraph graph = parser.processZQLTable(table);
-		//System.out.println(graph.toString());
-		 graph.printString();
+		QueryGraph graph;
+		try {
+			graph = parser.processZQLTable(table);
+			//System.out.println(graph.toString());
+			 graph.printString();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		
 	}
 	
@@ -177,8 +189,18 @@ public class ZQLTableToGraphTest {
 		
 		table.setZqlRows(rows);
 		ZQLParser parser = new ZQLParser();
-		QueryGraph graph = parser.processZQLTable(table);
-		//System.out.println(graph.toString());
-		 graph.printString();
+		QueryGraph graph;
+		try {
+			graph = parser.processZQLTable(table);
+			//System.out.println(graph.toString());
+			 graph.printString();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
