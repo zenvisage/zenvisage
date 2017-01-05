@@ -81,14 +81,14 @@ svg#treesvg {
 }
 
 #middle-left{
-  height: 360px !important;
+  height: 400px !important;
   overflow-x: auto;
   -webkit-flex: 1;
   flex:1;
 }
 
 #middle-right{
-  height: 360px !important;
+  height: 400px !important;
   -webkit-flex: 1;
   flex:1;
   position:relative;

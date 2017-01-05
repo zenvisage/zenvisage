@@ -239,7 +239,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("location='AUMELBRN'")
+      $($( ".tabler" )[0]).find(".constraints").val("location='Melbourne'")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -263,7 +263,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("location='AUMELBRN'")
+      $($( ".tabler" )[0]).find(".constraints").val("location='Melbourne'")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
