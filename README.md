@@ -13,7 +13,7 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
 
 * In addition to returning results for user-submitted queries, zenvisage runs a host of parallel queries to find the most typical and outlier trends for that subset of data the user is currently viewing and presents them as visualization recommendations.
 
-### Readings
+### Additional Readings
 * [Project webpage] [zenvisage-website]
 * [VLDB'17 Paper] [zenvisage-vldb]
 * [CIDR'17 Paper] [zenvisage-cidr]
@@ -27,29 +27,27 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
 ### Installation Instructions
 * Clone the zenvisage repository (Alternatively, you can download the source as a zip.). 
 
-      ...
+     
         git clone https://github.com/zenvisage/zenvisage.git
-      ...
+     
 
 
 * Configure Postgres.Users need to install PostgresSQL successfully. (A tutorial of installing PostgresSQL on Mac OSX can be found here.) Zenvisage uses the default username -- postgres. Users need to create a password “zenvisage” for the user postgres. Thus, zenvisage uses the following username and password:     
-        ...
+        
           username: postgres
           password: zenvisage 
-        ...
-    
+            
   Next, users need to create a few tables used by zenvisage. They can do so by running the db-setup.sh in zenvisage folder.
 
 * Build and deploy code. Inside zenvisage folder,
     
-        ...
+        
           sh build.sh.   
-        ...
+        
 * Run 
             
-            ...
-            sh run.sh
-            ...
+          sh run.sh
+        
   
 * Launch http://localhost:8080/ (preferably in chrome). 
 
