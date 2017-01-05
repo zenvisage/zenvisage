@@ -37,7 +37,7 @@ import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
 public class Similarity extends Analysis {
 	/* Whether rank trends in descending order */
 	public boolean descending = true;
-	public PiecewiseAggregation paa;
+	//public PiecewiseAggregation paa;
 	public DataReformation dataReformatter;
 	double[] interpolatedQuery = null;
 	double[][] overlappedAndInterpolatedQuery = null;
@@ -47,16 +47,16 @@ public class Similarity extends Analysis {
 			Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[] interpolatedQuery) {
 		super(chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
-		this.paa = paa;
+		//this.paa = paa;
 		this.dataReformatter = dataReformatter;
 		this.interpolatedQuery = interpolatedQuery;
 		this.considerRange = false;
 	}
 	
-	public Similarity(ChartOutputUtil chartOutput, Distance distance, Normalization normalization, PiecewiseAggregation paa, ZvQuery args, DataReformation dataReformatter, double[][] overlappedAndInterpolatedQuery) {
+	public Similarity(ChartOutputUtil chartOutput, Distance distance, Normalization normalization, ZvQuery args, DataReformation dataReformatter, double[][] overlappedAndInterpolatedQuery) {
 		super(chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
-		this.paa = paa;
+		//this.paa = paa;
 		this.dataReformatter = dataReformatter;
 		this.overlappedAndInterpolatedQuery = overlappedAndInterpolatedQuery;
 		this.considerRange = true;

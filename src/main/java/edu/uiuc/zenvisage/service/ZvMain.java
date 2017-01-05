@@ -117,11 +117,11 @@ public class ZvMain {
 //		System.out.println("Done loading data");
 	}
 
-	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
-    	Database database = new Database(name,schemafile,datafile);
-    	return database;
-
-    }
+//	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
+//    	Database database = new Database(name,schemafile,datafile);
+//    	return database;
+//
+//    }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 
@@ -164,7 +164,7 @@ public class ZvMain {
 			}
 
 			System.out.println("HERE:"+names.get(0) +" "+ names.get(2) + " "+ names.get(1));
-			inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
+			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
 //			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
@@ -411,7 +411,7 @@ public class ZvMain {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args); // O(V*P)
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1];
-				 analysis = new Similarity(chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);
+				 analysis = new Similarity(chartOutput,distance,normalization,args,dataReformatter, overlappedQuery);
 			 }
 			 else {
 				 normalizedgroups = dataReformatter.reformatData(output);
@@ -422,13 +422,13 @@ public class ZvMain {
 			 ((Similarity) analysis).setDescending(false);
 		 }
 		 else { //(method.equals("DissimilaritySearch"))
-			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
+			 //paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
 
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 double[][] overlappedQuery = overlappedDataAndQueries[1];
-				 analysis = new Similarity(chartOutput,distance,normalization,paa,args,dataReformatter, overlappedQuery);
+				 analysis = new Similarity(chartOutput,distance,normalization,args,dataReformatter, overlappedQuery);
 			 }
 			 else {
 				 normalizedgroups = dataReformatter.reformatData(output);
@@ -499,7 +499,7 @@ public class ZvMain {
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
-		inMemoryDatabase = createDatabase(this.databaseName, locations[0], locations[1]);
+		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1]);
 		//executor = new Executor(inMemoryDatabase);
 		
 
