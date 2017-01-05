@@ -134,7 +134,8 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/executeZQL", method = RequestMethod.GET)
 	@ResponseBody
 	public String executeZQL(@RequestParam(value="query") String arg) throws IOException, InterruptedException {
-		return zvMain.runZQLQuery(arg);
+		//return zvMain.runZQLQuery(arg);
+		return "";
 	}
 
 	@RequestMapping(value = "/executeZQLComplete", method = RequestMethod.GET)

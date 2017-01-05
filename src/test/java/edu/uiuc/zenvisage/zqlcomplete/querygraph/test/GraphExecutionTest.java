@@ -25,11 +25,11 @@ public class GraphExecutionTest {
 			System.out.println(outputGraphExecutor);
 			
 			
-			String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
+			//String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
 			System.out.println("Old Output");
-			System.out.println(outputOldExecutor);
+			//System.out.println(outputOldExecutor);
 						
-		} catch (IOException | InterruptedException | SQLException e) {
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

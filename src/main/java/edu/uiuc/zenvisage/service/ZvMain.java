@@ -173,18 +173,18 @@ public class ZvMain {
 		}
 	}
 
-   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
-		  System.out.println(zqlQuery);
+//   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
+//		  System.out.println(zqlQuery);
 //	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 //		  executor = new Executor(inMemoryDatabase);
 //		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
-		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
-     	  String result=new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
-     	  System.out.println(result);
-     	  return result;
+//		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+//     	  String result=new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
+//     	  System.out.println(result);
+//     	  return result;
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
-
-		}
+//
+//		}
 
    /**
     * 
@@ -241,15 +241,15 @@ public class ZvMain {
 	 }
 
    //old
-   public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
+//   public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
 //		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
 //		  executor = new Executor(inMemoryDatabase);
 //		  ZQLExecutor.executor=executor;
-		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
-		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
+//		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
+//		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
 //		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
-
-		}
+//
+//		}
 
 
 //	public String getScatterPlot(String query) throws JsonParseException, JsonMappingException, IOException {
