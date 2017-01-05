@@ -51,9 +51,11 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
   
 * Launch http://localhost:8080/ (preferably in chrome). 
 
-### License
+License
 ----
+
 MIT
+
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
