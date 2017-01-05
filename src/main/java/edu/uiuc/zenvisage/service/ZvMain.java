@@ -83,7 +83,7 @@ public class ZvMain {
 
 	private Database inMemoryDatabase;
 
-	public Executor executor = new Executor(inMemoryDatabase);
+	//public Executor executor = new Executor(inMemoryDatabase);
 	public Analysis analysis;
 	public Distance distance;
 	public Normalization normalization;
@@ -238,22 +238,22 @@ public class ZvMain {
 		}
 
 
-	public String getScatterPlot(String query) throws JsonParseException, JsonMappingException, IOException {
-		System.out.print(query);
-		ScatterPlotQuery q = new ObjectMapper().readValue(query, ScatterPlotQuery.class);
-		Map<String, ScatterResult> output = executor.getScatterData(q);
-		if (output == null) return "";
-		Result finalOutput = new Result();
-		finalOutput.method = q.method;
-		if (q.method == "ScatterRep") {
-			ScatterRep.compute(output, q, finalOutput);
-		}
-		else {
-			ScatterRank.compute(output, q, finalOutput);
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(finalOutput);
-	}
+//	public String getScatterPlot(String query) throws JsonParseException, JsonMappingException, IOException {
+//		System.out.print(query);
+//		ScatterPlotQuery q = new ObjectMapper().readValue(query, ScatterPlotQuery.class);
+//		Map<String, ScatterResult> output = executor.getScatterData(q);
+//		if (output == null) return "";
+//		Result finalOutput = new Result();
+//		finalOutput.method = q.method;
+//		if (q.method == "ScatterRep") {
+//			ScatterRep.compute(output, q, finalOutput);
+//		}
+//		else {
+//			ScatterRank.compute(output, q, finalOutput);
+//		}
+//		ObjectMapper mapper = new ObjectMapper();
+//		return mapper.writeValueAsString(finalOutput);
+//	}
 
 
 	/* Will be obsolete when the new separated query method is utilized */
@@ -405,7 +405,7 @@ public class ZvMain {
 			 analysis = new Representative(chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("SimilaritySearch")) {
-			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase); // O(1)
+			 //paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase); // O(1)
 
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args); // O(V*P)
@@ -458,30 +458,30 @@ public class ZvMain {
 	 * @throws JsonParseException
 	 * @throws InterruptedException
 	 */
-	public String getBaselineData(String query) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
-		BaselineQuery bq = new ObjectMapper().readValue(query, BaselineQuery.class);
-		if (!bq.equals(cachedQuery)) {
-			List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> output = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
-			for (int i = 0; i < bq.yAxis.size(); i++) {
-				Query q = new Query("query").setGrouby(bq.zAxis + "," + bq.xAxis).setAggregationFunc(bq.aggrFunc)
-						.setAggregationVaribale(bq.yAxis.get(i));
-				setBaselineFilter(q, bq);
-				ExecutorResult executorResult = executor.getData(q);
-				if (executorResult == null)
-					return "";
-
-				output.add(executorResult.output);
-			}
-			Result finalOutput = new Result();
-			finalOutput.method = "Basic search";
-			ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, null, null);
-			chartOutput.baselineOutput(output, bq, finalOutput);
-			cachedResult = finalOutput;
-		}
-		Result response = new Result(cachedResult, bq.pageNum);
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(response);
-	}
+//	public String getBaselineData(String query) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
+//		BaselineQuery bq = new ObjectMapper().readValue(query, BaselineQuery.class);
+//		if (!bq.equals(cachedQuery)) {
+//			List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> output = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
+//			for (int i = 0; i < bq.yAxis.size(); i++) {
+//				Query q = new Query("query").setGrouby(bq.zAxis + "," + bq.xAxis).setAggregationFunc(bq.aggrFunc)
+//						.setAggregationVaribale(bq.yAxis.get(i));
+//				setBaselineFilter(q, bq);
+//				ExecutorResult executorResult = executor.getData(q);
+//				if (executorResult == null)
+//					return "";
+//
+//				output.add(executorResult.output);
+//			}
+//			Result finalOutput = new Result();
+//			finalOutput.method = "Basic search";
+//			ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, null, null);
+//			chartOutput.baselineOutput(output, bq, finalOutput);
+//			cachedResult = finalOutput;
+//		}
+//		Result response = new Result(cachedResult, bq.pageNum);
+//		ObjectMapper mapper = new ObjectMapper();
+//		return mapper.writeValueAsString(response);
+//	}
 
 	public String outlier(String method,String sql,String outliercount) throws IOException{
 		return readFile();
