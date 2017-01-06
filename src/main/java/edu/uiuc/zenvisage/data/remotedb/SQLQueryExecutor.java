@@ -69,8 +69,17 @@ public class SQLQueryExecutor {
 	      stmt.close();
 	      return ret;
 	}
+	
+	
 
 	public int createTable(String sQLQuery) throws SQLException {
+	      Statement stmt = c.createStatement();
+	      int ret = stmt.executeUpdate(sQLQuery);
+	      stmt.close();
+	      return ret;
+	}
+	
+	public int executeUpdate(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      int ret = stmt.executeUpdate(sQLQuery);
 	      stmt.close();
