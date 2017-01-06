@@ -1,10 +1,14 @@
 package edu.uiuc.zenvisage.server;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.service.ZvMain;
 
 public class ZvServer {
 
@@ -66,8 +70,18 @@ public class ZvServer {
 	}
 	
 	
-	public static void loadDemoDatasets(){
+	public static void loadDemoDatasets() throws SQLException, IOException{
+		List<String> dataset1 = new ArrayList<String>(); // real_estate
 		
+		//Add values to the list here -- filepath, csv, txt  :same for datasets below
+//		List<String> dataset2 = new ArrayList<String>(); //weather
+//		List<String> dataset3 = new ArrayList<String>(); //flight
+//		List<String> dataset4 = new ArrayList<String>(); //cmu
+				
+		ZvMain.uploadDatasettoDB(dataset1,false);
+//		ZvMain.uploadDatasettoDB(dataset2);
+//		ZvMain.uploadDatasettoDB(dataset3);
+//		ZvMain.uploadDatasettoDB(dataset4);
 	}
 
 }
