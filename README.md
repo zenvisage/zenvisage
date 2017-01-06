@@ -36,9 +36,13 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
         
           username: postgres
           password: zenvisage 
+          
+ For changing or adding the password to username "postgres", you could run the following commands:
             
-  Next, users need to create a few tables used by zenvisage. They can do so by running the db-setup.sh in zenvisage folder.
-
+            sudo -u postgres psql
+            \password
+              
+ 
 * Build and deploy code. Inside zenvisage folder,
     
         

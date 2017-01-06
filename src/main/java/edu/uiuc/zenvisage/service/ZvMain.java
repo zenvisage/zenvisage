@@ -129,10 +129,14 @@ public class ZvMain {
 
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
+		uploadDatasettoDB(names,true);
+	}
+
+		
+   public static void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
-			System.out.println("successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
 			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 
 			/*create csv table*/
@@ -157,22 +161,28 @@ public class ZvMain {
 				
 				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
 				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
-				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " from "+names.get(1));
-			} else {//
+				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " table from "+names.get(1));
+				System.out.println("Successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
+				
+			} else if(overwrite) {//
 				sqlQueryExecutor.dropTable(names.get(0));
 				sqlQueryExecutor.createTable(schemeToMetatable.schemeFileToCreatTableSQL(names.get(2), names.get(0)));
 				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			System.out.println("HERE:"+names.get(0) +" "+ names.get(2) + " "+ names.get(1));
+			
 			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
 //			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
+		
 	}
-
+	
+	
+	
+	
 //   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 //		  System.out.println(zqlQuery);
 //	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");

@@ -69,8 +69,17 @@ public class SQLQueryExecutor {
 	      stmt.close();
 	      return ret;
 	}
+	
+	
 
 	public int createTable(String sQLQuery) throws SQLException {
+	      Statement stmt = c.createStatement();
+	      int ret = stmt.executeUpdate(sQLQuery);
+	      stmt.close();
+	      return ret;
+	}
+	
+	public int executeUpdate(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      int ret = stmt.executeUpdate(sQLQuery);
 	      stmt.close();
@@ -324,8 +333,12 @@ public class SQLQueryExecutor {
 		}
 		while (rs0.next())
  		{
-			System.out.println(rs0.getString(2));
-			if(rs0.getString(2).equals(tableName)) return true;
+			if(rs0.getString(2).equals(tableName)) 
+			{
+				System.out.println(tableName +" already exists");	
+				return true;
+			}
+			
  		}
 		return false;
 	}

@@ -1,11 +1,23 @@
 package edu.uiuc.zenvisage.server;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
+
+import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.service.ZvMain;
 
 public class ZvServer {
 
 	private Server server;
 	private static int port = 8080;
+	private static String metatable="zenvisage_metatable";
+	private static String metafilelocation="zenvisage_metafilelocation";
+	
 
 	public void setPort(int port) {
 		this.port = port;
@@ -35,8 +47,59 @@ public class ZvServer {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		createMetaTables();
 		ZvServer zvServer = new ZvServer();
+		zvServer.loadDemoDatasets();
 		zvServer.start();	
+	}
+	
+	public  static void createMetaTables() throws SQLException{
+		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+		if(!sqlQueryExecutor.isTableExists(metatable)){
+			String dropPublicSchemaSQL = "DROP schema public cascade;";
+			String createPublicSchemaSQL = "CREATE schema public;";
+			String createMetaTableSQL = "CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);";
+			sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
+			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);
+			sqlQueryExecutor.createTable(createMetaTableSQL);			
+		}
+		
+		if(!sqlQueryExecutor.isTableExists(metafilelocation)){
+			String createMetaFileLocationSQL ="CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);";
+			sqlQueryExecutor.createTable(createMetaFileLocationSQL);		
+		}
+	}
+	
+	
+	public  void loadDemoDatasets() throws SQLException, IOException{
+		List<String> dataset1 = new ArrayList<String>(); // real_estate
+		dataset1.add("real_estate");
+		dataset1.add(this.getClass().getClassLoader().getResource(("real_estate.csv")).getPath());
+		dataset1.add(this.getClass().getClassLoader().getResource(("real_estate.txt")).getPath());
+
+		List<String> dataset2 = new ArrayList<String>(); //weather
+		dataset2.add("weather");
+		dataset2.add(this.getClass().getClassLoader().getResource(("weather.csv")).getPath());
+		dataset2.add(this.getClass().getClassLoader().getResource(("weather.txt")).getPath());
+
+		List<String> dataset3 = new ArrayList<String>(); //weather
+		dataset3.add("flights");
+		dataset3.add(this.getClass().getClassLoader().getResource(("flights.csv")).getPath());
+		dataset3.add(this.getClass().getClassLoader().getResource(("flights.txt")).getPath());
+		
+		List<String> dataset4 = new ArrayList<String>(); //weather
+		dataset4.add("cmu");
+		dataset4.add(this.getClass().getClassLoader().getResource(("cmu_clean.csv")).getPath());
+		dataset4.add(this.getClass().getClassLoader().getResource(("cmu_clean.txt")).getPath());
+		
+				
+		//		List<String> dataset3 = new ArrayList<String>(); //flight
+//		List<String> dataset4 = new ArrayList<String>(); //cmu
+				
+		ZvMain.uploadDatasettoDB(dataset1,false);
+		ZvMain.uploadDatasettoDB(dataset2,false);
+		ZvMain.uploadDatasettoDB(dataset3,false);
+		ZvMain.uploadDatasettoDB(dataset4,false);
 	}
 
 }
