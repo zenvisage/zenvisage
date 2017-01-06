@@ -97,13 +97,11 @@
           <!-- drawing interface -->
           <div class="col-md-4">
             <div class="input-group" id="graph-buttons" >
-              <div class="btn-group" id="left-button-group">
+
+              <!-- <div class="btn-group" id="left-button-group">
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
-<!--                   <option>Line</option>
-                  <option>Scatter</option>
-                  <option>Bar</option> -->
                 </select>
-              </div>
+              </div> -->
 
               <div class="btn-group" >
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
@@ -245,12 +243,19 @@
                     <input ng-model="similarity" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
                   </form>
                 </div>
-                <b>Representative/Outlier</b>
+                <div>
+                  <div class="info-text"><b>K-means Cluster Size</b></div>
+                  <div>
+                    <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
+                  </div>
+                </div>
+
+                <!--<b>Representative/Outlier</b>
                 <div class="radio">
                   <form>
                     <input ng-model="representative" id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
                   </form>
-                </div>
+                </div>-->
 
                 <div>
                   <div class="info-text"><b>Input equation</b></div>

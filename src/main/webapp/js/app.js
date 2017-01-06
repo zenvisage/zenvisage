@@ -191,6 +191,7 @@ app.controller('options-controller', [
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
     $scope.numResults = 50;
+    $scope.clusterSize = 3;
     $scope.considerRange = true;
     $scope.equation =  '';
     $scope.zqltable = false;
@@ -202,6 +203,13 @@ app.controller('options-controller', [
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResults();
+      }
+    });
+
+    $scope.$watch('clusterSize', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        $scope.callgetRepresentativeTrends();
       }
     });
 
