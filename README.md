@@ -37,8 +37,7 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
           username: postgres
           password: zenvisage 
             
-  Next, users need to create a few tables used by zenvisage. They can do so by running the db-setup.sh in zenvisage folder.
-
+ 
 * Build and deploy code. Inside zenvisage folder,
     
         
