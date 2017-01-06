@@ -1,5 +1,6 @@
 package edu.uiuc.zenvisage.server;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,8 @@ public class ZvServer {
 	 */
 	public static void main(String[] args) throws Exception {
 		createMetaTables();
-		loadDemoDatasets();
 		ZvServer zvServer = new ZvServer();
+		zvServer.loadDemoDatasets();
 		zvServer.start();	
 	}
 	
@@ -70,18 +71,35 @@ public class ZvServer {
 	}
 	
 	
-	public static void loadDemoDatasets() throws SQLException, IOException{
+	public  void loadDemoDatasets() throws SQLException, IOException{
 		List<String> dataset1 = new ArrayList<String>(); // real_estate
+		dataset1.add("real_estate");
+		dataset1.add(this.getClass().getClassLoader().getResource(("real_estate.csv")).getPath());
+		dataset1.add(this.getClass().getClassLoader().getResource(("real_estate.txt")).getPath());
+
+		List<String> dataset2 = new ArrayList<String>(); //weather
+		dataset2.add("weather");
+		dataset2.add(this.getClass().getClassLoader().getResource(("weather.csv")).getPath());
+		dataset2.add(this.getClass().getClassLoader().getResource(("weather.txt")).getPath());
+
+		List<String> dataset3 = new ArrayList<String>(); //weather
+		dataset3.add("flights");
+		dataset3.add(this.getClass().getClassLoader().getResource(("flights.csv")).getPath());
+		dataset3.add(this.getClass().getClassLoader().getResource(("flights.txt")).getPath());
 		
-		//Add values to the list here -- filepath, csv, txt  :same for datasets below
-//		List<String> dataset2 = new ArrayList<String>(); //weather
-//		List<String> dataset3 = new ArrayList<String>(); //flight
+		List<String> dataset4 = new ArrayList<String>(); //weather
+		dataset4.add("cmu");
+		dataset4.add(this.getClass().getClassLoader().getResource(("cmu_clean.csv")).getPath());
+		dataset4.add(this.getClass().getClassLoader().getResource(("cmu_clean.txt")).getPath());
+		
+				
+		//		List<String> dataset3 = new ArrayList<String>(); //flight
 //		List<String> dataset4 = new ArrayList<String>(); //cmu
 				
 		ZvMain.uploadDatasettoDB(dataset1,false);
-//		ZvMain.uploadDatasettoDB(dataset2);
-//		ZvMain.uploadDatasettoDB(dataset3);
-//		ZvMain.uploadDatasettoDB(dataset4);
+		ZvMain.uploadDatasettoDB(dataset2,false);
+		ZvMain.uploadDatasettoDB(dataset3,false);
+		ZvMain.uploadDatasettoDB(dataset4,false);
 	}
 
 }

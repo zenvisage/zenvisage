@@ -2,4 +2,4 @@
 mvn clean
 mvn install
 cp lib/*.jar target/zenvisage/WEB-INF/lib/.
-cp data target/zenvisage/.
+cp -r data target/zenvisage/.
