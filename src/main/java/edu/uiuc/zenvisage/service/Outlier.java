@@ -22,6 +22,7 @@ import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.Clustering;
+import edu.uiuc.zenvisage.service.cluster.OutlierTrend;
 import  edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
 import  edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.model.*;
@@ -59,46 +60,27 @@ public class Outlier extends Analysis {
 		for(String key : output.keySet()) {
 			 mappings.add(key);
 		}
-		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
+//		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
+		double eps = 0; //unused in calculateClusters
 		@SuppressWarnings("rawtypes")
 		List clusters = cluster.calculateClusters(eps, 2, normalizedgroups);
-		//double[][] representativeTrends = cluster.computeRepresentativeTrends(clusters);
-		//List<Integer> orders = computeOrders(normalizedgroups,representativeTrends);
-		//chartOutput.chartOutput(normalizedgroups,output,orders,mappings,chartOutput.args,chartOutput.finalOutput);
-		/*
-		List<RepresentativeTrend> representativeTrends = new ArrayList<RepresentativeTrend>();
-	    for (int k = 0; k < clusters.size(); k++) {	    
-	    	RepresentativeTrend repTrend = new RepresentativeTrend();
-	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();    
-	  	  	double[] p = point.getPoint();
-	  	  	int max = 0;
-	  	  	double maxdist = distance.calculateDistance(p, normalizedgroups[0]);
-	  	  	for (int l = 1; l < normalizedgroups.length; l++) {
-	  	  		double d = distance.calculateDistance(p, normalizedgroups[l]);
-	  	  		if (d > maxdist ) {
-	  	  			max = l;
-	  	  		 	maxdist = d;
-	  	  		 	
-	  	  		}
-	  	  	}
-	  	  	repTrend.setP(normalizedgroups[max]);
-	  	  	repTrend.setKey(mappings.get(max));
-	  	  	repTrend.setSimilarTrends( ((CentroidCluster<DoublePoint>) clusters.get(k)).getPoints().size());
-	  	    representativeTrends.add(repTrend);
-	    }*/
-		List<RepresentativeTrend> representativeTrends = computeOutliers(clusters,normalizedgroups,mappings);
-		Collections.sort(representativeTrends, new Comparator<RepresentativeTrend>() {
+		
+		List<OutlierTrend> outlierTrends = computeOutliers(clusters,normalizedgroups,mappings);
+		Collections.sort(outlierTrends, new Comparator<OutlierTrend>() {
 
-	        public int compare(RepresentativeTrend o1, RepresentativeTrend o2) {
-	            if(o1.getSimilarTrends() < o2.getSimilarTrends())
-	            		return -1;
-	            else if (o1.getSimilarTrends() > o2.getSimilarTrends())
-	            	    return 1;
+	        public int compare(OutlierTrend o1, OutlierTrend o2) {
+	            if(o1.getWeightedDistance() < o2.getWeightedDistance())
+	            		return 1;
+	            else if (o1.getWeightedDistance() > o2.getWeightedDistance())
+	            	    return -1;
 	            else
 	            	    return 0;
 	        }
 	    });
-		chartOutput.chartOutput(representativeTrends,output,chartOutput.args,chartOutput.finalOutput);
+		
+		outlierTrends = outlierTrends.subList(0, 4);
+		
+		chartOutput.chartOutput(outlierTrends,output,chartOutput.args,chartOutput.finalOutput, 1);
 	}
 
 	
@@ -109,8 +91,8 @@ public class Outlier extends Analysis {
 	 * @return outliers
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List<RepresentativeTrend> computeOutliers(List clusters, double[][] normalizedgroups, ArrayList<String> mappings) {
-		List<RepresentativeTrend> outliers = new ArrayList<RepresentativeTrend>();
+	private List<OutlierTrend> computeOutliers(List clusters, double[][] normalizedgroups, ArrayList<String> mappings) {
+		List<OutlierTrend> outliers = new ArrayList<OutlierTrend>();
 		double[][] centerPoints = new double[clusters.size()][];
 		int[] centerPointsSize = new int[clusters.size()];
 		for (int k = 0; k < clusters.size(); k++) {
@@ -119,32 +101,33 @@ public class Outlier extends Analysis {
 			centerPointsSize[k] = ((CentroidCluster<DoublePoint>) clusters.get(k)).getPoints().size();
 		}
 		// cluster's outlier and its index in normalizedgroups
-		double[] maxDistance = new double[clusters.size()];
-		Arrays.fill(maxDistance, 0);
-		int[] maxIndex = new int[clusters.size()];
+		double[] weightedDistances = new double[normalizedgroups.length];
+		Arrays.fill(weightedDistances, 0);
+//		int[] maxIndex = new int[clusters.size()];
 		// now compute which cluster every data point belongs to
 		for (int i = 0; i < normalizedgroups.length; i++) {
-			double min = Double.MAX_VALUE;
-			int minIndex = -1;
+//			double min = Double.MAX_VALUE;
+//			int minIndex = -1;
 			for (int j = 0; j < centerPoints.length; j++) {
 				double dist = distance.calculateDistance(normalizedgroups[i], centerPoints[j]);
-				if (dist <= min) {
-					min = dist;
-					minIndex = j;
-				}
+//				if (dist <= min) {
+//					min = dist;
+//					minIndex = j;
+//				}
+				weightedDistances[i] += dist * centerPointsSize[j];
 			}
-			if (min >= maxDistance[minIndex]) {
-				maxIndex[minIndex] = i;
-				maxDistance[minIndex] = min;
-			}
+//			if (min >= maxDistance[minIndex]) {
+//				maxIndex[minIndex] = i;
+//				maxDistance[minIndex] = min;
+//			}
 		}
 		// add the outliers into result
-		for (int i = 0; i < clusters.size(); i++) {
-			RepresentativeTrend repTrend = new RepresentativeTrend();
-			repTrend.setP(normalizedgroups[maxIndex[i]]);
-			repTrend.setKey(mappings.get(maxIndex[i]));
-			repTrend.setSimilarTrends(centerPointsSize[i]);
-			outliers.add(repTrend);
+		for (int i = 0; i < normalizedgroups.length; i++) {
+			OutlierTrend outlierTrend = new OutlierTrend();
+			outlierTrend.setP(normalizedgroups[i]);
+			outlierTrend.setKey(mappings.get(i));
+			outlierTrend.setWeightedDistance(weightedDistances[i]);
+			outliers.add(outlierTrend);
 		}
 		return outliers;
 	}

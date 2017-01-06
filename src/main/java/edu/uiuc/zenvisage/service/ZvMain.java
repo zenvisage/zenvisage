@@ -419,12 +419,12 @@ public class ZvMain {
 		 // generate the corresponding data normalization metric
 		 if (args.distanceNormalized) {
 //			 normalization = new LinearNormalization();
-			 normalization = new Zscore();
+			 normalization = new LinearNormalization();
 //			 normalization = new Original();
 		 }
 		 else {
 //			 normalization = new Zscore();
-			 normalization = new Original();
+			 normalization = new LinearNormalization();
 		 }
 		 // generate the corresponding output normalization
 

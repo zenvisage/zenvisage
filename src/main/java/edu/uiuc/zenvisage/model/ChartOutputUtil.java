@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import edu.uiuc.zenvisage.model.BaselineQuery;
 import edu.uiuc.zenvisage.model.ZvQuery;
+import edu.uiuc.zenvisage.service.cluster.OutlierTrend;
 import edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
 
 
@@ -125,6 +126,41 @@ public class ChartOutputUtil {
 		return;
 	}
 
+	public void chartOutput(List<OutlierTrend> outlierTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput, int flag) throws JsonProcessingException{
+
+		for(int i = 0; i < outlierTrends.size() - 1; i++) {
+			// initialize a new chart
+			Chart chartOutput = new Chart();
+			OutlierTrend outTrend = outlierTrends.get(i);
+			/*Separate this call to rank and x axix and return separately*/
+			//chartOutput.setxType((i+1)+" : "+repTrend.getKey());
+			//chartOutput.setxType(repTrend.getKey());
+
+			// chartOutput.setxType(repTrend.getKey());
+			// chartOutput.setRank(i+1);
+			// chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
+
+			chartOutput.setxType(outTrend.getKey());
+			chartOutput.setyType(args.yAxis);
+			chartOutput.setzType(args.groupBy);
+			chartOutput.setRank(i+1);
+
+			// fill in chart data
+			LinkedHashMap<Float,Float> points = orig.get(outTrend.getKey());
+			int c = 0;
+			double[] p = outTrend.getP();
+			for(Float k : points.keySet()) {
+				chartOutput.xData.add(Float.toString(k));
+				chartOutput.yData.add(Float.toString(points.get(k)));
+				c++;
+			}
+			chartOutput.count = (int) outTrend.getWeightedDistance();
+			finalOutput.outputCharts.add(chartOutput);
+		}
+
+		return;
+	}
+	
 	// all baseline one time stuff...
 	public void baselineOutput(List<LinkedHashMap<String,LinkedHashMap<Float,Float>>> output, BaselineQuery bq, Result finalOutput) {
 		for (String zAxis : output.get(0).keySet()) {
