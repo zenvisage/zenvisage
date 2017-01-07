@@ -324,7 +324,8 @@ function displayOutlierResultsHelper( outlierResults )
   clearOutlierTable();
   var resultsDiv = $("#outlier-table");
   var varFinalArray = [];
-  for(var count = 0; count < 3; count++) //need to fix count
+  var arrLength = getClusterSize();
+  for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
     $("#outlier-row-" + count.toString()).append("<td><div class=\"outlier-results draggable-graph\" data-graph-type=\"outlierQuery\" id=\"outlier-result-" + count.toString() + "\"></div></td>");

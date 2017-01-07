@@ -22,6 +22,7 @@ import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.Clustering;
+import edu.uiuc.zenvisage.service.cluster.DummyCluster;
 import edu.uiuc.zenvisage.service.cluster.OutlierTrend;
 import  edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
 import  edu.uiuc.zenvisage.service.distance.Distance;
@@ -63,7 +64,8 @@ public class Outlier extends Analysis {
 //		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
 		double eps = 0; //unused in calculateClusters
 		@SuppressWarnings("rawtypes")
-		List clusters = cluster.calculateClusters(eps, 2, normalizedgroups);
+		DummyCluster dc = cluster.calculateClusters(eps, 2, normalizedgroups);
+		List clusters = dc.getClusters();
 		
 		List<OutlierTrend> outlierTrends = computeOutliers(clusters,normalizedgroups,mappings);
 		Collections.sort(outlierTrends, new Comparator<OutlierTrend>() {

@@ -398,6 +398,7 @@ public class ZvMain {
 		 System.out.println("After SQL");
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 System.out.println("After To HashMap");
+		 output = cleanUpDataWithAllZeros(output);
 
 		 // setup result format
 		 Result finalOutput = new Result();
@@ -536,6 +537,27 @@ public class ZvMain {
 
 	public String outlier(String method,String sql,String outliercount) throws IOException{
 		return readFile();
+	}
+	
+	LinkedHashMap<String, LinkedHashMap<Float, Float>> cleanUpDataWithAllZeros(LinkedHashMap<String, LinkedHashMap<Float, Float>> output) {
+		List<String> toRemove = new ArrayList<String>();
+		for (String s : output.keySet()) {
+			LinkedHashMap<Float, Float> v = output.get(s);
+			int flag = 1;
+			for (Float f : v.keySet()) {
+				if (v.get(f) != 0) {
+					flag = 0;
+					break;
+				}
+			}
+			if (flag == 1) {
+				toRemove.add(s);
+			}
+		}
+		for (String s: toRemove) {
+			output.remove(s);
+		}
+		return output;
 	}
 
 
