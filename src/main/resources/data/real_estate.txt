@@ -8,7 +8,7 @@ Month:int,indexed,T,F,F,F,F,0,O
 PctDecreasing:float,unindexed,F,T,F,F,F,0,Q
 ListingPricePerSqft:float,unindexed,F,T,F,F,F,0,Q
 PctPriceReductions:float,unindexed,F,T,F,F,F,0,Q
-Foreclosures-Ratio:float,unindexed,F,T,F,F,F,0,Q
+ForeclosuresRatio:float,unindexed,F,T,F,F,F,0,Q
 State:string,indexed,F,F,T,F,F,0,C
 PriceToRentRatio:float,unindexed,F,T,F,F,F,0,Q
 SaleToListRatio:float,unindexed,F,T,F,F,F,0,Q

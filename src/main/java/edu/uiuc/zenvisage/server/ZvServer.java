@@ -1,4 +1,5 @@
 package edu.uiuc.zenvisage.server;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -74,23 +75,31 @@ public class ZvServer {
 	public  void loadDemoDatasets() throws SQLException, IOException{
 		List<String> dataset1 = new ArrayList<String>(); // real_estate
 		dataset1.add("real_estate");
-		dataset1.add(this.getClass().getClassLoader().getResource(("real_estate.csv")).getPath());
-		dataset1.add(this.getClass().getClassLoader().getResource(("real_estate.txt")).getPath());
+		File file = new File(this.getClass().getClassLoader().getResource(("real_estate.csv")).getFile());
+		dataset1.add(file.getAbsolutePath());
+		file = new File(this.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
+		dataset1.add(file.getAbsolutePath());
 
 		List<String> dataset2 = new ArrayList<String>(); //weather
 		dataset2.add("weather");
-		dataset2.add(this.getClass().getClassLoader().getResource(("weather.csv")).getPath());
-		dataset2.add(this.getClass().getClassLoader().getResource(("weather.txt")).getPath());
-
-		List<String> dataset3 = new ArrayList<String>(); //weather
-		dataset3.add("flights");
-		dataset3.add(this.getClass().getClassLoader().getResource(("flights.csv")).getPath());
-		dataset3.add(this.getClass().getClassLoader().getResource(("flights.txt")).getPath());
+		file = new File(this.getClass().getClassLoader().getResource(("weather.csv")).getFile());
+		dataset2.add(file.getAbsolutePath());
+		file = new File(this.getClass().getClassLoader().getResource(("weather.txt")).getFile());
+		dataset2.add(file.getAbsolutePath());
 		
-		List<String> dataset4 = new ArrayList<String>(); //weather
+		List<String> dataset3 = new ArrayList<String>(); //flights
+		dataset3.add("flights");
+		file = new File(this.getClass().getClassLoader().getResource(("flights.csv")).getFile());
+		dataset3.add(file.getAbsolutePath());
+		file = new File(this.getClass().getClassLoader().getResource(("flights.txt")).getFile());
+		dataset3.add(file.getAbsolutePath());
+		
+		List<String> dataset4 = new ArrayList<String>(); //cmu
 		dataset4.add("cmu");
-		dataset4.add(this.getClass().getClassLoader().getResource(("cmu_clean.csv")).getPath());
-		dataset4.add(this.getClass().getClassLoader().getResource(("cmu_clean.txt")).getPath());
+		file = new File(this.getClass().getClassLoader().getResource(("cmu_clean.csv")).getFile());
+		dataset4.add(file.getAbsolutePath());
+		file = new File(this.getClass().getClassLoader().getResource(("cmu_clean.txt")).getFile());
+		dataset4.add(file.getAbsolutePath());
 		
 				
 		//		List<String> dataset3 = new ArrayList<String>(); //flight
