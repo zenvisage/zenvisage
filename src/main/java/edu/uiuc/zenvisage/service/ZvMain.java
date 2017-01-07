@@ -172,7 +172,7 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			new Database(names.get(0), names.get(1), names.get(2), true);
+			new Database(names.get(0), names.get(2), names.get(1), true);
 			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
