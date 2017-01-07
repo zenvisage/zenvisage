@@ -72,7 +72,7 @@ public class ZvServer {
 	}
 	
 	
-	public  void loadDemoDatasets() throws SQLException, IOException, InterruptedException{
+	public void loadDemoDatasets() throws SQLException, IOException, InterruptedException{
 		List<String> dataset1 = new ArrayList<String>(); // real_estate
 		dataset1.add("real_estate");
 		File file = new File(this.getClass().getClassLoader().getResource(("real_estate.csv")).getFile());
