@@ -1,3 +1,0 @@
-data_class:string,indexed,F,F,T,F,F
-homo_ev:float,unindexed,T,T,F,F,F
-donor_number:float,indexed,T,T,F,F,F
