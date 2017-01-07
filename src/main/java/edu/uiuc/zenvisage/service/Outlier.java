@@ -78,7 +78,7 @@ public class Outlier extends Analysis {
 	        }
 	    });
 		
-		outlierTrends = outlierTrends.subList(0, 4);
+		outlierTrends = outlierTrends.subList(0, args.kMeansClusterSize);
 		
 		chartOutput.chartOutput(outlierTrends,output,chartOutput.args,chartOutput.finalOutput, 1);
 	}

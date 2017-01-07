@@ -93,7 +93,7 @@ public class ChartOutputUtil {
 
 	public void chartOutput(List<RepresentativeTrend> representativeTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput) throws JsonProcessingException{
 
-		for(int i = 0; i < representativeTrends.size() - 1; i++) {
+		for(int i = 0; i < representativeTrends.size(); i++) {
 			// initialize a new chart
 			Chart chartOutput = new Chart();
 			RepresentativeTrend repTrend = representativeTrends.get(i);
@@ -128,7 +128,7 @@ public class ChartOutputUtil {
 
 	public void chartOutput(List<OutlierTrend> outlierTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput, int flag) throws JsonProcessingException{
 
-		for(int i = 0; i < outlierTrends.size() - 1; i++) {
+		for(int i = 0; i < outlierTrends.size(); i++) {
 			// initialize a new chart
 			Chart chartOutput = new Chart();
 			OutlierTrend outTrend = outlierTrends.get(i);
