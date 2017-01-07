@@ -90,6 +90,7 @@ svg#treesvg {
 #middle-right{
   height: 400px !important;
   -webkit-flex: 1;
+  overflow-x: auto;
   flex:1;
   position:relative;
 }
