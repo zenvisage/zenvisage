@@ -355,8 +355,8 @@ public class SQLQueryExecutor {
 	    stmt.close();
 	}
 	
-	public void updateMinMax(String tableName, String attribute, int min, int max) throws SQLException{
-		String sql = "UPDATE " + tableName + 
+	public void updateMinMax(String tableName, String attribute, float min, float max) throws SQLException{
+		String sql = "UPDATE " + attribute + 
 				" SET min = " + min + " , max = " + max +
 				" WHERE tablename = " + tableName + " AND attribute = " + attribute;
 		Statement stmt = c.createStatement();
