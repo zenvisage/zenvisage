@@ -125,6 +125,13 @@ public class Database {
             count=count+1;
 		 }
 		this.rowCount=count;
+		
+		for(int i=0;i<header.length;i++){
+			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
+			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+			}
+		}
+		
 
 		bufferedReader.close();
 	}
@@ -170,7 +177,6 @@ public class Database {
     		for (int i = 0; i < values.size(); i++) {
     			if (maps.containsKey(values.get(i))) {
     				maps.get(values.get(i)).add(i);
-
     			}
     			else {
     				RoaringBitmap bits = new RoaringBitmap();

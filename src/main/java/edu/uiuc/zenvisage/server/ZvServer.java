@@ -52,7 +52,7 @@ public class ZvServer {
 		ZvServer zvServer = new ZvServer();
 		zvServer.loadDemoDatasets();
 		zvServer.start();	
-	}
+	}	
 	
 	public  static void createMetaTables() throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
