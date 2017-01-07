@@ -44,17 +44,17 @@ public class KMeans extends Clustering {
 		// TODO Auto-generated method stub
 		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 //		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
-		KMeansPlusPlusClusterer<DoublePoint> kmeansIntermedia = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize * 3, normalizedgroups.length), 15);
-		List<DoublePoint> dataset = new ArrayList<DoublePoint>();
-		for(int i = 0;i < normalizedgroups.length; i++) {
-			dataset.add(new DoublePoint(normalizedgroups[i]));
+		KMeansPlusPlusClusterer<DoublePoint> kmeans1 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize * 3, normalizedgroups.length), 15);
+		List<DoublePoint> dataset1 = new ArrayList<DoublePoint>();
+		for(int i = 0; i < normalizedgroups.length; i++) {
+			dataset1.add(new DoublePoint(normalizedgroups[i]));
 		}		
-		List<CentroidCluster<DoublePoint>> clustersIntermedia = kmeansIntermedia.cluster(dataset);
+		List<CentroidCluster<DoublePoint>> clusters1 = kmeans1.cluster(dataset1);
 		
-		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize, clustersIntermedia.size()), 15);
-		List<DoublePoint> datasetIntermedia = new ArrayList<DoublePoint>();
-		for (int i = 0; i < clustersIntermedia.size(); i++) {	    
-	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clustersIntermedia.get(i)).getCenter();    
+		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize, clusters1.size()), 15);
+		List<DoublePoint> dataset2 = new ArrayList<DoublePoint>();
+		for (int i = 0; i < clusters1.size(); i++) {	    
+	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(i)).getCenter();    
 	  	  	double[] p = point.getPoint();
 	  	  	int min = 0;
 	  	  	double mindist = distance.calculateDistance(p, normalizedgroups[0]);
@@ -65,13 +65,11 @@ public class KMeans extends Clustering {
 	  	  		 	mindist = d;
 	  	  		}
 	  	  	}
-	  	  	datasetIntermedia.add(new DoublePoint(normalizedgroups[min]));
+	  	  	dataset2.add(new DoublePoint(normalizedgroups[min]));
 	    }
-		List<CentroidCluster<DoublePoint>> clusters = kmeans.cluster(datasetIntermedia);
+		List<CentroidCluster<DoublePoint>> clusters2 = kmeans2.cluster(dataset2);
 		
-		
-		
-		return clusters;
+		return clusters2;
 	}
 	
 	/**
