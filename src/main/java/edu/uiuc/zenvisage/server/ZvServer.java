@@ -52,14 +52,14 @@ public class ZvServer {
 		ZvServer zvServer = new ZvServer();
 		zvServer.loadDemoDatasets();
 		zvServer.start();	
-	}
+	}	
 	
 	public  static void createMetaTables() throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 		if(!sqlQueryExecutor.isTableExists(metatable)){
 			String dropPublicSchemaSQL = "DROP schema public cascade;";
 			String createPublicSchemaSQL = "CREATE schema public;";
-			String createMetaTableSQL = "CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT);";
+			String createMetaTableSQL = "CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT, min FLOAT, max FLOAT);";
 			sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
 			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);
 			sqlQueryExecutor.createTable(createMetaTableSQL);			
@@ -72,7 +72,7 @@ public class ZvServer {
 	}
 	
 	
-	public  void loadDemoDatasets() throws SQLException, IOException{
+	public void loadDemoDatasets() throws SQLException, IOException, InterruptedException{
 		List<String> dataset1 = new ArrayList<String>(); // real_estate
 		dataset1.add("real_estate");
 		File file = new File(this.getClass().getClassLoader().getResource(("real_estate.csv")).getFile());

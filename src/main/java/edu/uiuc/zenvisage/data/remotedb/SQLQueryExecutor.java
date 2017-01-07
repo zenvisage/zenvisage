@@ -354,6 +354,16 @@ public class SQLQueryExecutor {
 	    stmt.executeUpdate(sql.toString());
 	    stmt.close();
 	}
+	
+	public void updateMinMax(String tableName, String attribute, float min, float max) throws SQLException{
+		String sql = "UPDATE zenvisage_metatable"+ 
+				" SET min = " + min + ", max = " + max +
+				" WHERE tablename = '" + tableName + "' AND attribute = '" + attribute+"'";
+		System.out.println(sql);
+		Statement stmt = c.createStatement();
+		stmt.executeUpdate(sql);
+	    stmt.close();
+	}
 
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();

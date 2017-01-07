@@ -40,7 +40,7 @@ public class KMeans extends Clustering {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List calculateClusters(double eps, int k, double[][] normalizedgroups) {
+	public DummyCluster calculateClusters(double eps, int k, double[][] normalizedgroups) {
 		// TODO Auto-generated method stub
 		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 //		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
@@ -69,7 +69,32 @@ public class KMeans extends Clustering {
 	    }
 		List<CentroidCluster<DoublePoint>> clusters2 = kmeans2.cluster(dataset2);
 		
-		return clusters2;
+		int clusters2Sizes[] = new int[clusters2.size()];		
+		int clusters2RealSizes[] = new int[clusters2.size()];
+		for (int i = 0; i < clusters2.size(); i++) {
+			clusters2Sizes[i] = clusters2.get(i).getPoints().size();
+			clusters2RealSizes[i] = 0;
+		}
+		
+		List<CentroidCluster<DoublePoint>> clustersFinal = new ArrayList<CentroidCluster<DoublePoint>>();
+		for (int i = 0; i < clusters2.size(); i++) {
+			clustersFinal.add(new CentroidCluster<DoublePoint>(null));
+		}
+		
+		for (int i = 0; i < clusters1.size(); i++) {
+			double minDistance = Double.MAX_VALUE;
+			int minDistanceIndex = 0;
+			for (int j = 0; j < clusters2.size(); j++) {
+				double d = distance.calculateDistance(clusters1.get(i).getCenter().getPoint(), clusters2.get(j).getCenter().getPoint());
+				if (d < minDistance) {
+					minDistance = d;
+					minDistanceIndex = j;
+				}
+			}
+			clusters2RealSizes[minDistanceIndex] += clusters1.get(i).getPoints().size();
+		}
+		
+		return new DummyCluster(clusters2, clusters2RealSizes);
 	}
 	
 	/**

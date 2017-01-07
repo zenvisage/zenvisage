@@ -20,6 +20,7 @@ import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.Clustering;
+import edu.uiuc.zenvisage.service.cluster.DummyCluster;
 import edu.uiuc.zenvisage.service.cluster.RepresentativeTrend;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.model.*;
@@ -63,7 +64,9 @@ public class Representative extends Analysis {
 //		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
 		double eps = 0;  //unused in calculateClusters
 		@SuppressWarnings({ "rawtypes"})
-		List clusters = cluster.calculateClusters(eps, 0, normalizedgroups);
+		DummyCluster dc = cluster.calculateClusters(eps, 0, normalizedgroups);
+		List clusters = dc.getClusters();		
+		
 		//List<RepresentativeTrend> representativeTrends = cluster.computeRepresentativeTrends(clusters,mappings,normalizedgroups);
 		//removeDuplicate(representativeTrends);
 		//double[][] centers = cluster.getCenters(clusters);
@@ -85,7 +88,7 @@ public class Representative extends Analysis {
 	  	  	}
 	  	  	repTrend.setP(normalizedgroups[min]);
 	  	  	repTrend.setKey(mappings.get(min));
-	  	  	repTrend.setSimilarTrends( ((CentroidCluster<DoublePoint>) clusters.get(k)).getPoints().size());
+	  	  	repTrend.setSimilarTrends( dc.getRealSizes()[k]);
 	  	    representativeTrends.add(repTrend);
 	    }
 	  	  	

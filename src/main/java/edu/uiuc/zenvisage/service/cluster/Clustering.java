@@ -74,7 +74,7 @@ public abstract class Clustering {
 	 * @return list of clusters
 	 */
 	@SuppressWarnings("rawtypes")
-	public abstract List calculateClusters(double eps, int k, double[][] normalizedgroups);
+	public abstract DummyCluster calculateClusters(double eps, int k, double[][] normalizedgroups);
 	
 	/**
 	 * @param clusters
