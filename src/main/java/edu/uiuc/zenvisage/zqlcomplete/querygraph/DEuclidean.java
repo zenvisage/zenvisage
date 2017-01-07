@@ -51,7 +51,30 @@ public class DEuclidean implements D {
 		List<Double> scores = new ArrayList<Double>();
 		AxisVariableScores axisVariableScores;
 		
-		if (axisVariables.size() == 1) {
+		// one vs many or many vs one case (comparing f1 visual component vs f2 list of visual components)
+		if(axisVariables.size() == 1 && (f1List.size() == 1 || f2List.size() == 1)) {
+			// allows use to interpret v2<-argmax_{z2} instead of v1,v2<-argmax_{z1}x{z2}
+			ArrayList<String> firstAxisvarsList = new ArrayList<String>();
+			for (int i = 0; i < f1List.size(); i++) {
+				for (int j = 0; j < f2List.size(); j++) {
+					scores.add(calculateNormalizedDistance(f1List.get(i), f2List.get(j)));
+					if(f1List.size() > f2List.size()) {
+						firstAxisvarsList.add(VC1.extractAttribute(f1List.get(i),0));
+						
+					}
+					//eg f1<-{CA_VC} f2<-{CA_VC, NY_VC, etc..} grab the attribute from f2
+					if(f1List.size() < f2List.size()) {
+						firstAxisvarsList.add(VC1.extractAttribute(f2List.get(j),0));
+					}
+				}
+			}
+		
+			axisvars.add(firstAxisvarsList);
+			axisVariableScores = new AxisVariableScores(axisvars, scores);
+			return axisVariableScores;			
+		}
+		// one to one case (pairwise, compare pairs of (sorted) visual components of f1 with vcs of f2)
+		else if (axisVariables.size() == 1) {
 			
 			//TOFIXL: instead of two,make this generic 
 			ArrayList<String> singleAxisvarsList = new ArrayList<String>();
@@ -87,6 +110,7 @@ public class DEuclidean implements D {
 			return axisVariableScores;
 			
 		}
+		// explicit crossproduct, many vs many case
 		else if (axisVariables.size() == 2) {
 			ArrayList<String> firstAxisvarsList = new ArrayList<String>();
 			ArrayList<String> secondAxisvarsList = new ArrayList<String>();	

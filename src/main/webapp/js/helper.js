@@ -204,7 +204,7 @@ function displayRepresentativeResultsHelper( representativePatternResults )
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
-  var arrLength = representativePatternResults.length < 3 ? representativePatternResults.length : 3
+  var arrLength = getClusterSize()
 
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
@@ -428,7 +428,8 @@ function displayOutlierResultsHelper( outlierResults )
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .text(xlabel + " (" + clusterCount + ")");
+      .text(xlabel);
+      //.text(xlabel + " (" + clusterCount + ")");
   }
 
   $(".draggable-graph").draggable({

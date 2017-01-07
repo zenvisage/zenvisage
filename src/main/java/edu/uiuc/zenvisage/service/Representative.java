@@ -60,7 +60,8 @@ public class Representative extends Analysis {
 		for(String key : output.keySet()) {
 			 mappings.add(key);
 		}
-		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
+//		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
+		double eps = 0;  //unused in calculateClusters
 		@SuppressWarnings({ "rawtypes"})
 		List clusters = cluster.calculateClusters(eps, 0, normalizedgroups);
 		//List<RepresentativeTrend> representativeTrends = cluster.computeRepresentativeTrends(clusters,mappings,normalizedgroups);

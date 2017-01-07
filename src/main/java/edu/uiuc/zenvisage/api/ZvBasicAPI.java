@@ -72,10 +72,10 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-		
+
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
-	
+
 	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody
 	public String postOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
@@ -86,7 +86,7 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-	    
+
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 
@@ -145,7 +145,7 @@ public class ZvBasicAPI {
 		// for testing my query graph executor with zql.html
 		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
 		String outputGraphExecutor = zvMain.runQueryGraph(arg);
-		
+
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}

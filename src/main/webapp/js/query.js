@@ -47,7 +47,7 @@ function Query( searchMethod ) {
   this.distanceNormalized = false; // fix to dynamically fetch
   this.outputNormalized = false; // fix to dynamically fetch
   this.clustering = "KMeans"; // fix to dynamically fetch
-  //this.kMeansClusterSize = getClusterSize();
+  this.kMeansClusterSize = getClusterSize();
   this.distance_metric = getDistanceMethod(); // fix to dynamically fetch
   this.predicateOperator = "="; // fix to dynamically fetch
   this.predicateColumn = getSelectedCategory();

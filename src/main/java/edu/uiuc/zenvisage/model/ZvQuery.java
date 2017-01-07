@@ -24,6 +24,7 @@ public class ZvQuery {
 	public String predicateValue;
 	public float[] xRange;
 	public boolean considerRange;
+	public int kMeansClusterSize;
 
 	
 	public String getDistance_metric() {
@@ -143,4 +144,11 @@ public class ZvQuery {
 	public void setDataY(float[] dataY) {
 		this.dataY = dataY;
 	}
+	public int getKMeansClusterSize() {
+		return this.kMeansClusterSize;
+	}
+	public void setKMeansClusterSize(int k) {
+		this.kMeansClusterSize = k;
+	}
+	
 }
