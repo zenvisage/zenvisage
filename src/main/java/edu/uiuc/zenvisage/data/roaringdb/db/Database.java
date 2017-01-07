@@ -126,10 +126,11 @@ public class Database {
 		 }
 		this.rowCount=count;
 		
+		//set min, max value for each of the column in database
 		for(int i=0;i<header.length;i++){
 			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
 			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
-				
+				columnMeta.
 			}
 		}
 		

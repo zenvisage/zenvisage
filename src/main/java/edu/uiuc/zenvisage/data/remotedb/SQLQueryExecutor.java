@@ -354,6 +354,15 @@ public class SQLQueryExecutor {
 	    stmt.executeUpdate(sql.toString());
 	    stmt.close();
 	}
+	
+	public void updateMinMax(String tableName, String attribute, int min, int max) throws SQLException{
+		String sql = "UPDATE " + tableName + 
+				" SET min = " + min + " , max = " + max +
+				" WHERE tablename = " + tableName + " AND attribute = " + attribute;
+		Statement stmt = c.createStatement();
+		stmt.executeUpdate(sql);
+	    stmt.close();
+	}
 
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
