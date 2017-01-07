@@ -27,11 +27,15 @@ public class Database {
 	public DatabaseMetaData databaseMetaData= new DatabaseMetaData();
 	public long rowCount;
 
-	public Database(String name,String schemafilename,String datafilename) throws IOException, InterruptedException, SQLException{
+	public Database(String name,String schemafilename,String datafilename, boolean firstTime) throws IOException, InterruptedException, SQLException{
 		this.name=name;
 		this.databaseMetaData.dataset = name;
 		readSchema(schemafilename);
-		loadData0(datafilename);
+		if(firstTime)
+			loadData0(datafilename);
+		else
+			loadData1(datafilename);
+		
 		//DatabaseCatalog.addDatabase(name, this);
 	}
 
@@ -106,7 +110,7 @@ public class Database {
 
 
 
-    private void loadData0(String datafilename) throws IOException, SQLException{
+    public void loadData0(String datafilename) throws IOException, SQLException{
 //      	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 
 //       	InputStream is = getClass().getResourceAsStream(datafilename);
@@ -134,32 +138,44 @@ public class Database {
 			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
 				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
-				sqlQueryExecutor.updateMinMax("zenvisage_metatable", header[i], columnMetadata.min, columnMetadata.max);
+				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
 			}
 		}
 
 		bufferedReader.close();
 	}
     
-//    private void loadData1(String datafilename) throws IOException, SQLException{
-//	
-//	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
-//		String line;
-//		line = bufferedReader.readLine();
-//		String[] header=line.split(",");
-//		for(int i=0;i<header.length;i++){
-//			header[i]=header[i].toLowerCase().replaceAll("-", "");
-//		}
-//		//set min, max value for each of the column in database
-//		for(int i=0;i<header.length;i++){
-//			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
-//			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
-//				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-//				sqlQueryExecutor.updateMinMax(columnMetadata.name, header[i], columnMetadata.min, columnMetadata.max);
-//			}
-//		}
-//		bufferedReader.close();
-//    }
+    public void loadData1(String datafilename) throws IOException, SQLException{
+	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
+		String line;
+		line = bufferedReader.readLine();
+		String[] header=line.split(",");
+		for(int i=0;i<header.length;i++){
+			header[i]=header[i].toLowerCase().replaceAll("-", "");
+		}
+		int count=0;
+		 String[] terms;
+		while ((line = bufferedReader.readLine()) != null){
+			 terms=line.split(",");
+	        for(int i=0;i<header.length;i++){
+	       	     addValue(header[i].trim(), count, terms[i]);
+	            }
+	        count=count+1;
+		 }
+		this.rowCount=count;
+		
+		//set min, max value for each of the column in database
+		for(int i=0;i<header.length;i++){
+			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
+			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
+			}
+		}
+	
+		bufferedReader.close();
+    }
 
     public RoaringBitmap getColumn(FilterPredicate filterPredicate) {
     	String columnName = filterPredicate.getPropertyName();

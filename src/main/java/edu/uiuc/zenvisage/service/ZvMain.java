@@ -130,10 +130,11 @@ public class ZvMain {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
 		uploadDatasettoDB(names,true);
+		
 	}
 
 		
-   public static void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException{
+   public static void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
@@ -171,7 +172,7 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			
+			new Database(names.get(0), names.get(1), names.get(2), true);
 			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
@@ -572,7 +573,7 @@ public class ZvMain {
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
-		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1]);
+		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
 		//executor = new Executor(inMemoryDatabase);
 		
 
