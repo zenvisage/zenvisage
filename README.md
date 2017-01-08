@@ -54,7 +54,7 @@ For making the above change, you could run the following commands:
           sh run.sh
         
   
-* Launch http://localhost:8080/ (preferably in Chrome). 
+* Launch `http://localhost:8080/` (preferably in Chrome). 
 
 License
 ----
