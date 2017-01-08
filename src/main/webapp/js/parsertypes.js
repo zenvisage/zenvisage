@@ -50,9 +50,15 @@ function symVal(symbols) {
 
 // constant value
 function conVal() {
-
 	var restr = "(?:'\\w*')";
 	return restr;
+}
+
+// constalt val with space in it
+// like 'Oklahoma City' -> passed though regex engine returns 'Oklahoma City' , 'City' (finds two things)
+function mulVal() {
+  var restr = "(?:'\\w+( \\w+)*')"
+  return restr;
 }
 
 // a valid operator symbol
