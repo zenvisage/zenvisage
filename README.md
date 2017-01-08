@@ -39,10 +39,11 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
           
 For making the above change, you could run the following commands:
             
-            CREATE USER postgres WITH PASSWORD 'zenvisage';
+            ALTER USER postgres WITH PASSWORD 'zenvisage';
             ALTER USER postgres WITH SUPERUSER;
               
  
+
 * Build and deploy code. Inside zenvisage folder,
     
         
