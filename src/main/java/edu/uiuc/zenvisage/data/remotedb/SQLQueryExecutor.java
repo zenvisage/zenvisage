@@ -164,30 +164,43 @@ public class SQLQueryExecutor {
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
 
+		//clean Y attributes to use for query
+		//if we have y1<-{'soldprice','listingprice'
+		//this would build agg(soldprice),agg(listingprice),
+		StringBuilder build = new StringBuilder();
+		for(int j = 0; j < yLen; j++) {
+			String cleanY = zqlRow.getY().getAttributes().get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+			build.append(agg);
+			build.append("(");
+			build.append(cleanY);
+			build.append(")");
+			build.append(",");
+		}
+		// remove extra ,
+		build.setLength(build.length() - 1);
+		
 		for(int i = 0; i < xLen; i++){
-			for(int j = 0; j < yLen; j++){
-				String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-				String y = zqlRow.getY().getAttributes().get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+			String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 
-				//zqlRow.getConstraint() has replaced the whereCondiditon
-				if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
-					sql = "SELECT " + z + "," + x + " ," + agg + "(" + y + ")" //zqlRow.getViz() should replace the avg() function
-							+ " FROM " + databaseName
-							+ " GROUP BY " + z + ", "+ x
-							+ " ORDER BY " + x;
-				} else {
+			
+			//zqlRow.getConstraint() has replaced the whereCondiditon
+			if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
+				sql = "SELECT " + z + "," + x + " ," + build.toString() //zqlRow.getViz() should replace the avg() function
+						+ " FROM " + databaseName
+						+ " GROUP BY " + z + ", "+ x
+						+ " ORDER BY " + x;
+			} else {
 
-					sql = "SELECT " + z+ "," + x + " ," + agg + "(" + y + ")"
-					+ " FROM " + databaseName
-					+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
-					+ " GROUP BY " + z + ", "+ x
-					+ " ORDER BY " + x;
-				}
-
-				System.out.println("Running ZQL Query :"+sql);
-				//excecute sql and put into VisualComponentList
-				executeSQL(sql, zqlRow, databaseName, x, y);
+				sql = "SELECT " + z+ "," + x + " ," + build.toString()
+				+ " FROM " + databaseName
+				+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
+				+ " GROUP BY " + z + ", "+ x
+				+ " ORDER BY " + x;
 			}
+
+			System.out.println("Running ZQL Query :"+sql);
+			//excecute sql and put into VisualComponentList
+			executeSQL(sql, zqlRow, databaseName, x, zqlRow.getY().getAttributes());
 		}
 
 
@@ -195,7 +208,7 @@ public class SQLQueryExecutor {
         //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 	}
 
-	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, String y) throws SQLException{
+	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, List<String> yAttributes) throws SQLException{
 		Statement st = c.createStatement();
 		System.out.println("before execute");
 		ResultSet rs = st.executeQuery(sql);
@@ -210,31 +223,62 @@ public class SQLQueryExecutor {
 		System.out.println("before loop");
 		// Since we do not order by Z, we need a hashmap to keep track of all the visualcomponents
 		// Since X is sorted though, the XList and YList are sorted correctly
-		HashMap<String, VisualComponent> vcMap = new HashMap<String, VisualComponent>();
-		while (rs.next())
+		HashMap<String, List<VisualComponent>> vcMap = new HashMap<String, List<VisualComponent>>();
+		sql_loop: while (rs.next())
 		{
 			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
 			if(rs.getString(2) == null || rs.getString(2).isEmpty()) continue;
-			if(rs.getString(3) == null || rs.getString(3).isEmpty()) continue;
+			
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
-			if(yType == null) yType = getMetaType(y, databaseName);
 
 			String zStr = rs.getString(1);
-			VisualComponent vc = vcMap.get(zStr);
-			if(vc != null) {
-				vc.getPoints().getXList().add(new WrapperType(rs.getString(2), xType));
-				vc.getPoints().getYList().add(new WrapperType(rs.getString(3), yType));
+			List<VisualComponent> vcList = vcMap.get(zStr);
+			
+			// adding new x,y points to existing visual components
+			if(vcList != null) {
+				int rs_col_index = 3;
+				// for loop populates vcList for a specific Z
+				// So say we have x1<-{'year'} y1<-{'soldprice','listingprice'} Z='state'.'CA'
+				// vcList for CA: (year,soldprice) , (year, listingprice) (in that exact order)
+				for(int i = 0; i < yAttributes.size(); i++) {
+					if (rs.getString(rs_col_index) == null || rs.getString(3).isEmpty()) {
+						continue sql_loop;
+					}
+					VisualComponent vc = vcList.get(i);
+					vc.getPoints().getXList().add(new WrapperType(rs.getString(2), xType));
+					vc.getPoints().getYList().add(new WrapperType(rs.getString(rs_col_index)));	// don't get individual y meta types -- let WrapperType interpret the int, float, or string
+					rs_col_index++;
+				}
 			}
 			else {
-				xList = new ArrayList<WrapperType>();
-				yList = new ArrayList<WrapperType>();
-				xList.add(new WrapperType(rs.getString(2), xType));
-				yList.add(new WrapperType(rs.getString(3), yType));
-				tempVisualComponent = new VisualComponent(new WrapperType(zStr, zType), new Points(xList, yList), x, y);
-				this.visualComponentList.addVisualComponent(tempVisualComponent);
-				vcMap.put(zStr, tempVisualComponent);
+				vcList = new ArrayList<VisualComponent>();
+				int rs_col_index = 3;
+				for(int i = 0; i < yAttributes.size(); i++) {
+					if (rs.getString(rs_col_index) == null || rs.getString(3).isEmpty()) {
+						continue sql_loop;
+					}
+					String yAtribute = yAttributes.get(i);
+					// don't get individual y meta types -- let WrapperType interpret the int, float, or string
+					xList = new ArrayList<WrapperType>();
+					yList = new ArrayList<WrapperType>();
+					xList.add(new WrapperType(rs.getString(2), xType));
+					yList.add(new WrapperType(rs.getString(rs_col_index)));
+					tempVisualComponent = new VisualComponent(new WrapperType(zStr, zType), new Points(xList, yList), x, yAtribute);
+					vcList.add(tempVisualComponent);
+					rs_col_index++;
+				}
+				vcMap.put(zStr, vcList);
 			}
+
+			
+		}
+		// will be in some unsorted order (b/c hashmap), which is fine
+		// what is important is that have all VCs for one pair of X,Y first, then another pair of X,Y, and so on
+		for(int i = 0; i < yAttributes.size(); i++) {
+			for(List<VisualComponent> vcList: vcMap.values()) {
+					this.visualComponentList.addVisualComponent(vcList.get(i));
+			}		
 		}
 		rs.close();
 		st.close();
