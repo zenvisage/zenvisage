@@ -216,16 +216,14 @@ app.controller('options-controller', [
     $scope.$watch('showScatterplot', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        $scope.callGetUserQueryResults();
-        $scope.callgetRepresentativeTrends();
+        $scope.callGetUserQueryResultsWithCallBack();
       }
     });
 
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        $scope.callGetUserQueryResults();
-        $scope.callgetRepresentativeTrends();
+        $scope.callGetUserQueryResultsWithCallBack();
       }
     });
 
@@ -239,31 +237,14 @@ app.controller('options-controller', [
     $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        $scope.callGetUserQueryResults();
-        $scope.callgetRepresentativeTrends();
+        $scope.callGetUserQueryResultsWithCallBack();
       }
     });
 
     $scope.removerAndInsertRows = function( n ){
         $scope.$broadcast('removeAndInsertRows', {n} );
     }
-/*
-    $scope.removerAndInsertRows = function( n )
-    {
-      var table = $("#zql-table > tbody")[0];
-      var rowCount = table.rows.length;
-      for (i = 1; i < rowCount; i++) {
-        $("#table-row-" + i).remove();
-      }
 
-      for (i = 1; i < n; i++) {
-        var rowNumber = (i).toString();
-        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
-        //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
-        $compile($el)($scope);
-      }
-    }
-*/
     $scope.clearQuery = function() {
       $scope.removerAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("")
@@ -271,7 +252,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("")
       $($( ".tabler" )[0]).find(".z-val").val("")
       $($( ".tabler" )[0]).find(".constraints").val("")
-      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
     }
 
@@ -347,7 +327,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
-      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
     }
 
@@ -359,7 +338,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
-      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -367,7 +345,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      //$($( ".tabler" )[1]).find(".viz").val("")
       $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmin_{z1}x{z2}[k=7]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
@@ -375,7 +352,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".y-val").val("y1")
       $($( ".tabler" )[2]).find(".z-val").val("v2")
       $($( ".tabler" )[2]).find(".constraints").val("")
-      //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")
     }
 
@@ -387,7 +363,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice','listingprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.'CA'")
       $($( ".tabler" )[0]).find(".constraints").val("")
-      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -395,7 +370,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.'NY'")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      //$($( ".tabler" )[1]).find(".viz").val("")
       $($( ".tabler" )[1]).find(".process").val("x2,y2<-argmin_{x1,y1}[k=1]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
@@ -403,7 +377,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".y-val").val("y2")
       $($( ".tabler" )[2]).find(".z-val").val("'state'.{'CA','NY'}")
       $($( ".tabler" )[2]).find(".constraints").val("")
-      //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")
     }
 
@@ -439,7 +412,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
-      //$($( ".tabler" )[0]).find(".viz").val("")
       $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
@@ -447,7 +419,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
       $($( ".tabler" )[1]).find(".z-val").val("z1")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      //$($( ".tabler" )[1]).find(".viz").val("")
       $($( ".tabler" )[1]).find(".process").val("v1<-argmin_{z1}[k=7]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
@@ -455,7 +426,6 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
       $($( ".tabler" )[2]).find(".z-val").val("v1")
       $($( ".tabler" )[2]).find(".constraints").val("")
-      //$($( ".tabler" )[2]).find(".viz").val("")
       $($( ".tabler" )[2]).find(".process").val("")
     }
     $scope.drawFunction = function() {
@@ -503,6 +473,10 @@ app.controller('options-controller', [
       $rootScope.$emit("callgetRepresentativeTrends", {});
     }
 
+    $scope.callGetUserQueryResultsWithCallBack = function() {
+      $rootScope.$emit("callGetUserQueryResultsWithCallBack", {});
+    }
+
 }]);
 
 
@@ -533,8 +507,24 @@ app.controller('datasetController', [
                );
               break;
       }
+    }
 
-
+    $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()
+    {
+      clearUserQueryResultsTable();
+      var q = constructUserQuery(); //goes to query.js
+      var data = q;
+      console.log("calling getUserQueryResults");
+      $http.post('/zv/postSimilarity', data).
+      success(function(response) {
+        console.log("getUserQueryResults: success");
+        if (response.length == 0){console.log("empty response")}
+        plotResults.displayUserQueryResults(response.outputCharts);
+        $scope.getRepresentativeTrendsWithoutCallback();
+      }).
+      error(function(response) {
+        console.log("getUserQueryResults: fail");
+      });
     }
 
     // for all other normal queries
@@ -559,7 +549,6 @@ app.controller('datasetController', [
 
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
-
       getRepresentativeTrends( getOutlierTrends );
     }
 
@@ -651,13 +640,22 @@ app.controller('datasetController', [
           });
           $scope.selectedYAxis = $scope.yAxisItems[0];
           //send in first item info
+
+          // $.when(initializeSketchpadOnDataAttributeChange(
+          //       response.xAxisColumns[$scope.xAxisItems[0]],
+          //       response.yAxisColumns[$scope.yAxisItems[0]],
+          //       response.zAxisColumns[$scope.categories[0]]
+          //     )).done(function(){
+          //       getRepresentativeTrends( getOutlierTrends );
+          //     });
           initializeSketchpadOnDataAttributeChange(
                 response.xAxisColumns[$scope.xAxisItems[0]],
                 response.yAxisColumns[$scope.yAxisItems[0]],
                 response.zAxisColumns[$scope.categories[0]]
               );
-          getRepresentativeTrends( getOutlierTrends );
+          $scope.getUserQueryResultsWithCallBack();
         }).
+
         error(function(response) {
           alert('Request failed: /getformdata');
         });
@@ -669,9 +667,17 @@ app.controller('datasetController', [
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
-      initializeSketchpadOnDataAttributeChange(xData, yData, categoryData); //only x and y values?
-      getRepresentativeTrends(getOutlierTrends);
+      // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
+      // .done(function(){
+      //   getRepresentativeTrends( getOutlierTrends );
+      // });
+      initializeSketchpadOnDataAttributeChange(xData, yData, categoryData);
+      $scope.getUserQueryResultsWithCallBack();
     };
+
+    $rootScope.$on("callGetUserQueryResultsWithCallBack", function(){
+      $scope.getUserQueryResultsWithCallBack();
+    });
 
     $rootScope.$on("callGetUserQueryResults", function(){
       $scope.getUserQueryResults();
