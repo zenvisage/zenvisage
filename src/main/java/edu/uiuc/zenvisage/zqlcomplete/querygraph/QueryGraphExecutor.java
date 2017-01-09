@@ -32,11 +32,12 @@ public class QueryGraphExecutor {
 		outputList.setVisualComponentList(new ArrayList<VisualComponent>());
 
 		Queue<Node> nodeQueue = new ArrayDeque<Node>();
+		QueryNode currNode;
 		for (Node entryNode : queryGraph.entryNodes) {
-			QueryNode currNode = (QueryNode) entryNode;
+			currNode = (QueryNode) entryNode;
 			
 			nodeQueue.add(currNode);
-			
+		}
 			while(!nodeQueue.isEmpty()) {
 				currNode = (QueryNode) nodeQueue.remove();
 				if (currNode.state == State.FINISHED) {
@@ -79,7 +80,6 @@ public class QueryGraphExecutor {
 			}
 			// from every entry node, keep traveling down to children.
 			// each children keeps going until we are all finished, or we are blocked (waiting on another path)
-		}
 		return outputList;
 	}
 }

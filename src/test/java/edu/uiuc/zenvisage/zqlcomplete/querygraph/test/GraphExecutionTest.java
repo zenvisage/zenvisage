@@ -37,8 +37,25 @@ public class GraphExecutionTest {
 	}
 
 	@Test
-	public void TestsSketchQueryExecution() {
+	public void TestSketchQueryExecution() {
 		String arg = "{\"db\":\"real_estate\",\"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":true,\"name\":\"f1\"},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"city\",\"points\":[{\"x\":\"5\", \"y\":\"10000\"}, {\"x\":\"7\", \"y\":\"20000\"}, {\"x\":\"9\", \"y\":\"30000\"}]}}]}";
+		
+		try {
+			ZvMain zvMain = new ZvMain();
+			System.out.println("testing Sketech query");
+			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			System.out.println("Output");
+			System.out.println(outputGraphExecutor);
+			
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestAdvancedSketchQueryExecution() {
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"city\",\"points\":[{\"x\":\"5\", \"y\":\"10000\"}, {\"x\":\"7\", \"y\":\"20000\"}, {\"x\":\"9\", \"y\":\"30000\"}]}},{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z2\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"processe\":{\"variables\":[\"v2\"],\"method\":\"DEuclidean\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\",\"f2\"],\"axisList1\":[\"z2\"],\"axisList2\":[]}},{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f3\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"v2\",\"values\":[]}}]}";
 		
 		try {
 			ZvMain zvMain = new ZvMain();
