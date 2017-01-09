@@ -177,7 +177,7 @@ function parseConstraints(input) {
 	var result = [];
 	var restr = opExp(recExp(orExp([
 			intVal(),
-			conVal(),
+			mulVal(),
 			varVal()
 		])));
 	var re = new RegExp(restr);
