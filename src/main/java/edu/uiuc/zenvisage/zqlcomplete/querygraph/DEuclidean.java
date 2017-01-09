@@ -201,24 +201,71 @@ public class DEuclidean implements D {
 			return Double.MAX_VALUE;
 	}
 
+	// Currently only works for calculating distance between floats and integers, undefined for string value comparison
 	public double calculateNormalizedDistance(VisualComponent v1, VisualComponent v2) {
 		ArrayList<WrapperType> y1 = v1.getPoints().getYList();
 		ArrayList<WrapperType> y2 = v2.getPoints().getYList();
+
+		double[] y1Normalized;
+		double[] y2Normalized;
 		
 		if (y1.size() == y2.size()) {
 			
 			// normalize!
-			double[] y1Normalized = normalize(y1);
-			double[] y2Normalized = normalize(y2);
-			
-			double distance = 0.0;
-			for (int i = 0; i < y1Normalized.length; i++) {
-				distance += Math.sqrt(Math.pow(y1Normalized[i] - y2Normalized[i], 2));
-			}
-			return distance;
+			y1Normalized = normalize(y1);
+			y2Normalized = normalize(y2);
+
 		}
-		else
-			return Double.MAX_VALUE;		
+		else if (y1.size() > y2.size()) {
+			// need to make y2 the same size as y1 for the euclidean metric, do this with interpolation
+			double[] interpolatedY2Values = getInterpolatedData(v2.getPoints().getXList(), y2, y1.size());	
+			y1Normalized = normalize(y1);
+			y2Normalized = normalize(interpolatedY2Values);			
+		}
+		else {
+			double[] interpolatedY1Values = getInterpolatedData(v1.getPoints().getXList(), y1, y2.size());	
+			y1Normalized = normalize(interpolatedY1Values);
+			y2Normalized = normalize(y2);				
+		}
+		
+		double distance = 0.0;
+		for (int i = 0; i < y1Normalized.length; i++) {
+			distance += Math.sqrt(Math.pow(y1Normalized[i] - y2Normalized[i], 2));
+		}
+		return distance;
+	}
+	
+	public double[] getInterpolatedData(List<WrapperType> inputXValues, List<WrapperType> inputYValues, int length) {		
+		int n = length;
+		float[] interpolatedXValues = new float[n];
+		double[] interpolatedYValues = new double[n];
+
+		interpolatedXValues[0] = inputXValues.get(0).getNumberValue();
+		interpolatedYValues[0] = inputYValues.get(0).getNumberValue();
+		interpolatedXValues[n-1] = inputXValues.get(inputXValues.size()-1).getNumberValue();
+		interpolatedYValues[n-1] = inputYValues.get(inputYValues.size()-1).getNumberValue();
+		
+		float granularity = (inputXValues.get(inputXValues.size()-1).getNumberValue() - inputXValues.get(0).getNumberValue()) / n - 1;
+		
+		int count = 1;
+		for (int i = 1; i < n ; i++) {
+			float interpolatedX = inputXValues.get(0).getNumberValue() + i * granularity;
+			interpolatedXValues[i] = interpolatedX;
+			
+			while(inputXValues.get(count).getNumberValue() < interpolatedX) {
+				if (count < inputXValues.size())
+					count++;
+			}
+			if (inputXValues.get(count).getNumberValue() == interpolatedX) {
+				interpolatedYValues[i] = inputYValues.get(count).getNumberValue();
+			}
+			else {
+				float xDifference = inputXValues.get(count).getNumberValue() - inputXValues.get(count-1).getNumberValue();
+				double yDifference = inputYValues.get(count).getNumberValue() - inputYValues.get(count-1).getNumberValue();
+				interpolatedYValues[i] = inputYValues.get(count - 1).getNumberValue() + (interpolatedX - inputXValues.get(count-1).getNumberValue()) / xDifference * yDifference;				
+			}
+		}
+		return interpolatedYValues;
 	}
 	
 	// Basic ZScore normalization
@@ -240,5 +287,25 @@ public class DEuclidean implements D {
 			}
 		}
 		return values;
+	}
+	
+	public double[] normalize(double[] y) {
+		double[] values = new double[y.length];
+		for(int i = 0; i < y.length; i++){
+			values[i] = y[i];
+		}
+		
+		double mean = StatUtils.mean(values);
+		double std = FastMath.sqrt(StatUtils.variance(values));
+		
+		for(int i = 0; i < values.length; i++) {
+			if (std == 0) {
+				values[i] = 0;
+			}
+			else {
+				values[i] = (values[i] - mean) / std;
+			}
+		}
+		return values;		
 	}
 }
