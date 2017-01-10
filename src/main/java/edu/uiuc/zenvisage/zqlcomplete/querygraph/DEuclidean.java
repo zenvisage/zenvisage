@@ -245,7 +245,7 @@ public class DEuclidean implements D {
 		interpolatedXValues[n-1] = inputXValues.get(inputXValues.size()-1).getNumberValue();
 		interpolatedYValues[n-1] = inputYValues.get(inputYValues.size()-1).getNumberValue();
 		
-		float granularity = (inputXValues.get(inputXValues.size()-1).getNumberValue() - inputXValues.get(0).getNumberValue()) / n - 1;
+		float granularity = (inputXValues.get(inputXValues.size()-1).getNumberValue() - inputXValues.get(0).getNumberValue()) / (n - 1);
 		
 		int count = 1;
 		for (int i = 1; i < n ; i++) {
