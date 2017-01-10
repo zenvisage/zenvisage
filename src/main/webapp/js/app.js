@@ -53,7 +53,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     // }
 
   $scope.submitZQL = function () {
-      $("#views_table").empty();
+      clearUserQueryResultsTable();
       $scope.queries['zqlRows'] = [];
 
       $( ".tabler" ).each(function( index ) {
@@ -269,7 +269,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val(" z2<-'location'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmin_{z1}x{z2}[k=5]DEuclidean(f1,f2)")
+      $($( ".tabler" )[1]).find(".process").val("v2<-argmin_{z2}[k=5]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
       $($( ".tabler" )[2]).find(".x-val").val("x1")
@@ -293,7 +293,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val(" z2<-'location'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmax_{z1}x{z2}[k=5]DEuclidean(f1,f2)")
+      $($( ".tabler" )[1]).find(".process").val("v2<-argmax_{z2}[k=5]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
       $($( ".tabler" )[2]).find(".x-val").val("x1")
@@ -345,7 +345,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmin_{z1}x{z2}[k=7]DEuclidean(f1,f2)")
+      $($( ".tabler" )[1]).find(".process").val("v2<-argmin_{z2}[k=7]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
       $($( ".tabler" )[2]).find(".x-val").val("x1")
@@ -394,7 +394,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z2<-'city'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1,v2<-argmax_{z1}x{z2}[k=3]DEuclidean(f1,f2)")
+      $($( ".tabler" )[1]).find(".process").val("v2<-argmax_{z2}[k=3]DEuclidean(f1,f2)")
 
       $($( ".tabler" )[2]).find(".name").val("*f3")
       $($( ".tabler" )[2]).find(".x-val").val("x1")
