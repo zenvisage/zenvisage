@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
+import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
@@ -51,23 +52,74 @@ public class KMeans extends Clustering {
 		}		
 		List<CentroidCluster<DoublePoint>> clusters1 = kmeans1.cluster(dataset1);
 		
-		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize, clusters1.size()), 15);
-		List<DoublePoint> dataset2 = new ArrayList<DoublePoint>();
-		for (int i = 0; i < clusters1.size(); i++) {	    
-	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(i)).getCenter();    
-	  	  	double[] p = point.getPoint();
-	  	  	int min = 0;
-	  	  	double mindist = distance.calculateDistance(p, normalizedgroups[0]);
-	  	  	for (int j = 1; j < normalizedgroups.length; j++) {
-	  	  		double d = distance.calculateDistance(p, normalizedgroups[j]);
-	  	  		if (d < mindist ) {
-	  	  			min = j;
-	  	  		 	mindist = d;
-	  	  		}
+		/////////////////////////////////////////////////////////////
+//		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize, clusters1.size()), 15);
+//		List<DoublePoint> dataset2 = new ArrayList<DoublePoint>();
+//		for (int i = 0; i < clusters1.size(); i++) {	    
+//	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(i)).getCenter();    
+//	  	  	double[] p = point.getPoint();
+//	  	  	int min = 0;
+//	  	  	double mindist = distance.calculateDistance(p, normalizedgroups[0]);
+//	  	  	for (int j = 1; j < normalizedgroups.length; j++) {
+//	  	  		double d = distance.calculateDistance(p, normalizedgroups[j]);
+//	  	  		if (d < mindist ) {
+//	  	  			min = j;
+//	  	  		 	mindist = d;
+//	  	  		}
+//	  	  	}
+//	  	  	dataset2.add(new DoublePoint(normalizedgroups[min]));
+//	    }
+//		List<CentroidCluster<DoublePoint>> clusters2 = kmeans2.cluster(dataset2);
+		
+		/////////////////////////////////////////////////////////////
+		int reducedClusterNumber = clusters1.size() - Math.min(this.args.kMeansClusterSize, clusters1.size());
+		for (int i = 0; i < reducedClusterNumber; ++i) {
+			int jmin = -1;
+			int lmin = -1;
+			double mindist = Double.POSITIVE_INFINITY;
+			for (int j = 0; j < clusters1.size(); ++j) {
+				DoublePoint pointj = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(j)).getCenter();    
+		  	  	double[] pj = pointj.getPoint();
+				for (int l = 0; l < j; ++l) {
+					DoublePoint pointl = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(l)).getCenter();    
+			  	  	double[] pl = pointl.getPoint();
+					double d = distance.calculateDistance(pj, pl);
+					if (d < mindist) {
+						jmin = j;
+						lmin = l;
+						mindist = d;
+					}
+				}
+			}
+			
+			//merge cluster_jmin and cluster_lmin
+			DoublePoint pointjmin = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(jmin)).getCenter();    
+	  	  	double[] pjmin = pointjmin.getPoint();
+	  	  	DoublePoint pointlmin = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(lmin)).getCenter();    
+	  	  	double[] plmin = pointlmin.getPoint();
+	  	  	
+	  	  	int jminSize = clusters1.get(jmin).getPoints().size();
+	  	  	int lminSize = clusters1.get(lmin).getPoints().size();
+	  	  	
+	  	  	double[] newCenter = new double[pjmin.length];
+	  	  	for (int j = 0; j < pjmin.length; ++j) {
+	  	  		newCenter[j] = ( pjmin[j] * jminSize + plmin[j] * lminSize ) / (jminSize + lminSize);
 	  	  	}
-	  	  	dataset2.add(new DoublePoint(normalizedgroups[min]));
-	    }
-		List<CentroidCluster<DoublePoint>> clusters2 = kmeans2.cluster(dataset2);
+	  	  	
+			CentroidCluster<DoublePoint> mergedCluster = new CentroidCluster<DoublePoint>(new DoublePoint(newCenter));
+			for (int j = 0; j < jminSize; ++j) {
+				mergedCluster.addPoint(clusters1.get(jmin).getPoints().get(j));
+			}
+			for (int l = 0; l < lminSize; ++l) {
+				mergedCluster.addPoint(clusters1.get(lmin).getPoints().get(l));
+			}
+			
+			clusters1.remove(jmin);
+			clusters1.remove(lmin);
+			clusters1.add(mergedCluster);
+		}
+		List<CentroidCluster<DoublePoint>> clusters2 = clusters1;
+		/////////////////////////////////////////////////////////////
 		
 		int clusters2Sizes[] = new int[clusters2.size()];		
 		int clusters2RealSizes[] = new int[clusters2.size()];
