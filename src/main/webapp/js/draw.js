@@ -99,11 +99,11 @@ function createSketchpad( data )
       .attr("class", "line")
       .attr("d", valueline);
 
-  // Add the X Axis
-  focus.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call( d3.axisBottom(x).ticks(8, "s").tickValues(0) );
+  //Add the X Axis
+  // focus.append("g")
+  //     .attr("class", "axis x")
+  //     .attr("transform", "translate(0," + height + ")")
+  //     .call( d3.axisBottom(x).ticks(0) );
 
 
   // Add the Y Axis
@@ -122,6 +122,23 @@ function createSketchpad( data )
   {
     if(getSelectedXAxis()==="month")
     {
+      focus.append("g")
+      .attr("class", "axis x")
+      .attr("transform", "translate(0," + height + ")")
+      .call( d3.axisBottom(x).ticks(8).tickFormat(function (d) {
+            var mapper = {
+              "0": "01/2004",
+              "20": "08/2005",
+              "40": "04/2007",
+              "60": "12/2008",
+              "80": "08/2010",
+              "100": "04/2012",
+              "120": "12/2013",
+              "140": "08/2015",
+            }
+            return mapper[ d.toString() ]
+          }));
+
       context.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height2 + ")")
@@ -141,6 +158,20 @@ function createSketchpad( data )
     }
     if(getSelectedXAxis()==="quarter")
     {
+      focus.append("g")
+      .attr("class", "axis x")
+      .attr("transform", "translate(0," + height + ")")
+      .call( d3.axisBottom(x).ticks(8).tickFormat(function (d) {
+            var mapper = {
+              "5": "Q1/2005",
+              "15": "Q3/2007",
+              "25": "Q1/2010",
+              "35": "Q3/2012",
+              "45": "Q1/2014",
+            }
+            return mapper[ d.toString() ]
+          }));
+
       context.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height2 + ")")
@@ -157,6 +188,26 @@ function createSketchpad( data )
     }
     if(getSelectedXAxis()==="year")
     {
+        focus.append("g")
+      .attr("class", "axis x")
+      .attr("transform", "translate(0," + height + ")")
+      .call( d3.axisBottom(x).ticks(8).tickFormat(function (d) {
+          var mapper = {
+            "1": "2004",
+            "2": "2005",
+            "3": "2006",
+            "4": "2007",
+            "5": "2008",
+            "6": "2009",
+            "7": "2010",
+            "8": "2011",
+            "9": "2012",
+            "10": "2013",
+            "11": "2014",
+            "12": "2015",
+          }
+          return mapper[ d.toString() ]
+        }));
       context.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height2 + ")")
