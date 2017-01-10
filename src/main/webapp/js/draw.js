@@ -231,10 +231,15 @@ function createSketchpad( data )
     }
   }
   else{
+    focus.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(8, "s"));
+
     context.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height2 + ")")
-      .call(d3.axisLeft(y).ticks(8, "s"));
+      .call(d3.axisBottom(x).ticks(8, "s"));
   }
 
   context.append("g")

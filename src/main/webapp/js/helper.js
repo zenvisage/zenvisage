@@ -182,8 +182,8 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
   else{
     graph.append("g")
       .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + trans + ")")
-      .call(d3.axisLeft(y).ticks(5, "s"));
+        .attr("transform", "translate(0," + trans + ")")
+        .call(d3.axisBottom(x).ticks(5, "s"));
   }
 
     // graph.append("g")
@@ -387,9 +387,9 @@ function displayRepresentativeResultsHelper( representativePatternResults )
     }
     else{
       graph.append("g")
-        .attr("class", "axis axis--x")
+      .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisLeft(y).ticks(5, "s"));
+        .call(d3.axisBottom(x).ticks(5, "s"));
     }
     // create xAxis
     // graph.append("g")
@@ -564,10 +564,11 @@ function displayOutlierResultsHelper( outlierResults )
       }
     }
     else{
-      graph.append("g")
-        .attr("class", "axis axis--x")
+    graph.append("g")
+      .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisLeft(y).ticks(5, "s"));
+        .call(d3.axisBottom(x).ticks(5, "s"));
+
     }
 
     // graph.append("g")
