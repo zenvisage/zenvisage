@@ -93,6 +93,8 @@ public class SchemeToMetatable {
 			case "float": return "REAL";
 			case "int": return "INT";
 			case "string": return "TEXT";
+			case "timestamp": return "timestamp";
+			case "date": return "timestamp";
 		}
 		return null;
 	}

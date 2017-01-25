@@ -74,6 +74,7 @@ public class SQLQueryExecutor {
 
 	public int createTable(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
+	      System.out.println(sQLQuery);
 	      int ret = stmt.executeUpdate(sQLQuery);
 	      stmt.close();
 	      return ret;

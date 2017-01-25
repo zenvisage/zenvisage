@@ -1,0 +1,9 @@
+weekday:int,indexed,T,F,F,F,F,0,O
+carrier:string,indexed,F,F,T,F,F,0,C
+origin:string,indexed,F,F,T,F,F,0,C
+destination:string,indexed,F,F,T,F,F,0,C
+arrivaldelay:float,unindexed,F,T,F,F,F,0,Q
+departuredelay:float,unindexed,F,T,F,F,F,0,Q
+weatherdelay:float,unindexed,F,T,F,F,F,0,Q
+distance:float,indexed,T,F,F,F,F,0,O
+date:timestamp,indexed,T,F,F,F,F,0,O

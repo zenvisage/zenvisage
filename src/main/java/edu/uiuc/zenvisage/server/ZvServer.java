@@ -89,9 +89,9 @@ public class ZvServer {
 		
 		List<String> dataset3 = new ArrayList<String>(); //flights
 		dataset3.add("flights");
-		file = new File(this.getClass().getClassLoader().getResource(("flights.csv")).getFile());
+		file = new File(this.getClass().getClassLoader().getResource(("flights_dt.csv")).getFile());
 		dataset3.add(file.getAbsolutePath());
-		file = new File(this.getClass().getClassLoader().getResource(("flights.txt")).getFile());
+		file = new File(this.getClass().getClassLoader().getResource(("flights_dt.txt")).getFile());
 		dataset3.add(file.getAbsolutePath());
 		
 		List<String> dataset4 = new ArrayList<String>(); //cmu
@@ -105,10 +105,10 @@ public class ZvServer {
 		//		List<String> dataset3 = new ArrayList<String>(); //flight
 //		List<String> dataset4 = new ArrayList<String>(); //cmu
 				
-		ZvMain.uploadDatasettoDB(dataset1,false);
-		ZvMain.uploadDatasettoDB(dataset2,false);
+//		ZvMain.uploadDatasettoDB(dataset1,false);
+//		ZvMain.uploadDatasettoDB(dataset2,false);
 		ZvMain.uploadDatasettoDB(dataset3,false);
-		ZvMain.uploadDatasettoDB(dataset4,false);
+//		ZvMain.uploadDatasettoDB(dataset4,false);
 	}
 
 }
