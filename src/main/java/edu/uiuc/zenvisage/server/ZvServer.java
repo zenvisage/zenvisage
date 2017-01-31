@@ -105,10 +105,10 @@ public class ZvServer {
 		//		List<String> dataset3 = new ArrayList<String>(); //flight
 //		List<String> dataset4 = new ArrayList<String>(); //cmu
 				
-//		ZvMain.uploadDatasettoDB(dataset1,false);
-//		ZvMain.uploadDatasettoDB(dataset2,false);
+		ZvMain.uploadDatasettoDB(dataset1,false);
+		ZvMain.uploadDatasettoDB(dataset2,false);
 		ZvMain.uploadDatasettoDB(dataset3,false);
-//		ZvMain.uploadDatasettoDB(dataset4,false);
+		ZvMain.uploadDatasettoDB(dataset4,false);
 	}
 
 }

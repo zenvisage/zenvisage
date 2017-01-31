@@ -115,7 +115,7 @@ public class ZQLExecutor {
 				ZQLRowVizResult zQLRowVizResult = new ZQLRowVizResult();
 				Query q = new Query("query").setGrouby(z + "," + x)
 						.setAggregationFunc("avg").setAggregationVaribale(y);
-				setFilter(q, zqlRow.getConstraint());
+		//		setFilter(q, zqlRow.getConstraint());
 
 				// get data points with a in memory query
 				LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executor

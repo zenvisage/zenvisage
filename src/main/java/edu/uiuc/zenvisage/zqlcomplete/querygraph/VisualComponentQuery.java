@@ -15,7 +15,7 @@ public class VisualComponentQuery {
 	private XColumn x;
 	private YColumn y;
 	private ZColumn z;
-	private List<Constraints> constraints;
+	private String constraints;
 	private VizColumn viz;
 	// is sketchPoints associated with visualComponent?
 	// or vc output?
@@ -25,11 +25,10 @@ public class VisualComponentQuery {
 		x = new XColumn();
 		y= new YColumn();
 		z= new ZColumn();
-		constraints= new ArrayList<Constraints>();
 		viz = new VizColumn();		
 	}
 
-	public VisualComponentQuery(Name name, XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
+	public VisualComponentQuery(Name name, XColumn x, YColumn y, ZColumn z, String constraints, VizColumn viz) {
 		super();
 		this.name = name;
 		this.x = x;
@@ -80,11 +79,11 @@ public class VisualComponentQuery {
 		this.z = z;
 	}
 
-	public List<Constraints> getConstraints() {
+	public String getConstraints() {
 		return constraints;
 	}
 
-	public void setConstraints(List<Constraints> constraints) {
+	public void setConstraints(String constraints) {
 		this.constraints = constraints;
 	}
 	

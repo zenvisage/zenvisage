@@ -185,7 +185,7 @@ public class SQLQueryExecutor {
 
 			
 			//zqlRow.getConstraint() has replaced the whereCondiditon
-			if (zqlRow.getConstraint() == null || zqlRow.getConstraint().size() == 0) {
+			if (zqlRow.getConstraint() == null || zqlRow.getConstraint() =="") {
 				sql = "SELECT " + z + "," + x + " ," + build.toString() //zqlRow.getViz() should replace the avg() function
 						+ " FROM " + databaseName
 						+ " GROUP BY " + z + ", "+ x
@@ -292,17 +292,19 @@ public class SQLQueryExecutor {
 	 * @param constraint
 	 * @return
 	 */
-	private String appendConstraints(List<Constraints> constraints) {
+	private String appendConstraints(String constraints) {
 		// TODO Auto-generated method stub
 		String appendedConstraints = "";
-		boolean flag=false;
+/*		boolean flag=false;
 		for(Constraints constraint: constraints){
 			if(flag){
 				appendedConstraints+=" AND ";
 			}
 			appendedConstraints+=constraint.toString();
 			flag=true;
-		}
+		}*/
+		appendedConstraints+=constraints;
+		
 		appendedConstraints+=" ";
 
 		return appendedConstraints;
@@ -433,7 +435,7 @@ public class SQLQueryExecutor {
 		List<String> xList = new ArrayList<String>();
 		xList.add("quarter");xList.add("year");
 		//ZQLRow zqlRow = new ZQLRow(new XColumn("Quarter"), new YColumn("SoldPrice"), new ZColumn("State"), constraints, new VizColumn("avg"));
-		ZQLRow zqlRow = new ZQLRow(new XColumn(xList), new YColumn("soldprice"), new ZColumn("state"), constraints, new VizColumn("avg"));
+		ZQLRow zqlRow = new ZQLRow(new XColumn(xList), new YColumn("soldprice"), new ZColumn("state"),"", new VizColumn("avg"));
 		sqlQueryExecutor.ZQLQueryEnhanced(zqlRow, "real_estate");
 	}
 
