@@ -48,9 +48,8 @@ public class SQLQuery {
 		from("real_estate");
 		
 		
-		if (zQLRow.getConstraint().size() > 0) {
-			for (int i = 0; i < zQLRow.getConstraint().size(); i++)
-				where(zQLRow.getConstraint().get(i).toString());
+		if (zQLRow.getConstraint()!=null && zQLRow.getConstraint()!="") {
+					where(zQLRow.getConstraint());
 		}
 		
 		groupBy(zQLRow.getZ().getAttribute().replace("'", ""));

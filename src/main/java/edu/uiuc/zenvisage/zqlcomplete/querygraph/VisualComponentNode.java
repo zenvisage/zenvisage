@@ -273,11 +273,13 @@ public class VisualComponentNode extends QueryNode{
 		List<String> values = z.getValues();
 		if(!values.isEmpty() && !values.get(0).equals("") && !values.get(0).equals("*")){
 			String parentheSizedValues = generateParenthesizedList(values);
-			edu.uiuc.zenvisage.zqlcomplete.executor.Constraints constraints = new edu.uiuc.zenvisage.zqlcomplete.executor.Constraints();
-			constraints.setKey(z.getAttribute());
-			constraints.setOperator(" IN");
-			constraints.setValue(parentheSizedValues);
-			vc.getConstraints().add(constraints);
+		
+			if(vc.getConstraints()!=null || vc.getConstraints()!="" )
+			{
+				vc.setConstraints(vc.getConstraints()+" AND ("+ z.getAttribute() +" IN "+parentheSizedValues + ")");
+			}
+			else
+				vc.setConstraints(z.getAttribute() +" IN "+parentheSizedValues);
 		}
 
 		// update the z column to make sure it strips extra '' out (so will be state, not 'state')

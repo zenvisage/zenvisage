@@ -17,7 +17,7 @@ public class ZQLRow {
 	private XColumn x;
 	private YColumn y;
 	private ZColumn z;
-	private List<Constraints> constraints;
+	private String constraints;
 	private Processe processe;
 	private VizColumn viz;
 	public Sketch sketchPoints;
@@ -28,12 +28,12 @@ public class ZQLRow {
 		x = new XColumn();
 		y= new YColumn();
 		z= new ZColumn();
-		constraints= new ArrayList<Constraints>();
+	//	constraints= new ArrayList<Constraints>();
 		processe = new Processe();
 		viz = new VizColumn();
 	}
 
-	public ZQLRow(XColumn x, YColumn y, ZColumn z, List<Constraints> constraints, VizColumn viz) {
+	public ZQLRow(XColumn x, YColumn y, ZColumn z,String constraints, VizColumn viz) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -99,10 +99,10 @@ public class ZQLRow {
 	public void setZ(ZColumn source) {
 		this.z = source;
 	}
-	public List<Constraints> getConstraint() {
+	public String  getConstraint() {
 		return constraints;
 	}
-	public void setConstraints(List<Constraints> constraints) {
+	public void setConstraints(String constraints) {
 		this.constraints = constraints;
 	}
 	public Processe getProcesse() {
