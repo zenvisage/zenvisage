@@ -36,22 +36,6 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $compile($el)($scope);
   }});
 
-  // $scope.removeAndInsertRows = function( n )
-  //   {
-    //   var table = $("#zql-table > tbody")[0];
-    //   var rowCount = table.rows.length;
-    //   for (i = 1; i < rowCount; i++) {
-    //     $("#table-row-" + i).remove();
-    //   }
-
-    //   for (i = 1; i < n; i++) {
-    //     var rowNumber = (i).toString();
-    //     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"5\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"15\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"20\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
-    //     //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
-    //     $compile($el)($scope);
-    //   }
-    // }
-
   $scope.submitZQL = function () {
       clearUserQueryResultsTable();
       $scope.queries['zqlRows'] = [];
@@ -124,7 +108,11 @@ function checkInput(input) {
         input.z = parseZ(input.z);
     }
     if (input.constraints !== undefined) {
-        input.constraints = parseConstraints(input.constraints);
+        if (0 === input.constraints.length)
+        {
+          input.constraints = undefined;
+        }
+        //input.constraints = input.constraints //parseConstraints(input.constraints);
     }
     if (input.viz !== undefined) {
         input.viz = parseViz(input.viz);
