@@ -274,7 +274,7 @@ public class VisualComponentNode extends QueryNode{
 		if(!values.isEmpty() && !values.get(0).equals("") && !values.get(0).equals("*")){
 			String parentheSizedValues = generateParenthesizedList(values);
 		
-			if(vc.getConstraints()!=null || vc.getConstraints()!="" )
+			if(vc.getConstraints()!=null && vc.getConstraints()!="" )
 			{
 				vc.setConstraints(vc.getConstraints()+" AND ("+ z.getAttribute() +" IN "+parentheSizedValues + ")");
 			}

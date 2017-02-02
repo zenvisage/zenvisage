@@ -185,7 +185,7 @@ public class SQLQueryExecutor {
 
 			
 			//zqlRow.getConstraint() has replaced the whereCondiditon
-			if (zqlRow.getConstraint() == null || zqlRow.getConstraint() =="") {
+			if (zqlRow.getConstraint() == null && zqlRow.getConstraint() =="") {
 				sql = "SELECT " + z + "," + x + " ," + build.toString() //zqlRow.getViz() should replace the avg() function
 						+ " FROM " + databaseName
 						+ " GROUP BY " + z + ", "+ x
