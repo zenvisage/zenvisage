@@ -77,7 +77,7 @@ public class ZQLTableToGraphTest {
 		List<Constraints> constraints = new ArrayList<Constraints>();
 		constraints.add(constraint);
 		
-		ZQLRow row2 = new ZQLRow(x2, y2, z2, constraints, null);
+		ZQLRow row2 = new ZQLRow(x2, y2, z2, "", null);
 		Name name2 = new Name();
 		name2.setName("f2");
 		row2.setName(name2);
@@ -142,7 +142,7 @@ public class ZQLTableToGraphTest {
 		List<Constraints> constraints = new ArrayList<Constraints>();
 		constraints.add(constraint);
 		
-		ZQLRow row1 = new ZQLRow(x1, y1, z1, constraints, null);
+		ZQLRow row1 = new ZQLRow(x1, y1, z1, "", null);
 		Name name1 = new Name();
 		name1.setName("f1");
 		row1.setName(name1);
