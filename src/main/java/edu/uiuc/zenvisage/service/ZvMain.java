@@ -104,7 +104,6 @@ public class ZvMain {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
 		uploadDatasettoDB(names,true);
-		
 	}
 
 		
@@ -147,6 +146,7 @@ public class ZvMain {
 			}
 
 			//new Database(names.get(0), names.get(2), names.get(1), true);
+			
 		}
 		
 	}
@@ -409,16 +409,10 @@ public class ZvMain {
 	public String getInterfaceFomData(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		this.databaseName = fq.getDatabasename();
-		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
-				//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
-		//executor = new Executor(inMemoryDatabase);
-		
-
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
-		System.out.println(buffer);
-//		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		System.out.println("inMemoryDatabase.getFormMetdaData()"+buffer);
 		return buffer;
 }
 

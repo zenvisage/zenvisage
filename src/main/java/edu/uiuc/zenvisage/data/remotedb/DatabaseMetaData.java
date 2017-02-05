@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.data.roaringdb.db;
+package edu.uiuc.zenvisage.data.remotedb;
 
 import java.util.HashMap;
 import java.util.Map;

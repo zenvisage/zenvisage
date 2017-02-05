@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.data.roaringdb.db;
+package edu.uiuc.zenvisage.data.remotedb;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,12 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.roaringbitmap.RoaringBitmap;
-import edu.uiuc.zenvisage.data.roaringdb.db.Column;
-import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
-
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
-import  edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 
 public class Database {
 	private String name;
