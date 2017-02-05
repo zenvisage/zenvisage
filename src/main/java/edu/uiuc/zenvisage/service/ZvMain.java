@@ -97,33 +97,7 @@ public class ZvMain {
 
 	public ZvMain() throws IOException, InterruptedException{
 		System.out.println("ZVMAIN LOADED");
-		loadData();
 	}
-
-	public  void loadData() throws IOException, InterruptedException{
-
-//		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-//		inMemoryDatabases.put("cmu", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
-//		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
-//
-//		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
-//		inMemoryDatabases.put("sales", inMemoryDatabase);
-//
-//		System.out.println("Done loading data");
-	}
-
-//	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
-//    	Database database = new Database(name,schemafile,datafile);
-//    	return database;
-//
-//    }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 
@@ -172,30 +146,12 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			new Database(names.get(0), names.get(2), names.get(1), true);
-			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
-
-
-//			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
+			//new Database(names.get(0), names.get(2), names.get(1), true);
 		}
 		
 	}
 	
-	
-	
-	
-//   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
-//		  System.out.println(zqlQuery);
-//	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
-//		  executor = new Executor(inMemoryDatabase);
-//		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.executor=executor;
-//		  edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
-//     	  String result=new ObjectMapper().writeValueAsString(edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor.execute(zqlTable));
-//     	  System.out.println(result);
-//     	  return result;
-//		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
-//
-//		}
+
 
    /**
     * 
@@ -251,35 +207,6 @@ public class ZvMain {
 		return finalOutput;
 	 }
 
-   //old
-//   public String runZQLQuery(String zqlQuery) throws IOException, InterruptedException{
-//		  inMemoryDatabase = inMemoryDatabases.get("real_estate");
-//		  executor = new Executor(inMemoryDatabase);
-//		  ZQLExecutor.executor=executor;
-//		  ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery,ZQLTable.class);
-//		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(zqlTable));
-//		  return new ObjectMapper().writeValueAsString(ZQLExecutor.execute(ZQLTest.createZQLTable()));
-//
-//		}
-
-
-//	public String getScatterPlot(String query) throws JsonParseException, JsonMappingException, IOException {
-//		System.out.print(query);
-//		ScatterPlotQuery q = new ObjectMapper().readValue(query, ScatterPlotQuery.class);
-//		Map<String, ScatterResult> output = executor.getScatterData(q);
-//		if (output == null) return "";
-//		Result finalOutput = new Result();
-//		finalOutput.method = q.method;
-//		if (q.method == "ScatterRep") {
-//			ScatterRep.compute(output, q, finalOutput);
-//		}
-//		else {
-//			ScatterRank.compute(output, q, finalOutput);
-//		}
-//		ObjectMapper mapper = new ObjectMapper();
-//		return mapper.writeValueAsString(finalOutput);
-//	}
-
 	/**
 	 * Given a front end sketch or drag and drop, run similarity search through the query graph backend
 	 * @param zvQuery
@@ -307,70 +234,6 @@ public class ZvMain {
 		
 		return null;
 	}
-	
-	/* Will be obsolete when the new separated query method is utilized */
-//	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
-//		// get data from database
-//		System.out.println(query);
-//		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-//		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
-//		 if (args.method.equals("SimilaritySearch"))
-//			 setFilter(q, args);
-//		 ExecutorResult executorResult = executor.getData(q);
-//		 if (executorResult == null) return "";
-//		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
-//		 // setup result format
-//		 Result finalOutput = new Result();
-//		 finalOutput.method = args.method;
-//		 //finalOutput.xUnit = inMemoryDatabase.getColumnMetaData(args.xAxis).unit;
-//		 //finalOutput.yUnit = inMemoryDatabase.getColumnMetaData(args.yAxis).unit;
-//		 // generate new result for query
-//		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args, executorResult.xMap);
-//		 // generate the corresponding distance metric
-//		 if (args.distance_metric.equals("Euclidean")) {
-//			 distance = new Euclidean();
-//		 }
-//		 else {
-//			 distance = new DTWDistance();
-//		 }
-//		 // generate the corresponding data normalization metric
-//		 if (args.distanceNormalized) {
-//			 normalization = new Zscore();
-////			 normalization = new Original();
-//		 }
-//		 else {
-//			 normalization = new Original();
-//		 }
-//		 // generate the corresponding output normalization
-//
-//		 outputNormalization = new Original();
-//		 // reformat database data
-//		 DataReformation dataReformatter = new DataReformation(outputNormalization);
-//		 double[][] normalizedgroups = dataReformatter.reformatData(output);
-//		 // generate the corresponding analysis method
-//		 if (args.method.equals("Outlier")) {
-//			 Clustering cluster = new KMeans(distance, normalization, args);
-//			 analysis = new Outlier(executor,inMemoryDatabase,chartOutput,distance,normalization,cluster,args);
-//		 }
-//		 else if (args.method.equals("RepresentativeTrends")) {
-//			 Clustering cluster = new KMeans(distance, normalization, args);
-//			 analysis = new Representative(executor,inMemoryDatabase,chartOutput,distance,normalization,cluster,args);
-//		 }
-//		 else if (args.method.equals("SimilaritySearch")) {
-//			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
-//			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
-//			 ((Similarity) analysis).setDescending(false);
-//		 }
-//		 else if (args.method.equals("DissimilaritySearch")) {
-//			 paa = new PiecewiseAggregation(normalization, args, inMemoryDatabase);
-//			 analysis = new Similarity(executor,inMemoryDatabase,chartOutput,distance,normalization,paa,args,dataReformatter);
-//			 ((Similarity) analysis).setDescending(true);
-//		 }
-//		 analysis.compute(output, normalizedgroups, args);
-//
-//		 ObjectMapper mapper = new ObjectMapper();
-//		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
-//	}
 
 
 	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
@@ -511,30 +374,6 @@ public class ZvMain {
 	 * @throws JsonParseException
 	 * @throws InterruptedException
 	 */
-//	public String getBaselineData(String query) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
-//		BaselineQuery bq = new ObjectMapper().readValue(query, BaselineQuery.class);
-//		if (!bq.equals(cachedQuery)) {
-//			List<LinkedHashMap<String, LinkedHashMap<Float, Float>>> output = new ArrayList<LinkedHashMap<String, LinkedHashMap<Float, Float>>>();
-//			for (int i = 0; i < bq.yAxis.size(); i++) {
-//				Query q = new Query("query").setGrouby(bq.zAxis + "," + bq.xAxis).setAggregationFunc(bq.aggrFunc)
-//						.setAggregationVaribale(bq.yAxis.get(i));
-//				setBaselineFilter(q, bq);
-//				ExecutorResult executorResult = executor.getData(q);
-//				if (executorResult == null)
-//					return "";
-//
-//				output.add(executorResult.output);
-//			}
-//			Result finalOutput = new Result();
-//			finalOutput.method = "Basic search";
-//			ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, null, null);
-//			chartOutput.baselineOutput(output, bq, finalOutput);
-//			cachedResult = finalOutput;
-//		}
-//		Result response = new Result(cachedResult, bq.pageNum);
-//		ObjectMapper mapper = new ObjectMapper();
-//		return mapper.writeValueAsString(response);
-//	}
 
 	public String outlier(String method,String sql,String outliercount) throws IOException{
 		return readFile();

@@ -100,9 +100,6 @@ public class Database {
 		     if (terms[6].equals("T")) {
 		    	 columnMetadata.unit = terms[7];
 		     }
-
-		    Column column = new Column(columnMetadata, this);
-
 		 }
 
 		bufferedReader.close();
@@ -133,14 +130,14 @@ public class Database {
 		this.rowCount=count;
 		
 		//set min, max value for each of the column in database
-//		for(int i=0;i<header.length;i++){
-//			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
-//			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
-//				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-//				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
-//				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
-//			}
-//		}
+		for(int i=0;i<header.length;i++){
+			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
+			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
+			}
+		}
 
 		bufferedReader.close();
 	}
@@ -165,14 +162,14 @@ public class Database {
 		this.rowCount=count;
 		
 		//set min, max value for each of the column in database
-//		for(int i=0;i<header.length;i++){
-//			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
-//			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
-//				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-//				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
-//				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
-//			}
-//		}
+		for(int i=0;i<header.length;i++){
+			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
+			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
+			}
+		}
 	
 		bufferedReader.close();
     }
