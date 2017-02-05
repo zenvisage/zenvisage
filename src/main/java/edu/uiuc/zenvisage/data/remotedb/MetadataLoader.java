@@ -16,13 +16,13 @@ import org.roaringbitmap.RoaringBitmap;
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 
-public class Database {
+public class MetadataLoader {
 	private String name;
 	private Map<String,Column> columns= new HashMap<String,Column>();
 	public DatabaseMetaData databaseMetaData= new DatabaseMetaData();
 	public long rowCount;
 
-	public Database(String name,String schemafilename,String datafilename, boolean firstTime) throws IOException, InterruptedException, SQLException{
+	public MetadataLoader(String name,String schemafilename,String datafilename, boolean firstTime) throws IOException, InterruptedException, SQLException{
 		this.name=name;
 		this.databaseMetaData.dataset = name;
 		readSchema(schemafilename);
@@ -30,8 +30,6 @@ public class Database {
 			loadData0(datafilename);
 		else
 			loadData1(datafilename);
-		
-		//DatabaseCatalog.addDatabase(name, this);
 	}
 
 	public Map<String, Column> getColumns() {
@@ -154,16 +152,14 @@ public class Database {
 	
 		bufferedReader.close();
     }
- 
-
-    public ColumnMetadata getColumnMetaData(String columnName){
-
-    	//columnName format incorrect... discovered during zql parser process column test
-    	//Column column = columns.get(columnName);
-    	Column column = columns.get(columnName.substring(0,1).toUpperCase()+columnName.substring(1));
-		return column.columnMetadata;
-
-     }
+// 
+//
+//    public ColumnMetadata getColumnMetaData(String columnName){
+//    	//columnName format incorrect... discovered during zql parser process column test
+//    	//Column column = columns.get(columnName);
+//    	Column column = columns.get(columnName.substring(0,1).toUpperCase()+columnName.substring(1));
+//		return column.columnMetadata;
+//     }
 
      public DatabaseMetaData getFormMetdaData(){
 	  return databaseMetaData;

@@ -12,9 +12,9 @@ import edu.uiuc.zenvisage.data.Query.FilterPredicate;
 public class Column {
 	public ColumnMetadata columnMetadata= new ColumnMetadata();
 
-	public Column(ColumnMetadata columnMetadata,Database database){
+	public Column(ColumnMetadata columnMetadata,MetadataLoader metadataLoader){
 		this.columnMetadata=columnMetadata;
-		database.getColumns().put(columnMetadata.name, this);
+		metadataLoader.getColumns().put(columnMetadata.name, this);
 	}
 
 	public String getName() {

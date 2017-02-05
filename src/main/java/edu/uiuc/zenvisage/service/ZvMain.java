@@ -37,7 +37,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import edu.uiuc.zenvisage.data.Query;
-import edu.uiuc.zenvisage.data.remotedb.Database;
+import edu.uiuc.zenvisage.data.remotedb.MetadataLoader;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.SchemeToMetatable;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
@@ -78,7 +78,7 @@ public class ZvMain {
 //	private InMemoryDatabase inMemoryDatabase;
 //	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
 
-	private Database inMemoryDatabase;
+	private MetadataLoader metadataloader;
 
 	//public Executor executor = new Executor(inMemoryDatabase);
 	public Analysis analysis;
@@ -405,8 +405,8 @@ public class ZvMain {
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		this.databaseName = fq.getDatabasename();
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
-		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
-		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		this.metadataloader = new MetadataLoader(this.databaseName, locations[0], locations[1], false);
+		buffer = new ObjectMapper().writeValueAsString(this.metadataloader.getFormMetdaData());
 		System.out.println("inMemoryDatabase.getFormMetdaData()"+buffer);
 		return buffer;
 }
