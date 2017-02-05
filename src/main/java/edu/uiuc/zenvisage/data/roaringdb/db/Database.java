@@ -100,7 +100,9 @@ public class Database {
 		     if (terms[6].equals("T")) {
 		    	 columnMetadata.unit = terms[7];
 		     }
+		     new Column(columnMetadata, this);
 		 }
+	
 
 		bufferedReader.close();
 	}
