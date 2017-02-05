@@ -19,7 +19,6 @@ import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 public class Database {
 	private String name;
 	private Map<String,Column> columns= new HashMap<String,Column>();
-	private Map<String,Column> indexedColumns= new HashMap<String,Column>();
 	public DatabaseMetaData databaseMetaData= new DatabaseMetaData();
 	public long rowCount;
 
@@ -39,29 +38,13 @@ public class Database {
 		return columns;
 	}
 
-	public Map<String, Column> getIndexedColumns() {
-		return indexedColumns;
-	}
-
 	private void addValue(String columnName,int row,String value){
 		Column column=columns.get(columnName);
-		
-//		System.out.println(columns.size());
-//		System.out.println(columnName);
-//		for(String key:columns.keySet()){
-//			System.out.print(key +" ");
-//		}
-		//System.out.println();
 		column.add(row, value);
  	}
 
 	private void readSchema(String schemafilename) throws IOException, InterruptedException{
-//   	 BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
-//   	 String in = getClass().getClassLoader().getResource(schemafilename).getPath();
-//     BufferedReader bufferedReader = new BufferedReader(new FileReader(in));
-//		System.out.println(schemafilename);
-//		System.out.println(this.databaseMetaData.dataset);
-//   	InputStream is = getClass().getResourceAsStream(schemafilename);
+
    	BufferedReader bufferedReader = new BufferedReader(new FileReader(schemafilename));
 	 String line;
 	 while ((line = bufferedReader.readLine()) != null){
@@ -160,71 +143,18 @@ public class Database {
 		this.rowCount=count;
 		
 		//set min, max value for each of the column in database
-		for(int i=0;i<header.length;i++){
-			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
-			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
-				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
-				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
-			}
-		}
+//		for(int i=0;i<header.length;i++){
+//			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
+//			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+//				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+//				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+//				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
+//			}
+//		}
 	
 		bufferedReader.close();
     }
-
-    public RoaringBitmap getColumn(FilterPredicate filterPredicate) {
-    	String columnName = filterPredicate.getPropertyName();
-    	Column column = indexedColumns.get(columnName);
-    	if (column != null) {
-    		return column.getIndexedValues(filterPredicate);
-    	}
-    	return getUnIndexedColumn(filterPredicate);
-    }
-
-    public RoaringBitmap getIndexedColumn(FilterPredicate filterPredicate){
-  		Column column=indexedColumns.get(filterPredicate.getPropertyName());
-  		return column.getIndexedValues(filterPredicate);
-  	 }
-
-    public RoaringBitmap getUnIndexedColumn(FilterPredicate filterPredicate){
-  		Column column=columns.get(filterPredicate.getPropertyName());
-  		return column.getUnIndexedValues(filterPredicate);
-  	 }
-
-    public Map<String,RoaringBitmap> getIndexedColumn(String columnName){
-  		Column column=indexedColumns.get(columnName);
-  		if (column == null) return null;
-  		return column.getIndexedValues();
-  	 }
-
-    public List<String> getUnIndexedColumn(String columnName){
-    	Column column = columns.get(columnName);
-    	if (column == null) return null;
-    	return column.getUnIndexedValues();
-    }
-
-    // new
-    public Map<String,RoaringBitmap> getColumn(String columnName) {
-    	Column column = indexedColumns.get(columnName);
-    	if (column == null) {
-    		column = columns.get(columnName);
-    		List<String> values = column.getUnIndexedValues();
-    		Map<String,RoaringBitmap> maps = new HashMap<String,RoaringBitmap>();
-    		for (int i = 0; i < values.size(); i++) {
-    			if (maps.containsKey(values.get(i))) {
-    				maps.get(values.get(i)).add(i);
-    			}
-    			else {
-    				RoaringBitmap bits = new RoaringBitmap();
-    				bits.add(i);
-    				maps.put(values.get(i), bits);
-    			}
-    		}
-    		return maps;
-    	}
-    	return column.getIndexedValues();
-    }
-
+ 
 
     public ColumnMetadata getColumnMetaData(String columnName){
 

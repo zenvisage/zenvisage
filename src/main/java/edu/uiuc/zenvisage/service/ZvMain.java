@@ -37,17 +37,12 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import edu.uiuc.zenvisage.data.Query;
+import edu.uiuc.zenvisage.data.remotedb.Database;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.SchemeToMetatable;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
-import edu.uiuc.zenvisage.data.roaringdb.db.Column;
-import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
-import edu.uiuc.zenvisage.data.roaringdb.db.Database;
-import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
-import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
-import edu.uiuc.zenvisage.data.roaringdb.executor.ExecutorResult;
 import edu.uiuc.zenvisage.service.cluster.Clustering;
 import edu.uiuc.zenvisage.service.cluster.KMeans;
 import edu.uiuc.zenvisage.service.distance.DTWDistance;
