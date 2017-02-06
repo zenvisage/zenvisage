@@ -268,6 +268,11 @@ public class VisualComponentNode extends QueryNode{
 			z.setValues(values);
 		}
 
+		// update the z column to make sure it strips extra '' out (so will be state, not 'state')
+		String str = z.getAttribute();
+		str = str.replace("'", "");
+		z.setAttribute(str);
+		
 		// So either z naturally has values eg from query with z=state.{'CA','NY'}
 		// Or z got values from the lookuptable eg z=v1
 		List<String> values = z.getValues();
@@ -281,11 +286,6 @@ public class VisualComponentNode extends QueryNode{
 			else
 				vc.setConstraints(z.getAttribute() +" IN "+parentheSizedValues);
 		}
-
-		// update the z column to make sure it strips extra '' out (so will be state, not 'state')
-		String str = z.getAttribute();
-		str = str.replace("'", "");
-		z.setAttribute(str);
 
 		System.out.println("z information:");
 		System.out.println(z.getVariable());
