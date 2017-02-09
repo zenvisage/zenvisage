@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
+import edu.uiuc.zenvisage.service.FindTopKClasses;
 import edu.uiuc.zenvisage.service.ZvMain;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 
@@ -107,7 +108,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
-	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
+	public String getFindTopKClassesDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
 //		System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}
@@ -153,10 +154,9 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/findbestclass", method = RequestMethod.GET)
 	@ResponseBody
 	public String findbestclass(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
-		
-
-		// TODO change to graph executor
-		return "";
+		FindTopKClasses findTopKClasses = new FindTopKClasses();
+		String output= findTopKClasses.findtopKClasses(arg);
+		return output;
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)

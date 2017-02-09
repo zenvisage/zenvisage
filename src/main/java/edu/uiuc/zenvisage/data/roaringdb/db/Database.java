@@ -93,7 +93,7 @@ public class Database {
 		     if(terms[4].equals("T")){
 		    	 databaseMetaData.zAxisColumns.put(columnMetadata.name,columnMetadata);
 		     }
-
+		     getFormMetdaData
 		     if(terms[5].equals("T")){
 		    	 databaseMetaData.predicateColumns.put(columnMetadata.name,columnMetadata);
 		     }

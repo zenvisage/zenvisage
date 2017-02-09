@@ -20,22 +20,24 @@ import edu.uiuc.zenvisage.model.ZvQuery;
 public class FindTopKClasses {
 	
 	
-void findtopKClasses(String query) throws JsonParseException, JsonMappingException, IOException{
+public String findtopKClasses(String query) throws JsonParseException, JsonMappingException, IOException{
 	ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 	Sketch[] sketch= args.getSketchPoints();
 	String datasetName="real_estate";
 	segmentTrend();
 	findMargins();
 	ProjectedPoints projectedPoints=projectPoints(datasetName);
-	summarizeResults();
-	
+	ArrayList<VisualClass> visualClasses=summarizeResults();
+		
+//	return new ObjectMapper().writeValueAsString(visualClasses);
+	return "placeholder";
 	//findMargins
 	//projectPoints
 	//findMostCommonXandY
 }
 
 
-void segmentTrend(){
+ void segmentTrend(){
 	
 }
 	
