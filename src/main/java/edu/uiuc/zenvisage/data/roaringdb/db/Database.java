@@ -35,7 +35,7 @@ public class Database {
 			loadData0(datafilename);
 		else
 			loadData1(datafilename);
-		
+
 		//DatabaseCatalog.addDatabase(name, this);
 	}
 
@@ -49,7 +49,7 @@ public class Database {
 
 	private void addValue(String columnName,int row,String value){
 		Column column=columns.get(columnName);
-		
+
 //		System.out.println(columns.size());
 //		System.out.println(columnName);
 //		for(String key:columns.keySet()){
@@ -93,14 +93,14 @@ public class Database {
 		     if(terms[4].equals("T")){
 		    	 databaseMetaData.zAxisColumns.put(columnMetadata.name,columnMetadata);
 		     }
-		     getFormMetdaData
+
 		     if(terms[5].equals("T")){
 		    	 databaseMetaData.predicateColumns.put(columnMetadata.name,columnMetadata);
 		     }
 		     if (terms[6].equals("T")) {
 		    	 columnMetadata.unit = terms[7];
 		     }
-		   
+
 		     new Column(columnMetadata, this);
 		 }
 
@@ -130,7 +130,7 @@ public class Database {
             count=count+1;
 		 }
 		this.rowCount=count;
-		
+
 		//set min, max value for each of the column in database
 //		for(int i=0;i<header.length;i++){
 //			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
@@ -143,7 +143,7 @@ public class Database {
 
 		bufferedReader.close();
 	}
-    
+
     public void loadData1(String datafilename) throws IOException, SQLException{
 	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 		String line;
@@ -162,7 +162,7 @@ public class Database {
 	        count=count+1;
 		 }
 		this.rowCount=count;
-		
+
 		//set min, max value for each of the column in database
 		for(int i=0;i<header.length;i++){
 			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
@@ -172,7 +172,7 @@ public class Database {
 				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
 			}
 		}
-	
+
 		bufferedReader.close();
     }
 
