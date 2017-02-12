@@ -73,7 +73,6 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 
@@ -101,8 +100,9 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-
-
+	    FindTopKClasses findTopKClasses = new FindTopKClasses(body);
+	    findTopKClasses.findtopKClasses();
+	    System.out.println("Draw query output:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 
@@ -151,13 +151,13 @@ public class ZvBasicAPI {
 		return outputGraphExecutor;
 	}
 
-	@RequestMapping(value = "/findbestclass", method = RequestMethod.GET)
-	@ResponseBody
-	public String findbestclass(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
-		FindTopKClasses findTopKClasses = new FindTopKClasses();
-		String output= findTopKClasses.findtopKClasses(arg);
-		return output;
-	}
+//	@RequestMapping(value = "/findbestclass", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String findbestclass(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
+//		FindTopKClasses findTopKClasses = new FindTopKClasses();
+//		String output= findTopKClasses.findtopKClasses(arg);
+//		return output;
+//	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
