@@ -4,6 +4,7 @@
 package edu.uiuc.zenvisage.service;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ZvQuery;
+import edu.uiuc.zenvisage.data.remotedb.Attribute;
 
 /**
  * @author tarique
@@ -47,7 +49,7 @@ public FindTopKClasses(String query){
 	this.query = query;
 }
 
-public String findtopKClasses() throws JsonParseException, JsonMappingException, IOException{
+public String findtopKClasses() throws JsonParseException, JsonMappingException, IOException, SQLException{
 	 //get the trend from /zv/postSimilarity
 	ZvQuery args = new ObjectMapper().readValue(this.query,ZvQuery.class);
 	//get the trend from /zv/postSimilarity
@@ -104,12 +106,15 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
  }
 
 
-ProjectedPoints projectPoints(String datasetName){
+ProjectedPoints projectPoints(String datasetName) throws SQLException{
 	 ProjectedPoints projectedPoints=new ProjectedPoints();
 	//write a sql query to fetch the data points.
 	//iterate through the rows, project them with all possible X and Y, and see if they fall in the margin. If so, add them to the projected points.
 	 SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-	 
+	 ArrayList<Attribute> attributes = sqlQueryExecutor.getAllAttribute(datasetName);
+	 for(Attribute attribute : attributes){
+		 System.out.println(attribute.toString());
+	 }
 	 return projectedPoints;
 }
 

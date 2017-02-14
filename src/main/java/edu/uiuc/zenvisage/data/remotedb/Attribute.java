@@ -10,6 +10,6 @@ public class Attribute {
 		this.axis = axis;
 	}
 	public String toString(){
-		return "name:"+name+"type:"+type+"axis:"+axis;
+		return "name:"+name+",type:"+type+",axis:"+axis;
 	}
 }
