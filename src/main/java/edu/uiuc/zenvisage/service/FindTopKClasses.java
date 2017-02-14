@@ -36,6 +36,9 @@ private class Region{
 		this.minY = minY;
 		this.maxY = maxY;
 	}
+	public String toString(){
+		return String.valueOf(minX)+ ","+String.valueOf(maxX)+","+String.valueOf(minY)+ ","+String.valueOf(maxY);
+	}
 }
 
 private String query;
@@ -80,7 +83,7 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	 int segSize = nPoints/nOfSegments;
 	 List<Region> regions = new ArrayList<Region>();
 
-	 int[] averagePoint = new int[2];
+	 float[] averagePoint = new float[2];
 	 int i = 0; int j = 0;
 	 for(; i < points.size();i+=(j+1)){
 		 Region r = new Region(Float.MAX_VALUE,Float.MIN_VALUE,Float.MAX_VALUE,Float.MIN_VALUE);
@@ -94,6 +97,8 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 			 if(y<r.minY) r.minY = y;
 			 if(y>r.maxY) r.maxY = y;
 			 regions.add(r);
+			 System.out.println(r.toString()+"Average:"+averagePoint[0]+","+averagePoint[1]);
+			 
 		 }
 	 }
  }
