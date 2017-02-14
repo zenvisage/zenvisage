@@ -128,6 +128,7 @@ public class ZvMain {
 					System.out.println("MetaType already exists!");
 				}
 				
+				/*Create database*/
 				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
 				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
 				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " table from "+names.get(1));
