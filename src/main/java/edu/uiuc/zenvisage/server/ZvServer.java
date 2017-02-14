@@ -59,7 +59,7 @@ public class ZvServer {
 		if(!sqlQueryExecutor.isTableExists(metatable)){
 			String dropPublicSchemaSQL = "DROP schema public cascade;";
 			String createPublicSchemaSQL = "CREATE schema public;";
-			String createMetaTableSQL = "CREATE TABLE zenvisage_metatable (tablename TEXT,attribute TEXT, type TEXT, min FLOAT, max FLOAT);";
+			String createMetaTableSQL = "CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT);";
 			sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
 			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);
 			sqlQueryExecutor.createTable(createMetaTableSQL);			
