@@ -44,9 +44,10 @@ For making the above change, you could run the following commands:
             ALTER USER postgres WITH PASSWORD 'zenvisage';
             ALTER USER postgres WITH SUPERUSER;
               
+* Update Database Schema
+        
+            DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT,       csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT);
 
-run:
-DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT);
  
 * Build and deploy code. Inside the zenvisage folder,
         
