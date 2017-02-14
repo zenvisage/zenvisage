@@ -1,5 +1,7 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph.test;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -10,6 +12,8 @@ import edu.uiuc.zenvisage.service.ZvMain;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
 
 public class GraphExecutionTest {
+
+	String nullOutput = "{\"outputCharts\":[],\"method\":null,\"xUnit\":null,\"yUnit\":null,\"totalPage\":0}";
 
 	@Test
 	public void TestBasicQueryExecution() {
@@ -24,17 +28,36 @@ public class GraphExecutionTest {
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
 			
-			
-			//String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
-			System.out.println("Old Output");
-			//System.out.println(outputOldExecutor);
-						
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
+	
+	// when the z field is empty, we should return all results
+	@Test
+	public void TestBasicQueryAllZExecution() {
+		//Q1 (similar)
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'Year'\"]},\"y\":{\"attributes\":[\"'SoldPrice'\"]}}]}";
+		//String arg = "{\"zqlRows\":[{\"name\":{\"name\":\"f1\",\"output\":false,\"sketch\":false},\"x\":{\"variable\":\"\",\"attributes\":\"Year\",\"values\":[\"'Year'\"]},\"y\":{\"variable\":\"\",\"attribute\":\"SoldPrice\",\"values\":[\"'SoldPrice'\"]},\"z\":{\"variable\":\"\",\"attribute\":\"State\",\"values\":[\"*\"],\"expression\":\"\"},\"processe\":{\"variables\":[],\"method\":\"\",\"axis\":[],\"count\":\"\",\"metric\":\"\",\"arguments\":[],\"parameters\":{}},\"viz\":{\"variable\":\"\",\"type\":[],\"parameters\":[]},\"sketchPoints\":null,\"output\":false,\"constraint\":[]}]}";
+
+		try {
+			ZvMain zvMain = new ZvMain();
+			System.out.println("testing basic query");
+			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			System.out.println("Output");
+			System.out.println(outputGraphExecutor);
+			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 
 	@Test
 	public void TestSketchQueryExecution() {
@@ -47,6 +70,7 @@ public class GraphExecutionTest {
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
 			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,6 +88,7 @@ public class GraphExecutionTest {
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
 			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,6 +106,7 @@ public class GraphExecutionTest {
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
 			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,11 +125,7 @@ public class GraphExecutionTest {
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
 			
-			
-			//String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
-			//System.out.println("Old Output");
-			//System.out.println(outputOldExecutor);
-			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,11 +149,7 @@ public class GraphExecutionTest {
 			System.out.println(outputGraphExecutor);
 			System.out.println(outputGraphExecutor.length());
 			
-			System.out.println("old stuff");
-			//String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
-			System.out.println("Old Output");
-			//System.out.println(outputOldExecutor);
-			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -155,11 +173,7 @@ public class GraphExecutionTest {
 			System.out.println(outputGraphExecutor);
 			System.out.println(outputGraphExecutor.length());
 			
-			System.out.println("old stuff");
-			//String outputOldExecutor = zvMain.runZQLCompleteQuery(arg);
-			System.out.println("Old Output");
-			//System.out.println(outputOldExecutor);
-			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -181,7 +195,7 @@ public class GraphExecutionTest {
 			System.out.println(outputGraphExecutor);
 			System.out.println(outputGraphExecutor.length());
 
-			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -204,7 +218,7 @@ public class GraphExecutionTest {
 			System.out.println(outputGraphExecutor);
 			System.out.println(outputGraphExecutor.length());
 
-			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -228,7 +242,7 @@ public class GraphExecutionTest {
 			System.out.println(outputGraphExecutor);
 			System.out.println(outputGraphExecutor.length());
 
-			
+			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
