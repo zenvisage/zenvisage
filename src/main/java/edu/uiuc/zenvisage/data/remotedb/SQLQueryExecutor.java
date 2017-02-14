@@ -411,6 +411,17 @@ public class SQLQueryExecutor {
 		stmt.executeUpdate(sql);
 	    stmt.close();
 	}
+	
+	public ArrayList<Attribute> getAllAttribute(String tableName) throws SQLException{
+		String sql = "SELECT attribute, type, axis FROM zenvisage_metatable WHERE tablename = " + "'" + tableName + "'";
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		ArrayList<Attribute> ret = new ArrayList<Attribute>();
+		while(rs.next()){
+			ret.add(new Attribute(rs.getString(1),rs.getString(2),rs.getString(3)));
+		}
+		return ret;
+	}
 
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
