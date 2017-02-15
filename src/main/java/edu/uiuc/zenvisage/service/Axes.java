@@ -10,6 +10,11 @@ package edu.uiuc.zenvisage.service;
 public class Axes {
 private String X;
 private String Y;
+
+public Axes(String X,String Y){
+	this.X=X;
+	this.Y=Y;
+}
 /**
  * @return the x
  */
