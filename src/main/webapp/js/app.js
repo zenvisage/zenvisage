@@ -233,6 +233,26 @@ app.controller('options-controller', [
         $scope.$broadcast('removeAndInsertRows', {n} );
     }
 
+    // TOP K
+    $scope.getTopK = function()
+    {
+      clearUserQueryResultsTable();
+      var q = constructUserQuery(); //goes to query.js
+      var data = q;
+
+      console.log("calling getTopK");
+      $http.post('/zv/findbestclass', data).
+      success(function(response) {
+        console.log("getTopK: success");
+        if (response.length == 0){console.log("empty response")}
+        plotResults.displayUserQueryResults(response.outputCharts);
+      }).
+      error(function(response) {
+        console.log("getUserQueryResults: fail");
+      });
+
+    }
+
     $scope.clearQuery = function() {
       $scope.removerAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("")
