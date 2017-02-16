@@ -81,7 +81,7 @@ public class ZQLParser {
 			System.out.println(name);
 			System.out.println(name.getName());
 			nodeMap.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
-			if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
+			if (x.getVariable() != null && !x.getVariable().equals("") && x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 				if(x.getAttributes().get(0).equals("*")) {
 					// replaces x1<-* with x1<-'year','month',...
 					x.setAttributes(xAttributes);
@@ -89,14 +89,14 @@ public class ZQLParser {
 				nodeMap.put(x.getVariable(), vcNode);
 				updatedX = true;
 			}
-			if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
+			if (y.getVariable() != null && !y.getVariable().equals("") && y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 				if(y.getAttributes().get(0).equals("*")) {
 					y.setAttributes(yAttributes);
 				}
 				nodeMap.put(y.getVariable(), vcNode);
 				updatedY = true;
 			}
-			if (z.getValues() != null && !z.getValues().isEmpty()) {
+			if (z.getVariable() != null && !z.getVariable().equals("") && z.getValues() != null && !z.getValues().isEmpty()) {
 				nodeMap.put(z.getVariable(), vcNode);
 				updatedZ = true;
 			}

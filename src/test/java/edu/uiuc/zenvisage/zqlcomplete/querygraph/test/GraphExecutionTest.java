@@ -36,7 +36,7 @@ public class GraphExecutionTest {
 		
 	}
 	
-	// when the z field is empty, we should return all results
+	// when the z field is empty, we should return one viz overall for the whole table with given x and y
 	@Test
 	public void TestBasicQueryAllZExecution() {
 		//Q1 (similar)

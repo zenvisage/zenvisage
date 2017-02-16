@@ -183,19 +183,19 @@ public class SQLQueryExecutor {
 		for(int i = 0; i < xLen; i++){
 			String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 
-			
+			boolean hasZ = (z != null) && !z.equals("");
 			//zqlRow.getConstraint() has replaced the whereCondiditon
 			if (zqlRow.getConstraint() == null || zqlRow.getConstraint() =="") {
-				sql = "SELECT " + z + "," + x + " ," + build.toString() //zqlRow.getViz() should replace the avg() function
+				sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
 						+ " FROM " + databaseName
-						+ " GROUP BY " + z + ", "+ x
+						+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
 						+ " ORDER BY " + x;
 			} else {
 
-				sql = "SELECT " + z+ "," + x + " ," + build.toString()
+				sql = "SELECT " + (hasZ ? (z + "," + x) : x) + " ," + build.toString()
 				+ " FROM " + databaseName
 				+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
-				+ " GROUP BY " + z + ", "+ x
+				+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
 				+ " ORDER BY " + x;
 			}
 
@@ -231,6 +231,7 @@ public class SQLQueryExecutor {
 			if(rs.getString(2) == null || rs.getString(2).isEmpty()) continue;
 			
 			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
+			if(zType == null) zType = "string";	// if zAttribute is null, set the zType to be string
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
 
 			String zStr = rs.getString(1);
