@@ -13,6 +13,6 @@ import java.util.Map;
  */
 public class ProjectedPoints {
 	
-	HashMap<Axes,ArrayList<ProjectedPoint>> projectedPoints= new HashMap<>();
+	HashMap<Axes,ArrayList<Integer>> projectedPoints= new HashMap<>();
 
 }
