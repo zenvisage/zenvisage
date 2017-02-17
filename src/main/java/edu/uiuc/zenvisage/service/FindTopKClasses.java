@@ -93,14 +93,17 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	 ZvQuery args = new ObjectMapper().readValue(this.query,ZvQuery.class);
 	 List<Point> points = sketch[0].getPoints();
 	 int nPoints = points.size();
-	 int segSize = nPoints/nOfSegments;
+	 //Equal divide segments by x axis, 1. find segSize;
+	 double segSize= (args.maxX - args.minX)/nOfSegments;
+	 
 	 List<Region> regions = new ArrayList<Region>();
 
 	 float[] averagePoint = new float[2];
 	 int i = 0; int j = 0;
-	 for(; i < points.size();i+=(j+1)){
+	 //For each point see whether it falls into current segment. if
+	 for(; i < points.size();){
 		 Region r = new Region(Float.MAX_VALUE,Float.MIN_VALUE,Float.MAX_VALUE,Float.MIN_VALUE);
-		 for(j = 0; j < segSize && i+j < points.size(); j++){
+		 for(j = ; j < segSize && i+j < points.size(); j++){
 			 float x = points.get(i+j).getX();
 			 float y = points.get(i+j).getY();
 			 averagePoint[0] += (x-averagePoint[0])/nPoints;
@@ -111,7 +114,6 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 			 if(y>r.maxY) r.maxY = y;
 			 regions.add(r);
 			 System.out.println(r.toString()+"Average:"+averagePoint[0]+","+averagePoint[1]);
-			 
 		 }
 	 }
  }
