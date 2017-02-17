@@ -34,6 +34,8 @@ private class Region{
 	double maxX;
 	double minY;
 	double maxY;
+	double averageY;
+	int nPoints;
 	public Region(double minX, double maxX, double minY, double maxY){
 		this.minX = minX;
 		this.maxX = maxX;
@@ -41,7 +43,12 @@ private class Region{
 		this.maxY = maxY;
 	}
 	public String toString(){
-		return String.valueOf(minX)+ ","+String.valueOf(maxX)+","+String.valueOf(minY)+ ","+String.valueOf(maxY);
+		return "minX:"+String.valueOf(minX)+ ","+
+			   "maxX:"+String.valueOf(maxX)+","+
+			   "minY:"+String.valueOf(minY)+ ","+
+			   "maxY:"+String.valueOf(maxY)+","+
+			   "averageY:"+String.valueOf(averageY)+
+			   "nPoints:"+String.valueOf(nPoints);
 	}
 }
 
@@ -69,10 +76,11 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	//get the trend from /zv/postSimilarity
 	Sketch[] sketch= args.getSketchPoints();
 	String datasetName="real_estate";
-	segmentTrendAndFindMargins(sketch,20);
-	RawData rawData=projectPoints(datasetName, null, 0, 0, 0, 0);
-	ArrayList<VisualClass> visualClasses=summarizeResults(rawData);
-	return new ObjectMapper().writeValueAsString(visualClasses);
+	segmentTrendAndFindMargins(sketch,20, 0.0);
+//	RawData rawData=projectPoints(datasetName, null, 0, 0, 0, 0);
+//	ArrayList<VisualClass> visualClasses=summarizeResults(rawData);
+//	return new ObjectMapper().writeValueAsString(visualClasses);
+	return null;
 	//findMargins
 	//projectPoints
 	//findMostCommonXandY
@@ -89,7 +97,7 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
  * 	 1.get the average point of each region
  *	 2.get the square region of each segment
  */
- void segmentTrendAndFindMargins(Sketch[] sketch, int nOfSegments) throws JsonParseException, JsonMappingException, IOException{
+ public List<Region> segmentTrendAndFindMargins(Sketch[] sketch, int nOfSegments, double margin) throws JsonParseException, JsonMappingException, IOException{
 	 ZvQuery args = new ObjectMapper().readValue(this.query,ZvQuery.class);
 	 List<Point> points = sketch[0].getPoints();
 	 int nPoints = points.size();
@@ -97,29 +105,37 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	 double segSize= (args.maxX - args.minX)/nOfSegments;
 	 
 	 List<Region> regions = new ArrayList<Region>();
-
-	 double[] averagePoint = new double[2];
 	 int i = 0; int j = 0;
-	 //For each point see whether it falls into current segment.
-	 //if it is, normalize y value, change average and region for this segment.
-	 //if not, proceed to next segment.
+	 /*For each point see whether it falls into current segment.
+	  *if it is, normalize y value, change average and region for this segment.
+	  *if not, proceed to next segment.*/
+	 //initialize, Region(double minX, double maxX, double minY, double maxY)
+	 Region r = new Region(args.minX, args.minX + segSize,Double.MAX_VALUE,Double.MIN_VALUE);
 	 for(; i < nPoints;i++){
-		 //initialize, Region(double minX, double maxX, double minY, double maxY)
-		 Region r = new Region(Double.MAX_VALUE,Double.MIN_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);
-		 for(j = 0; j < segSize && i+j < points.size(); j++){
-			 double x = points.get(i+j).getX();
-			 double y = points.get(i+j).getY();
-			 
-			 averagePoint[0] += (x-averagePoint[0])/nPoints;
-			 averagePoint[1] += (y-averagePoint[1])/nPoints;
-			 if(x<r.minX) r.minX = x;
-			 if(x>r.maxX) r.maxX = x;
-			 if(y<r.minY) r.minY = y;
-			 if(y>r.maxY) r.maxY = y;
+		 double x = points.get(i+j).getX();
+		 double y = points.get(i+j).getY();
+		 //x out of range, hop to next region
+		 if( x > r.maxX){
+			 r.minY = r.minY - margin;
+			 r.maxY = r.maxY + margin;
+			 System.out.println(r.toString());
 			 regions.add(r);
-			 System.out.println(r.toString()+"Average:"+averagePoint[0]+","+averagePoint[1]);
+			 r = new Region(r.maxX,r.maxX+segSize,Double.MAX_VALUE,Double.MIN_VALUE);
 		 }
+		 //update minY, maxY, nPoint, averageY for new point added in a region
+		 if(y<r.minY) r.minY = y;
+		 if(y>r.maxY) r.maxY = y;
+		 r.nPoints++;
+		 r.averageY += (y-r.averageY)*1.0/r.nPoints; 
 	 }
+	 //process last region
+	 r.minY = r.minY - margin;
+	 r.maxY = r.maxY + margin;
+	 System.out.println(r.toString());
+	 regions.add(r);
+	 
+	 
+	 return regions;
  }
 
 
