@@ -13,8 +13,8 @@ import java.util.HashMap;
 public class VisualClass {
 	String X;
 	String Y;
-	ArrayList<Float> xPoints= new ArrayList<Float>();
-	ArrayList<Float> yPoints= new ArrayList<Float>();
+	ArrayList<Double> xPoints= new ArrayList<Double>();
+	ArrayList<Double> yPoints= new ArrayList<Double>();
 	HashMap<String,String> constraints = new HashMap<String, String>();
 	
 	public String constraintToString(){

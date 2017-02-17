@@ -30,11 +30,11 @@ import edu.uiuc.zenvisage.data.remotedb.Attribute;
 public class FindTopKClasses {
 
 private class Region{
-	float minX;
-	float maxX;
-	float minY;
-	float maxY;
-	public Region(float minX, float maxX, float minY, float maxY){
+	double minX;
+	double maxX;
+	double minY;
+	double maxY;
+	public Region(double minX, double maxX, double minY, double maxY){
 		this.minX = minX;
 		this.maxX = maxX;
 		this.minY = minY;
@@ -46,12 +46,12 @@ private class Region{
 }
 
 private class RawData{
-	HashMap<String,ArrayList<Float>> XYColumns;
+	HashMap<String,ArrayList<Double>> XYColumns;
 	HashMap<String,ArrayList<String>> otherColumns;
-	HashMap<String,Float> min;
-	HashMap<String,Float> max;
-	HashMap<String,Float> sum;
-	HashMap<String,Float> variance;
+	HashMap<String,Double> min;
+	HashMap<String,Double> max;
+	HashMap<String,Double> sum;
+	HashMap<String,Double> variance;
 	int size;
 	HashMap<Axes,ArrayList<Integer>> projectedPoints;
 	
@@ -98,14 +98,18 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	 
 	 List<Region> regions = new ArrayList<Region>();
 
-	 float[] averagePoint = new float[2];
+	 double[] averagePoint = new double[2];
 	 int i = 0; int j = 0;
-	 //For each point see whether it falls into current segment. if
-	 for(; i < points.size();){
-		 Region r = new Region(Float.MAX_VALUE,Float.MIN_VALUE,Float.MAX_VALUE,Float.MIN_VALUE);
-		 for(j = ; j < segSize && i+j < points.size(); j++){
-			 float x = points.get(i+j).getX();
-			 float y = points.get(i+j).getY();
+	 //For each point see whether it falls into current segment.
+	 //if it is, normalize y value, change average and region for this segment.
+	 //if not, proceed to next segment.
+	 for(; i < nPoints;i++){
+		 //initialize, Region(double minX, double maxX, double minY, double maxY)
+		 Region r = new Region(Double.MAX_VALUE,Double.MIN_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);
+		 for(j = 0; j < segSize && i+j < points.size(); j++){
+			 double x = points.get(i+j).getX();
+			 double y = points.get(i+j).getY();
+			 
 			 averagePoint[0] += (x-averagePoint[0])/nPoints;
 			 averagePoint[1] += (y-averagePoint[1])/nPoints;
 			 if(x<r.minX) r.minX = x;
@@ -119,7 +123,7 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
  }
 
 
-RawData projectPoints(String datasetName,List<Region> regions,float pixelMinX,float pixelMaxX, float pixelMinY,float pixelMaxY) throws SQLException{
+RawData projectPoints(String datasetName,List<Region> regions,double pixelMinX,double pixelMaxX, double pixelMinY,double pixelMaxY) throws SQLException{
 	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 	ArrayList<Attribute> attributes = sqlQueryExecutor.getAllAttribute(datasetName);
 	ArrayList<String> xAttributes= new ArrayList();
@@ -134,8 +138,8 @@ RawData projectPoints(String datasetName,List<Region> regions,float pixelMinX,fl
 		for(int i=0;i<xAttributes.size();i++)
 		for(int j=0;j<yAttributes.size();j++)
 			{
-			Float xvalue=rawData.XYColumns.get(xAttributes.get(i)).get(k);
-			Float yvalue=rawData.XYColumns.get(yAttributes.get(i)).get(k);
+			double xvalue=rawData.XYColumns.get(xAttributes.get(i)).get(k);
+			double yvalue=rawData.XYColumns.get(yAttributes.get(i)).get(k);
 			if(isWithinBounds(xvalue,yvalue,
 					rawData.min.get(xAttributes.get(i)),
 					rawData.max.get(xAttributes.get(i)),
@@ -153,7 +157,7 @@ RawData projectPoints(String datasetName,List<Region> regions,float pixelMinX,fl
 }
 
 
-Boolean isWithinBounds(Float xvalue,Float yvalue,Float xmin,Float xmax, Float ymin,Float ymax,List<Region> regions,float pixelMinX,float pixelMaxX, float pixelMinY,float pixelMaxY){
+Boolean isWithinBounds(double xvalue,double yvalue,double xmin,double xmax, double ymin,double ymax,List<Region> regions,double pixelMinX,double pixelMaxX, double pixelMinY,double pixelMaxY){
 	xvalue=((xvalue-xmin)/(xmax-xmin))*(pixelMaxX-pixelMinX);
 	yvalue=((yvalue-ymin)/(ymax-ymin))*(pixelMaxY-pixelMinY);
 	for(Region region: regions) {
@@ -181,15 +185,15 @@ private RawData fetchdata(String datasetName, ArrayList<String> xAttributes, Arr
 		ArrayList<String> otherAttributes) throws SQLException {
 	// TODO Auto-generated method stub
 	String projections="";
-	HashMap<String,ArrayList<Float>> XYColumns= new HashMap<String,ArrayList<Float>>();
+	HashMap<String,ArrayList<Double>> XYColumns= new HashMap<String,ArrayList<Double>>();
 	HashMap<String,ArrayList<String>> otherColumns= new HashMap<String,ArrayList<String>>();
 	for(int i=0;i<xAttributes.size();i++){
 		projections=projections+","+xAttributes.get(i);
-		XYColumns.put(xAttributes.get(i), new ArrayList<Float>());
+		XYColumns.put(xAttributes.get(i), new ArrayList<Double>());
 	}
 	for(int i=0;i<yAttributes.size();i++){
 		projections=projections+","+yAttributes.get(i);
-		XYColumns.put(yAttributes.get(i), new ArrayList<Float>());
+		XYColumns.put(yAttributes.get(i), new ArrayList<Double>());
 	}
 	for(int i=0;i<otherAttributes.size();i++){
 		projections=projections+","+otherAttributes.get(i);
@@ -205,16 +209,16 @@ private RawData fetchdata(String datasetName, ArrayList<String> xAttributes, Arr
 	String SQLquery="SELECT "+projections+" from " +datasetName +" ;";
 	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();			
 	ResultSet rs = sqlQueryExecutor.query(SQLquery);
-	HashMap<String,Float> min = new HashMap<>();
-	HashMap<String,Float> max = new HashMap<>();
-	HashMap<String,Float> sum = new HashMap<>();
-	HashMap<String,Float> variance = new HashMap<>();
+	HashMap<String,Double> min = new HashMap<>();
+	HashMap<String,Double> max = new HashMap<>();
+	HashMap<String,Double> sum = new HashMap<>();
+	HashMap<String,Double> variance = new HashMap<>();
 	
 	int rowCount=0;
 	while(rs.next()){
 		for(int i=0;i<xAttributes.size();i++){
-			Float val=rs.getFloat(xAttributes.get(i));
-			XYColumns.get(rs.getFloat(xAttributes.get(i))).add(rowCount,val);
+			double val=rs.getDouble(xAttributes.get(i));
+			XYColumns.get(rs.getDouble(xAttributes.get(i))).add(rowCount,val);
 			sum.put(xAttributes.get(i),sum.get(xAttributes.get(i))+val);
 			if(val<min.get(xAttributes.get(i)))
 				min.put(xAttributes.get(i),val);
@@ -223,9 +227,9 @@ private RawData fetchdata(String datasetName, ArrayList<String> xAttributes, Arr
 		}
 				
 		for(int i=0;i<yAttributes.size();i++){
-			Float val=rs.getFloat(xAttributes.get(i));
+			double val=rs.getDouble(xAttributes.get(i));
 			sum.put(yAttributes.get(i),sum.get(yAttributes.get(i))+val);
-			XYColumns.get(rs.getFloat(yAttributes.get(i))).add(rowCount,rs.getFloat(yAttributes.get(i)));
+			XYColumns.get(rs.getDouble(yAttributes.get(i))).add(rowCount,rs.getDouble(yAttributes.get(i)));
 			if(val<min.get(yAttributes.get(i)))
 				min.put(yAttributes.get(i),val);
 			if(val>max.get(yAttributes.get(i)))
@@ -242,15 +246,15 @@ private RawData fetchdata(String datasetName, ArrayList<String> xAttributes, Arr
 	//normalize Y values
 
 	for(int i=0;i<yAttributes.size();i++){
-		ArrayList<Float> yColumn= XYColumns.get(yAttributes.get(i));
+		ArrayList<Double> yColumn= XYColumns.get(yAttributes.get(i));
 		
-		float mean=sum.get(yAttributes.get(i))/yColumn.size();
-		float var=0;
+		double mean=sum.get(yAttributes.get(i))/yColumn.size();
+		double var=0;
 		for(int j=0;j<yColumn.size();j++){
-			var+=(float) Math.pow(yColumn.get(j)-mean,2);
+			var+=(double) Math.pow(yColumn.get(j)-mean,2);
 		}
 		var=var/yColumn.size();
-		float std=(float) Math.sqrt(var);
+		double std=(double) Math.sqrt(var);
 		
 		for(int j=0;j<yColumn.size();j++){
 			yColumn.set(i, (yColumn.get(i)-mean)/std);
@@ -320,8 +324,8 @@ private ArrayList<VisualClass> summarizeResults(RawData rawData) {
 		vClass.X=key.getX();
 		vClass.Y=key.getY();
 		Integer rowCount=0;
-		HashMap<String,Float> min= new HashMap<>();
-		HashMap<String,Float> max= new HashMap<>();
+		HashMap<String,Double> min= new HashMap<>();
+		HashMap<String,Double> max= new HashMap<>();
 		HashMap<String,Set<String>> in= new HashMap<>();
 		for(int i:indices){
 			for(String x:rawData.XYColumns.keySet()){
@@ -350,8 +354,8 @@ private ArrayList<VisualClass> summarizeResults(RawData rawData) {
 			}
 		
 		for(String k:min.keySet()){
-			Float mn=min.get(k);
-			Float mx=max.get(k);
+			double mn=min.get(k);
+			double mx=max.get(k);
 			String value="";
 			if(mn==mx)
 			{
