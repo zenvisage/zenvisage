@@ -16,6 +16,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.Statistics;
 import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ZvQuery;
@@ -102,20 +103,40 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	 List<Point> points = sketch[0].getPoints();
 	 int nPoints = points.size();
 	 //Equal divide segments by x axis, 1. find segSize;
-	 double segSize= (args.maxX - args.minX)/nOfSegments;
+	 double segSize=0;
+	 double minX = Double.MAX_VALUE;
+	 double maxX = Double.MIN_VALUE;
+	 /**
+	  * 1. z-normalize y values
+	  */
+	 double[] dataY = new double[nPoints];
+	 double[] dataX = new double[nPoints];
+	 for(int i = 0;i<nPoints;i++){
+		 dataX[i] = points.get(i).getX();
+		 dataY[i] = points.get(i).getY();
+		 if(minX > dataX[i]) minX = dataX[i];
+		 if(maxX < dataX[i]) maxX = dataX[i];
+	 }
+	 segSize = (maxX-minX)/nOfSegments;
+	 Statistics yStatistics = new Statistics(dataY);
+	 for(int i = 0;i<nPoints;i++){
+		 dataY[i]= yStatistics.getZScore(dataY[i]);
+	 }
 	 
 	 List<Region> regions = new ArrayList<Region>();
-	 int i = 0; int j = 0;
-	 /*For each point see whether it falls into current segment.
-	  *if it is, normalize y value, change average and region for this segment.
-	  *if not, proceed to next segment.*/
+	 int i = 0;
+	 /**
+	  * 2.Segmentation
+	  * For each point see whether it falls into current segment.
+	  * if it is, normalize y value, change average and region for this segment.
+	  * if not, proceed to next segment.*/
 	 //initialize, Region(double minX, double maxX, double minY, double maxY)
-	 Region r = new Region(args.minX, args.minX + segSize,Double.MAX_VALUE,Double.MIN_VALUE);
+	 Region r = new Region(minX, minX + segSize,Double.MAX_VALUE,Double.MIN_VALUE);
 	 for(; i < nPoints;i++){
-		 double x = points.get(i+j).getX();
-		 double y = points.get(i+j).getY();
+		 double x = dataX[i];
+		 double y = dataY[i];
 		 //x out of range, hop to next region
-		 if( x > r.maxX){
+		 if(x > r.maxX){
 			 r.minY = r.minY - margin;
 			 r.maxY = r.maxY + margin;
 			 System.out.println(r.toString());
@@ -127,14 +148,13 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 		 if(y>r.maxY) r.maxY = y;
 		 r.nPoints++;
 		 r.averageY += (y-r.averageY)*1.0/r.nPoints; 
+		 regions.add(r);
 	 }
 	 //process last region
 	 r.minY = r.minY - margin;
 	 r.maxY = r.maxY + margin;
 	 System.out.println(r.toString());
 	 regions.add(r);
-	 
-	 
 	 return regions;
  }
 
