@@ -78,10 +78,10 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	Sketch[] sketch= args.getSketchPoints();
 	String datasetName="real_estate";
 	segmentTrendAndFindMargins(sketch,20, 0.0);
-//	RawData rawData=projectPoints(datasetName, null, 0, 0, 0, 0);
-//	ArrayList<VisualClass> visualClasses=summarizeResults(rawData);
-//	return new ObjectMapper().writeValueAsString(visualClasses);
-	return null;
+	
+	RawData rawData=projectPoints(datasetName, null, 0, 0, 0, 0);
+	ArrayList<VisualClass> visualClasses=summarizeResults(rawData);
+	return new ObjectMapper().writeValueAsString(visualClasses);
 	//findMargins
 	//projectPoints
 	//findMostCommonXandY
