@@ -5,7 +5,9 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
@@ -26,6 +28,22 @@ public class DEuclidean implements D {
 	 */
 	
 	//Tarique: I have changes the type of axisvariables to a class instead of a string, so that we can also see attrubute type, i.e, x,y, or z.
+	
+	public AxisVariableScores executeNew(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVariables) {
+		// eg key = month, value = visual components that have xAttribute as month
+		Map<String, List<VisualComponent>> xHashMap = new HashMap<String, List<VisualComponent>>();
+		Map<String, List<VisualComponent>> yHashMap = new HashMap<String, List<VisualComponent>>();
+		Map<String, List<VisualComponent>> zHashMap = new HashMap<String, List<VisualComponent>>();
+
+		// java 8 woo
+		xHashMap.forEach((xKey, xValue) -> {
+			yHashMap.forEach((yKey, yValue) -> {
+				
+			});
+		});
+
+		return null;
+	}
 	
 	@Override
 	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2,List<List<AxisVariable>> axisVariables) {
