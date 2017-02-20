@@ -6,6 +6,7 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,19 +30,66 @@ public class DEuclidean implements D {
 	
 	//Tarique: I have changes the type of axisvariables to a class instead of a string, so that we can also see attrubute type, i.e, x,y, or z.
 	
+	private void updateHashMap(Map<String, List<VisualComponent>> map, String key, VisualComponent vc) {
+		List<VisualComponent> res = map.get(key);
+		if (res == null) {
+			res = new ArrayList<VisualComponent>();
+			map.put(key, res);
+		}
+		res.add(vc);	// updating the referenced List in the hashmap	
+	}
+	
 	public AxisVariableScores executeNew(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVariables) {
 		// eg key = month, value = visual components that have xAttribute as month
-		Map<String, List<VisualComponent>> xHashMap = new HashMap<String, List<VisualComponent>>();
-		Map<String, List<VisualComponent>> yHashMap = new HashMap<String, List<VisualComponent>>();
-		Map<String, List<VisualComponent>> zHashMap = new HashMap<String, List<VisualComponent>>();
+		//Map<String, List<VisualComponent>> xHashMap = new HashMap<String, List<VisualComponent>>();
+		//Map<String, List<VisualComponent>> yHashMap = new HashMap<String, List<VisualComponent>>();
+		//Map<String, List<VisualComponent>> zHashMap = new HashMap<String, List<VisualComponent>>();
 
-		// java 8 woo
+		Map<String, List<VisualComponent>> f1HashMap = new HashMap<String, List<VisualComponent>>();
+		Map<String, List<VisualComponent>> f2HashMap = new HashMap<String, List<VisualComponent>>();
+	
+		for (VisualComponent vc : f1.getVisualComponentList()) {
+			String xAttribute = vc.getxAttribute();
+			updateHashMap(f1HashMap, xAttribute, vc);
+			updateHashMap(f1HashMap, vc.getyAttribute(), vc);
+			updateHashMap(f1HashMap, vc.getzAttribute(), vc);
+		}
+		
+		for (VisualComponent vc : f2.getVisualComponentList()) {
+			updateHashMap(f2HashMap, vc.getxAttribute(), vc);
+			updateHashMap(f2HashMap, vc.getyAttribute(), vc);
+			updateHashMap(f2HashMap, vc.getzAttribute(), vc);			
+		}
+		List<VisualComponent> f1Candidates = new ArrayList<VisualComponent>(f1.getVisualComponentList());
+		List<VisualComponent> f2Candidates = new ArrayList<VisualComponent>(f2.getVisualComponentList());
+		
+		for (AxisVariable axisVar : axisVariables) {
+			for (Iterator<VisualComponent> it = f1Candidates.iterator(); it.hasNext();) {
+				VisualComponent vc = it.next();
+				List<VisualComponent> vcListHasAttribute = f1HashMap.get(axisVar.getAttribute());
+				if (!vcListHasAttribute.contains(vc)) {
+					it.remove();
+				}
+			}
+			
+			for (Iterator<VisualComponent> it = f2Candidates.iterator(); it.hasNext();) {
+				VisualComponent vc = it.next();
+				List<VisualComponent> vcListHasAttribute = f1HashMap.get(axisVar.getAttribute());
+				if (!vcListHasAttribute.contains(vc)) {
+					it.remove();
+				}
+			}
+		}
+		if (f1Candidates.isEmpty() || f2Candidates.isEmpty()) {
+			return null;
+		}
+/*		// java 8 woo
 		xHashMap.forEach((xKey, xValue) -> {
 			yHashMap.forEach((yKey, yValue) -> {
 				
 			});
 		});
-
+*/
 		return null;
 	}
 	
