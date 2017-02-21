@@ -39,6 +39,64 @@ public class DEuclidean implements D {
 		res.add(vc);	// updating the referenced List in the hashmap	
 	}
 	
+	// idea is to update the AxisVariableScores I am passing by reference in the parameter list
+	private void process(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVars, int index, List<String> attributeConstraints) {
+		if (index >= axisVars.size()) {
+			// base case: start processing for the visual components that satisfy all the constraints
+			List<VisualComponent> f1List = new ArrayList<VisualComponent>();
+			List<VisualComponent> f2List = new ArrayList<VisualComponent>();
+			for (VisualComponent vc : f1.getVisualComponentList()) {
+				for (String attributeConstraint : attributeConstraints) {
+					boolean satisfied = false;
+					if (attributeConstraint == vc.getxAttribute()) satisfied = true;
+					if (attributeConstraint == vc.getyAttribute()) satisfied = true;
+					if (attributeConstraint == vc.getZValue().getStrValue()) satisfied = true;
+					if (satisfied) {
+						f1List.add(vc);
+					}
+				}
+			}
+			for (VisualComponent vc : f2.getVisualComponentList()) {
+				for (String attributeConstraint : attributeConstraints) {
+					boolean satisfied = false;
+					if (attributeConstraint == vc.getxAttribute()) satisfied = true;
+					if (attributeConstraint == vc.getyAttribute()) satisfied = true;
+					if (attributeConstraint == vc.getZValue().getStrValue()) satisfied = true;
+					if (satisfied) {
+						f2List.add(vc);
+					}
+				}
+			}
+			// these if statements are used if currently processing one vs many (eg one state vs many states), and using axisvar = state.*
+			// when the constraint is on say NY, f2 will have a component, but f1 will have nothing. Just take f1 (CA) compare it to (NY)
+			if (f1List.isEmpty()) f1List = f1.getVisualComponentList();
+			if (f2List.isEmpty()) f2List = f2.getVisualComponentList();
+			
+			for (VisualComponent vc1 : f1List) {
+				for (VisualComponent vc2 : f2List) {
+					//scores.add(calculateNormalizedDistance(f1List.get(i), f2List.get(j)));
+				}
+			}
+		}
+		// For z, the values are like [CA, NY] for state
+		// For x and y, the values are the list of attributes, like ['year','month']
+		for(String value : axisVars.get(index).getValues()) {
+			attributeConstraints.add(value);
+			process(f1, f2, axisVars, index+1, attributeConstraints);
+			attributeConstraints.remove(value);
+		}
+	}
+	
+	public AxisVariableScores executeNewer(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVariables) {
+		List<Double> scores = new ArrayList<Double>();
+		AxisVariableScores axisVariableScores;
+		ArrayList<ArrayList<String>> axisvars = new ArrayList<ArrayList<String>>();;
+
+		process(f1, f2, axisVariables, 0, new ArrayList<String>());
+		axisVariableScores = new AxisVariableScores(axisvars, scores);
+		return axisVariableScores;
+	}
+	
 	public AxisVariableScores executeNew(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVariables) {
 		// eg key = month, value = visual components that have xAttribute as month
 		//Map<String, List<VisualComponent>> xHashMap = new HashMap<String, List<VisualComponent>>();
@@ -64,20 +122,25 @@ public class DEuclidean implements D {
 		List<VisualComponent> f2Candidates = new ArrayList<VisualComponent>(f2.getVisualComponentList());
 		
 		for (AxisVariable axisVar : axisVariables) {
-			for (Iterator<VisualComponent> it = f1Candidates.iterator(); it.hasNext();) {
-				VisualComponent vc = it.next();
-				List<VisualComponent> vcListHasAttribute = f1HashMap.get(axisVar.getAttribute());
-				if (!vcListHasAttribute.contains(vc)) {
-					it.remove();
-				}
-			}
 			
-			for (Iterator<VisualComponent> it = f2Candidates.iterator(); it.hasNext();) {
-				VisualComponent vc = it.next();
-				List<VisualComponent> vcListHasAttribute = f1HashMap.get(axisVar.getAttribute());
-				if (!vcListHasAttribute.contains(vc)) {
-					it.remove();
+			// For z, the values are like [CA, NY] for state
+			// For x and y, the values are the list of attributes, like ['year','month']
+			for (String value : axisVar.getValues()) {
+				for (Iterator<VisualComponent> it = f1Candidates.iterator(); it.hasNext();) {
+					VisualComponent vc = it.next();
+					List<VisualComponent> vcListHasAttribute = f1HashMap.get(axisVar.getAttribute());
+					if (!vcListHasAttribute.contains(vc)) {
+						it.remove();
+					}
 				}
+				
+				for (Iterator<VisualComponent> it = f2Candidates.iterator(); it.hasNext();) {
+					VisualComponent vc = it.next();
+					List<VisualComponent> vcListHasAttribute = f1HashMap.get(axisVar.getAttribute());
+					if (!vcListHasAttribute.contains(vc)) {
+						it.remove();
+					}
+				} 
 			}
 		}
 		if (f1Candidates.isEmpty() || f2Candidates.isEmpty()) {
