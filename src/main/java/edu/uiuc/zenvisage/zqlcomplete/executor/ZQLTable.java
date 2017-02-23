@@ -3,10 +3,13 @@ package edu.uiuc.zenvisage.zqlcomplete.executor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * @author tarique
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ZQLTable {
 	private List<ZQLRow> zqlRows;
 	private String db;
