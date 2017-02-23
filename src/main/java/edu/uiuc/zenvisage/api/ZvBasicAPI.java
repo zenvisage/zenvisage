@@ -99,10 +99,10 @@ public class ZvBasicAPI {
 	        stringBuilder.append(scanner.nextLine());
 	    }
 
-	    String body = stringBuilder.toString();
-	    FindTopKClasses findTopKClasses = new FindTopKClasses(body);
-	    findTopKClasses.findtopKClasses();
-	    System.out.println("Draw query output:"+body);
+	     String body = stringBuilder.toString();
+	    // FindTopKClasses findTopKClasses = new FindTopKClasses(body);
+	    // findTopKClasses.findtopKClasses();
+	    //System.out.println("Draw query output:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 

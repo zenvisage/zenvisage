@@ -6,8 +6,6 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     $scope.input = {};
     $scope.queries = {};
     $scope.queries['zqlRows'] = [];
-    // $scope.parsed = {};
-    // $scope.parsed['zqlRows'] = [];
 
   $scope.removeRow = function ( index ) {
     $("#table-row-" + index).remove();
@@ -18,7 +16,18 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     var rowCount = table.rows.length;
     var rowNumber = (rowCount+1).toString();
     //$("#zql-table").append
-    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
+    $compile($el)($scope);
+  };
+
+  $scope.addProcessRow = function () {
+    var table = $("#zql-table > tbody")[0];
+    var rowCount = table.rows.length;
+    var rowNumber = (rowCount+1).toString();
+    //$("#zql-table").append
+    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
     $compile($el)($scope);
   };
 
@@ -31,7 +40,8 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
 
     for (i = 1; i < args.n; i++) {
       var rowNumber = (i).toString();
-      $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+      $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+      //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
       //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
       $compile($el)($scope);
   }});
@@ -39,43 +49,55 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
   $scope.submitZQL = function () {
       clearUserQueryResultsTable();
       $scope.queries['zqlRows'] = [];
-
+      var processRow = [];
       $( ".tabler" ).each(function( index ) {
-        var name = $(this).find(".name").val()
-        var x = $(this).find(".x-val").val()
-        var y = $(this).find(".y-val").val()
-        var z = $(this).find(".z-val").val()
-        var constraints = $(this).find(".constraints").val()
-        // var viz = $(this).find(".viz").val()
-        var processe = $(this).find(".process").val()
-        var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": "", "processe": processe };
-        if (checkInput(input)) {
-          if (input.name.sketch) {
-            // if this row needs to grab data from the sketch
-            var points = [];
-            this.dataX = [];
-            this.dataY = [];
-            this.xAxis = getSelectedXAxis();
-            this.yAxis = getSelectedYAxis();
-            for(var i = 0; i < sketchpadData.length; i++){
-              var xp = sketchpadData[i]["xval"];
-              var yp = sketchpadData[i]["yval"];
-              points.push(new Point( xp, yp ));
-              this.dataX.push( xp );
-              this.dataY.push( yp );
+        if ( $(this).hasClass("processRow") )
+        {
+          var processe = $(this).find(".process").val()
+          processRow.push(processe);
+        }
+        else
+        {
+          var name = $(this).find(".name").val()
+          var x = $(this).find(".x-val").val()
+          var y = $(this).find(".y-val").val()
+          var z = $(this).find(".z-val").val()
+          var constraints = $(this).find(".constraints").val()
+          // var viz = $(this).find(".viz").val()
+          // var processe = $(this).find(".process").val()
+          // "processe": processe
+          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+          if (checkInput(input)) {
+            if (input.name.sketch) {
+              // if this row needs to grab data from the sketch
+              var points = [];
+              this.dataX = [];
+              this.dataY = [];
+              this.xAxis = getSelectedXAxis();
+              this.yAxis = getSelectedYAxis();
+              for(var i = 0; i < sketchpadData.length; i++){
+                var xp = sketchpadData[i]["xval"];
+                var yp = sketchpadData[i]["yval"];
+                points.push(new Point( xp, yp ));
+                this.dataX.push( xp );
+                this.dataY.push( yp );
+              }
+              input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+              input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x"+(index+1)};
+              input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y"+(index+1)};
+              input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z"+(index+1), expression: undefined};
+              "z"+index + "<-'"+ getSelectedCategory() +"'.*";
             }
-            input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
-            input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x"+(index+1)};
-            input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y"+(index+1)};
-            input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z"+(index+1), expression: undefined};
-            "z"+index + "<-'"+ getSelectedCategory() +"'.*";
+            $scope.queries['zqlRows'].push(input);
           }
-          $scope.queries['zqlRows'].push(input);
         }
       });
 
-      $scope.queries['db'] = getSelectedDataset();
+      $.each( processRow, function( index, value ) {
+        $scope.queries['zqlRows'][index]["processe"] = value;
+      });
 
+      $scope.queries['db'] = getSelectedDataset();
       console.log($scope.queries);
 
       $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
@@ -117,13 +139,16 @@ function checkInput(input) {
     if (input.viz !== undefined) {
         input.viz = parseViz(input.viz);
     }
-    if (input.processe !== undefined) {
-        input.processe = parseProcess(input.processe);
-    }
-
-    return (name && x && y && z && constraints && viz && processe) !== undefined;
+    return (name && x && y && z && constraints && viz) !== undefined;
 }
 
+function checkProcessInput(input)
+{
+    if (input.processe !== undefined) {
+      input.processe = parseProcess(input.processe);
+    }
+    return processe !== undefined;
+}
 
 app.factory('datasetInfo', function() {
   var categoryData;
@@ -183,6 +208,7 @@ app.controller('options-controller', [
     $scope.considerRange = true;
     $scope.equation =  '';
     $scope.zqltable = false;
+    $scope.tree = false;
     $scope.chartSettings = ChartSettings;
     $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
     $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
@@ -699,3 +725,8 @@ app.controller('datasetController', [
 app.service('ChartSettings', function () {
     return {};
 })
+
+  $('#tree-option').click(function() {
+    $(this).toggleClass("active");
+    $("#tree-div").toggle("active");
+  });
