@@ -147,7 +147,8 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 		 if(y<r.minY) r.minY = y;
 		 if(y>r.maxY) r.maxY = y;
 		 r.nPoints++;
-		 r.averageY += (y-r.averageY)*1.0/r.nPoints; 
+		 //calculation of average, prevent overflow by upgrade step by step
+		 r.averageY += (y-r.averageY)*1.0/(i+1); 
 		 regions.add(r);
 	 }
 	 //process last region
