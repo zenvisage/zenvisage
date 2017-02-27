@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.roaringdb.db.Column;
@@ -60,89 +62,115 @@ public class ZQLParser {
 		System.out.println("metadata");
 		System.out.println(xAttributes);
 		System.out.println(yAttributes);
+		
+		Queue<Node> nodeQueue = new ArrayDeque<Node>();
+
+		// first pass, generate nodes
+		// add to hashmap the variables
 		for (ZQLRow row : table.getZqlRows()) {
 			XColumn x = row.getX();
 			YColumn y = row.getY();
 			ZColumn z = row.getZ(); // eg z1 or v1
 			Name name = row.getName();
 			
+			// Create the nodes
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz());
 			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 			VisualComponentNode vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor, row.getSketchPoints());
 			vcNode.setDb(db);
 			Processe process = row.getProcesse();
-			ProcessNode processNode = new ProcessNode(process, lookuptable);
-
-			// Robustness. Update HashMap only if new assignment to existing variable occurs
-			// Update hash map
-			boolean updatedX = false;
-			boolean updatedY = false;
-			boolean updatedZ = false;
-			System.out.println(name);
-			System.out.println(name.getName());
-			nodeMap.put(name.getName(), vcNode); // if they reuse a name, assume future rows refer to the latest reused name node
+			ProcessNode processNode = new ProcessNode(process, lookuptable);	
+			
+			// Add to queue
+			nodeQueue.add(vcNode);
+			if(process != null) {
+				nodeQueue.add(processNode);
+			}
+			
+			// Add to nodeMap
+			// assume each var will be written to only in one row, and laters rows only read that var
+			// this assumption is needed because we are creating nodes first, then edges and we don't need to depend on row order
+			nodeMap.put(name.getName(), vcNode); 
 			if (x.getVariable() != null && !x.getVariable().equals("") && x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 				if(x.getAttributes().get(0).equals("*")) {
 					// replaces x1<-* with x1<-'year','month',...
 					x.setAttributes(xAttributes);
 				}
 				nodeMap.put(x.getVariable(), vcNode);
-				updatedX = true;
 			}
 			if (y.getVariable() != null && !y.getVariable().equals("") && y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 				if(y.getAttributes().get(0).equals("*")) {
 					y.setAttributes(yAttributes);
 				}
 				nodeMap.put(y.getVariable(), vcNode);
-				updatedY = true;
 			}
 			if (z.getVariable() != null && !z.getVariable().equals("") && z.getValues() != null && !z.getValues().isEmpty()) {
 				nodeMap.put(z.getVariable(), vcNode);
-				updatedZ = true;
 			}
 			if (process != null) {
 				for (String variable : process.getVariables()) {
 					nodeMap.put(variable, processNode); // if they reuse a process variable, assume future rows refer to the latest reused variable name node
 				}
 			}
-			// So if any x,y,or z variable is referenced from above, link that as a parent
-			// make sure that if we have updated a variable with a new assignment, make sure to NOT have a parent (since this node has the latest value)
-			if (!updatedX && nodeMap.containsKey(x.getVariable())) {
-				Node parent = nodeMap.get(x.getVariable());
-				parent.addChild(vcNode);
-				vcNode.addParent(parent);
-			} else if (!updatedY && nodeMap.containsKey(y.getVariable())) {
-				Node parent = nodeMap.get(y.getVariable());
-				parent.addChild(vcNode);
-				vcNode.addParent(parent);
-			} else if (!updatedZ && nodeMap.containsKey(z.getVariable())) {
-				Node parent = nodeMap.get(z.getVariable());
-				parent.addChild(vcNode);
-				vcNode.addParent(parent);
-			} else {
+		}
+		// second pass, add dependencies
+		while(!nodeQueue.isEmpty()) {
+			QueryNode currNode = (QueryNode) nodeQueue.remove();
+			if (currNode instanceof VisualComponentNode) {
+				VisualComponentNode vcNode = (VisualComponentNode) currNode;
+				XColumn x = vcNode.getVc().getX();
+				YColumn y = vcNode.getVc().getY();
+				ZColumn z = vcNode.getVc().getZ();
+				
+				// A vcnode is an entry node if it has defined its X,Y,Z (so has no parents)
 				// New entry node! Add as an entry node for this query, and entry node for the entire graph
-				queryEntryNodes.add(vcNode);
-				graph.entryNodes.add(vcNode);
+				if (x.getVariable() != null && !x.getVariable().equals("") && x.getAttributes() != null && !x.getAttributes().isEmpty()) {
+					if (y.getVariable() != null && !y.getVariable().equals("") && y.getAttributes() != null && !y.getAttributes().isEmpty()) {;
+						if (z.getVariable() != null && !z.getVariable().equals("") && z.getValues() != null && !z.getValues().isEmpty()) {
+							queryEntryNodes.add(vcNode);
+							graph.entryNodes.add(vcNode);
+							continue;
+						}	
+					}					
+				}
+				
+				// So if any x,y,or z variable is referenced from table, link that as a parent
+				if (nodeMap.containsKey(x.getVariable())) {
+					Node parent = nodeMap.get(x.getVariable());
+					parent.addChild(vcNode);
+					vcNode.addParent(parent);
+				} else if (nodeMap.containsKey(y.getVariable())) {
+					Node parent = nodeMap.get(y.getVariable());
+					parent.addChild(vcNode);
+					vcNode.addParent(parent);
+				} else if (nodeMap.containsKey(z.getVariable())) {
+					Node parent = nodeMap.get(z.getVariable());
+					parent.addChild(vcNode);
+					vcNode.addParent(parent);
+				}
+				
 			}
 			
-			boolean hasParent = false;
-			if (process != null) {
-				for (String argument : process.getArguments()) {
-					Node parent = nodeMap.get(argument);
-					if (parent != null) {
-						hasParent = true;
-						parent.addChild(processNode);
-						processNode.addParent(parent);					
+			if (currNode instanceof ProcessNode) {
+				ProcessNode processNode = (ProcessNode) currNode;
+				Processe process = processNode.getProcess();
+				boolean hasParent = false;
+				if (process != null) {
+					for (String argument : process.getArguments()) {
+						Node parent = nodeMap.get(argument);
+						if (parent != null) {
+							hasParent = true;
+							parent.addChild(processNode);
+							processNode.addParent(parent);					
+						}
 					}
 				}
+				if (!hasParent && process != null) {
+					queryEntryNodes.add(processNode);
+					graph.entryNodes.add(processNode);
+					// process nodes depend on some parameters, so is this case reachable?
+				}
 			}
-			if (!hasParent && process != null) {
-				queryEntryNodes.add(processNode);
-				graph.entryNodes.add(processNode);
-				// process nodes depend on some parameters, so is this case reachable?
-			}
-			
-
 		}
 		return graph;
 		
