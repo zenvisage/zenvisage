@@ -122,11 +122,14 @@ public class ZQLParser {
 				YColumn y = vcNode.getVc().getY();
 				ZColumn z = vcNode.getVc().getZ();
 				
-				// A vcnode is an entry node if it has defined its X,Y,Z (so has no parents)
+				// A vcnode is an entry node if it has defined its X,Y,Z (so has no parents) eg X1<-'month', Y1<-'soldprice', Z1<-'state'.* 
 				// New entry node! Add as an entry node for this query, and entry node for the entire graph
-				if (x.getVariable() != null && !x.getVariable().equals("") && x.getAttributes() != null && !x.getAttributes().isEmpty()) {
-					if (y.getVariable() != null && !y.getVariable().equals("") && y.getAttributes() != null && !y.getAttributes().isEmpty()) {;
-						if (z.getVariable() != null && !z.getVariable().equals("") && z.getValues() != null && !z.getValues().isEmpty()) {
+				// Since we are assuming variables are write once, read forever
+				// A vcnode is also an entry node if it has no variables, but defines all its X,Y,Z (so still no parents) Eg X: 'month', Y: 'soldprice', Z: 'state'.* 
+				// so we don't need this check: x.getVariable() != null && !x.getVariable().equals("")  
+				if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
+					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {;
+						if ( z.getValues() != null && !z.getValues().isEmpty()) {
 							queryEntryNodes.add(vcNode);
 							graph.entryNodes.add(vcNode);
 							continue;
