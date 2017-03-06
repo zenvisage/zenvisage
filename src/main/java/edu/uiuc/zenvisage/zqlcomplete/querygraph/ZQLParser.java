@@ -127,9 +127,12 @@ public class ZQLParser {
 				// Since we are assuming variables are write once, read forever
 				// A vcnode is also an entry node if it has no variables, but defines all its X,Y,Z (so still no parents) Eg X: 'month', Y: 'soldprice', Z: 'state'.* 
 				// so we don't need this check: x.getVariable() != null && !x.getVariable().equals("")
+				
 				if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
-					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {;
-						if ( z.getValues() != null && !z.getValues().isEmpty()) {
+					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
+						// if ZAttribute and ZValues are both null emptyZ case
+						boolean emptyZ = (z.getValues() == null || z.getValues().isEmpty()) && z.getAttribute().equals("");
+						if ( (z.getValues() != null && !z.getValues().isEmpty()) || emptyZ ) {
 							queryEntryNodes.add(vcNode);
 							graph.entryNodes.add(vcNode);
 							continue;
