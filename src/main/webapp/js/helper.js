@@ -597,16 +597,14 @@ function uploadToSketchpadNew( draggableId, graphType )
   plotSketchpadNew( draggedGraph )//, xType, yType, zType);
 }
 
-function addRow() {
-  var table = $("#zql-table > tbody")[0];
-  var rowCount = table.rows.length;
-  var rowNumber = (rowCount+1).toString();
-  $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><input class=\"form-control zql-table number\" type=\"text\" size=\"3\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
-}
-
+// function addRow() {
+//   var table = $("#zql-table > tbody")[0];
+//   var rowCount = table.rows.length;
+//   var rowNumber = (rowCount+1).toString();
+//   $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><input class=\"form-control zql-table number\" type=\"text\" size=\"3\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
+// }
 
 $(document).ready(function(){
-
   // $('#add-row').click(function(){
   //   addRow();
   // });
@@ -616,7 +614,6 @@ $(document).ready(function(){
     drop: function( event, ui )
     {
       uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
-      // uploadToSketchpad($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
     }
   });
 });

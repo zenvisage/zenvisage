@@ -3,9 +3,9 @@ var globalDatasetInfo;
 
 
 app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
-    $scope.input = {};
-    $scope.queries = {};
-    $scope.queries['zqlRows'] = [];
+  $scope.input = {};
+  $scope.queries = {};
+  $scope.queries['zqlRows'] = [];
 
   $scope.removeRow = function ( index ) {
     $("#table-row-" + index).remove();
@@ -19,6 +19,8 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
     $compile($el)($scope);
+    //tree.addLeaf(count);
+    //tree.addParent(1);
   };
 
   $scope.addProcessRow = function () {
@@ -29,6 +31,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
     $compile($el)($scope);
+    //tree.addParent(count);
   };
 
   $scope.$on('removeAndInsertRows', function( event, args ) {
@@ -46,71 +49,116 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $compile($el)($scope);
   }});
 
+
   $scope.submitZQL = function () {
-      clearUserQueryResultsTable();
-      $scope.queries['zqlRows'] = [];
-      var processRow = [];
-      $( ".tabler" ).each(function( index ) {
-        if ( $(this).hasClass("processRow") )
-        {
-          var processe = $(this).find(".process").val()
-          processRow.push(processe);
-        }
-        else
-        {
-          var name = $(this).find(".name").val()
-          var x = $(this).find(".x-val").val()
-          var y = $(this).find(".y-val").val()
-          var z = $(this).find(".z-val").val()
-          var constraints = $(this).find(".constraints").val()
-          // var viz = $(this).find(".viz").val()
-          // var processe = $(this).find(".process").val()
-          // "processe": processe
-          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-          if (checkInput(input)) {
-            if (input.name.sketch) {
-              // if this row needs to grab data from the sketch
-              var points = [];
-              this.dataX = [];
-              this.dataY = [];
-              this.xAxis = getSelectedXAxis();
-              this.yAxis = getSelectedYAxis();
-              for(var i = 0; i < sketchpadData.length; i++){
-                var xp = sketchpadData[i]["xval"];
-                var yp = sketchpadData[i]["yval"];
-                points.push(new Point( xp, yp ));
-                this.dataX.push( xp );
-                this.dataY.push( yp );
-              }
-              input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
-              input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x"+(index+1)};
-              input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y"+(index+1)};
-              input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z"+(index+1), expression: undefined};
-              "z"+index + "<-'"+ getSelectedCategory() +"'.*";
+
+    $("#graph-div").empty();
+    createZQLGraph( submitNodeZQL );
+
+    clearUserQueryResultsTable();
+    $scope.queries['zqlRows'] = [];
+    var processRow = [];
+    $( ".tabler" ).each(function( index ) {
+      if ( $(this).hasClass("processRow") )
+      {
+        var processe = $(this).find(".process").val()
+        processRow.push(processe);
+      }
+      else
+      {
+        var name = $(this).find(".name").val()
+        var x = $(this).find(".x-val").val()
+        var y = $(this).find(".y-val").val()
+        var z = $(this).find(".z-val").val()
+        var constraints = $(this).find(".constraints").val()
+        // var viz = $(this).find(".viz").val()
+        // var processe = $(this).find(".process").val()
+        // "processe": processe
+        var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+        if (checkInput(input)) {
+          if (input.name.sketch) {
+            // if this row needs to grab data from the sketch
+            var points = [];
+            this.dataX = [];
+            this.dataY = [];
+            this.xAxis = getSelectedXAxis();
+            this.yAxis = getSelectedYAxis();
+            for(var i = 0; i < sketchpadData.length; i++){
+              var xp = sketchpadData[i]["xval"];
+              var yp = sketchpadData[i]["yval"];
+              points.push(new Point( xp, yp ));
+              this.dataX.push( xp );
+              this.dataY.push( yp );
             }
-            $scope.queries['zqlRows'].push(input);
+            input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+            input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x"+(index+1)};
+            input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y"+(index+1)};
+            input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z"+(index+1), expression: undefined};
+            "z"+index + "<-'"+ getSelectedCategory() +"'.*";
           }
+          $scope.queries['zqlRows'].push(input);
         }
-      });
+      }
+    });
 
-      $.each( processRow, function( index, value ) {
-        $scope.queries['zqlRows'][index]["processe"] = value;
-      });
+    $.each( processRow, function( index, value ) {
+      $scope.queries['zqlRows'][index]["processe"] = value;
+    });
 
-      $scope.queries['db'] = getSelectedDataset();
-      console.log($scope.queries);
+    $scope.queries['db'] = getSelectedDataset();
+    console.log($scope.queries);
 
-      $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
-      ).then(
-          function (response) {
-              console.log("success: ", response);
-              plotResults.displayUserQueryResults(response.data.outputCharts, false);
-          },
-          function (response) {
-              console.log("failed: ", escape(response));
-          }
-      );
-    };
+    $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
+    ).then(
+        function (response) {
+            console.log("success: ", response);
+            plotResults.displayUserQueryResults(response.data.outputCharts, false);
+        },
+        function (response) {
+            console.log("failed: ", escape(response));
+        }
+    );
+  };
+
+  function submitNodeZQL( d )
+  {
+    $scope.queries['zqlRows'] = [];
+    var input = { "name": "*f1", "x": d.xval, "y": d.yval, "z": d.zval, "constraints": d.constraint, "viz": ""};
+    if (checkInput(input)) {
+      if (input.name.sketch) {
+        // if this row needs to grab data from the sketch
+        var points = [];s
+        this.dataX = [];
+        this.dataY = [];
+        this.xAxis = getSelectedXAxis();
+        this.yAxis = getSelectedYAxis();
+        for(var i = 0; i < sketchpadData.length; i++){
+          var xp = sketchpadData[i]["xval"];
+          var yp = sketchpadData[i]["yval"];
+          points.push(new Point( xp, yp ));
+          this.dataX.push( xp );
+          this.dataY.push( yp );
+        }
+        input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+        input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x"+(index+1)};
+        input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y"+(index+1)};
+        input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z"+(index+1), expression: undefined};
+        "z"+index + "<-'"+ getSelectedCategory() +"'.*";
+      }
+      $scope.queries['zqlRows'].push(input);
+    }
+    $scope.queries['db'] = getSelectedDataset();
+    $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
+    ).then(
+        function (response) {
+            console.log("success: ", response);
+            plotResults.displayUserQueryResults(response.data.outputCharts, false);
+        },
+        function (response) {
+            console.log("failed: ", escape(response));
+        }
+    );
+  }
 
 }]);
 
@@ -208,7 +256,6 @@ app.controller('options-controller', [
     $scope.considerRange = true;
     $scope.equation =  '';
     $scope.zqltable = false;
-    $scope.tree = false;
     $scope.chartSettings = ChartSettings;
     $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
     $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
@@ -256,7 +303,7 @@ app.controller('options-controller', [
     });
 
     $scope.removerAndInsertRows = function( n ){
-        $scope.$broadcast('removeAndInsertRows', {n} );
+      $scope.$broadcast('removeAndInsertRows', {n} );
     }
 
     // TOP K

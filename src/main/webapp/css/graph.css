@@ -1,42 +1,25 @@
-circle{
-  fill:white;
-  stroke:steelblue;
-  stroke-width:2px;
+.link {
+  stroke: #000;
+  stroke-width: 1.5px;
 }
 
-line{
-  stroke:grey;
-  stroke-width:3px;
-}
-.incRect{
-  stroke:grey;
-  shape-rendering:crispEdges;
-}
-#incMatx text{
-  text-anchor:middle;
-  cursor:default;
-}
-#treesvg g text:hover, #treesvg g circle:hover{
-  cursor:pointer;
-}
-#navdiv{
-  background:#555;
-}
-#treesvg{
-
+.node {
+  cursor: move;
+  fill: #ccc;
+  stroke: #000;
+  stroke-width: 1.5px;
 }
 
-#labelpos{
-  color:white;
+.process{
+  fill: cyan;
 }
-#navdiv button, #navdiv textarea{
-  vertical-align:middle;
-}
-#g_labels text{
-  text-anchor:middle;
-}
-#g_elabels text{
-  text-anchor:middle;
-  fill:red;
-  font-weight:bold;
+
+div.tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 5px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 3px;
 }

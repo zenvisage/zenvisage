@@ -6,7 +6,8 @@
     <title>Visual Data Exploration</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
-    <link href="css/draw.css" rel="stylesheet">
+    <!-- <link href="css/draw.css" rel="stylesheet"> -->
+    <link href="css/graph.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
@@ -106,30 +107,8 @@
               <div class="btn-group" >
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
                 <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
-                <button type="button" name="vizflow" aria-pressed="false" data-toggle="button" ng-click="vizflow = !vizflow" class="btn btn-default btn-xs">vizflow</button>
+                <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button>
               </div>
-
-<!--
-              <div ng-show="zqltable">
-                <div class="btn-group">
-                  <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
-                  <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
-                  <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
-                </div>
-
-                <div class="btn-group">
-                  <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
-                  <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
-                  <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>
-                </div>
-                <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
-              </div>
--->
-
-<!--               <div class="btn-group" >
-                <button type="button" name="options" ng-show="zqltable" ng-click="submitZQLTable()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Submit</button>
-              </div>
- -->
             </div>
 
             <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'"></div>
@@ -177,18 +156,7 @@
                   </tr>
                 </thead>
                 <tbody>
-<!--                   <tr ng-repeat="query in queries['zqlRows']">
-                    <td>
-                      <a ng-click="removeRow($index)" id="remove-row"><span class="glyphicon glyphicon glyphicon-minus-sign"></span></a>
-                    </td>
-                    <td>{{query.name}}</td>
-                    <td>{{query.x}}</td>
-                    <td>{{query.y}}</td>
-                    <td>{{query.z}}</td>
-                    <td>{{query.constraints}}</td>
-                    <td>{{query.viz}}</td>
-                    <td>{{query.processe}}</td>
-                  </tr> -->
+
                   <tr id="table-row-1" class="tabler">
                     <td>
 
@@ -319,14 +287,16 @@
               </div>
             </div>
           </div>
-
+          <div class="col-md-12" ng-show="zqlgraph">
+            <div id="graph-div" >
+            </div>
+          </div>
         </div>
         <!-- drawng interface + zql table END-->
 
         <hr>
         <div id="bottom-middle-bar">
-          <div class="col-md-12" id="tree-div" ng-show="tree">
-          </div>
+
           <div id="middle-left" class="col-md-6">
             <h5><b>Results</b></h5>
             <div>
@@ -353,10 +323,6 @@
         </div>
       </div>
     </div>
-    <script src="js/graph.js"></script>
-    <script>
-      var tree = tree();
-    </script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/jquery-ui.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
@@ -370,10 +336,15 @@
     <script src="js/draw.js"></script>
     <script src="js/query.js"></script>
     <script src="js/helper.js"></script>
-
+    <script src="js/graph.js"></script>
     <script src="js/fileUploader.js"></script>
     <script src="js/renderplot.js"></script>
     <script src="js/parsertypes.js"></script>
     <script src="js/zqlparser.js"></script>
+    <script src="js/zqlgraph.js"></script>
+    <script>
+      // var tree = tree();
+      // tree.initialize();
+    </script>
   </body>
 </html>
