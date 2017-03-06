@@ -37,14 +37,13 @@ width: 100%;
   overflow-x: auto;
 }
 
-#tree-div {
+#graph-div {
   height: 242px !important;
   border: 0.5px solid #D9D9D9;
   width: 98%;
   border-radius: 5px;
   margin-top: 5px;
   margin-left: 10px;
-  display: none;
 }
 
 #sidebar input{
