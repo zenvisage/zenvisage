@@ -83,7 +83,7 @@ public class ZQLParser {
 			
 			// Add to queue
 			nodeQueue.add(vcNode);
-			if(process != null) {
+			if(process != null && process.getVariables().size() > 0) {
 				nodeQueue.add(processNode);
 			}
 			
@@ -126,7 +126,7 @@ public class ZQLParser {
 				// New entry node! Add as an entry node for this query, and entry node for the entire graph
 				// Since we are assuming variables are write once, read forever
 				// A vcnode is also an entry node if it has no variables, but defines all its X,Y,Z (so still no parents) Eg X: 'month', Y: 'soldprice', Z: 'state'.* 
-				// so we don't need this check: x.getVariable() != null && !x.getVariable().equals("")  
+				// so we don't need this check: x.getVariable() != null && !x.getVariable().equals("")
 				if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {;
 						if ( z.getValues() != null && !z.getValues().isEmpty()) {
@@ -137,17 +137,32 @@ public class ZQLParser {
 					}					
 				}
 				
+				// A vcNode is also an entry node if it is a sketch
+				if (vcNode.getVc().getName().getSketch()) {
+					queryEntryNodes.add(vcNode);
+					graph.entryNodes.add(vcNode);
+					continue;					
+				}
+				
 				// So if any x,y,or z variable is referenced from table, link that as a parent
+				// we can have multiple parents (say Z from a processNode, X,Y from a vcNode)
+				Node prevParent = null;
 				if (nodeMap.containsKey(x.getVariable())) {
 					Node parent = nodeMap.get(x.getVariable());
 					parent.addChild(vcNode);
 					vcNode.addParent(parent);
-				} else if (nodeMap.containsKey(y.getVariable())) {
+					prevParent = parent;
+				} 
+				if (nodeMap.containsKey(y.getVariable())) {
 					Node parent = nodeMap.get(y.getVariable());
+					if (prevParent == parent) break; // don't add a parent twice
 					parent.addChild(vcNode);
 					vcNode.addParent(parent);
-				} else if (nodeMap.containsKey(z.getVariable())) {
+					prevParent = parent;
+				} 
+				if (nodeMap.containsKey(z.getVariable())) {
 					Node parent = nodeMap.get(z.getVariable());
+					if (prevParent == parent) break;
 					parent.addChild(vcNode);
 					vcNode.addParent(parent);
 				}
