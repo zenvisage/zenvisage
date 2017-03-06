@@ -40,7 +40,7 @@ public class DEuclidean implements D {
 	}
 	
 	// idea is to update the AxisVariableScores I am passing by reference in the parameter list
-	private void process(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVars, int index, List<String> attributeConstraints) {
+	private void process(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVars, int index, List<String> attributeConstraints, ArrayList<ArrayList<String>> outputAxisVars, List<Double> scores) {
 		if (index >= axisVars.size()) {
 			// base case: start processing for the visual components that satisfy all the constraints
 			List<VisualComponent> f1List = new ArrayList<VisualComponent>();
@@ -74,15 +74,22 @@ public class DEuclidean implements D {
 			
 			for (VisualComponent vc1 : f1List) {
 				for (VisualComponent vc2 : f2List) {
+					
 					//scores.add(calculateNormalizedDistance(f1List.get(i), f2List.get(j)));
+					scores.add(calculateNormalizedDistance(vc1, vc2));
+
+					for (int i = 0; i < axisVars.size(); i++) {
+						outputAxisVars.get(i).add(extractAttribute(vc1, i, axisVars));
+					}
 				}
 			}
+			return;
 		}
 		// For z, the values are like [CA, NY] for state
 		// For x and y, the values are the list of attributes, like ['year','month']
 		for(String value : axisVars.get(index).getValues()) {
 			attributeConstraints.add(value);
-			process(f1, f2, axisVars, index+1, attributeConstraints);
+			process(f1, f2, axisVars, index+1, attributeConstraints, outputAxisVars, scores);
 			attributeConstraints.remove(value);
 		}
 	}
@@ -90,10 +97,15 @@ public class DEuclidean implements D {
 	public AxisVariableScores executeNewer(VisualComponentList f1, VisualComponentList f2, List<AxisVariable> axisVariables) {
 		List<Double> scores = new ArrayList<Double>();
 		AxisVariableScores axisVariableScores;
-		ArrayList<ArrayList<String>> axisvars = new ArrayList<ArrayList<String>>();;
+		ArrayList<ArrayList<String>> outputAxisVars = new ArrayList<ArrayList<String>>();;
 
-		process(f1, f2, axisVariables, 0, new ArrayList<String>());
-		axisVariableScores = new AxisVariableScores(axisvars, scores);
+		// there should be one outputAxisVar for each axisVariale
+		for (int i = 0; i < axisVariables.size(); i++) {
+			ArrayList<String> temp = new ArrayList<String>();
+			outputAxisVars.add(temp);
+		}
+		process(f1, f2, axisVariables, 0, new ArrayList<String>(), outputAxisVars, scores);
+		axisVariableScores = new AxisVariableScores(outputAxisVars, scores);
 		return axisVariableScores;
 	}
 	
@@ -159,7 +171,8 @@ public class DEuclidean implements D {
 	@Override
 	public AxisVariableScores execute(VisualComponentList f1, VisualComponentList f2,List<List<AxisVariable>> axisVariables) {
 		// TODO Auto-generated method stub
-
+		return executeNewer(f1, f2, axisVariables.get(0));
+/*		
 		List<VisualComponent> f1List = f1.getVisualComponentList();
 		List<VisualComponent> f2List = f2.getVisualComponentList();
 		
@@ -258,6 +271,7 @@ public class DEuclidean implements D {
 		}
 		
 		return null;
+		*/
 	}
 	
 	
@@ -313,7 +327,16 @@ public class DEuclidean implements D {
 		}
 
 	}
-	
+
+	public String extractAttribute(VisualComponent v1,int order, List<AxisVariable> axisVariables) {
+		if(axisVariables.get(order).getAttributeType().equals("Z"))
+			return v1.getZValue().toString();
+		else if(axisVariables.get(order).getAttributeType().equals("Y"))
+			return v1.getyAttribute();
+		else {
+			return v1.getxAttribute();
+		}		
+	}
 	
 	public double calculateDistance(VisualComponent v1, VisualComponent v2) {
 		ArrayList<WrapperType> y1 = v1.getPoints().getYList();
