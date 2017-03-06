@@ -149,22 +149,27 @@ public class ZQLParser {
 				Node prevParent = null;
 				if (nodeMap.containsKey(x.getVariable())) {
 					Node parent = nodeMap.get(x.getVariable());
-					parent.addChild(vcNode);
-					vcNode.addParent(parent);
-					prevParent = parent;
+					if (parent != vcNode) {
+						parent.addChild(vcNode);
+						vcNode.addParent(parent);
+						prevParent = parent;
+					}
 				} 
 				if (nodeMap.containsKey(y.getVariable())) {
 					Node parent = nodeMap.get(y.getVariable());
-					if (prevParent == parent) break; // don't add a parent twice
-					parent.addChild(vcNode);
-					vcNode.addParent(parent);
-					prevParent = parent;
+					if (prevParent != parent && parent != vcNode) { // don't add a parent twice
+						parent.addChild(vcNode);
+						vcNode.addParent(parent);
+						prevParent = parent;
+					}
 				} 
-				if (nodeMap.containsKey(z.getVariable())) {
+				if (nodeMap.containsKey(z.getVariable())) { 
 					Node parent = nodeMap.get(z.getVariable());
-					if (prevParent == parent) break;
-					parent.addChild(vcNode);
-					vcNode.addParent(parent);
+					// / make sure this parent is not ourself! We may not be an entry node, but we may define Z
+					if (prevParent != parent && parent != vcNode) {
+						parent.addChild(vcNode);
+						vcNode.addParent(parent);
+					}
 				}
 				
 			}
