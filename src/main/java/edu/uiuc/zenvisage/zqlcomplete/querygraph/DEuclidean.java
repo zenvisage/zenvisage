@@ -67,10 +67,20 @@ public class DEuclidean implements D {
 					}
 				}
 			}
+			
 			// these if statements are used if currently processing one vs many (eg one state vs many states), and using axisvar = state.*
 			// when the constraint is on say NY, f2 will have a component, but f1 will have nothing. Just take f1 (CA) compare it to (NY)
-			if (f1List.isEmpty()) f1List = f1.getVisualComponentList();
-			if (f2List.isEmpty()) f2List = f2.getVisualComponentList();
+			if (f1List.isEmpty()) {
+				f1List = f1.getVisualComponentList();
+			}
+			if (f2List.isEmpty()) {
+				f2List = f2.getVisualComponentList();
+			}
+			if(f1List.size() < f2List.size()) {
+				List<VisualComponent> temp = f1List; // point to what f1List is pointing to
+				f1List = f2List; // point f1List to what f2List is pointing to
+				f2List = temp;
+			}
 			
 			for (VisualComponent vc1 : f1List) {
 				for (VisualComponent vc2 : f2List) {
@@ -78,9 +88,11 @@ public class DEuclidean implements D {
 					//scores.add(calculateNormalizedDistance(f1List.get(i), f2List.get(j)));
 					scores.add(calculateNormalizedDistance(vc1, vc2));
 
-					for (int i = 0; i < axisVars.size(); i++) {
-						outputAxisVars.get(i).add(extractAttribute(vc1, i, axisVars));
-					}
+					//for (int i = 0; i < axisVars.size(); i++) {
+					//	outputAxisVars.get(i).add(extractAttribute(vc1, i, axisVars));
+					//}
+					outputAxisVars.get(0).add(extractAttribute(vc1, 0, axisVars));
+					outputAxisVars.get(1).add(extractAttribute(vc2, 1, axisVars));
 				}
 			}
 			return;
@@ -99,8 +111,9 @@ public class DEuclidean implements D {
 		AxisVariableScores axisVariableScores;
 		ArrayList<ArrayList<String>> outputAxisVars = new ArrayList<ArrayList<String>>();;
 
-		// there should be one outputAxisVar for each axisVariale
-		for (int i = 0; i < axisVariables.size(); i++) {
+		// there should be one outputAxisVar for each axisVariable
+		// assumption: outputAxisVars of size 2
+		for (int i = 0; i < 2; i++) {
 			ArrayList<String> temp = new ArrayList<String>();
 			outputAxisVars.add(temp);
 		}
@@ -329,6 +342,11 @@ public class DEuclidean implements D {
 	}
 
 	public String extractAttribute(VisualComponent v1,int order, List<AxisVariable> axisVariables) {
+		
+		// small fix so when we have a shared axisVariable for two VCLists (eg both are state, so only provide 1 axisVar)
+		if (order >= axisVariables.size()) {
+			order = 0;
+		}
 		if(axisVariables.get(order).getAttributeType().equals("Z"))
 			return v1.getZValue().toString();
 		else if(axisVariables.get(order).getAttributeType().equals("Y"))
