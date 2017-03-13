@@ -8,6 +8,8 @@ public class Result {
 	public String xUnit;
 	public String yUnit;
 	public int totalPage;
+	public ArrayList<Node> nodes = new ArrayList<Node>();
+	public ArrayList<Link> links = new ArrayList<Link>();
 	
 	// default constructor
 	public Result() {
