@@ -1,6 +1,59 @@
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
 
+app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
+
+  $scope.AxisInfo = [];
+
+  $rootScope.$on("callLoadAxisInfo", function(){
+    $scope.loadAxisInfo();
+  });
+
+  $scope.loadAxisInfo = function loadAxisInfo() {
+    $scope.AxisInfo = [];
+    for (var key in globalDatasetInfo["yAxisColumns"]) {
+      $scope.AxisInfo.push(key);
+    }
+  };
+
+  $scope.createClasses = function() {
+    var query = {};
+    for (i = 1; i < 5; i++) {
+      key = $("#class-row-" + i + "\ > div").find(":selected").text();
+      val = $("#class-row-" + i + "\ > div > input")[0].value
+      if (val && key)
+      {
+        var min = globalDatasetInfo["yAxisColumns"][key]["min"]
+        var max = globalDatasetInfo["yAxisColumns"][key]["max"]
+        var replacedMin = val.replace("min", min);
+        var replacedMinMax = replacedMin.replace("max", max);
+        query[key] = "[" + replacedMinMax + "]";
+      }
+    }
+
+    $http.get('/zv/createClasses', query
+    ).then(
+        function (response) {
+          console.log("success: ", response);
+        },
+        function (response) {
+          console.log("failed: ", response);
+        }
+    );
+  }
+
+  // $scope.removeRow = function ( index ) {
+  //   $("#class-row-" + index).remove();
+  // };
+
+  // $scope.addClassRow = function () {
+  //   var rowCount = $("#class-rows > div").length;
+  //   var rowNumber = (rowCount+1).toString();
+  //   $el = $("<div class=\"row\" id=\"class-row-" + rowNumber + "\"><div class=\"col-md-4\"><div class=\"dropdown\"><select name=\"select\" ng-model=\"option\"><option ng-repeat=\"option" + rowNumber + " in AxisInfo\" value=\"{{option}}\"> {{" + option + "}} </option></select></div></div><div class=\"col-md-8\"><input type=\"text\"></div></div>").appendTo("#class-rows");
+  //   $compile($el)($scope);
+  // };
+
+}]);
 
 app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
   $scope.input = {};
@@ -590,6 +643,10 @@ app.controller('datasetController', [
       }
     }
 
+    $scope.callLoadAxisInfo = function() {
+      $rootScope.$emit("callLoadAxisInfo", {});
+    }
+
     $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()
     {
       clearUserQueryResultsTable();
@@ -767,7 +824,7 @@ app.controller('datasetController', [
     $rootScope.$on("callgetRepresentativeTrends", function(){
       $scope.getRepresentativeTrendsWithoutCallback();
     });
-  }]);
+}]);
 
 app.service('ChartSettings', function () {
     return {};
