@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -60,10 +62,16 @@ import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
+import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowResult;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowVizResult;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.Node;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.ProcessNode;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.VisualComponentNode;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 import edu.uiuc.zenvisage.service.distance.*;
 
@@ -165,11 +173,13 @@ public class ZvMain {
 		   graph = parser.processZQLTable(zqlTable);
 		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
 		   //convert it into front-end format.
-		   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
+		   Result result = convertVCListtoVisualOutput(output);
+		   addGraphVisualOutput(graph, result, 0);
+		   String resultString = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
 		   //System.out.println(" Query Graph Execution Results Are:");
 		   //System.out.println(result);
 		   System.out.println("Done");
-		   return result;
+		   return resultString;
 	   } catch (SQLException e) {
 		   // TODO Auto-generated catch block
 		   e.printStackTrace();
@@ -177,7 +187,52 @@ public class ZvMain {
 	   }
    }
 
-   public Result convertVCListtoVisualOutput(VisualComponentList vcList){
+   private void addGraphVisualOutput(QueryGraph graph, Result result, Integer numbering) {
+	   ArrayList<edu.uiuc.zenvisage.model.Node> nodes = new ArrayList<edu.uiuc.zenvisage.model.Node>();
+	   Queue<edu.uiuc.zenvisage.zqlcomplete.querygraph.Node> nodeQueue = new ArrayDeque<edu.uiuc.zenvisage.zqlcomplete.querygraph.Node>();
+	   for(Node node : graph.getEntryNodes()) {
+		   if (node.numbering == -1) {
+			   node.numbering = ++numbering;
+		   }
+		   nodeQueue.add(node);
+	   }
+	   while(!nodeQueue.isEmpty()) {
+		   Node queueNode = nodeQueue.remove();
+		   edu.uiuc.zenvisage.model.Node node = new edu.uiuc.zenvisage.model.Node();
+		   if (queueNode instanceof VisualComponentNode) {
+			   VisualComponentNode vcNode = (VisualComponentNode) queueNode;
+			   node.setType("zql");
+			   node.setName(vcNode.getVc().getName().getName());
+			   XColumn x = vcNode.getVc().getX();
+			   node.setXval(x.getVariable() + "<-{" + x.getAttributes().toString()+"}");
+			   YColumn y = vcNode.getVc().getY();
+			   node.setYval(y.getVariable() + "<-{" + y.getAttributes().toString()+"}");
+			   ZColumn z = vcNode.getVc().getZ();
+			   node.setZval(z.getVariable() + "<-" + z.getAttribute() + "." + z.getValues().toString());
+			   node.setConstraint(vcNode.getVc().getConstraints());
+		   }
+		   if (queueNode instanceof ProcessNode) {
+			   node.setType("process");
+			   
+		   }
+		   result.nodes.add(node);
+		   
+		   // bfs adds children that havent been numbered yet
+		   for (Node child : queueNode.getChildren()) {
+			   if (child.numbering == -1) {
+				   child.numbering = ++numbering;
+				   nodeQueue.add(child);
+			   }
+			   Link link = new Link();
+			   link.setSource(queueNode.numbering);
+			   link.setTarget(child.numbering);
+			   result.links.add(link);
+		   }
+	   }
+
+   }
+   
+public Result convertVCListtoVisualOutput(VisualComponentList vcList){
 		Result finalOutput = new Result();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
 	    for(VisualComponent viz : vcList.getVisualComponentList()) {

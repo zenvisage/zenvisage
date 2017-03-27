@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Node {
 	
+	public int numbering = -1; 
 	private List<Node> children;
 	private List<Node> parents;
 	
@@ -55,4 +56,6 @@ public class Node {
 	public void removeParent(Node parent) {
 		this.parents.remove(parent);
 	}
+	
+	
 }

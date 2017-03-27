@@ -16,4 +16,12 @@ public class Graph {
 		entryNodes = new ArrayList<Node>();
 	}
 
+	public List<Node> getEntryNodes() {
+		return entryNodes;
+	}
+
+	public void setEntryNodes(List<Node> entryNodes) {
+		this.entryNodes = entryNodes;
+	}
+
 }
