@@ -101,16 +101,16 @@ public class ZvMain {
 		uploadDatasettoDB(names,true);
 	}
 
-		
+
    public static void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
-		
+
 		if (names.size() == 3) {
 			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 
 			/*create csv table*/
 			if(!sqlQueryExecutor.isTableExists(names.get(0))){
-				
+
 				/*insert zenvisage_metafilelocation*/
 				String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
 						"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"');";
@@ -119,21 +119,21 @@ public class ZvMain {
 				} else {
 					System.out.println("Metafilelocation already exists!");
 				}
-				
+
 				/*insert zenvisage_metatable*/
-				
+
 				if(sqlQueryExecutor.insert(schemeToMetatable.schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
 					System.out.println("MetaType Data successfully inserted into Postgres");
 				} else {
 					System.out.println("MetaType already exists!");
 				}
-				
+
 				/*Create database*/
 				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
 				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
 				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " table from "+names.get(1));
 				System.out.println("Successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
-				
+
 			} else if(overwrite) {//
 				sqlQueryExecutor.dropTable(names.get(0));
 				sqlQueryExecutor.createTable(schemeToMetatable.schemeFileToCreatTableSQL(names.get(2), names.get(0)));
@@ -142,15 +142,15 @@ public class ZvMain {
 			}
 
 			//new Database(names.get(0), names.get(2), names.get(1), true);
-			
+
 		}
-		
+
 	}
-	
+
 
 
    /**
-    * 
+    *
     * @param zqlQuery Receives as a string the JSON format of a ZQLTable
     * @return String representing JSON format of Result (output of running ZQLTable through our query graph)
     * @throws IOException
@@ -212,23 +212,28 @@ public class ZvMain {
 	 */
 	public String runSimilaritySearch(String zvQuery) throws InterruptedException, IOException {
 		String result = "";
-		
+
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
 	   ZQLParser parser = new ZQLParser();
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
-	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
-		
+	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+
 		return result;
 	}
-	
+
 	private ZQLTable createSimilairtySearchTable(ZvQuery args) {
 		ZQLTable table = new ZQLTable();
 		List<ZQLRow> rows = new ArrayList<ZQLRow>();
-		
+
 		Name name1 = new Name();
 		name1.setName("f1");
-		
+
 		return null;
+	}
+
+	public String runCreateClasses(String query) throws IOException{
+    DynamicClass args = new ObjectMapper().readValue(query,DynamicClass.class);
+    return "";
 	}
 
 
@@ -374,7 +379,7 @@ public class ZvMain {
 	public String outlier(String method,String sql,String outliercount) throws IOException{
 		return readFile();
 	}
-	
+
 	LinkedHashMap<String, LinkedHashMap<Float, Float>> cleanUpDataWithAllZeros(LinkedHashMap<String, LinkedHashMap<Float, Float>> output) {
 		List<String> toRemove = new ArrayList<String>();
 		for (String s : output.keySet()) {
