@@ -50,13 +50,13 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody
 	public String createClasses(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
-    StringBuilder stringBuilder = new StringBuilder();
-    Scanner scanner = new Scanner(request.getInputStream());
-    while (scanner.hasNextLine()) {
-    	stringBuilder.append(scanner.nextLine());
-    }
-    String body = stringBuilder.toString();
-    return zvMain.runCreateClasses(body);
+	    StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	    	stringBuilder.append(scanner.nextLine());
+	    }
+	    String body = stringBuilder.toString();
+	    return zvMain.runCreateClasses(body);
 	}
 
 //    /* Will be obsolete after separated calls*/
