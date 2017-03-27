@@ -31,7 +31,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       }
     }
 
-    $http.get('/zv/createClasses', query
+    $http.post('/zv/createClasses', query
     ).then(
         function (response) {
           console.log("success: ", response);
