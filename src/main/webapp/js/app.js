@@ -18,18 +18,23 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
 
   $scope.createClasses = function() {
     var query = {};
+    var classList = [];
     for (i = 1; i < 5; i++) {
       key = $("#class-row-" + i + "\ > div").find(":selected").text();
       val = $("#class-row-" + i + "\ > div > input")[0].value
       if (val && key)
       {
+        var keyval = {};
         var min = globalDatasetInfo["yAxisColumns"][key]["min"]
         var max = globalDatasetInfo["yAxisColumns"][key]["max"]
         var replacedMin = val.replace("min", min);
         var replacedMinMax = replacedMin.replace("max", max);
-        query[key] = "[" + replacedMinMax + "]";
+        keyval["name"] = key
+        keyval["values"] = JSON.parse("[" + replacedMinMax + "]");
+        classList.push(keyval);
       }
     }
+    query["classes"] = classList;
 
     $http.post('/zv/createClasses', query
     ).then(
