@@ -56,6 +56,10 @@ public class SchemeToMetatable {
 			createTableSQLBuilder.append(split1[0].toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(split2[0]) + ", ");
 			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
+		
+		//Adding dynamic_class column
+		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
+		
 		br.close();
 		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");
 //		System.out.println(createTableSQL);
@@ -70,28 +74,20 @@ public class SchemeToMetatable {
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
 		
 	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
-		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type, axis) VALUES ");
+		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
 		String sCurrentLine;
 		while ((sCurrentLine = br.readLine()) != null) {
 //			System.out.println(sCurrentLine);
 			String split1[] = sCurrentLine.split(":");
 			String split2[] = split1[1].split(",");
-			sql.append("('" + tablename + "', '" + split1[0].toLowerCase().replaceAll("-", "") + "', '" + split2[0] + "', '");
-			//getting axis
-            String axis="";
-              if(split2[2].equals("T")){
-                axis = "X";
-              }
-              if(split2[3].equals("T")){
-                axis = "Y";
-              }
-              if(split2[4].equals("T")){
-                axis = "Z";
-              }
-            sql.append(axis+ "'), ");
+			sql.append("('" + tablename + "', '" + split1[0].toLowerCase().replaceAll("-", "") + "', '" + split2[0] + "'), ");
 			createTableSQLBuilder.append(split1[0].toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(split2[0]) + ", ");
 			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
+		
+		//Adding dynamic_class column
+		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
+				
 		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
 		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");

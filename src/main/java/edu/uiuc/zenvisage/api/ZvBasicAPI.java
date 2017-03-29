@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
-import edu.uiuc.zenvisage.service.FindTopKClasses;
 import edu.uiuc.zenvisage.service.ZvMain;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 
@@ -45,7 +44,6 @@ public class ZvBasicAPI {
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
 		zvMain.fileUpload(request, response);
 	}
-
 
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody
@@ -86,6 +84,7 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
+	    System.out.println("Representative:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 
@@ -112,16 +111,15 @@ public class ZvBasicAPI {
 	        stringBuilder.append(scanner.nextLine());
 	    }
 
-	     String body = stringBuilder.toString();
-	     // FindTopKClasses findTopKClasses = new FindTopKClasses(body);
-	     // findTopKClasses.findtopKClasses();
-	    //System.out.println("Draw query output:"+body);
+	    String body = stringBuilder.toString();
+
+
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
-	public String getFindTopKClassesDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
+	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
 //		System.out.println(arg);
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 	}
@@ -164,19 +162,27 @@ public class ZvBasicAPI {
 		return outputGraphExecutor;
 	}
 
-//	@RequestMapping(value = "/findbestclass", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String findbestclass(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
-//		FindTopKClasses findTopKClasses = new FindTopKClasses();
-//		String output= findTopKClasses.findtopKClasses(arg);
-//		return output;
-//	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
 	public String test(@RequestParam(value="query") String arg) {
 		return "Test successful:" + arg;
 	}
+	
+	@RequestMapping(value = "/dynamicClassCreation", method = RequestMethod.POST)
+	@ResponseBody
+	public String dynamicClassCreation(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		StringBuilder stringBuilder = new StringBuilder();
+	    @SuppressWarnings("resource")
+		Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
 
+	    String body = stringBuilder.toString();
+
+
+		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
+	}
 
 }
