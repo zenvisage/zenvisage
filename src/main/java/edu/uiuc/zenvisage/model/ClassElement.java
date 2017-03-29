@@ -1,12 +1,26 @@
 package edu.uiuc.zenvisage.model;
-import java.util.ArrayList;
 
 public class ClassElement {
 
 	public String name;
-	public Float[][] values;
+	public float[][] values;
 
 	public ClassElement() {
-		// TODO Auto-generated constructor stub
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
+	
+	public float[][] getValues(){
+		return this.values;
+	}
+	
+	public void setFloat(float[][] values){
+		this.values = values;
 	}
 }

@@ -6,6 +6,14 @@ public class DynamicClass {
 	public ClassElement[] classes;
 
 	public DynamicClass() {
-		// TODO Auto-generated constructor stub
 	}
+	
+	public ClassElement[] getClassElement(){
+		return classes;
+	}
+	
+	public void setClassElement(ClassElement[] classes){
+		this.classes = classes;
+	}
+	
 }

@@ -168,21 +168,5 @@ public class ZvBasicAPI {
 	public String test(@RequestParam(value="query") String arg) {
 		return "Test successful:" + arg;
 	}
-	
-	@RequestMapping(value = "/dynamicClassCreation", method = RequestMethod.POST)
-	@ResponseBody
-	public String dynamicClassCreation(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		StringBuilder stringBuilder = new StringBuilder();
-	    @SuppressWarnings("resource")
-		Scanner scanner = new Scanner(request.getInputStream());
-	    while (scanner.hasNextLine()) {
-	        stringBuilder.append(scanner.nextLine());
-	    }
-
-	    String body = stringBuilder.toString();
-
-
-		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
-	}
 
 }

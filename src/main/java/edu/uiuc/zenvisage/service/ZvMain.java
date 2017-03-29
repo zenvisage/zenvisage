@@ -219,7 +219,6 @@ public class ZvMain {
 		   System.out.println("Done");
 		   return result;
 	   } catch (SQLException e) {
-		   // TODO Auto-generated catch block
 		   e.printStackTrace();
 		   return "";
 	   }
@@ -291,7 +290,7 @@ public class ZvMain {
 		String result = "";
 		
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
-	   ZQLParser parser = new ZQLParser();
+	    ZQLParser parser = new ZQLParser();
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
 	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
 		
@@ -309,7 +308,7 @@ public class ZvMain {
 	}
 
 	public String runCreateClasses(String query) throws IOException{
-	    DynamicClass args = new ObjectMapper().readValue(query,DynamicClass.class);
+	    DynamicClass args = new ObjectMapper().readValue(query, DynamicClass.class);
 	    return "";
 	}
 	
@@ -619,13 +618,6 @@ public class ZvMain {
 	    } finally {
 	        br.close();
 	    }
-	}
-	
-	public String processDynamicClass(String query, String method) throws org.codehaus.jackson.JsonParseException, JsonMappingException, IOException{
-
-
-		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		 return "";
 	}
 
 }
