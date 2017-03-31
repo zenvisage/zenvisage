@@ -16,7 +16,7 @@ public class ClassCreationTest {
 	
 	@Test
 	public void TestInputParsing() {
-		String input = "{\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,100],[100,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,500],[500,1457.0552]]}]}";
+		String input = "{\"dataset\":\"weather\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,100],[100,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,500],[500,1457.0552]]}]}";
 	    
 		try {
 			ZvMain zvMain = new ZvMain();

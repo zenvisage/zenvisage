@@ -34,6 +34,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         classList.push(keyval);
       }
     }
+    query["dataset"] = getSelectedDataset();
     query["classes"] = classList;
 
     $http.post('/zv/createClasses', query

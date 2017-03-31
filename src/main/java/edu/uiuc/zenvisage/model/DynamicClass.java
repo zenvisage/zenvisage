@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class DynamicClass {
 	
+	public String dataset;
 	public ClassElement[] classes;
 
 	public DynamicClass() {
