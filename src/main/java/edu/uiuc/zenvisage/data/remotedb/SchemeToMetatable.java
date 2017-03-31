@@ -46,6 +46,7 @@ public class SchemeToMetatable {
 //		InputStream is = getClass().getResourceAsStream(filePath);
 		tablename = tablename.toLowerCase();
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
+		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
 		
 	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
 		String sCurrentLine;
@@ -72,6 +73,7 @@ public class SchemeToMetatable {
 //		InputStream is = getClass().getResourceAsStream(filePath);
 		tablename = tablename.toLowerCase();
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
+		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
 		
 	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");

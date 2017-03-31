@@ -71,8 +71,6 @@ public class SQLQueryExecutor {
 	      return ret;
 	}
 	
-	
-
 	public int createTable(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      System.out.println(sQLQuery);
@@ -448,7 +446,8 @@ public class SQLQueryExecutor {
 			System.out.println(rs.getString(1));
 		}
 		
-		String sql1 = "UPDATE " + dc.dataset + " SET dynamic_class = '" + ret.get(0) + "'";
+		
+		String sql1 = "UPDATE " + dc.dataset + " SET dynamic_class = " + ret.get(0);
 		
 		System.out.println(sql1);
 		Statement stmt = c.createStatement();
