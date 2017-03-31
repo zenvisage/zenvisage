@@ -18,6 +18,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
+import edu.uiuc.zenvisage.model.DynamicClass;
 
 
 /**
@@ -423,6 +424,11 @@ public class SQLQueryExecutor {
 		}
 		return ret;
 	}
+	
+	public void persistDynamicClass(){
+		DynamicClass dc = new DynamicClass();
+		
+	}
 
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
@@ -458,5 +464,7 @@ public class SQLQueryExecutor {
 	public void setVisualComponentList(VisualComponentList visualComponentList) {
 		this.visualComponentList = visualComponentList;
 	}
+	
+	
 
 }

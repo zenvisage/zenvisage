@@ -16,5 +16,4 @@ public class DynamicClass {
 	public void setClassElement(ClassElement[] classes){
 		this.classes = classes;
 	}
-	
 }
