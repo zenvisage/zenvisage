@@ -307,10 +307,11 @@ public class ZvMain {
 		return null;
 	}
 
-	public String runCreateClasses(String query) throws IOException{
-	    DynamicClass dC = new ObjectMapper().readValue(query, DynamicClass.class);
-	    
-	    return "";
+	public String runCreateClasses(String query) throws IOException, SQLException{
+	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
+	    SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+	    sqlQueryExecutor.persistDynamicClass(dc);
+	    return "Success";
 	}
 	
 	/* Will be obsolete when the new separated query method is utilized */

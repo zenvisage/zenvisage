@@ -425,9 +425,35 @@ public class SQLQueryExecutor {
 		return ret;
 	}
 	
-	public void persistDynamicClass(){
-		DynamicClass dc = new DynamicClass();
+	/**
+	 * Enumerate combinations of criteria of each classes, set all rows satisfy that combination a dynamic_class string
+	 * bp [0-10] [20-30] [40-50]
+	 * fp [0-10] [20-30]
+	 * ad [0-20] [30-40]
+	 * if we have bp [0-10] fp [20-30] ad not satisfied,
+	 * we mark dynamic_class string as  120, 
+	 * which means choose first criteria of bp, 
+	 * second criteria of fp and none of ad.
+	 * @throws SQLException 
+	 */
+	public void persistDynamicClass(DynamicClass dc) throws SQLException{
+		String sql0 = "Select column_name from information_schema.columns Where table_name='" + dc.dataset + "'";
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql0);
 		
+		//Get the List of all column names in this database
+		ArrayList<String> ret = new ArrayList<String>();
+		while(rs.next()){
+			ret.add(rs.getString(1));
+			System.out.println(rs.getString(1));
+		}
+		
+		String sql1 = "UPDATE " + dc.dataset + " SET dynamic_class = '" + ret.get(0) + "'";
+		
+		System.out.println(sql1);
+		Statement stmt = c.createStatement();
+		stmt.executeUpdate(sql1);
+	    stmt.close();
 	}
 
 	public static void main(String[] args) throws SQLException{
