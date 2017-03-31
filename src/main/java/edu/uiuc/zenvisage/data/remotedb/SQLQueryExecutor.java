@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.fileupload.FileItem;
 import org.postgresql.util.PSQLException;
@@ -19,6 +21,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
+import edu.uiuc.zenvisage.model.ClassElement;
 
 
 /**
@@ -436,23 +439,53 @@ public class SQLQueryExecutor {
 	 */
 	public void persistDynamicClass(DynamicClass dc) throws SQLException{
 		String sql0 = "Select column_name from information_schema.columns Where table_name='" + dc.dataset + "'";
-		Statement st = c.createStatement();
-		ResultSet rs = st.executeQuery(sql0);
+		Statement st0 = c.createStatement();
+		ResultSet rs0 = st0.executeQuery(sql0);
 		
 		//Get the List of all column names in this database
 		ArrayList<String> ret = new ArrayList<String>();
-		while(rs.next()){
-			ret.add(rs.getString(1));
-			System.out.println(rs.getString(1));
+		while(rs0.next()){
+			ret.add(rs0.getString(1));
 		}
+		ret.remove(0);//remove ID
 		
+		st0.close();
+
+		Map<String, ClassElement> classesMap = dc.getDCHashMap();
 		
-		String sql1 = "UPDATE " + dc.dataset + " SET dynamic_class = " + ret.get(0);
+		Statement st1 = c.createStatement();
+		String sql1 = "Select * from " + dc.dataset;
+		ResultSet rs1 = st1.executeQuery(sql1);
 		
-		System.out.println(sql1);
-		Statement stmt = c.createStatement();
-		stmt.executeUpdate(sql1);
-	    stmt.close();
+		Statement st2= c.createStatement();
+		
+		//Get the all column value for a particular row in this database
+		//for each row
+		while(rs1.next()){
+			long id = Long.parseLong(rs1.getString(1));
+			//System.out.println(id);
+			StringBuilder dynamic_class = new StringBuilder();
+			//for each column except for ID
+			for(int i = 0; i < ret.size();i++){
+				String curColumn = ret.get(i);
+				//if column in queryMap
+				if(classesMap.containsKey(curColumn)){
+					//getInterval
+					float input = Float.parseFloat(rs1.getString(i+2));
+					//System.out.println(input);
+					int interval = classesMap.get(curColumn).getInterval(input);
+					dynamic_class.append(interval);
+				}
+			}
+			
+			
+			
+			//update dynamic_class for this row
+			String sql2 = "UPDATE " + dc.dataset + " SET dynamic_class = '" + dynamic_class.toString() + "' Where id = " + id;
+			st2.executeUpdate(sql2);
+		}
+		st1.close();
+	    st2.close();
 	}
 
 	public static void main(String[] args) throws SQLException{

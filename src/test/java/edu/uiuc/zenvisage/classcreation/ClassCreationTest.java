@@ -16,13 +16,19 @@ public class ClassCreationTest {
 	
 	@Test
 	public void TestInputParsing() throws SQLException {
-		String input = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,100],[100,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,500],[500,1457.0552]]}]}";
+		long startTime = System.currentTimeMillis();
+		
+		String input = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,200],[201,2000]]},{\"name\":\"pctincreasing\",\"values\":[[0,90],[90,100]]}]}";
 	    
 		try {
 			ZvMain zvMain = new ZvMain();
 			System.out.println("testing basic input parsing");
 			String output = zvMain.runCreateClasses(input);
 			System.out.println("Output");
+			long endTime  = System.currentTimeMillis();
+			
+			long totalTime = endTime - startTime;
+			System.out.println("TotalTime:"+totalTime/1000);
 			
 			//assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
