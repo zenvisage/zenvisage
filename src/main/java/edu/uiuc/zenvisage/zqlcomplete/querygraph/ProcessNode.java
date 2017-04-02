@@ -21,7 +21,7 @@ import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
  */
 public class ProcessNode extends QueryNode {
 
-	private Processe process;
+	protected Processe process;
 	
 	public Processe getProcess() {
 		return process;
@@ -29,11 +29,6 @@ public class ProcessNode extends QueryNode {
 
 	public void setProcess(Processe process) {
 		this.process = process;
-	}
-
-	public ProcessNode(Processe process_) {
-		super();
-		process = process_;
 	}
 	
 	public ProcessNode(Processe process_, LookUpTable table) {

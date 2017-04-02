@@ -14,11 +14,14 @@ import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
 import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
+import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
 
 public class ScatterVCNode extends VisualComponentNode {
 
 	private ScatterPlotQuery query;
+	private Map<String, ScatterResult> data = new HashMap<String, ScatterResult>();
+	
 	
 	public ScatterVCNode(ScatterPlotQuery query, VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
 		super(vc, table, sqlQueryExecutor, sketch);
@@ -29,11 +32,13 @@ public class ScatterVCNode extends VisualComponentNode {
 	@Override
 	public void execute() {
 		// execute scatter
+		
 		// data fetcher
-		Map<String, ScatterResult> output = getScatterData(query);
-		Result finalOutput = new Result();
-		// data transformer
-		ScatterRep.compute(output, query, finalOutput);
+		data = getScatterData(query);
+		// data transformer??
+
+		// task processor: (eg find the charts that match the scatter data in these rectangles)
+		
 	}
 	
 	private Map<String, ScatterResult> getScatterData(ScatterPlotQuery query) {
