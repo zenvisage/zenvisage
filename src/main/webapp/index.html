@@ -192,6 +192,22 @@
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
                 <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button>
+
+                <div ng-show="zqltable">                
+                  <div class="btn-group">
+                    <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                    <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
+                    <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
+                    <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>-->
+                    <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
+                    <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
+                    <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>
+                  </div>
+                  <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
+                </div>
+
+
               </div>
             </div>
 

@@ -82,6 +82,18 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     //tree.addParent(1);
   };
 
+  $scope.$on('insertRowhelper', function(event){
+    var table = $("#zql-table > tbody")[0];
+    var rowCount = table.rows.length;
+    var rowNumber = (rowCount+1).toString();
+    //$("#zql-table").append
+    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
+    $compile($el)($scope);
+    //tree.addLeaf(count);
+    //tree.addParent(1);
+  });
+
   $scope.addProcessRow = function () {
     var table = $("#zql-table > tbody")[0];
     var rowCount = table.rows.length;
@@ -93,18 +105,40 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     //tree.addParent(count);
   };
 
-  $scope.$on('removeAndInsertRows', function( event, args ) {
+  $scope.$on('insertProcessRowhelper', function (event) {
     var table = $("#zql-table > tbody")[0];
     var rowCount = table.rows.length;
-    for (i = 1; i < rowCount; i++) {
-      $("#table-row-" + i).remove();
+    var rowNumber = (rowCount+1).toString();
+    //$("#zql-table").append
+    $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+    //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
+    $compile($el)($scope);
+    //tree.addParent(count);
+  });
+
+  $scope.$on('removeAndInsertRowshelper', function( event, args ) {
+    var table = $("#zql-table > tbody")[0];
+    var rowCount = table.rows.length;
+
+    for (i = rowCount; i > 0; i--) {
+      // $("#table-row-" + i).remove();
+      table.deleteRow(i-1)
     }
 
-    for (i = 1; i < args.n; i++) {
+    for (i = 1; i <= args.n; i++) {
       var rowNumber = (i).toString();
-      $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+      
+      // if (i+1 != args.n){
+        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+      // }
+      
       //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
       //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
+
+      // else{
+      //   $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
+      // }
+
       $compile($el)($scope);
   }});
 
@@ -361,9 +395,19 @@ app.controller('options-controller', [
       }
     });
 
-    $scope.removerAndInsertRows = function( n ){
-      $scope.$broadcast('removeAndInsertRows', {n} );
+    $scope.removeAndInsertRows = function( n ){
+      $scope.$broadcast('removeAndInsertRowshelper', {n} );
     }
+
+    $scope.insertRow = function(){
+      $scope.$broadcast('insertRowhelper');
+    }
+
+    $scope.insertProcessRow = function(){
+      $scope.$broadcast('insertProcessRowhelper');
+    }
+
+
 
     // TOP K
     $scope.getTopK = function()
@@ -386,7 +430,7 @@ app.controller('options-controller', [
     }
 
     $scope.clearQuery = function() {
-      $scope.removerAndInsertRows( 1 );
+      $scope.removeAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("")
       $($( ".tabler" )[0]).find(".x-val").val("")
       $($( ".tabler" )[0]).find(".y-val").val("")
@@ -396,108 +440,123 @@ app.controller('options-controller', [
     }
 
     $scope.populateWeatherQuery1 = function() {
-      $scope.removerAndInsertRows( 3 );
+      
+      $scope.removeAndInsertRows( 1 );
+
+      // $scope.insertRow()
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
       $($( ".tabler" )[0]).find(".constraints").val("location='Melbourne'")
-      $($( ".tabler" )[0]).find(".process").val("")
-
+      // $($( ".tabler" )[0]).find(".process").val("")
+      $scope.insertRow()
       $($( ".tabler" )[1]).find(".name").val("f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val(" z2<-'location'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v2<-argmin_{z2}[k=5]DEuclidean(f1,f2)")
 
-      $($( ".tabler" )[2]).find(".name").val("*f3")
-      $($( ".tabler" )[2]).find(".x-val").val("x1")
-      $($( ".tabler" )[2]).find(".y-val").val("y1")
-      $($( ".tabler" )[2]).find(".z-val").val("v2")
-      $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".process").val("")
+      $scope.insertProcessRow()
+      $($( ".tabler" )[2]).find(".process").val("v2<-argmin_{z2}[k=5]DEuclidean(f1,f2)")
+
+      $scope.insertRow()
+      $($( ".tabler" )[3]).find(".name").val("*f3")
+      $($( ".tabler" )[3]).find(".x-val").val("x1")
+      $($( ".tabler" )[3]).find(".y-val").val("y1")
+      $($( ".tabler" )[3]).find(".z-val").val("v2")
+      $($( ".tabler" )[3]).find(".constraints").val("")
+
+      
+      // $($( ".tabler" )[2]).find(".process").val("")
+
     }
 
     $scope.populateWeatherQuery2 = function() {
-      $scope.removerAndInsertRows( 3 );
+      $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
       $($( ".tabler" )[0]).find(".constraints").val("location='Melbourne'")
-      $($( ".tabler" )[0]).find(".process").val("")
+      // $($( ".tabler" )[0]).find(".process").val("")
 
       $($( ".tabler" )[1]).find(".name").val("f2")
       $($( ".tabler" )[1]).find(".x-val").val("x1<-{'month'}")
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val(" z2<-'location'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v2<-argmax_{z2}[k=5]DEuclidean(f1,f2)")
 
-      $($( ".tabler" )[2]).find(".name").val("*f3")
-      $($( ".tabler" )[2]).find(".x-val").val("x1")
-      $($( ".tabler" )[2]).find(".y-val").val("y1")
-      $($( ".tabler" )[2]).find(".z-val").val("v2")
-      $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".process").val("")
+      $scope.insertProcessRow()
+      $($( ".tabler" )[2]).find(".process").val("v2<-argmax_{z2}[k=5]DEuclidean(f1,f2)")
+
+      $scope.insertRow()
+      $($( ".tabler" )[3]).find(".name").val("*f3")
+      $($( ".tabler" )[3]).find(".x-val").val("x1")
+      $($( ".tabler" )[3]).find(".y-val").val("y1")
+      $($( ".tabler" )[3]).find(".z-val").val("v2")
+      $($( ".tabler" )[3]).find(".constraints").val("")
+      // $($( ".tabler" )[3]).find(".process").val("")
     }
 
     $scope.populateWeatherQuery3 = function() {
-      $scope.removerAndInsertRows( 2 );
+      $scope.removeAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'temperature'}")
       $($( ".tabler" )[0]).find(".z-val").val(" z1<-'location'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
-      $($( ".tabler" )[0]).find(".process").val("v1<-argmax_{z1}[k=5]T(f1)")
 
-      $($( ".tabler" )[1]).find(".name").val("*f2")
-      $($( ".tabler" )[1]).find(".x-val").val("x1")
-      $($( ".tabler" )[1]).find(".y-val").val("y1")
-      $($( ".tabler" )[1]).find(".z-val").val("v1")
-      $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("")
-    }
+      $scope.insertProcessRow()
+      $($( ".tabler" )[1]).find(".process").val("v1<-argmax_{z1}[k=5]T(f1)")
 
-    $scope.populateQuery1 = function() {
-      $scope.removerAndInsertRows( 1 );
-      $($( ".tabler" )[0]).find(".name").val("*f1")
-      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
-      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
-      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
-      $($( ".tabler" )[1]).find(".constraints").val("state='CA'")
-      $($( ".tabler" )[0]).find(".process").val("")
-    }
-
-    $scope.populateQuery2 = function() {
-
-      $scope.removerAndInsertRows( 3 );
-      $($( ".tabler" )[0]).find(".name").val("f1")
-      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
-      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
-      $($( ".tabler" )[0]).find(".z-val").val(" z1<-'state'.*")
-      $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
-      $($( ".tabler" )[0]).find(".process").val("")
-
-      $($( ".tabler" )[1]).find(".name").val("f2")
-      $($( ".tabler" )[1]).find(".x-val").val("x1")
-      $($( ".tabler" )[1]).find(".y-val").val("y1")
-      $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.*")
-      $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v2<-argmin_{z2}[k=7]DEuclidean(f1,f2)")
-
-      $($( ".tabler" )[2]).find(".name").val("*f3")
+      $scope.insertRow()
+      $($( ".tabler" )[2]).find(".name").val("*f2")
       $($( ".tabler" )[2]).find(".x-val").val("x1")
       $($( ".tabler" )[2]).find(".y-val").val("y1")
-      $($( ".tabler" )[2]).find(".z-val").val("v2")
+      $($( ".tabler" )[2]).find(".z-val").val("v1")
       $($( ".tabler" )[2]).find(".constraints").val("")
       $($( ".tabler" )[2]).find(".process").val("")
     }
 
+    // $scope.populateQuery1 = function() {
+    //   $scope.removeAndInsertRows( 1 );
+    //   $($( ".tabler" )[0]).find(".name").val("*f1")
+    //   $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+    //   $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+    //   $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+    //   $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
+    //   // $($( ".tabler" )[0]).find(".process").val("")
+    // }
+
+    // $scope.populateQuery2 = function() {
+
+    //   $scope.removeAndInsertRows( 3 );
+    //   $($( ".tabler" )[0]).find(".name").val("f1")
+    //   $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+    //   $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+    //   $($( ".tabler" )[0]).find(".z-val").val(" z1<-'state'.*")
+    //   $($( ".tabler" )[0]).find(".constraints").val("state='CA'")
+    //   $($( ".tabler" )[0]).find(".process").val("")
+
+    //   $($( ".tabler" )[1]).find(".name").val("f2")
+    //   $($( ".tabler" )[1]).find(".x-val").val("x1")
+    //   $($( ".tabler" )[1]).find(".y-val").val("y1")
+    //   $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.*")
+    //   $($( ".tabler" )[1]).find(".constraints").val("")
+    //   $($( ".tabler" )[1]).find(".process").val("v2<-argmin_{z2}[k=7]DEuclidean(f1,f2)")
+
+    //   $($( ".tabler" )[2]).find(".name").val("*f3")
+    //   $($( ".tabler" )[2]).find(".x-val").val("x1")
+    //   $($( ".tabler" )[2]).find(".y-val").val("y1")
+    //   $($( ".tabler" )[2]).find(".z-val").val("v2")
+    //   $($( ".tabler" )[2]).find(".constraints").val("")
+    //   $($( ".tabler" )[2]).find(".process").val("")
+    // }
+
     $scope.populateQuery3 = function() {
 
-      $scope.removerAndInsertRows( 3 );
+      $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year','month'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice','listingprice'}")
@@ -510,18 +569,21 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z2<-'state'.'NY'")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("x2,y2<-argmin_{x1,y1}[k=1]DEuclidean(f1,f2)")
 
-      $($( ".tabler" )[2]).find(".name").val("*f3")
-      $($( ".tabler" )[2]).find(".x-val").val("x2")
-      $($( ".tabler" )[2]).find(".y-val").val("y2")
-      $($( ".tabler" )[2]).find(".z-val").val("'state'.{'CA','NY'}")
-      $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".process").val("")
+      $scope.insertProcessRow()
+      $($( ".tabler" )[2]).find(".process").val("x2,y2<-argmin_{x1,y1}[k=1]DEuclidean(f1,f2)")
+
+      $scope.insertRow()
+      $($( ".tabler" )[3]).find(".name").val("*f3")
+      $($( ".tabler" )[3]).find(".x-val").val("x2")
+      $($( ".tabler" )[3]).find(".y-val").val("y2")
+      $($( ".tabler" )[3]).find(".z-val").val("'state'.{'CA','NY'}")
+      $($( ".tabler" )[3]).find(".constraints").val("")
+      $($( ".tabler" )[3]).find(".process").val("")
     }
 
     $scope.populateQuery4 = function() {
-      $scope.removerAndInsertRows( 3 );
+      $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
@@ -534,19 +596,22 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y1")
       $($( ".tabler" )[1]).find(".z-val").val("z2<-'city'.*")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v2<-argmax_{z2}[k=3]DEuclidean(f1,f2)")
 
-      $($( ".tabler" )[2]).find(".name").val("*f3")
-      $($( ".tabler" )[2]).find(".x-val").val("x1")
-      $($( ".tabler" )[2]).find(".y-val").val("y1")
-      $($( ".tabler" )[2]).find(".z-val").val("v2")
-      $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".process").val("")
+      $scope.insertProcessRow()
+      $($( ".tabler" )[2]).find(".process").val("v2<-argmax_{z2}[k=3]DEuclidean(f1,f2)")
+
+      $scope.insertRow()
+      $($( ".tabler" )[3]).find(".name").val("*f3")
+      $($( ".tabler" )[3]).find(".x-val").val("x1")
+      $($( ".tabler" )[3]).find(".y-val").val("y1")
+      $($( ".tabler" )[3]).find(".z-val").val("v2")
+      $($( ".tabler" )[3]).find(".constraints").val("")
+      $($( ".tabler" )[3]).find(".process").val("")
     }
 
     $scope.populateQuery5 = function() {
       //Pairwise example
-      $scope.removerAndInsertRows( 3 );
+      $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
       $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
@@ -559,14 +624,17 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".y-val").val("y2<-{'listingprice'}")
       $($( ".tabler" )[1]).find(".z-val").val("z1")
       $($( ".tabler" )[1]).find(".constraints").val("")
-      $($( ".tabler" )[1]).find(".process").val("v1<-argmin_{z1}[k=7]DEuclidean(f1,f2)")
 
-      $($( ".tabler" )[2]).find(".name").val("*f3")
-      $($( ".tabler" )[2]).find(".x-val").val("x1")
-      $($( ".tabler" )[2]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
-      $($( ".tabler" )[2]).find(".z-val").val("v1")
-      $($( ".tabler" )[2]).find(".constraints").val("")
-      $($( ".tabler" )[2]).find(".process").val("")
+      $scope.insertProcessRow()
+      $($( ".tabler" )[2]).find(".process").val("v1<-argmin_{z1}[k=7]DEuclidean(f1,f2)")
+
+      $scope.insertRow()
+      $($( ".tabler" )[3]).find(".name").val("*f3")
+      $($( ".tabler" )[3]).find(".x-val").val("x1")
+      $($( ".tabler" )[3]).find(".y-val").val("y3<-{'soldprice','listingprice'}")
+      $($( ".tabler" )[3]).find(".z-val").val("v1")
+      $($( ".tabler" )[3]).find(".constraints").val("")
+      $($( ".tabler" )[3]).find(".process").val("")
     }
     $scope.drawFunction = function() {
       var xval = [];
