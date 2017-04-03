@@ -26,8 +26,8 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 public class VisualComponentNode extends QueryNode{
 
 	private VisualComponentQuery vc;
-	private SQLQueryExecutor sqlQueryExecutor;
-	private String db;
+	protected SQLQueryExecutor sqlQueryExecutor;
+	protected String db;
 	private Sketch sketch;
 	
 	// private vc output
@@ -119,7 +119,7 @@ public class VisualComponentNode extends QueryNode{
 		}
 
 		// call SQL backend
-		ZQLRow row = buildRowFromNode();
+		ZQLRow row = buildRowFromNode("AVG");
 		try {
 			// run zqlquery on this ZQLRow on the database table db
 			if(this.db == null || this.db.equals("")) {
@@ -225,7 +225,7 @@ public class VisualComponentNode extends QueryNode{
 	 * Column hs no variable name, but values. Can use as is
 	 * Column has no variable name, and no value. Send as is (columns may be optional)
 	 */
-	public ZQLRow buildRowFromNode() {
+	protected ZQLRow buildRowFromNode(String aggregation) {
 
 		XColumn x = vc.getX();
 		// x1 (variable, no values)
@@ -291,7 +291,7 @@ public class VisualComponentNode extends QueryNode{
 		System.out.println(z.getVariable());
 		//System.out.println(z.getValues());
 		System.out.println(z.getAttribute());
-		vc.getViz().setVariable("AVG");
+		vc.getViz().setVariable(aggregation);
 		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)
 		return result;

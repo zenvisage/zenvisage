@@ -1,5 +1,6 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +9,11 @@ import java.util.Map;
 import org.roaringbitmap.IntIterator;
 import org.roaringbitmap.RoaringBitmap;
 
+import edu.uiuc.zenvisage.data.remotedb.Points;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
@@ -16,6 +21,7 @@ import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 public class ScatterVCNode extends VisualComponentNode {
 
@@ -58,27 +64,41 @@ public class ScatterVCNode extends VisualComponentNode {
 	
 	private Map<String, ScatterResult> getScatterData(ScatterPlotQuery query) {
 		Map<String, ScatterResult> result = new HashMap<String, ScatterResult>();
-		String yAxis = query.yAxis;
-		String xAxis = query.xAxis;
-		String zAxis = query.zAxis;
-		// TODO: convert to postgres format
-		List<String> yValues = null; //database.getUnIndexedColumn(yAxis);
-		List<String> xValues = null; //database.getUnIndexedColumn(xAxis);
-		Map<String,RoaringBitmap> zValues = null; // database.getIndexedColumn(zAxis);
-		if (zValues == null) return null;
-		List<String> zKeys = new ArrayList<String>(zValues.keySet());
-		for (String zKey : zKeys) {
-			List<Tuple> points = new ArrayList<Tuple>();
-			RoaringBitmap bitset = zValues.get(zKey);
-			IntIterator it = bitset.getIntIterator();
-			while (it.hasNext()) {
-				int row = it.next();
-				Tuple tuple = new Tuple(Double.parseDouble(xValues.get(row)),Double.parseDouble(yValues.get(row)));
-				points.add(tuple);
+		
+		// old method: grab info from ScatterPlotQuery
+		//String yAxis = query.yAxis; // eg year, yValues = [2001, 2002, ...]
+		//String xAxis = query.xAxis; // eg soldPrice, xValues = [10000, 12330, ...]
+		//String zAxis = query.zAxis; // eg State, zValues = ['CA', 'MN', ...]
+		
+		// new method: grab info from the VisualComponentQuery
+		// call SQL backend (for scatter plot, no aggregation method)
+		ZQLRow row = buildRowFromNode("");
+		try {
+			// run zqlquery on this ZQLRow on the database table db
+			if(this.db == null || this.db.equals("")) {
+				// default case
+				sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
 			}
-			ScatterResult currResult = new ScatterResult(points,0,zKey);
-			result.put(zKey, currResult);
+			sqlQueryExecutor.ZQLQueryEnhanced(row, this.db);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
+		for (VisualComponent vc : vcList.getVisualComponentList()) {
+			String zValue = vc.getZValue().getStrValue();
+			Points points = vc.getPoints();
+			List<WrapperType> xValues = points.getXList();
+			List<WrapperType> yValues = points.getYList();
+			List<Tuple> tuples = new ArrayList<Tuple>();
+			for(int i = 0; i < points.getXList().size(); i++) {
+				Tuple tuple = new Tuple((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
+				tuples.add(tuple);
+			}
+			ScatterResult currResult = new ScatterResult(tuples,0,zValue);
+			result.put(zValue, currResult);
+			
+		}
+		
 		return result;
 	}
 }
