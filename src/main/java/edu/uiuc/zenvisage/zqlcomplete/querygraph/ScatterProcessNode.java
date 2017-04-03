@@ -21,21 +21,26 @@ public class ScatterProcessNode extends ProcessNode {
 		
 		this.state = State.RUNNING;
 		//
-		Result finalOutput = new Result();
+		Result output;
 		if(process.getMethod().equals("Rep")) {
-			scatterRepExecution();
+			output = scatterRepExecution();
 		} else if (process.getMethod().equals("Rank")) {
-			scatterRankExecution();
+			output = scatterRankExecution();
 		}
 		this.state = State.FINISHED;
 	}
 	
 	// currently data transform + task processing
-	private void scatterRepExecution() {
+	private Result scatterRepExecution() {
 		// lookup table the VCNode we depend on
+		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
+		Result output = new Result();
+		ScatterRep.compute(vcNode.getData(), vcNode.getQuery(), output);
+		return output;
 	}
 	
-	private void scatterRankExecution() {
+	private Result scatterRankExecution() {
 		// lookup table the VCNode we depend on	
+		return null;
 	}
 }

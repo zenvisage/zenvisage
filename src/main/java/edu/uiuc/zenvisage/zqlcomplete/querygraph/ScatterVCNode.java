@@ -22,7 +22,22 @@ public class ScatterVCNode extends VisualComponentNode {
 	private ScatterPlotQuery query;
 	private Map<String, ScatterResult> data = new HashMap<String, ScatterResult>();
 	
-	
+	public ScatterPlotQuery getQuery() {
+		return query;
+	}
+
+	public void setQuery(ScatterPlotQuery query) {
+		this.query = query;
+	}
+
+	public Map<String, ScatterResult> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, ScatterResult> data) {
+		this.data = data;
+	}
+
 	public ScatterVCNode(ScatterPlotQuery query, VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
 		super(vc, table, sqlQueryExecutor, sketch);
 		// TODO Auto-generated constructor stub
