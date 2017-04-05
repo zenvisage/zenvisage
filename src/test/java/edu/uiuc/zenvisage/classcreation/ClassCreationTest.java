@@ -18,13 +18,16 @@ public class ClassCreationTest {
 	public void TestInputParsing() throws SQLException {
 		long startTime = System.currentTimeMillis();
 		
-		String input = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,200],[201,2000]]},{\"name\":\"pctincreasing\",\"values\":[[0,90],[90,100]]}]}";
+		String input = "{\"dataset\":\"real_estate\",\"classes\":["
+				+ "{\"name\":\"soldpricepersqft\",\"values\":[[0,200],[201,2000]]},"
+				+ "{\"name\":\"pctincreasing\",\"values\":[[0,90],[90,100]]},"
+				+ "{\"name\":\"month\",\"values\":[[0,5],[5,10],[10,13]]}"
+				+ "]}";
 	    
 		try {
 			ZvMain zvMain = new ZvMain();
 			System.out.println("testing basic input parsing");
-			String output = zvMain.runCreateClasses(input);
-			System.out.println("Output");
+			zvMain.runCreateClasses(input);
 			long endTime  = System.currentTimeMillis();
 			
 			long totalTime = endTime - startTime;
