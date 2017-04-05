@@ -38,4 +38,10 @@ public class ClassElement {
 		}
 		return 0;
 	}
+	
+	public String getSQL(int i){
+		Arrays.sort(values[i]);
+		return this.name + " >= " + values[i][0] + " AND " 
+				+ this.name + " <= " + values[i][1];
+	}
 }

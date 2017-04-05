@@ -487,6 +487,18 @@ public class SQLQueryExecutor {
 		st1.close();
 	    st2.close();
 	}
+	
+	/**
+	 * Generating powerset of dynamic_classes 
+     * and then update with one query instead of update each line with a query
+	 * @param dc
+	 * @throws SQLException
+	 */
+	public void persistDynamicClassPowerSetMethod(DynamicClass dc) throws SQLException{
+		Statement st= c.createStatement();
+		String sql0 = "UPDATE " + dc.dataset + " SET dynamic_class = '" + "dynamic_class" + "' Where ";
+		st.executeUpdate(sql0);
+	}
 
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
