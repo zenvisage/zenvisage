@@ -50,9 +50,11 @@ public class DynamicClass {
 		List<String> updateList = new ArrayList<String>();
 		List<String> sqlList = new ArrayList<String>();
 		GeneratePermutations(classes, updateList, sqlList, 0, "", "");
-		for(int i = 0; i < updateList.size(); i++){
+		int i = 0;
+		for(; i < updateList.size()-1; i++){
 			ret.append("WHEN "+ sqlList.get(i) + " THEN '" + updateList.get(i) + "'\n");
 		}
+		ret.append("ELSE '" + updateList.get(i) + "'\n");
 		ret.append("END AS dynamic_class FROM " + this.dataset + ";");
 		return ret.toString();
 	}
@@ -66,14 +68,20 @@ public class DynamicClass {
 	       return;
 	     }
 
-	    for(int i = -1; i < classes[depth].values.length; i++)
+	    for(int i = classes[depth].values.length-1; i >= -1 ; i--)
 	    {
 	    	if( i == -1)
 	    		GeneratePermutations(classes, updateList, sqlList, depth + 1, current + i + ".", currentSQL);
-	    	else
-	    		GeneratePermutations(classes, updateList, sqlList, depth + 1, current + i + ".", currentSQL
-	    				+ classes[depth].name + " >= " + classes[depth].values[i][0]
-	    				+ " AND " + classes[depth].name + " <= " + classes[depth].values[i][1]);
+	    	else {
+	    		String addon = classes[depth].name + " >= " + classes[depth].values[i][0]
+	    				+ " AND " + classes[depth].name + " < " + classes[depth].values[i][1];
+	    		if(currentSQL.equals("")){
+	    			GeneratePermutations(classes, updateList, sqlList, depth + 1, current + i + ".", currentSQL + addon);
+	    		}else{
+	    			GeneratePermutations(classes, updateList, sqlList, depth + 1, current + i + ".", currentSQL + " AND " + addon);
+	    		}
+	    		
+	    	}
 	    }
 	}
 }
