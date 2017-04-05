@@ -43,19 +43,20 @@ public class DynamicClass {
 	 * @throws SQLException 
 	 * http://stackoverflow.com/questions/6446250/sql-statement-with-multiple-sets-and-wheres
 	 * http://stackoverflow.com/questions/27800119/postgresql-case-end-with-multiple-conditions
+	 * http://dba.stackexchange.com/questions/39815/use-case-to-select-columns-in-update-query
 	 */
 
 	public String getSQL(){
-		StringBuilder ret = new StringBuilder("Select *, CASE \n");
+		StringBuilder ret = new StringBuilder("Update " + this.dataset + "\nSET dynamic_class = CASE \n");
 		List<String> updateList = new ArrayList<String>();
 		List<String> sqlList = new ArrayList<String>();
 		GeneratePermutations(classes, updateList, sqlList, 0, "", "");
 		int i = 0;
 		for(; i < updateList.size()-1; i++){
-			ret.append("WHEN "+ sqlList.get(i) + " THEN '" + updateList.get(i) + "'\n");
+			ret.append(" When "+ sqlList.get(i) + " THEN '" + updateList.get(i) +  "'\n");
 		}
 		ret.append("ELSE '" + updateList.get(i) + "'\n");
-		ret.append("END AS dynamic_class FROM " + this.dataset + ";");
+		ret.append("END;");
 		return ret.toString();
 	}
 

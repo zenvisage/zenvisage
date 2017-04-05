@@ -494,11 +494,12 @@ public class SQLQueryExecutor {
 	 * @throws SQLException
 	 */
 	public void persistDynamicClassPowerSetMethod(DynamicClass dc) throws SQLException{
-		Statement st5= c.createStatement();
+		Statement st= c.createStatement();
 		String sql = dc.getSQL();
-		System.out.println(sql);
-		st5.execute(sql);
-		st5.close();
+		//System.out.println(sql);
+		//sql = "UPDATE " + dc.dataset + " SET dynamic_class = 'hello'";
+		st.execute(sql);
+		st.close();
 	}
 
 	public static void main(String[] args) throws SQLException{
