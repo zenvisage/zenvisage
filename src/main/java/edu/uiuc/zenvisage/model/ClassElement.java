@@ -34,7 +34,7 @@ public class ClassElement {
 	public int getInterval(float input){
 		for(int i = 0; i < values.length; i++){
 			Arrays.sort(values[i]);
-			if(input>=values[i][0] && input <= values[i][1]) return i+1;
+			if(input >= values[i][0] && input <= values[i][1]) return i+1;
 		}
 		return 0;
 	}

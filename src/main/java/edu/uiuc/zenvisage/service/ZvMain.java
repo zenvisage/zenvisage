@@ -310,7 +310,7 @@ public class ZvMain {
 	public String runCreateClasses(String query) throws IOException, SQLException{
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
 	    SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-	    sqlQueryExecutor.persistDynamicClass(dc);
+	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
 	    return "Success";
 	}
 	

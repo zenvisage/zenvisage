@@ -496,8 +496,8 @@ public class SQLQueryExecutor {
 	 */
 	public void persistDynamicClassPowerSetMethod(DynamicClass dc) throws SQLException{
 		Statement st= c.createStatement();
-		String sql0 = "UPDATE " + dc.dataset + " SET dynamic_class = '" + "dynamic_class" + "' Where ";
-		st.executeUpdate(sql0);
+		System.out.println(dc.getSQL());
+		//st.executeUpdate();
 	}
 
 	public static void main(String[] args) throws SQLException{
