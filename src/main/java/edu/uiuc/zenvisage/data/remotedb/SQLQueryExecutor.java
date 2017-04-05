@@ -427,76 +427,30 @@ public class SQLQueryExecutor {
 	}
 	
 	/**
+	 * Generating powerset of dynamic_classes 
+     * and then update with one query instead of update each line with a query
+     * 
+     * 
 	 * Enumerate combinations of criteria of each classes, set all rows satisfy that combination a dynamic_class string
 	 * bp [0-10] [20-30] [40-50]
 	 * fp [0-10] [20-30]
 	 * ad [0-20] [30-40]
 	 * if we have bp [0-10] fp [20-30] ad not satisfied,
-	 * we mark dynamic_class string as  120, 
+	 * we mark dynamic_class string as  0.1.-1, 
 	 * which means choose first criteria of bp, 
-	 * second criteria of fp and none of ad.
+	 * second criteria of fp and none of ad. 
+	 * Moreover . is the separator.
 	 * @throws SQLException 
-	 */
-//	public void persistDynamicClass(DynamicClass dc) throws SQLException{
-//		String sql0 = "Select column_name from information_schema.columns Where table_name='" + dc.dataset + "'";
-//		Statement st0 = c.createStatement();
-//		ResultSet rs0 = st0.executeQuery(sql0);
-//		
-//		//Get the List of all column names in this database
-//		ArrayList<String> ret = new ArrayList<String>();
-//		while(rs0.next()){
-//			ret.add(rs0.getString(1));
-//		}
-//		ret.remove(0);//remove ID
-//		
-//		st0.close();
-//
-//		Map<String, ClassElement> classesMap = dc.getDCHashMap();
-//		
-//		Statement st1 = c.createStatement();
-//		String sql1 = "Select * from " + dc.dataset;
-//		ResultSet rs1 = st1.executeQuery(sql1);
-//		
-//		Statement st2= c.createStatement();
-//		
-//		//Get the all column value for a particular row in this database
-//		//for each row
-//		while(rs1.next()){
-//			long id = Long.parseLong(rs1.getString(1));
-//			//System.out.println(id);
-//			StringBuilder dynamic_class = new StringBuilder();
-//			//for each column except for ID
-//			for(int i = 0; i < ret.size();i++){
-//				String curColumn = ret.get(i);
-//				//if column in queryMap
-//				if(classesMap.containsKey(curColumn)){
-//					//getInterval
-//					float input = Float.parseFloat(rs1.getString(i+2));
-//					//System.out.println(input);
-//					int interval = classesMap.get(curColumn).getInterval(input);
-//					dynamic_class.append(interval);
-//				}
-//			}
-//			
-//			
-//			//update dynamic_class for this row
-//			String sql2 = "UPDATE " + dc.dataset + " SET dynamic_class = '" + dynamic_class.toString() + "' Where id = " + id;
-//			st2.executeUpdate(sql2);
-//		}
-//		st1.close();
-//	    st2.close();
-//	}
-	
-	/**
-	 * Generating powerset of dynamic_classes 
-     * and then update with one query instead of update each line with a query
+	 * http://stackoverflow.com/questions/6446250/sql-statement-with-multiple-sets-and-wheres
+	 * http://stackoverflow.com/questions/27800119/postgresql-case-end-with-multiple-conditions
+	 * http://dba.stackexchange.com/questions/39815/use-case-to-select-columns-in-update-query
+	 *
 	 * @param dc
 	 * @throws SQLException
 	 */
 	public void persistDynamicClassPowerSetMethod(DynamicClass dc) throws SQLException{
 		Statement st= c.createStatement();
 		String sql = dc.getSQL();
-		//System.out.println(sql);
 		//sql = "UPDATE " + dc.dataset + " SET dynamic_class = 'hello'";
 		st.execute(sql);
 		st.close();

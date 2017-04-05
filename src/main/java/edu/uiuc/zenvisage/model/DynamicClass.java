@@ -36,7 +36,7 @@ public class DynamicClass {
 	 * fp [0-10] [20-30]
 	 * ad [0-20] [30-40]
 	 * if we have bp [0-10] fp [20-30] ad not satisfied,
-	 * we mark dynamic_class string as  1.2.0, 
+	 * we mark dynamic_class string as  0.1.-1, 
 	 * which means choose first criteria of bp, 
 	 * second criteria of fp and none of ad. 
 	 * Moreover . is the separator.
