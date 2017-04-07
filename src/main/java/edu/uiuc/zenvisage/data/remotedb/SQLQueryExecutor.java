@@ -22,7 +22,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.model.ClassElement;
-
+import java.util.Arrays;
 
 /**
  * PostgreSQL database connection portal for my local machine
@@ -427,10 +427,29 @@ public class SQLQueryExecutor {
 	}
 	
 	/**
-	 * Generating powerset of dynamic_classes 
-     * and then update with one query instead of update each line with a query
-     * 
-     * 
+	 * Removes existing dynamic class details for the selected dataset and adds the new ones
+	 * @throws SQLException
+	 */
+	public void persistDynamicClassDetails(DynamicClass dc) throws SQLException{
+		
+		System.out.println("1");
+		String sql0 = "DELETE FROM zenvisage_dynamic_classes WHERE tablename='" + dc.dataset + "'";
+		System.out.println(sql0);
+		Statement st0 = c.createStatement();
+		st0.executeUpdate(sql0);
+		st0.close();
+	    
+		for (ClassElement e: dc.classes){
+			String sql1 = "INSERT INTO zenvisage_dynamic_classes (tablename, attribute,ranges ) VALUES('" + dc.dataset + "','" + e.name + "','" + e.values + "')";
+			System.out.println(sql1);
+			Statement st1 = c.createStatement();
+			st1.executeUpdate(sql1);
+			st1.close();
+		}
+		System.out.println("3");
+	}
+	
+	/**
 	 * Enumerate combinations of criteria of each classes, set all rows satisfy that combination a dynamic_class string
 	 * bp [0-10] [20-30] [40-50]
 	 * fp [0-10] [20-30]
@@ -438,8 +457,7 @@ public class SQLQueryExecutor {
 	 * if we have bp [0-10] fp [20-30] ad not satisfied,
 	 * we mark dynamic_class string as  0.1.-1, 
 	 * which means choose first criteria of bp, 
-	 * second criteria of fp and none of ad. 
-	 * Moreover . is the separator.
+	 * second criteria of fp and none of ad.
 	 * @throws SQLException 
 	 * http://stackoverflow.com/questions/6446250/sql-statement-with-multiple-sets-and-wheres
 	 * http://stackoverflow.com/questions/27800119/postgresql-case-end-with-multiple-conditions

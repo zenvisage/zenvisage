@@ -311,6 +311,7 @@ public class ZvMain {
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
 	    SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
+	    sqlQueryExecutor.persistDynamicClassDetails(dc);
 	    return "Success";
 	}
 	
