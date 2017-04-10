@@ -122,4 +122,35 @@ public class ScatterVCNode extends VisualComponentNode {
 		}
 		return false;
 	}
+	
+	private void simpleBinning(Map<String, ScatterResult> allDataCharts, int bins) {
+		int rows = 100; // height
+		int cols = 200; // width
+		int cells = rows*cols;
+		// grid interval 
+		double S = Math.sqrt(cells/bins);
+		
+		Tuple grid_center = new Tuple(S/2, S/2);
+		while (grid_center.y < rows && grid_center.x < cols) {
+			
+			// add grid to array, maybe count points here
+			
+			// move right, next grid in this row
+			grid_center.x = grid_center.x + S;
+			if (grid_center.x + S > cols) {
+				// move down, start of next grid row
+				grid_center.y = grid_center.y + S;
+				grid_center.x = S/2;
+			}
+		}
+		// 2D array for each bin.
+		// look through all tuples, add them to each bin.
+		
+		// instead of having X points in a grid, just display the grid center, and the count (or size)
+		// Our ScatterResult object currently supports points as just tuples of (x,y)
+		// to support binning, we probably need (x,y, count)? 
+		
+		// how does front end use the binning? 
+		
+	}
 }
