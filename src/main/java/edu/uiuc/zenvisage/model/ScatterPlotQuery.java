@@ -40,9 +40,9 @@ public class ScatterPlotQuery {
 		}
 	}
 	
-	public String method;
-	public List<Rectangle> rectangles;
-    public String xAxis;
+	public String method; // now resides in ScatterProcess
+	public List<Rectangle> rectangles; // now resides in VisualComponentQuery
+    public String xAxis; // VisualComponentQuery vc.getX().getAttributes().get(0);
 	public String yAxis;
 	public String zAxis;
 	public int numOfResults;

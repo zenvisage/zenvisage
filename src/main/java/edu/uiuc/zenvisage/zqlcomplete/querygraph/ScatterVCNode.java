@@ -25,17 +25,8 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 public class ScatterVCNode extends VisualComponentNode {
 
-	private ScatterPlotQuery query;
 	private Map<String, ScatterResult> data = new HashMap<String, ScatterResult>();
 	
-	public ScatterPlotQuery getQuery() {
-		return query;
-	}
-
-	public void setQuery(ScatterPlotQuery query) {
-		this.query = query;
-	}
-
 	public Map<String, ScatterResult> getData() {
 		return data;
 	}
@@ -44,10 +35,10 @@ public class ScatterVCNode extends VisualComponentNode {
 		this.data = data;
 	}
 
-	public ScatterVCNode(ScatterPlotQuery query, VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
+	public ScatterVCNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
 		super(vc, table, sqlQueryExecutor, sketch);
 		// TODO Auto-generated constructor stub
-		this.query = query;
+
 	}
 
 	@Override
@@ -55,14 +46,14 @@ public class ScatterVCNode extends VisualComponentNode {
 		// execute scatter
 		
 		// data fetcher
-		data = getScatterData(query);
+		data = getScatterData();
 		// data transformer??
 
 		// task processor: (eg find the charts that match the scatter data in these rectangles)
 		
 	}
 	
-	private Map<String, ScatterResult> getScatterData(ScatterPlotQuery query) {
+	private Map<String, ScatterResult> getScatterData() {
 		Map<String, ScatterResult> result = new HashMap<String, ScatterResult>();
 		
 		// old method: grab info from ScatterPlotQuery
