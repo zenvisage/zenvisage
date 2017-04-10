@@ -47,11 +47,6 @@ public class ScatterProcessNode extends ProcessNode {
 		return output;
 	}
 	
-	private Result scatterRankExecution() {
-		// lookup table the VCNode we depend on	
-		return null;
-	}
-	
 	private void computeScatterRep(Map<String, ScatterResult> input, VisualComponentQuery q, Result finalOutput) {
 		List<ScatterResult> datas = new ArrayList<ScatterResult>(input.values());
 		int len = Math.min(datas.size(), q.getNumOfResults());
@@ -68,4 +63,16 @@ public class ScatterProcessNode extends ProcessNode {
 			finalOutput.outputCharts.add(chartOutput);
 		}
 	}
+	
+	private Result scatterSimilarity() {
+		return null;
+	}
+	
+	private Result scatterRankExecution() {
+		// lookup table the VCNode we depend on
+		// task processor: (eg find the charts that match the scatter data in these rectangles)
+		return null;
+	}
+	
+
 }

@@ -3,6 +3,7 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.VisualComponentQuery.Rectangle;
 
 public class ScatterVCNode extends VisualComponentNode {
 
@@ -47,10 +49,15 @@ public class ScatterVCNode extends VisualComponentNode {
 		
 		// data fetcher
 		data = getScatterData();
-		// data transformer??
-
-		// task processor: (eg find the charts that match the scatter data in these rectangles)
 		
+		// data transformer
+		List<Rectangle> rectangles = this.getVc().getRectangles();
+		if (!rectangles.isEmpty()) {
+			removeNonRectanglePoints(data, rectangles);
+		}
+		
+		// After we have executed this scatter vc node, we have fetched the data and performed data transformation.
+		// This allows us to easily move on to the task processor, while keeping the VCNode -> ProcessNode flow, with having to add a specific data transform node
 	}
 	
 	private Map<String, ScatterResult> getScatterData() {
@@ -91,5 +98,28 @@ public class ScatterVCNode extends VisualComponentNode {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Given scatter plot charts, remove points from each that are not in the query rectangle
+	 * @param allDataCharts (side effect: modified)
+	 * @param rectangles
+	 */
+	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Rectangle> rectangles) {
+		for (ScatterResult chart : allDataCharts.values()) {
+			for(Iterator<Tuple> it = chart.points.iterator(); it.hasNext();) {
+				Tuple point = it.next();
+				if(!inArea(point,rectangles)) {
+					it.remove();					
+				}
+			}
+		}
+	}
+	
+	private static boolean inArea(Tuple tuple, List<Rectangle> rectangles) {
+		for (Rectangle r : rectangles) {
+			if (r.inArea(tuple)) return true;
+		}
+		return false;
 	}
 }
