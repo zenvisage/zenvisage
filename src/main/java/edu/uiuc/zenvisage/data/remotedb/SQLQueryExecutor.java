@@ -213,9 +213,9 @@ public class SQLQueryExecutor {
 
 	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, List<String> yAttributes) throws SQLException{
 		Statement st = c.createStatement();
-		System.out.println("before execute");
 		ResultSet rs = st.executeQuery(sql);
-		System.out.println("after execute");
+		
+		System.out.println("Finished SQL Execution");
 
 		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
@@ -223,7 +223,6 @@ public class SQLQueryExecutor {
 		VisualComponent tempVisualComponent = null;
 
 		String zType = null, xType = null, yType = null;
-		System.out.println("before loop");
 		// Since we do not order by Z, we need a hashmap to keep track of all the visualcomponents
 		// Since X is sorted though, the XList and YList are sorted correctly
 		HashMap<String, List<VisualComponent>> vcMap = new HashMap<String, List<VisualComponent>>();
@@ -286,7 +285,7 @@ public class SQLQueryExecutor {
 		}
 		rs.close();
 		st.close();
-		System.out.println("after loop");
+		System.out.println(this.visualComponentList.getVisualComponentList().size() + " Visual Components Created");
 	}
 
 
