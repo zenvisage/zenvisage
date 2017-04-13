@@ -48,18 +48,40 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     );
   }
 
-  // $scope.removeRow = function ( index ) {
-  //   $("#class-row-" + index).remove();
-  // };
+}]);
 
-  // $scope.addClassRow = function () {
-  //   var rowCount = $("#class-rows > div").length;
-  //   var rowNumber = (rowCount+1).toString();
-  //   $el = $("<div class=\"row\" id=\"class-row-" + rowNumber + "\"><div class=\"col-md-4\"><div class=\"dropdown\"><select name=\"select\" ng-model=\"option\"><option ng-repeat=\"option" + rowNumber + " in AxisInfo\" value=\"{{option}}\"> {{" + option + "}} </option></select></div></div><div class=\"col-md-8\"><input type=\"text\"></div></div>").appendTo("#class-rows");
-  //   $compile($el)($scope);
-  // };
+app.controller('classInfoController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
+
+  $scope.classes = ["test1", "test2"];
+  $rootScope.$on("callGetClassInfo", function(){
+    $scope.getClassInfo();
+  });
+
+  var testQ = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,90],[90,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,100],[100,1457.0552]]}]}"
+  $scope.getClassInfo = function getClassInfo() {
+    var query = {};
+    query["dataset"] = getSelectedDataset();
+    $http.post('/zv/getClassInfo', query
+    ).then(
+        function (response) {
+          console.log("success: ", response);
+          $scope.classes = response["classes"]
+        },
+        function (response) {
+          console.log("failed: ", response);
+        }
+    );
+  }
+
+  $scope.populateClassInfo = function() {
+    $scope.AxisInfo = [];
+    for (var key in globalDatasetInfo["yAxisColumns"]) {
+      $scope.AxisInfo.push(key);
+    }
+  };
 
 }]);
+
 
 app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
   $scope.input = {};
@@ -127,17 +149,8 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
 
     for (i = 1; i <= args.n; i++) {
       var rowNumber = (i).toString();
-      
-      // if (i+1 != args.n){
-        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
-      // }
-      
-      //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
-      //<td><input class=\"form-control zql-table viz\" type=\"text\" size=\"1\" value=\" \"></td>
 
-      // else{
-      //   $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
-      // }
+        $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
 
       $compile($el)($scope);
   }});
@@ -440,7 +453,7 @@ app.controller('options-controller', [
     }
 
     $scope.populateWeatherQuery1 = function() {
-      
+
       $scope.removeAndInsertRows( 1 );
 
       // $scope.insertRow()
@@ -467,7 +480,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
 
-      
+
       // $($( ".tabler" )[2]).find(".process").val("")
 
     }
@@ -719,6 +732,10 @@ app.controller('datasetController', [
 
     $scope.callLoadAxisInfo = function() {
       $rootScope.$emit("callLoadAxisInfo", {});
+    }
+
+    $scope.callGetClassInfo = function() {
+      $rootScope.$emit("callGetClassInfo", {});
     }
 
     $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()

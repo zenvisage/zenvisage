@@ -127,6 +127,28 @@
         </div>
       </div>
 
+      <div class="modal fade" id="class-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classInfoController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Class creation</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+              <ul>
+                <div ng-repeat="class in classes">
+                  {{class}}
+                </div>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController">
@@ -146,9 +168,16 @@
             </select>
           </div>
           <div>
-            <h5><b>Category</b><button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5><b>Category</b>
+
+            <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+
+            <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button>
+
+            </h5>
             <div ng-repeat="category in categories">
               <label>
+
                 <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
               </label>
             </div>
@@ -193,7 +222,7 @@
                 <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button>
 
-                <div ng-show="zqltable">                
+                <div ng-show="zqltable">
                   <div class="btn-group">
                     <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
