@@ -313,20 +313,24 @@ public class ZvMain {
 	}
 
 	public String runCreateClasses(String query) throws IOException, SQLException{
-		System.out.println("Create Dynamic Classes Query:" + query);
+		System.out.println("Create Dynamic Classes Configuration Query:" + query);
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
 	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
 	    sqlQueryExecutor.persistDynamicClassDetails(dc);
 	    
-	    String retrieved = runRetrieveClasses("{\"dataset\": \"real_estate\"}");
-	    System.out.println("Retrieved query:"+retrieved);
+        //Testing
+        //String retrieved = runRetrieveClasses("{\"dataset\": \"real_estate\"}");
+        //System.out.println("Retrieved query:"+retrieved);
+
 	    return "Success";
 	    
 	}
 	
 	public String runRetrieveClasses(String query) throws IOException, SQLException{
 		DynamicClass dc = sqlQueryExecutor.retrieveDynamicClassDetails(query);
-		return new ObjectMapper().writeValueAsString(dc);
+		String retrieved = new ObjectMapper().writeValueAsString(dc);
+		System.out.println("Retrieved Dynamic Classes Configuration Query:"+retrieved);
+		return retrieved;
 	}
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
