@@ -14,7 +14,7 @@ public class DynamicClass {
 	public DynamicClass() {
 	}
 	
-	public ClassElement[] getClassElement(){
+	public ClassElement[] retrieveClassElement(){
 		return classes;
 	}
 	
@@ -22,7 +22,7 @@ public class DynamicClass {
 		this.classes = classes;
 	}
 	
-	public Map<String, ClassElement> getDCHashMap(){
+	public Map<String, ClassElement> retrieveDCHashMap(){
 		Map<String, ClassElement> map = new HashMap<>();
 		for(ClassElement ce: classes){
 			map.put(ce.name, ce);
@@ -46,7 +46,7 @@ public class DynamicClass {
 	 * http://dba.stackexchange.com/questions/39815/use-case-to-select-columns-in-update-query
 	 */
 
-	public String getSQL(){
+	public String retrieveSQL(){
 		StringBuilder ret = new StringBuilder("Update " + this.dataset + "\nSET dynamic_class = CASE \n");
 		List<String> updateList = new ArrayList<String>();
 		List<String> sqlList = new ArrayList<String>();

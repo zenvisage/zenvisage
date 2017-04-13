@@ -444,8 +444,29 @@ public class SQLQueryExecutor {
 		}
 	}
 	
-	public DynamicClass retrieveDynamicClassDetails(String query){
-		return new DynamicClass();
+	public DynamicClass retrieveDynamicClassDetails(String query) throws SQLException{
+		/*
+		 * /zv/getClassInfo
+		 * {“dataset”: “cmu”}
+		 */
+		//get cmu
+		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
+		String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		DynamicClass dc = new DynamicClass();
+		
+		dc.dataset = tableName;
+		List<String[]> l = new ArrayList<String[]>();
+		while(rs.next()){
+			l.add(new String[]{rs.getString(1),rs.getString(2)});
+		}
+		dc.classes = new ClassElement[l.size()];
+		for(int i = 0; i < l.size(); i++){
+			String[] cur = l.get(i);
+			dc.classes[i] = new ClassElement(cur[0], ClassElement.fromStringToFloatArray(cur[1]));
+		}
+		return dc;
 	}
 	
 	/**
@@ -472,7 +493,7 @@ public class SQLQueryExecutor {
 	 */
 	public void persistDynamicClassPowerSetMethod(DynamicClass dc) throws SQLException{
 		Statement st= c.createStatement();
-		String sql = dc.getSQL();
+		String sql = dc.retrieveSQL();
 		//sql = "UPDATE " + dc.dataset + " SET dynamic_class = 'hello'";
 		st.execute(sql);
 		st.close();
