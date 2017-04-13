@@ -407,7 +407,6 @@ public class ZvMain {
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 System.out.println("After To HashMap");
 		 output = cleanUpDataWithAllZeros(output);
-
 		 // setup result format
 		 Result finalOutput = new Result();
 		 finalOutput.method = method;

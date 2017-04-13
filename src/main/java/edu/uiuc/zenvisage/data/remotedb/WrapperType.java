@@ -6,9 +6,9 @@ public class WrapperType {
 	private Float floatValue  = null; 
 	
 	public WrapperType(String input) {
-		if (input.matches("^\\d+$")){
+		if (input.matches("^(-?)\\d+$")){ //"^\\d+$")){
 			this.intValue = Integer.parseInt(input);
-		} else if (input.matches("\\d+(?:\\.\\d+)?")){
+		} else if (input.matches("^([+-]?\\d*\\.?\\d*)$")){ //"\\d+(?:\\.\\d+)?")){
 			this.floatValue = Float.parseFloat(input);
 		} else {
 			this.strValue = input;

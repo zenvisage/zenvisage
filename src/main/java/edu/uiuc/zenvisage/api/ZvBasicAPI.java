@@ -11,29 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.fasterxml.jackson.core.JsonParseException;
 
 import edu.uiuc.zenvisage.service.ZvMain;
-import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 
 @Controller
 public class ZvBasicAPI {
 
 	@Autowired
 	private ZvMain zvMain;
-
-
 
     public ZvBasicAPI(){
 
