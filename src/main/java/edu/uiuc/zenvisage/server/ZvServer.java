@@ -48,13 +48,14 @@ public class ZvServer {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		createMetaTables();
+		boolean reload = createMetaTables();
 		ZvServer zvServer = new ZvServer();
-		zvServer.loadDemoDatasets();
+		if(reload) zvServer.loadDemoDatasets();
 		zvServer.start();	
 	}	
 	
-	public  static void createMetaTables() throws SQLException{
+	public static boolean createMetaTables() throws SQLException{
+		Boolean reload = false;
 		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 		if(!sqlQueryExecutor.isTableExists(metatable)){
 			String dropPublicSchemaSQL = "DROP schema public cascade;";
@@ -62,13 +63,23 @@ public class ZvServer {
 			String createMetaTableSQL = "CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT);";
 			sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
 			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);
-			sqlQueryExecutor.createTable(createMetaTableSQL);			
+			sqlQueryExecutor.createTable(createMetaTableSQL);	
+			reload = true;
 		}
 		
 		if(!sqlQueryExecutor.isTableExists(metafilelocation)){
 			String createMetaFileLocationSQL ="CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);";
 			sqlQueryExecutor.createTable(createMetaFileLocationSQL);		
+			reload = true;
 		}
+		
+		if(!sqlQueryExecutor.isTableExists("zenvisage_dynamic_classes")){
+			String createDynamicClassesSQL ="CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);";
+			sqlQueryExecutor.createTable(createDynamicClassesSQL);
+			reload = true;
+		}
+		return reload;
+		
 	}
 	
 	
