@@ -15,10 +15,7 @@ import edu.uiuc.zenvisage.service.ZvMain;
 public class ZvServer {
 
 	private Server server;
-	private static int port = 8080;
-	private static String metatable="zenvisage_metatable";
-	private static String metafilelocation="zenvisage_metafilelocation";
-	
+	private static int port = 8080;	
 
 	public void setPort(int port) {
 		this.port = port;
@@ -48,78 +45,9 @@ public class ZvServer {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		boolean reload = createMetaTables();
+
 		ZvServer zvServer = new ZvServer();
-		if(reload) zvServer.loadDemoDatasets();
 		zvServer.start();	
 	}	
-	
-	public static boolean createMetaTables() throws SQLException{
-		Boolean reload = false;
-		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
-		if(!sqlQueryExecutor.isTableExists(metatable)){
-			String dropPublicSchemaSQL = "DROP schema public cascade;";
-			String createPublicSchemaSQL = "CREATE schema public;";
-			String createMetaTableSQL = "CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT);";
-			sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
-			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);
-			sqlQueryExecutor.createTable(createMetaTableSQL);	
-			reload = true;
-		}
-		
-		if(!sqlQueryExecutor.isTableExists(metafilelocation)){
-			String createMetaFileLocationSQL ="CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);";
-			sqlQueryExecutor.createTable(createMetaFileLocationSQL);		
-			reload = true;
-		}
-		
-		if(!sqlQueryExecutor.isTableExists("zenvisage_dynamic_classes")){
-			String createDynamicClassesSQL ="CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);";
-			sqlQueryExecutor.createTable(createDynamicClassesSQL);
-			reload = true;
-		}
-		return reload;
-		
-	}
-	
-	
-	public void loadDemoDatasets() throws SQLException, IOException, InterruptedException{
-		List<String> dataset1 = new ArrayList<String>(); // real_estate
-		dataset1.add("real_estate");
-		File file = new File(this.getClass().getClassLoader().getResource(("real_estate.csv")).getFile());
-		dataset1.add(file.getAbsolutePath());
-		file = new File(this.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
-		dataset1.add(file.getAbsolutePath());
-
-		List<String> dataset2 = new ArrayList<String>(); //weather
-		dataset2.add("weather");
-		file = new File(this.getClass().getClassLoader().getResource(("weather.csv")).getFile());
-		dataset2.add(file.getAbsolutePath());
-		file = new File(this.getClass().getClassLoader().getResource(("weather.txt")).getFile());
-		dataset2.add(file.getAbsolutePath());
-		
-		List<String> dataset3 = new ArrayList<String>(); //flights
-		dataset3.add("flights");
-		file = new File(this.getClass().getClassLoader().getResource(("flights_dt.csv")).getFile());
-		dataset3.add(file.getAbsolutePath());
-		file = new File(this.getClass().getClassLoader().getResource(("flights_dt.txt")).getFile());
-		dataset3.add(file.getAbsolutePath());
-		
-		List<String> dataset4 = new ArrayList<String>(); //cmu
-		dataset4.add("cmu");
-		file = new File(this.getClass().getClassLoader().getResource(("cmu_clean.csv")).getFile());
-		dataset4.add(file.getAbsolutePath());
-		file = new File(this.getClass().getClassLoader().getResource(("cmu_clean.txt")).getFile());
-		dataset4.add(file.getAbsolutePath());
-		
-				
-		//		List<String> dataset3 = new ArrayList<String>(); //flight
-//		List<String> dataset4 = new ArrayList<String>(); //cmu
-				
-		ZvMain.uploadDatasettoDB(dataset1,false);
-		ZvMain.uploadDatasettoDB(dataset2,false);
-		ZvMain.uploadDatasettoDB(dataset3,false);
-		ZvMain.uploadDatasettoDB(dataset4,false);
-	}
 
 }

@@ -60,6 +60,7 @@ import edu.uiuc.zenvisage.service.utility.LinearNormalization;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
+import edu.uiuc.zenvisage.server.DatabaseAutoLoader;
 import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
@@ -94,13 +95,17 @@ public class ZvMain {
 	public ArrayList<List<Double>> data;
 	public String databaseName;
 	public String buffer = null;
+	private DatabaseAutoLoader databaseAutoLoader; 
 
-	public ZvMain() throws IOException, InterruptedException{
+	public ZvMain() throws IOException, InterruptedException, SQLException{
+		this.databaseAutoLoader = new DatabaseAutoLoader(this);
+		this.databaseAutoLoader.run();
 		System.out.println("ZVMAIN LOADED");
 		loadData();
+		
 	}
 
-	public  void loadData() throws IOException, InterruptedException{
+	public void loadData() throws IOException, InterruptedException{
 
 //		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 //		inMemoryDatabases.put("real_estate", inMemoryDatabase);
