@@ -444,6 +444,10 @@ public class SQLQueryExecutor {
 		}
 	}
 	
+	public DynamicClass retrieveDynamicClassDetails(String query){
+		return new DynamicClass();
+	}
+	
 	/**
 	 * Generating powerset of dynamic_classes 
      * and then update with one query instead of update each line with a query

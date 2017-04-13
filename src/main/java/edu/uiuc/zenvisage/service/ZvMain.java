@@ -95,14 +95,15 @@ public class ZvMain {
 	public ArrayList<List<Double>> data;
 	public String databaseName;
 	public String buffer = null;
-	private DatabaseAutoLoader databaseAutoLoader; 
+	private DatabaseAutoLoader databaseAutoLoader;
+	private static SQLQueryExecutor sqlQueryExecutor;
 
 	public ZvMain() throws IOException, InterruptedException, SQLException{
 		this.databaseAutoLoader = new DatabaseAutoLoader(this);
 		this.databaseAutoLoader.run();
 		System.out.println("ZVMAIN LOADED");
 		loadData();
-		
+		sqlQueryExecutor = new SQLQueryExecutor();
 	}
 
 	public void loadData() throws IOException, InterruptedException{
@@ -143,7 +144,6 @@ public class ZvMain {
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
-			SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 
 			/*create csv table*/
 			if(!sqlQueryExecutor.isTableExists(names.get(0))){
@@ -314,12 +314,15 @@ public class ZvMain {
 
 	public String runCreateClasses(String query) throws IOException, SQLException{
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
-	    SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
 	    sqlQueryExecutor.persistDynamicClassDetails(dc);
 	    return "Success";
 	}
 	
+	public String runRetrieveClasses(String query) throws IOException, SQLException{
+		DynamicClass dc = sqlQueryExecutor.retrieveDynamicClassDetails(query);
+		return new ObjectMapper().writeValueAsString(dc);
+	}
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database
@@ -405,7 +408,6 @@ public class ZvMain {
 		  * LinkedHashMap<String, LinkedHashMap<Float, Float>> output = executorResult.output;
 		  */
 		 System.out.println("Before SQL");
-		 SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
 		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
 		 System.out.println("After SQL");
@@ -582,7 +584,7 @@ public class ZvMain {
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		this.databaseName = fq.getDatabasename();
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
-		String locations[] = new SQLQueryExecutor().getMetaFileLocation(databaseName);
+		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
 		//executor = new Executor(inMemoryDatabase);
