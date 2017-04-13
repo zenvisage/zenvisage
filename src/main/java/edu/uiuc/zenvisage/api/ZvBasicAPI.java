@@ -46,6 +46,22 @@ public class ZvBasicAPI {
 	    String body = stringBuilder.toString();
 	    return zvMain.runCreateClasses(body);
 	}
+	
+	/*
+	 * /zv/getClassInfo
+	 * {“dataset”: “real_estate”}
+	 */
+	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public String getClassInfo(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
+	    StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	    	stringBuilder.append(scanner.nextLine());
+	    }
+	    String body = stringBuilder.toString();
+	    return zvMain.runRetrieveClasses(body);
+	}
 
 //    /* Will be obsolete after separated calls*/
 //	@RequestMapping(value = "/getdata", method = RequestMethod.GET)

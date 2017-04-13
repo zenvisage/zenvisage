@@ -447,7 +447,7 @@ public class SQLQueryExecutor {
 	public DynamicClass retrieveDynamicClassDetails(String query) throws SQLException{
 		/*
 		 * /zv/getClassInfo
-		 * {“dataset”: “cmu”}
+		 * {“dataset”: “real_estate”}
 		 */
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
