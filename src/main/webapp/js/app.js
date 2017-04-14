@@ -47,7 +47,6 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         }
     );
   }
-
 }]);
 
 app.controller('classInfoController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
@@ -65,7 +64,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
     ).then(
         function (response) {
           console.log("success: ", response);
-          $scope.classes = response["classes"]
+          $scope.classes = response.data["classes"]
         },
         function (response) {
           console.log("failed: ", response);
