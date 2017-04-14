@@ -24,11 +24,10 @@ public class DatabaseAutoLoader {
 		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 		
 		//clean everything
-//		String dropPublicSchemaSQL = "DROP schema public cascade;";
-//		sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
+		String dropPublicSchemaSQL = "DROP schema public cascade;";
+		sqlQueryExecutor.executeUpdate(dropPublicSchemaSQL);
 		
-		
-		if(!sqlQueryExecutor.isTableExists(metatable)){
+		if(!sqlQueryExecutor.isTableExists(metatable) ){
 			String createPublicSchemaSQL = "CREATE schema public;";
 			String createMetaTableSQL = "CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT);";
 			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);

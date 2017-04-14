@@ -99,15 +99,14 @@ public class ZvMain {
 	private static SQLQueryExecutor sqlQueryExecutor;
 
 	public ZvMain() throws IOException, InterruptedException, SQLException{
+		sqlQueryExecutor = new SQLQueryExecutor();
 		this.databaseAutoLoader = new DatabaseAutoLoader(this);
 		this.databaseAutoLoader.run();
 		System.out.println("ZVMAIN LOADED");
-		loadData();
-		sqlQueryExecutor = new SQLQueryExecutor();
 	}
 
-	public void loadData() throws IOException, InterruptedException{
-
+//	public void loadData() throws IOException, InterruptedException{
+//
 //		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
 //		inMemoryDatabases.put("real_estate", inMemoryDatabase);
 //
@@ -123,7 +122,7 @@ public class ZvMain {
 //		inMemoryDatabases.put("sales", inMemoryDatabase);
 //
 //		System.out.println("Done loading data");
-	}
+//	}
 
 //	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
 //    	Database database = new Database(name,schemafile,datafile);
@@ -132,11 +131,9 @@ public class ZvMain {
 //    }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
-
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
 		uploadDatasettoDB(names,true);
-		
 	}
 
 		
