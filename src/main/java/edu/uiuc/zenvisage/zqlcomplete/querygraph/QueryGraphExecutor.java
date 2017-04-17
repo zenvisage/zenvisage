@@ -2,14 +2,10 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.collections.MapUtils;
-
-import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
@@ -19,7 +15,7 @@ import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
  * Takes in a query graph and executes it
  */
 public class QueryGraphExecutor {
-
+	static final Logger logger = LoggerFactory.getLogger(QueryGraphExecutor.class);
 	/**
 	 * Taking in a queryGraph, execute it from entryNodes down to leaves.
 	 * In the meantime, buildup the resultGraph to go along with it.
@@ -46,7 +42,7 @@ public class QueryGraphExecutor {
 					// probably needs to be fixed with some "visited" state 
 					continue;
 				}
-				System.out.println("Processing Node: "+ currNode.toString());
+				logger.info("Processing Node: "+ currNode.toString());
 				currNode.execute(); 
 				if (currNode.state == State.FINISHED) {
 					// TODO: currently always outputs result of final node!
