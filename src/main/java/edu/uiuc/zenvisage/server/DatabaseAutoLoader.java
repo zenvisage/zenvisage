@@ -14,10 +14,10 @@ public class DatabaseAutoLoader {
 	
 	private static String metatable="zenvisage_metatable";
 	private static String metafilelocation="zenvisage_metafilelocation";
-	private ZvMain zvMain;
+	private ZvServer zvServer;
 	
-	public DatabaseAutoLoader(ZvMain zvMain){
-		this.zvMain = zvMain;
+	public DatabaseAutoLoader(ZvServer zvServer){
+		this.zvServer = zvServer;
 	}
 	public boolean createMetaTables() throws SQLException{
 		Boolean reload = false;
@@ -51,7 +51,7 @@ public class DatabaseAutoLoader {
 	}
 	
 	public void loadDemoDatasets() throws SQLException, IOException, InterruptedException{
-		URL folderURL = zvMain.getClass().getClassLoader().getResource(("data"));
+		URL folderURL = zvServer.getClass().getClassLoader().getResource(("data"));
 		if(folderURL == null){
 			System.out.println("Data folder not exists, abort auto loader.");
 			return;
@@ -61,30 +61,30 @@ public class DatabaseAutoLoader {
 		
 		List<String> dataset1 = new ArrayList<String>(); // real_estate
 		dataset1.add("real_estate");
-		File file = new File(zvMain.getClass().getClassLoader().getResource(("data/real_estate.csv")).getFile());
+		File file = new File(zvServer.getClass().getClassLoader().getResource(("data/real_estate.csv")).getFile());
 		dataset1.add(file.getAbsolutePath());
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/real_estate.txt")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/real_estate.txt")).getFile());
 		dataset1.add(file.getAbsolutePath());
 
 		List<String> dataset2 = new ArrayList<String>(); //weather
 		dataset2.add("weather");
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/weather.csv")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/weather.csv")).getFile());
 		dataset2.add(file.getAbsolutePath());
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/weather.txt")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/weather.txt")).getFile());
 		dataset2.add(file.getAbsolutePath());
 		
 		List<String> dataset3 = new ArrayList<String>(); //flights
 		dataset3.add("flights");
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/flights.csv")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/flights.csv")).getFile());
 		dataset3.add(file.getAbsolutePath());
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/flights.txt")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/flights.txt")).getFile());
 		dataset3.add(file.getAbsolutePath());
 		
 		List<String> dataset4 = new ArrayList<String>(); //cmu
 		dataset4.add("cmu");
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/cmu_clean.csv")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/cmu_clean.csv")).getFile());
 		dataset4.add(file.getAbsolutePath());
-		file = new File(zvMain.getClass().getClassLoader().getResource(("data/cmu_clean.txt")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("data/cmu_clean.txt")).getFile());
 		dataset4.add(file.getAbsolutePath());
 		
 				

@@ -16,13 +16,13 @@ public class ZvServer {
 
 	private Server server;
 	private static int port = 8080;	
-
+	
 	public void setPort(int port) {
 		this.port = port;
 	}
 
 	public void start() throws Exception {	
-		server = new Server(port);
+		server = new Server(port);	
 		
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setContextPath("/");
@@ -36,6 +36,9 @@ public class ZvServer {
 		server.start();
 //		ZvMain zvMain = (ZvMain) SpringApplicationContext.getBean("zvMain");
 //		zvMain.loadData();
+		
+		DatabaseAutoLoader databaseAutoLoader = new DatabaseAutoLoader(this);
+		databaseAutoLoader.run();
 	
 	}
 	
