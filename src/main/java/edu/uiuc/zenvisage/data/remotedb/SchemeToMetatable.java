@@ -15,7 +15,7 @@ public class SchemeToMetatable {
 	public List<String> columns;
 	
 	public SchemeToMetatable(){
-		createTableSQL =null;
+		createTableSQL = null;
 		columns = new ArrayList<String>();
 	};
 	

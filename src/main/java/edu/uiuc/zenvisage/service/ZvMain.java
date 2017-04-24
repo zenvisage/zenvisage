@@ -95,13 +95,10 @@ public class ZvMain {
 	public ArrayList<List<Double>> data;
 	public String databaseName;
 	public String buffer = null;
-	private DatabaseAutoLoader databaseAutoLoader;
 	private static SQLQueryExecutor sqlQueryExecutor;
 
 	public ZvMain() throws IOException, InterruptedException, SQLException{
 		sqlQueryExecutor = new SQLQueryExecutor();
-		this.databaseAutoLoader = new DatabaseAutoLoader(this);
-		this.databaseAutoLoader.run();
 		System.out.println("ZVMAIN LOADED");
 	}
 
