@@ -1,0 +1,11 @@
+class:string,indexed,F,F,T,F,F,0,Q
+dynamic_class:string,indexed,F,F,T,F,F,0,Q
+ip:float,unindexed,T,T,F,F,F,0,Q
+ea:float,unindexed,T,T,F,F,F,0,Q
+vis:float,unindexed,T,T,F,F,F,0,Q
+bp:float,unindexed,T,T,F,F,F,0,Q
+fp:float,unindexed,T,T,F,F,F,0,Q
+li:float,unindexed,T,T,F,F,F,0,Q
+lio2:float,unindexed,T,T,F,F,F,0,Q
+o2m:float,unindexed,T,T,F,F,F,0,Q
+o2:float,unindexed,T,T,F,F,F,0,Q

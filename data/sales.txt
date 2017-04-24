@@ -1,0 +1,10 @@
+date:float,unindexed,T,F,F,F,F,0,Q
+year:int,unindexed,T,F,F,F,F,0,Q
+day:int,unindexed,T,F,F,F,F,0,Q
+month:int,indexed,T,F,F,F,F,0,C
+week:int,unindexed,T,F,F,F,F,0,Q
+product:string,indexed,F,F,T,F,F,0,O
+color:string,unindexed,F,F,T,F,F,0,Q
+size:string,unindexed,F,F,T,F,F,0,Q
+quantity:int,unindexed,F,T,F,F,F,0,Q
+salesprice:float,unindexed,F,T,F,F,F,0,Q
