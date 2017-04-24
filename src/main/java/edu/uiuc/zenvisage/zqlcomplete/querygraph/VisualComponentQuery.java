@@ -3,6 +3,7 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
@@ -20,18 +21,19 @@ public class VisualComponentQuery {
 	private VizColumn viz;
 	// is sketchPoints associated with visualComponent?
 	// or vc output?
-	private List<Rectangle> rectangles;
 	private int numOfResults;
-	
+	private Sketch sketch;
+
 	public VisualComponentQuery() {
 		name = new Name();
 		x = new XColumn();
 		y= new YColumn();
 		z= new ZColumn();
-		viz = new VizColumn();		
+		viz = new VizColumn();	
+		sketch = new Sketch();
 	}
 
-	public VisualComponentQuery(Name name, XColumn x, YColumn y, ZColumn z, String constraints, VizColumn viz) {
+	public VisualComponentQuery(Name name, XColumn x, YColumn y, ZColumn z, String constraints, VizColumn viz, Sketch sketch) {
 		super();
 		this.name = name;
 		this.x = x;
@@ -39,6 +41,7 @@ public class VisualComponentQuery {
 		this.z = z;
 		this.constraints = constraints;
 		this.viz = viz;
+		this.sketch = sketch;
 	}
 
 	public VisualComponentQuery(VisualComponentQuery source) {
@@ -98,12 +101,12 @@ public class VisualComponentQuery {
 		this.viz = viz;
 	}	
 
-	public List<Rectangle> getRectangles() {
-		return rectangles;
+	public Sketch getSketch() {
+		return sketch;
 	}
-
-	public void setRectangles(List<Rectangle> rectangles) {
-		this.rectangles = rectangles;
+	
+	public void setSketch(Sketch sketch) {
+		this.sketch = sketch;
 	}
 
 	public int getNumOfResults() {
@@ -114,30 +117,4 @@ public class VisualComponentQuery {
 		this.numOfResults = numOfResults;
 	}
 
-	public static class Rectangle {
-		public double x1;
-	    public double x2;
-	    public double y1;
-	    public double y2;
-		/**
-		 * @param x1
-		 * @param x2
-		 * @param y1
-		 * @param y2
-		 */
-		public Rectangle(double x1, double x2, double y1, double y2) {
-			this.x1 = x1;
-			this.x2 = x2;
-			this.y1 = y1;
-			this.y2 = y2;
-		}
-		
-		public Rectangle() {
-			
-		}
-		
-		public boolean inArea(Tuple tuple) {
-			return this.x1 <= tuple.x && tuple.x <= this.x2 && this.y1 <= tuple.y && tuple.y <= this.y2;
-		}
-	}
 }

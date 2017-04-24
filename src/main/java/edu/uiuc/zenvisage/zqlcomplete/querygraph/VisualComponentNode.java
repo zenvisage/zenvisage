@@ -28,7 +28,6 @@ public class VisualComponentNode extends QueryNode{
 	private VisualComponentQuery vc;
 	protected SQLQueryExecutor sqlQueryExecutor;
 	protected String db;
-	private Sketch sketch;
 	
 	// private vc output
 	//TODO: build separate result node
@@ -46,16 +45,14 @@ public class VisualComponentNode extends QueryNode{
 		this.db = db;
 	}
 
-	public VisualComponentNode(VisualComponentQuery vc, Sketch sketch) {
+	public VisualComponentNode(VisualComponentQuery vc) {
 		this.vc = vc;
-		this.sketch = sketch;
 	}
 
-	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
+	public VisualComponentNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor) {
 		super(table);
 		this.vc = vc;
 		this.sqlQueryExecutor = sqlQueryExecutor;
-		this.sketch = sketch;
 	}
 
 	@Override
@@ -94,22 +91,22 @@ public class VisualComponentNode extends QueryNode{
 			VisualComponentList vcList = new VisualComponentList();
 			ArrayList<VisualComponent> list = new ArrayList<VisualComponent>();
 			vcList.setVisualComponentList(list);
-			
-			if(sketch == null || sketch.points.isEmpty()) {
+			Sketch sketch = this.getVc().getSketch();
+			if(sketch == null || sketch.getPoints().isEmpty()) {
 				this.state = State.FINISHED;
 				return;
 			}
 			ArrayList<WrapperType> xList = new ArrayList<WrapperType>();
 			ArrayList<WrapperType> yList = new ArrayList<WrapperType>();
-			for (Point point : sketch.points) {
+			for (Point point : sketch.getPoints()) {
 				xList.add(new WrapperType(point.getX()));
 				yList.add(new WrapperType(point.getY()));
 			}
 			
 			VisualComponent vc = new VisualComponent(new WrapperType("sketch", "string"), new Points(xList, yList));
-			vc.setxAttribute(sketch.xAxis);
-			vc.setyAttribute(sketch.yAxis);
-			vc.setzAttribute(sketch.groupBy);
+			vc.setxAttribute(sketch.getxAxis());
+			vc.setyAttribute(sketch.getyAxis());
+			vc.setzAttribute(sketch.getGroupBy());
 			vcList.addVisualComponent(vc);
 			
 			this.getLookUpTable().put(name_obj.getName(), vcList);

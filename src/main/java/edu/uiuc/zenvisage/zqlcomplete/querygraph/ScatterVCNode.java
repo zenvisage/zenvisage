@@ -23,7 +23,6 @@ import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.VisualComponentQuery.Rectangle;
 
 public class ScatterVCNode extends VisualComponentNode {
 
@@ -37,8 +36,8 @@ public class ScatterVCNode extends VisualComponentNode {
 		this.data = data;
 	}
 
-	public ScatterVCNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor, Sketch sketch) {
-		super(vc, table, sqlQueryExecutor, sketch);
+	public ScatterVCNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor) {
+		super(vc, table, sqlQueryExecutor);
 		// TODO Auto-generated constructor stub
 
 	}
@@ -51,7 +50,7 @@ public class ScatterVCNode extends VisualComponentNode {
 		data = getScatterData();
 		
 		// data transformer
-		List<Rectangle> rectangles = this.getVc().getRectangles();
+		List<Polygon> rectangles = this.getVc().getSketch().getPolygons();
 		if (!rectangles.isEmpty()) {
 			removeNonRectanglePoints(data, rectangles);
 		}
@@ -105,19 +104,19 @@ public class ScatterVCNode extends VisualComponentNode {
 	 * @param allDataCharts (side effect: modified)
 	 * @param rectangles
 	 */
-	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Rectangle> rectangles) {
+	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Polygon> polygons) {
 		for (ScatterResult chart : allDataCharts.values()) {
 			for(Iterator<Tuple> it = chart.points.iterator(); it.hasNext();) {
 				Tuple point = it.next();
-				if(!inArea(point,rectangles)) {
+				if(!inArea(point,polygons)) {
 					it.remove();					
 				}
 			}
 		}
 	}
 	
-	private static boolean inArea(Tuple tuple, List<Rectangle> rectangles) {
-		for (Rectangle r : rectangles) {
+	private static boolean inArea(Tuple tuple, List<Polygon> polygons) {
+		for (Polygon r : polygons) {
 			if (r.inArea(tuple)) return true;
 		}
 		return false;

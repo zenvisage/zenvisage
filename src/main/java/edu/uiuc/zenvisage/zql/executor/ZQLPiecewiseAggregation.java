@@ -113,11 +113,11 @@ public class ZQLPiecewiseAggregation {
 	
 	
 	public double[] applyPAAonQuery(Set<Float> ignore, Sketch sketchPoint){
-		ColumnMetadata xcolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.xAxis);
+		ColumnMetadata xcolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.getxAxis());
 		float pAAWidth = xcolumnMetadata.pAAWidth;
 		int numberofsegments = (int) (1/pAAWidth);
-		float min = sketchPoint.minX;
-		float max = sketchPoint.maxX;		
+		float min = sketchPoint.getMinX();
+		float max = sketchPoint.getMaxX();		
 		float rangeX = max-min;
 		double [] normalizedValues = new double[numberofsegments+1];
 		int[] numberofpoints = new int[numberofsegments+1];
@@ -126,15 +126,15 @@ public class ZQLPiecewiseAggregation {
 			numberofpoints[i] = 0;
 		}
 	  
-		ColumnMetadata ycolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.yAxis);
+		ColumnMetadata ycolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.getyAxis());
 		float minY = ycolumnMetadata.min;
 		float maxY = ycolumnMetadata.max;
 		float rangeY = maxY-minY;
 	  
-		float minYQ = sketchPoint.minY;
-		float maxYQ = sketchPoint.maxY;		
+		float minYQ = sketchPoint.getMinY();
+		float maxYQ = sketchPoint.getMaxY();		
 		float rangeYQ = maxYQ-minYQ;
-		for (Point p : sketchPoint.points) {		  
+		for (Point p : sketchPoint.getPoints()) {		  
 			int segment = (int) ((p.getX()-min)/(rangeX*pAAWidth));
 			//System.out.println(segment);
 			float yvalue = minY+((p.getY()-minYQ)*rangeY/(rangeYQ));

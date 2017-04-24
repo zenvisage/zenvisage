@@ -43,7 +43,7 @@ public class PiecewiseAggregation {
 	
 	public void setPAAwidth(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, Sketch sketchPoint) {
 		if (output == null) return;
-		ColumnMetadata columnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.xAxis);
+		ColumnMetadata columnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.getxAxis());
 		columnMetadata.pAAWidth = (float) 1/(output.values().iterator().next().size() - 2);
 		columnMetadata.numberOfSegments = output.values().iterator().next().size();
 	}
@@ -51,7 +51,7 @@ public class PiecewiseAggregation {
 	public double[][] applyPAAonData(LinkedHashMap<String,LinkedHashMap<Float,Float>> data, Set<Float> ignore, Sketch sketchPoint){
 		double[][] normalizedgroups = new double[data.size()][];
 		int count = 0;
-		ColumnMetadata columnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.xAxis);
+		ColumnMetadata columnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.getxAxis());
 		float pAAWidth = columnMetadata.pAAWidth;
 		int numberofsegments = (int) (1/pAAWidth);
 		float min = columnMetadata.min;
@@ -106,11 +106,11 @@ public class PiecewiseAggregation {
 	}
 	
 	public double[] applyPAAonQuery(Set<Float> ignore, Sketch sketchPoint){
-		ColumnMetadata xcolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.xAxis);
+		ColumnMetadata xcolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.getxAxis());
 		float pAAWidth = xcolumnMetadata.pAAWidth;
 		int numberofsegments = (int) (1/pAAWidth);
-		float min = sketchPoint.minX;
-		float max = sketchPoint.maxX;		
+		float min = sketchPoint.getMinX();
+		float max = sketchPoint.getMaxX();		
 		float rangeX = max-min;
 		double [] normalizedValues = new double[numberofsegments+1];
 		int[] numberofpoints = new int[numberofsegments+1];
@@ -119,15 +119,15 @@ public class PiecewiseAggregation {
 			numberofpoints[i] = 0;
 		}
 	  
-		ColumnMetadata ycolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.yAxis);
+		ColumnMetadata ycolumnMetadata = inMemoryDatabase.getColumnMetaData(sketchPoint.getyAxis());
 		float minY = ycolumnMetadata.min;
 		float maxY = ycolumnMetadata.max;
 		float rangeY = maxY-minY;
 	  
-		float minYQ = sketchPoint.minY;
-		float maxYQ = sketchPoint.maxY;		
+		float minYQ = sketchPoint.getMinY();
+		float maxYQ = sketchPoint.getMaxY();		
 		float rangeYQ = maxYQ-minYQ;
-		for (Point p : sketchPoint.points) {		  
+		for (Point p : sketchPoint.getPoints()) {		  
 			int segment = (int) ((p.getX()-min)/(rangeX*pAAWidth));
 			float yvalue = (float) (minY+((p.getY()-minYQ)*rangeY/(rangeYQ)));
 			normalizedValues[segment] = normalizedValues[segment]+yvalue;
