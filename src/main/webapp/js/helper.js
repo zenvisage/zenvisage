@@ -109,15 +109,23 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
         .attr("height", 65)
         .attr("transform", "translate(20,20)");
 
+
+    //xmin xmax ymin ymax
+    var newRanges = getEvaluatingRange( xmin, xmax, xRange )
+    //return [first_left, first_right, second_left, second_right]
+
     graph.append("rect")
-        .attr("width", Math.abs( (xRange[0]-xmin)/(xmax-xmin)*(width-40) ) )
+        //.attr("width", Math.abs( (xRange[0]-xmin)/(xmax-xmin)*(width-40) ) )
+        .attr("width", Math.abs( (newRanges[1] - newRanges[0])/(xmax-xmin)*(width-40) ) )
         .attr("height", height-40)
         .attr("transform", "translate(20,20)")
         .attr("fill", "grey");
 
-    var newLoc = (xRange[1])/(xmax-xmin)*(width-40)+20
+    // if negative, newLoc no longer works
+    var newLoc = Math.abs((newRanges[2]-xmin)/(xmax-xmin)*(width-40))+20
     graph.append("rect")
-        .attr("width", Math.abs( (xmax-xRange[1])/(xmax-xmin)*(width-40) ) )
+        //.attr("width", Math.abs( (xmax-xRange[1])/(xmax-xmin)*(width-40) ) )
+        .attr("width", Math.abs( (newRanges[3] - newRanges[2])/(xmax-xmin)*(width-40) ) )
         .attr("height", height-40)
         .attr("transform", "translate(" + newLoc.toString() + ",20)")
         .attr("fill", "grey");
