@@ -48,14 +48,14 @@ For making the above change, you could run the following commands:
         
             DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT,       csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT);
 
-* Clearn Postgres
+* Clean Postgres
 
             Postgres:
             psql -d postgres -U postgres
             \connect postgres;
             DROP schema public cascade; CREATE schema public;
 
-*Data files location:
+* Data files location:
             Have you data folder under zenvisage folder, same level of src folder, name it data
             https://drive.google.com/drive/u/1/folders/0B3otFgGFeJnpVk96dEZqUnVaV2c
 
