@@ -48,17 +48,34 @@ For making the above change, you could run the following commands:
         
             DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT,       csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT);
 
- 
+* Clearn Postgres
+
+            Postgres:
+            psql -d postgres -U postgres
+            \connect postgres;
+            DROP schema public cascade; CREATE schema public;
+
+*Data files location:
+            Have you data folder under zenvisage folder, same level of src folder, name it data
+            https://drive.google.com/drive/u/1/folders/0B3otFgGFeJnpVk96dEZqUnVaV2c
+
+
+
+
 * Build and deploy code. Inside the zenvisage folder,
         
-          sh build.sh.   
-        
-* Run 
-            
-          sh run.sh
-        
-  
-* Launch `http://localhost:8080/` (preferably in Chrome). 
+In Terminal:
+            Make sure your branch is at v2.0 use "git branch" to check if not, use git checkout origin/v2.0
+            commit you code first(git status;git add ...;git commit -m "blabla")
+            git pull --rebase origin v2.0
+            sudo rm -f -r target/
+            sudo rm nohup.out  #(on our server only)
+            sudo nohup sh run.sh & #(on our server only)
+            sudo kill $(sudo lsof -t -i:8080)
+            sudo sh build.sh
+            sudo sh run.sh
+
+* Launch `http://localhost:8080/` (preferably in Chrome, if has error mostly because of uncleared cache, use incognito mode probably fix). 
 
 License
 ----
