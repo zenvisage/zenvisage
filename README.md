@@ -66,7 +66,7 @@ For making the above change, you could run the following commands:
         
 In Terminal:
             Make sure your branch is at v2.0 use "git branch" to check if not, use git checkout origin/v2.0
-            commit you code first(git status;git add ...;git commit -m "blabla")
+            commit you code first(git status;git add ...;git commit -m "blabla"; git push origin v2.0)
             git pull --rebase origin v2.0
             sudo rm -f -r target/
             sudo rm nohup.out  #(on our server only)
