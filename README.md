@@ -61,6 +61,7 @@ For making the above change, you could run the following commands:
 
         
 * In Terminal:
+
             Make sure your branch is at v2.0 use "git branch" to check 
             if not, use git checkout origin/v2.0
             commit you code first(git status;git add ...;git commit -m "blabla"; git push origin v2.0)
@@ -70,6 +71,7 @@ For making the above change, you could run the following commands:
             sudo kill $(sudo lsof -t -i:8080)  
             
  * Build and deploy code. Inside the zenvisage folder,
+ 
             sudo sh build.sh
             sudo sh run.sh  or sudo nohup sh run.sh & #(on our server only)
 
