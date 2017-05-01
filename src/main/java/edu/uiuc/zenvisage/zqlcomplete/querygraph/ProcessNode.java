@@ -217,7 +217,7 @@ public class ProcessNode extends QueryNode {
 	}	
 	
 	@Override
-	public ZQLRow buildRowFromNode(String aggregation) {
+	public ZQLRow buildRowFromNode() {
 		ZQLRow result = new ZQLRow(null, null, null, null, null);
 		result.setProcesse(process);
 		return result;

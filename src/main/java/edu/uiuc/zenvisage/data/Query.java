@@ -42,7 +42,9 @@ public class Query {
 	public ZQLRow getZQLRow(){
 		//return new ZQLRow();
 		String zAndX[] = groupBy.split(",");
-		ZQLRow zqlRow = new ZQLRow(new XColumn(zAndX[1]), new YColumn(aggregationVarible), new ZColumn(zAndX[0]), null, new VizColumn(aggregationFunc));
+		VizColumn vc = new VizColumn();
+		vc.getMap().put(VizColumn.aggregation, aggregationFunc);
+		ZQLRow zqlRow = new ZQLRow(new XColumn(zAndX[1]), new YColumn(aggregationVarible), new ZColumn(zAndX[0]), null, vc);
 		return zqlRow;
 	}
   	

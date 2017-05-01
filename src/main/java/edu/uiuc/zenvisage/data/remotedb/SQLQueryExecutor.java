@@ -157,8 +157,7 @@ public class SQLQueryExecutor {
 
 		databaseName = databaseName.toLowerCase();
 		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String agg = zqlRow.getViz().getVariable().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-
+		String agg = ((String) zqlRow.getViz().getMap().get(VizColumn.aggregation)).toLowerCase().replaceAll("\"", "");
 
 		//support list of x, y values, general all possible x,y combinations, generate sql
 		int xLen = zqlRow.getX().getAttributes().size();
@@ -522,7 +521,10 @@ public class SQLQueryExecutor {
 		List<String> xList = new ArrayList<String>();
 		xList.add("quarter");xList.add("year");
 		//ZQLRow zqlRow = new ZQLRow(new XColumn("Quarter"), new YColumn("SoldPrice"), new ZColumn("State"), constraints, new VizColumn("avg"));
-		ZQLRow zqlRow = new ZQLRow(new XColumn(xList), new YColumn("soldprice"), new ZColumn("state"),"", new VizColumn("avg"));
+		VizColumn vc = new VizColumn();
+		vc.getMap().put(VizColumn.aggregation, "AVG");
+
+		ZQLRow zqlRow = new ZQLRow(new XColumn(xList), new YColumn("soldprice"), new ZColumn("state"),"", vc);
 		sqlQueryExecutor.ZQLQueryEnhanced(zqlRow, "real_estate");
 	}
 

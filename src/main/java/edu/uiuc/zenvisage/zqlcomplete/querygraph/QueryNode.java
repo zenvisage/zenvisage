@@ -37,7 +37,7 @@ public abstract class QueryNode extends Node {
 		return state;
 	}
 
-	abstract protected ZQLRow buildRowFromNode(String aggregation);
+	abstract protected ZQLRow buildRowFromNode();
 	
 	/**
 	 * If one parent has not finished, we are still blocked

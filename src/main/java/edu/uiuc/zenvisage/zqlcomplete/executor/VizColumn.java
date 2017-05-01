@@ -1,41 +1,35 @@
 package edu.uiuc.zenvisage.zqlcomplete.executor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+
 
 public class VizColumn {
-	private String variable;
-	private List<String> type;
-	private List<String> parameters;
 	
-	public VizColumn(String variable) {
-		this.variable = variable;
+	public static final String aggregation = "aggregation";
+	public static final String type = "type";
+	//private String variable;
+	//private List<String> type;
+	//private List<String> parameters;
+	// This map can contain as may variables as needed:
+	// eg type, aggregation, so on. We choose this format since VizColumn is very fluid between different types of queries
+	private Map<String, Object> map;
+	
+	public VizColumn(Map<String, Object> map) {
+		this.map = map;
 	}
 	
 	public VizColumn() {
-		variable = "";
-		type = new ArrayList<String>();
-		parameters = new ArrayList<String>();
+		map = new HashMap<String, Object>();
+	}
+
+	public Map<String, Object> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<String, Object> map) {
+		this.map = map;
 	}
 	
-	public String getVariable() {
-		return variable;
-	}
-	public void setVariable(String source) {
-		variable = source;
-	}
-	public List<String> getType() {
-		return type;
-	}
-	public void setType(List<String> source) {
-		type = source;
-	}
-	
-	public List<String> getParameters() {
-		return parameters;
-	}
-	
-	public void setParameters(List<String> source) {
-		parameters = source;
-	}
 }

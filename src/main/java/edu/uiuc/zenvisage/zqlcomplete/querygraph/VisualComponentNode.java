@@ -14,6 +14,7 @@ import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.zql.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
@@ -116,7 +117,7 @@ public class VisualComponentNode extends QueryNode{
 		}
 
 		// call SQL backend
-		ZQLRow row = buildRowFromNode("AVG");
+		ZQLRow row = buildRowFromNode();
 		try {
 			// run zqlquery on this ZQLRow on the database table db
 			if(this.db == null || this.db.equals("")) {
@@ -222,7 +223,7 @@ public class VisualComponentNode extends QueryNode{
 	 * Column hs no variable name, but values. Can use as is
 	 * Column has no variable name, and no value. Send as is (columns may be optional)
 	 */
-	protected ZQLRow buildRowFromNode(String aggregation) {
+	protected ZQLRow buildRowFromNode() {
 
 		XColumn x = vc.getX();
 		// x1 (variable, no values)
@@ -288,7 +289,10 @@ public class VisualComponentNode extends QueryNode{
 		System.out.println(z.getVariable());
 		//System.out.println(z.getValues());
 		System.out.println(z.getAttribute());
-		vc.getViz().setVariable(aggregation);
+		
+		if(!vc.getViz().getMap().containsKey(VizColumn.aggregation)) {
+			vc.getViz().getMap().put(VizColumn.aggregation, "AVG");
+		}
 		ZQLRow result = new ZQLRow(x, y, z, vc.getConstraints(), vc.getViz());
 		// null processe and sketchPoints (for now)
 		return result;

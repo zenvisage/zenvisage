@@ -22,6 +22,7 @@ import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 public class ScatterVCNode extends VisualComponentNode {
@@ -69,7 +70,8 @@ public class ScatterVCNode extends VisualComponentNode {
 		
 		// new method: grab info from the VisualComponentQuery
 		// call SQL backend (for scatter plot, no aggregation method)
-		ZQLRow row = buildRowFromNode("");
+		ZQLRow row = buildRowFromNode();
+		this.getVc().getViz().getMap().put(VizColumn.aggregation, "");
 		try {
 			// run zqlquery on this ZQLRow on the database table db
 			if(this.db == null || this.db.equals("")) {
