@@ -391,7 +391,7 @@ public class ZvMain {
 //	}
 
 
-	public String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 //		System.out.println(query);
 

@@ -39,7 +39,7 @@ public class SQLQueryExecutor {
 	private String username = "postgres";
 	private String password = "zenvisage";
 	Connection c = null;
-	private VisualComponentList visualComponentList;
+	public VisualComponentList visualComponentList;
 
 	// Initialize connection
 	public SQLQueryExecutor() {
