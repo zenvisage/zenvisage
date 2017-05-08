@@ -25,7 +25,7 @@ public class VisualComponentList {
 		this.visualComponentList.add(input);
 	}
 	
-	public LinkedHashMap<String, LinkedHashMap<Float, Float>> toInMemoryHashmap(){
+	public synchronized LinkedHashMap<String, LinkedHashMap<Float, Float>> toInMemoryHashmap(){
 		LinkedHashMap<String, LinkedHashMap<Float, Float>> output = new LinkedHashMap<String, LinkedHashMap<Float, Float>>();
 		for(VisualComponent i: visualComponentList){
 			List<WrapperType> xList = i.getPoints().getXList();
