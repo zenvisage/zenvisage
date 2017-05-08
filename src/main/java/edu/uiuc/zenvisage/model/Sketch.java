@@ -16,7 +16,7 @@ public class Sketch {
 	private int maxX;
 	private int minY;	
 	private int maxY;
-	private List<Polygon> polygons;
+	private List<Polygon> polygons = new ArrayList<Polygon>();
 	
 	public ArrayList<Point> getPoints() {
 		return points;

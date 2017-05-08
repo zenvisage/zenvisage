@@ -22,6 +22,14 @@ public class Polygon {
 		
 	}
 	
+	public List<Point> getPoints() {
+		return points;
+	}
+
+	public void setPoints(List<Point> points) {
+		this.points = points;
+	}
+
 	/**
 	 * Checks if a tuple is within the polygon
 	 * @param tuple

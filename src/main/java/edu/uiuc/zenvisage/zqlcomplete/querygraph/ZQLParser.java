@@ -18,6 +18,7 @@ import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
@@ -77,9 +78,14 @@ public class ZQLParser {
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz(), row.getSketchPoints());
 			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 			VisualComponentNode vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor);
-			vcNode.setDb(db);
 			Processe process = row.getProcesse();
 			ProcessNode processNode = new ProcessNode(process, lookuptable);	
+			if(vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
+				vcNode = new ScatterVCNode(vc, lookuptable, sqlQueryExecutor);
+				processNode = new ScatterProcessNode(process, lookuptable);
+			}
+			vcNode.setDb(db);
+
 			
 			// Add to queue
 			nodeQueue.add(vcNode);

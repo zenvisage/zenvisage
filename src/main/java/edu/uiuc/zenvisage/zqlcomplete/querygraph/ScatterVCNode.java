@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.roaringbitmap.IntIterator;
 import org.roaringbitmap.RoaringBitmap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.data.remotedb.Points;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
@@ -26,6 +28,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 public class ScatterVCNode extends VisualComponentNode {
+	static final Logger logger = LoggerFactory.getLogger(ScatterVCNode.class);
 
 	private Map<String, ScatterResult> data = new HashMap<String, ScatterResult>();
 	
@@ -48,13 +51,14 @@ public class ScatterVCNode extends VisualComponentNode {
 		// execute scatter
 		
 		// data fetcher
+		logger.info("fetching scatter data");
 		data = getScatterData();
-		
+		Result output = new Result();
+
+		ScatterProcessNode.computeScatterRep(data, this.getVc(), output);
+		logger.info("scatter data");
+		logger.info(output.outputCharts.toString());
 		// data transformer
-		List<Polygon> rectangles = this.getVc().getSketch().getPolygons();
-		if (!rectangles.isEmpty()) {
-			removeNonRectanglePoints(data, rectangles);
-		}
 		
 		// After we have executed this scatter vc node, we have fetched the data and performed data transformation.
 		// This allows us to easily move on to the task processor, while keeping the VCNode -> ProcessNode flow, with having to add a specific data transform node
@@ -101,28 +105,7 @@ public class ScatterVCNode extends VisualComponentNode {
 		return result;
 	}
 	
-	/**
-	 * Given scatter plot charts, remove points from each that are not in the query rectangle
-	 * @param allDataCharts (side effect: modified)
-	 * @param rectangles
-	 */
-	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Polygon> polygons) {
-		for (ScatterResult chart : allDataCharts.values()) {
-			for(Iterator<Point> it = chart.points.iterator(); it.hasNext();) {
-				Point point = it.next();
-				if(!inArea(point,polygons)) {
-					it.remove();					
-				}
-			}
-		}
-	}
-	
-	private static boolean inArea(Point point, List<Polygon> polygons) {
-		for (Polygon r : polygons) {
-			if (r.inArea(point)) return true;
-		}
-		return false;
-	}
+
 	
 	private void simpleBinning(Map<String, ScatterResult> allDataCharts, int bins) {
 		int rows = 100; // height
