@@ -65,6 +65,6 @@ public class Polygon {
 			return false;
 		}
 		
-		return false;
+		return true;
 	}
 }

@@ -1,10 +1,12 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,9 +43,15 @@ public class ScatterProcessNode extends ProcessNode {
 			List<Polygon> rectangles = vcNode.getVc().getSketch().getPolygons();
 			if (!rectangles.isEmpty()) {
 				removeNonRectanglePoints(vcNode.getData(), rectangles);
-				Result result = scatterRepExecution();
-				logger.info(result.outputCharts.toString());
-			}
+				output = scatterRepExecution();
+				try {
+					Chart chart = output.getOutputCharts().get(0);
+					String result = new ObjectMapper().writeValueAsString(chart);
+					logger.info(result);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			}
 		}
 		if(process.getMethod().equals("Rep")) {
 			output = scatterRepExecution();
@@ -65,10 +73,13 @@ public class ScatterProcessNode extends ProcessNode {
 	public static void computeScatterRep(Map<String, ScatterResult> input, VisualComponentQuery q, Result finalOutput) {
 		List<ScatterResult> datas = new ArrayList<ScatterResult>(input.values());
 		int len = Math.min(datas.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
+			len = datas.size();
+		}
 		for (int i = 0; i < len; i++) {
 			Chart chartOutput = new Chart();
 			ScatterResult data = datas.get(i);
-			System.out.println(data.name + Integer.toString(data.count / data.points.size()));
+			//System.out.println(data.name + Integer.toString(data.count / data.points.size()));
 			chartOutput.setxType((i+1)+" : "+data.name);
 			chartOutput.setyType(q.getY().getAttributes().get(0));
 			for (Point point : data.points) {
