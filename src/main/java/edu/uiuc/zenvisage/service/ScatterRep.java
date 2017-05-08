@@ -2,7 +2,6 @@ package edu.uiuc.zenvisage.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.*;
 
@@ -10,6 +9,7 @@ import edu.uiuc.zenvisage.model.*;
  * @author xiaofo
  *
  */
+@Deprecated
 public class ScatterRep {
 
 	public static void compute(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
@@ -25,9 +25,9 @@ public class ScatterRep {
 			System.out.println(data.name + Integer.toString(data.count / data.points.size()));
 			chartOutput.setxType((i+1)+" : "+data.name);
 			chartOutput.setyType(yAxis);
-			for (Tuple point : data.points) {
-				chartOutput.xData.add(Double.toString(point.x));
-				chartOutput.yData.add(Double.toString(point.y));
+			for (Point point : data.points) {
+				chartOutput.xData.add(Float.toString(point.getX()));
+				chartOutput.yData.add(Float.toString(point.getY()));
 			}
 			finalOutput.outputCharts.add(chartOutput);
 		}

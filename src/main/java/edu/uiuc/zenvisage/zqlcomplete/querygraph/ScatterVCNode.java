@@ -15,11 +15,11 @@ import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
+import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
 import edu.uiuc.zenvisage.model.Sketch;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
@@ -88,9 +88,9 @@ public class ScatterVCNode extends VisualComponentNode {
 			Points points = vc.getPoints();
 			List<WrapperType> xValues = points.getXList();
 			List<WrapperType> yValues = points.getYList();
-			List<Tuple> tuples = new ArrayList<Tuple>();
+			List<Point> tuples = new ArrayList<Point>();
 			for(int i = 0; i < points.getXList().size(); i++) {
-				Tuple tuple = new Tuple((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
+				Point tuple = new Point((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
 				tuples.add(tuple);
 			}
 			ScatterResult currResult = new ScatterResult(tuples,0,zValue);
@@ -108,8 +108,8 @@ public class ScatterVCNode extends VisualComponentNode {
 	 */
 	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Polygon> polygons) {
 		for (ScatterResult chart : allDataCharts.values()) {
-			for(Iterator<Tuple> it = chart.points.iterator(); it.hasNext();) {
-				Tuple point = it.next();
+			for(Iterator<Point> it = chart.points.iterator(); it.hasNext();) {
+				Point point = it.next();
 				if(!inArea(point,polygons)) {
 					it.remove();					
 				}
@@ -117,9 +117,9 @@ public class ScatterVCNode extends VisualComponentNode {
 		}
 	}
 	
-	private static boolean inArea(Tuple tuple, List<Polygon> polygons) {
+	private static boolean inArea(Point point, List<Polygon> polygons) {
 		for (Polygon r : polygons) {
-			if (r.inArea(tuple)) return true;
+			if (r.inArea(point)) return true;
 		}
 		return false;
 	}
@@ -129,20 +129,25 @@ public class ScatterVCNode extends VisualComponentNode {
 		int cols = 200; // width
 		int cells = rows*cols;
 		// grid interval 
-		double S = Math.sqrt(cells/bins);
+		float S = (float) Math.sqrt(cells/bins);
 		
-		Tuple grid_center = new Tuple(S/2, S/2);
-		while (grid_center.y < rows && grid_center.x < cols) {
+		float x = S/2;
+		float y = S/2;
+		
+		// create all grid centers
+		while (y < rows && x < cols) {
 			
 			// add grid to array, maybe count points here
 			
 			// move right, next grid in this row
-			grid_center.x = grid_center.x + S;
-			if (grid_center.x + S > cols) {
+			x = x + S;
+			if (x + S > cols) {
 				// move down, start of next grid row
-				grid_center.y = grid_center.y + S;
-				grid_center.x = S/2;
+				y = y + S;
+				x = S/2;
 			}
+			
+			Point grid_center = new Point(x,y);
 		}
 		// 2D array for each bin.
 		// look through all tuples, add them to each bin.

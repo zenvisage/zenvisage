@@ -3,7 +3,6 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 import java.util.List;
 
 import edu.uiuc.zenvisage.model.Point;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 
 public class Polygon {
 	
@@ -28,7 +27,7 @@ public class Polygon {
 	 * @param tuple
 	 * @return
 	 */
-	public boolean inArea(Tuple tuple) {
+	public boolean inArea(Point point) {
 		if (points.isEmpty()) {
 			return false;
 		}
@@ -38,9 +37,9 @@ public class Polygon {
 		float minY = firstPoint.getY();
 		float maxY = firstPoint.getY();
 		
-		for (Point point : points) {
-			float x = point.getX();
-			float y = point.getY();
+		for (Point p : points) {
+			float x = p.getX();
+			float y = p.getY();
 			
 			if (x < minX) minX = x;
 			else if (x > maxX) maxX = x;
@@ -49,8 +48,8 @@ public class Polygon {
 			else if (y > maxY) maxY = y;
 		}
 		
-		float x = (float) tuple.x;
-		float y = (float) tuple.y;
+		float x = (float) point.getX();
+		float y = (float) point.getY();
 		
 		
 		// check if point is outside bounding box

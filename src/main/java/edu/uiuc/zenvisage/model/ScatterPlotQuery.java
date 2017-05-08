@@ -5,7 +5,6 @@ package edu.uiuc.zenvisage.model;
 
 import java.util.List;
 
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 
 /**
  * @author xiaofo
@@ -34,9 +33,12 @@ public class ScatterPlotQuery {
 		public Rectangle() {
 			
 		}
-		
-		public boolean inArea(Tuple tuple) {
-			return this.x1 <= tuple.x && tuple.x <= this.x2 && this.y1 <= tuple.y && tuple.y <= this.y2;
+		// obsolete
+//		public boolean inArea(Tuple tuple) {
+//			return this.x1 <= tuple.x && tuple.x <= this.x2 && this.y1 <= tuple.y && tuple.y <= this.y2;
+//		}
+		public boolean inArea(Point point) {
+			return true;
 		}
 	}
 	

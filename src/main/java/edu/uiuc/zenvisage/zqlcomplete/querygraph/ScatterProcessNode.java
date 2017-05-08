@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import edu.uiuc.zenvisage.model.Chart;
+import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
@@ -56,9 +56,9 @@ public class ScatterProcessNode extends ProcessNode {
 			System.out.println(data.name + Integer.toString(data.count / data.points.size()));
 			chartOutput.setxType((i+1)+" : "+data.name);
 			chartOutput.setyType(q.getY().getAttributes().get(0));
-			for (Tuple point : data.points) {
-				chartOutput.xData.add(Double.toString(point.x));
-				chartOutput.yData.add(Double.toString(point.y));
+			for (Point point : data.points) {
+				chartOutput.xData.add(Float.toString(point.getX()));
+				chartOutput.yData.add(Float.toString(point.getY()));
 			}
 			finalOutput.outputCharts.add(chartOutput);
 		}

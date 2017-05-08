@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery.*;
 import edu.uiuc.zenvisage.model.*;
@@ -18,12 +17,13 @@ import edu.uiuc.zenvisage.model.*;
  * @author xiaofo
  *
  */
+@Deprecated
 public class ScatterRank {
 	
 	public static void compute(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
 		List<ScatterResult> datas = new ArrayList<ScatterResult>(output.values());
 		for (ScatterResult data : datas) {
-			for (Tuple point : data.points) {
+			for (Point point : data.points) {
 				if (inArea(point,q)) data.count ++;
 			}
 		}
@@ -35,7 +35,7 @@ public class ScatterRank {
 		generateCharts(datas, q.numOfResults, q.yAxis, finalOutput);
 	}
 	
-	public static boolean inArea(Tuple tuple, ScatterPlotQuery q) {
+	public static boolean inArea(Point tuple, ScatterPlotQuery q) {
 		for (Rectangle r : q.rectangles) {
 			if (r.inArea(tuple)) return true;
 		}
@@ -50,9 +50,9 @@ public class ScatterRank {
 			System.out.println(data.name + Double.toString(((double) data.count) / ((double) data.points.size())));
 			chartOutput.setxType((i+1)+" : "+data.name);
 			chartOutput.setyType(yAxis);
-			for (Tuple point : data.points) {
-				chartOutput.xData.add(Double.toString(point.x));
-				chartOutput.yData.add(Double.toString(point.y));
+			for (Point point : data.points) {
+				chartOutput.xData.add(Float.toString(point.getX()));
+				chartOutput.yData.add(Float.toString(point.getY()));
 			}
 			finalOutput.outputCharts.add(chartOutput);
 		}
