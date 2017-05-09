@@ -27,9 +27,9 @@ import edu.uiuc.zenvisage.data.Query.CompositeFilterOperator;
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
 import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
+import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.data.Query.Filter;
 
 
@@ -335,12 +335,12 @@ public class Executor {
 		if (zValues == null) return null;
 		List<String> zKeys = new ArrayList<String>(zValues.keySet());
 		for (String zKey : zKeys) {
-			List<Tuple> points = new ArrayList<Tuple>();
+			List<Point> points = new ArrayList<Point>();
 			RoaringBitmap bitset = zValues.get(zKey);
 			IntIterator it = bitset.getIntIterator();
 			while (it.hasNext()) {
 				int row = it.next();
-				Tuple tuple = new Tuple(Double.parseDouble(xValues.get(row)),Double.parseDouble(yValues.get(row)));
+				Point tuple = new Point(Float.parseFloat(xValues.get(row)),Float.parseFloat(yValues.get(row)));
 				points.add(tuple);
 			}
 			ScatterResult currResult = new ScatterResult(points,0,zKey);

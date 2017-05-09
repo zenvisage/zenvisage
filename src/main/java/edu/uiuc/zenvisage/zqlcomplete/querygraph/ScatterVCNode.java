@@ -1,5 +1,6 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,25 +8,33 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.roaringbitmap.IntIterator;
 import org.roaringbitmap.RoaringBitmap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.data.remotedb.Points;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
+import edu.uiuc.zenvisage.model.Chart;
+import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
 import edu.uiuc.zenvisage.model.Sketch;
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
 import edu.uiuc.zenvisage.service.ScatterRank;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
 public class ScatterVCNode extends VisualComponentNode {
+	static final Logger logger = LoggerFactory.getLogger(ScatterVCNode.class);
 
 	private Map<String, ScatterResult> data = new HashMap<String, ScatterResult>();
 	
@@ -45,19 +54,50 @@ public class ScatterVCNode extends VisualComponentNode {
 
 	@Override
 	public void execute() {
+		
+		// update lookup table with axisvariables
+		XColumn x = this.getVc().getX();
+		YColumn y = this.getVc().getY();
+		ZColumn z = this.getVc().getZ();
+
+		// e.g., x1 <- 'year'
+		if (!x.getVariable().equals("") && !x.getAttributes().isEmpty()) {
+			AxisVariable axisVar = new AxisVariable("X", "", x.getAttributes());
+			lookuptable.put(x.getVariable(), axisVar);
+		}
+		if (!y.getVariable().equals("") && !y.getAttributes().isEmpty()) {
+			AxisVariable axisVar = new AxisVariable("Y", "", y.getAttributes());
+			lookuptable.put(y.getVariable(), axisVar);
+		}
+		// For z, use type variable = z.getColumn!
+		if (!z.getVariable().equals("") && !z.getValues().isEmpty()) {
+			AxisVariable axisVar = new AxisVariable("Z", z.getAttribute(), z.getValues());
+			lookuptable.put(z.getVariable(), axisVar);
+		}
+		
 		// execute scatter
 		
 		// data fetcher
+		logger.info("fetching scatter data");
 		data = getScatterData();
-		
-		// data transformer
-		List<Polygon> rectangles = this.getVc().getSketch().getPolygons();
-		if (!rectangles.isEmpty()) {
-			removeNonRectanglePoints(data, rectangles);
+		Result output = new Result();
+
+		ScatterProcessNode.computeScatterRep(data, this.getVc(), output);
+		logger.info("scatter data: first chart");
+		try {
+			Chart chart = output.getOutputCharts().get(0);
+			String result = new ObjectMapper().writeValueAsString(chart);
+			logger.info(result);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		// data transformer
 		
 		// After we have executed this scatter vc node, we have fetched the data and performed data transformation.
 		// This allows us to easily move on to the task processor, while keeping the VCNode -> ProcessNode flow, with having to add a specific data transform node
+		this.getLookUpTable().put(this.getVc().getName().getName(), this);
+		this.state = State.FINISHED;
 	}
 	
 	private Map<String, ScatterResult> getScatterData() {
@@ -88,9 +128,9 @@ public class ScatterVCNode extends VisualComponentNode {
 			Points points = vc.getPoints();
 			List<WrapperType> xValues = points.getXList();
 			List<WrapperType> yValues = points.getYList();
-			List<Tuple> tuples = new ArrayList<Tuple>();
+			List<Point> tuples = new ArrayList<Point>();
 			for(int i = 0; i < points.getXList().size(); i++) {
-				Tuple tuple = new Tuple((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
+				Point tuple = new Point((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
 				tuples.add(tuple);
 			}
 			ScatterResult currResult = new ScatterResult(tuples,0,zValue);
@@ -101,48 +141,32 @@ public class ScatterVCNode extends VisualComponentNode {
 		return result;
 	}
 	
-	/**
-	 * Given scatter plot charts, remove points from each that are not in the query rectangle
-	 * @param allDataCharts (side effect: modified)
-	 * @param rectangles
-	 */
-	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Polygon> polygons) {
-		for (ScatterResult chart : allDataCharts.values()) {
-			for(Iterator<Tuple> it = chart.points.iterator(); it.hasNext();) {
-				Tuple point = it.next();
-				if(!inArea(point,polygons)) {
-					it.remove();					
-				}
-			}
-		}
-	}
-	
-	private static boolean inArea(Tuple tuple, List<Polygon> polygons) {
-		for (Polygon r : polygons) {
-			if (r.inArea(tuple)) return true;
-		}
-		return false;
-	}
+
 	
 	private void simpleBinning(Map<String, ScatterResult> allDataCharts, int bins) {
 		int rows = 100; // height
 		int cols = 200; // width
 		int cells = rows*cols;
 		// grid interval 
-		double S = Math.sqrt(cells/bins);
+		float S = (float) Math.sqrt(cells/bins);
 		
-		Tuple grid_center = new Tuple(S/2, S/2);
-		while (grid_center.y < rows && grid_center.x < cols) {
+		float x = S/2;
+		float y = S/2;
+		
+		// create all grid centers
+		while (y < rows && x < cols) {
 			
 			// add grid to array, maybe count points here
 			
 			// move right, next grid in this row
-			grid_center.x = grid_center.x + S;
-			if (grid_center.x + S > cols) {
+			x = x + S;
+			if (x + S > cols) {
 				// move down, start of next grid row
-				grid_center.y = grid_center.y + S;
-				grid_center.x = S/2;
+				y = y + S;
+				x = S/2;
 			}
+			
+			Point grid_center = new Point(x,y);
 		}
 		// 2D array for each bin.
 		// look through all tuples, add them to each bin.

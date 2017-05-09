@@ -39,7 +39,7 @@ public class SQLQueryExecutor {
 	private String username = "postgres";
 	private String password = "zenvisage";
 	Connection c = null;
-	private VisualComponentList visualComponentList;
+	public VisualComponentList visualComponentList;
 
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -199,7 +199,13 @@ public class SQLQueryExecutor {
 				+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
 				+ " ORDER BY " + x;
 			}
-
+			// for scatter plot queries
+			if (agg.equals("")) {
+				sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
+				+ " FROM " + databaseName
+				+ " ORDER BY " + x;
+			}
+			
 			System.out.println("Running ZQL Query :"+sql);
 			//excecute sql and put into VisualComponentList
 			executeSQL(sql, zqlRow, databaseName, x, zqlRow.getY().getAttributes());

@@ -9,6 +9,8 @@ public class VizColumn {
 	
 	public static final String aggregation = "aggregation";
 	public static final String type = "type";
+	public static final String scatter = "scatter";
+	public static final String lineChart = "linechart";
 	//private String variable;
 	//private List<String> type;
 	//private List<String> parameters;

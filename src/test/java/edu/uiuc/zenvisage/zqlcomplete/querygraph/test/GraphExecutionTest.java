@@ -5,11 +5,15 @@ import java.sql.SQLException;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.service.ZvMain;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.ScatterVCNode;
 
 public class GraphExecutionTest {
+	static final Logger logger = LoggerFactory.getLogger(GraphExecutionTest.class);
 
 	@Test
 	public void TestBasicQueryExecution() throws SQLException {
@@ -80,6 +84,23 @@ public class GraphExecutionTest {
 			String outputGraphExecutor = zvMain.runQueryGraph(arg);
 			System.out.println("Output");
 			System.out.println(outputGraphExecutor);
+			
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestScatterQueryExecution() throws SQLException {
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"x\":\"5\", \"y\":\"200000\"}, {\"x\":\"200\", \"y\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}}  },{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"z1\",\"values\":[]}, \"viz\":{\"map\": {\"type\":\"scatter\"}},\"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
+		
+		try {
+			ZvMain zvMain = new ZvMain();
+			logger.info("testing Scatter query");
+			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			logger.info("Output");
+			logger.info(outputGraphExecutor);
 			
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block

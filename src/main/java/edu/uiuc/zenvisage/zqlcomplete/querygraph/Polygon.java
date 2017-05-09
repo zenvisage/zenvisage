@@ -1,30 +1,70 @@
 package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
-import edu.uiuc.zenvisage.model.ScatterResult.Tuple;
+import java.util.List;
+
+import edu.uiuc.zenvisage.model.Point;
 
 public class Polygon {
-	public double x1;
-    public double x2;
-    public double y1;
-    public double y2;
+	
+	private List<Point> points;
+
 	/**
 	 * @param x1
 	 * @param x2
 	 * @param y1
 	 * @param y2
 	 */
-	public Polygon(double x1, double x2, double y1, double y2) {
-		this.x1 = x1;
-		this.x2 = x2;
-		this.y1 = y1;
-		this.y2 = y2;
+	public Polygon(List<Point> points) {
+		this.points = points;
 	}
 	
 	public Polygon() {
 		
 	}
 	
-	public boolean inArea(Tuple tuple) {
-		return this.x1 <= tuple.x && tuple.x <= this.x2 && this.y1 <= tuple.y && tuple.y <= this.y2;
+	public List<Point> getPoints() {
+		return points;
+	}
+
+	public void setPoints(List<Point> points) {
+		this.points = points;
+	}
+
+	/**
+	 * Checks if a tuple is within the polygon
+	 * @param tuple
+	 * @return
+	 */
+	public boolean inArea(Point point) {
+		if (points.isEmpty()) {
+			return false;
+		}
+		Point firstPoint = points.get(0);
+		float minX = firstPoint.getX();
+		float maxX = firstPoint.getX();
+		float minY = firstPoint.getY();
+		float maxY = firstPoint.getY();
+		
+		for (Point p : points) {
+			float x = p.getX();
+			float y = p.getY();
+			
+			if (x < minX) minX = x;
+			else if (x > maxX) maxX = x;
+			
+			if (y < minY) minY = y;
+			else if (y > maxY) maxY = y;
+		}
+		
+		float x = (float) point.getX();
+		float y = (float) point.getY();
+		
+		
+		// check if point is outside bounding box
+		if (x < minX || x > maxX || y < minY || y > maxY) {
+			return false;
+		}
+		
+		return true;
 	}
 }
