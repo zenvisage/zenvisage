@@ -161,7 +161,6 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
-
     if (getScatterplotOption())
     {
       graph.selectAll("dot")
@@ -180,7 +179,7 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
           .attr("fill", "none");
     }
 
-    if (data2 != null && data2 != undefined && includeSketch)
+    if (data2 != null && data2 != undefined && includeSketch && getShowOriginalSketch())
     {
       graph.append("g").attr("clip-path", "url(#clip-" + count.toString() + ")")
                         .append("path").attr("d", valueline(data2))

@@ -359,6 +359,7 @@ app.controller('options-controller', [
     $scope.numResults = 50;
     $scope.clusterSize = 3;
     $scope.considerRange = true;
+    $scope.showOriginalSketch = true;
     $scope.equation =  '';
     $scope.zqltable = false;
     $scope.chartSettings = ChartSettings;
@@ -387,6 +388,13 @@ app.controller('options-controller', [
     });
 
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        $scope.callGetUserQueryResultsWithCallBack();
+      }
+    });
+
+    $scope.$watchGroup( ['showOriginalSketch' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
         $scope.callGetUserQueryResultsWithCallBack();
