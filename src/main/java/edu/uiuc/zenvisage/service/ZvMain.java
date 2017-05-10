@@ -306,18 +306,11 @@ public class ZvMain {
 		return null;
 	}
 
-	public String runCreateClasses(String query) throws IOException, SQLException{
+	public void runCreateClasses(String query) throws IOException, SQLException{
 		System.out.println("Create Dynamic Classes Configuration Query:" + query);
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
 	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
 	    sqlQueryExecutor.persistDynamicClassDetails(dc);
-	    
-        //Testing
-        //String retrieved = runRetrieveClasses("{\"dataset\": \"real_estate\"}");
-        //System.out.println("Retrieved query:"+retrieved);
-
-	    return "Success";
-	    
 	}
 	
 	public String runRetrieveClasses(String query) throws IOException, SQLException{

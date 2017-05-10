@@ -41,6 +41,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     ).then(
         function (response) {
           console.log("success: ", response);
+          $('#class-creation-close-button')[0].click();
         },
         function (response) {
           console.log("failed: ", response);
@@ -56,7 +57,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
     $scope.getClassInfo();
   });
 
-  var testQ = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,90],[90,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,100],[100,1457.0552]]}]}"
+  //var testQ = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,90],[90,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,100],[100,1457.0552]]}]}"
   $scope.getClassInfo = function getClassInfo() {
     var query = {};
     query["dataset"] = getSelectedDataset();
@@ -684,6 +685,8 @@ app.controller('options-controller', [
           plotData.push( { "xval": xval[i], "yval": y } )
         }
       }
+
+      angular.element('#class-creation').triggerHandler('click');
 
       var zType = angular.element($("#sidebar")).scope().selectedCategory;
       var xType = angular.element($("#sidebar")).scope().selectedXAxis;
