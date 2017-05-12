@@ -18,6 +18,7 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
   var pointSize = 1.0;
   var drawPoints = false;
   var strokeWidth = 1.0;
+
   if ( getScatterplotOption() )
   {
     connectSeparatedPoints = false;
@@ -97,10 +98,46 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#result-" + count.toString())
           .append("svg")
-          .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
+          .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+    if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
+    {
+      var tooltipText = ""
+      for (i = 0; i < zlabel.split(".").length; i++) {
+        var name = globalDatasetInfo["classes"]["classes"][i]["name"]
+        var value = globalDatasetInfo["classes"]["classes"][i]["values"][zlabel.split(".")[i]]
+        tooltipText += name + ": " + value + " "
+      }
+
+      var tooltip = graph.append("g")
+        .attr("class", "custom-tooltip")
+        .attr("id", "custom-tooltip" + count.toString())
+        .style("display", "none");
+      tooltip.append("rect")
+        .attr("width", 60)
+        .attr("height", 20)
+        .attr("fill", "white")
+        .style("opacity", 0.5);
+      tooltip.append("text")
+        .attr("x", 30)
+        .attr("dy", "1.2em")
+        .attr("text", tooltipText)
+        .style("text-anchor", "left")
+        .attr("font-size", "12px")
+
+      graph.on("mouseover", function() { $($(this).find(".custom-tooltip")[0]).show(); })
+      .on("mouseout", function() { $($(this).find(".custom-tooltip")[0]).hide(); })
+      .on("mousemove", function(d) {
+        var xPosition = d3.mouse(this)[0] - 5;
+        var yPosition = d3.mouse(this)[1] - 5;
+        $($(this).find(".custom-tooltip")[0]).attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+        var ttt = $($($(this).find(".custom-tooltip")[0]).children()[1]).attr("text")
+        $($($(this).find(".custom-tooltip")[0]).children()[1]).text(ttt);
+      });
+    }
 
     graph.append("defs").append("clipPath")
         .attr("id", "clip-" + count.toString())
@@ -143,8 +180,9 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
             "translate(" + (width/2) + " ," +
            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
+      .attr("count", count.toString())
       .text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
-
+      //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
     graph.append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +

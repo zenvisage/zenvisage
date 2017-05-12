@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 @Controller
@@ -37,7 +39,7 @@ public class ZvBasicAPI {
 
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody
-	public void createClasses(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
+	public String createClasses(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
 	    StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -45,6 +47,7 @@ public class ZvBasicAPI {
 	    }
 	    String body = stringBuilder.toString();
 	    zvMain.runCreateClasses(body);
+	    return new ObjectMapper().writeValueAsString(body);
 	}
 	
 	/*

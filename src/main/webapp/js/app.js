@@ -41,6 +41,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     ).then(
         function (response) {
           console.log("success: ", response);
+          globalDatasetInfo["classes"] = JSON.parse(response.data)
           $('#class-creation-close-button')[0].click();
         },
         function (response) {
@@ -65,6 +66,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
     ).then(
         function (response) {
           console.log("success: ", response);
+          globalDatasetInfo["classes"] = response.data
           $scope.classes = response.data["classes"]
         },
         function (response) {
@@ -931,7 +933,7 @@ app.service('ChartSettings', function () {
     return {};
 })
 
-  $('#tree-option').click(function() {
-    $(this).toggleClass("active");
-    $("#tree-div").toggle("active");
-  });
+  // $('#tree-option').click(function() {
+  //   $(this).toggleClass("active");
+  //   $("#tree-div").toggle("active");
+  // });
