@@ -6,6 +6,8 @@
     <title>Visual Data Exploration</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <!-- <link href="css/draw.css" rel="stylesheet"> -->
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -251,7 +253,9 @@
               <div class="col-md-11">
                   <svg id="main-chart">
                   </svg>
+
               </div>
+              <div id="colorbar"></div>
               <div class="row col-md-1">
                   <div class="col-md-12">
                       <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
@@ -269,9 +273,8 @@
                       <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
                   </div>
               </div>
+
           </div>
-
-
 
           </div>
           <!-- drawing interface END-->
@@ -344,7 +347,7 @@
               </table>
             </div>
             <div ng-show="!zqltable" class="row">
-              <div class="col-md-3">
+              <div class="col-md-3" >
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
@@ -410,6 +413,12 @@
                     <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                   </form>
                 </div>
+              <!-- Insert slider-->
+                <p><nobr>
+                  <label for="amount">Smoothing Constant:</label>
+                  <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
+                </nobr></p>
+                <div id="slider-range-max" align = "right" style="width:200px;"></div>
 
                 <!--
                 <div id="math-equation">
@@ -427,6 +436,8 @@
             </div>
           </div>
         </div>
+
+
         <!-- drawng interface + zql table END-->
 
         <hr>
@@ -458,6 +469,9 @@
         </div>
       </div>
     </div>
+
+
+
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/jquery-ui.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
@@ -471,15 +485,26 @@
     <script src="js/draw.js"></script>
     <script src="js/query.js"></script>
     <script src="js/helper.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <!-- <script src="js/graph.js"></script> -->
     <script src="js/fileUploader.js"></script>
     <script src="js/renderplot.js"></script>
     <script src="js/parsertypes.js"></script>
     <script src="js/zqlparser.js"></script>
     <script src="js/zqlgraph.js"></script>
+    <script src="js/slider.js"></script>
+    <script src="js/colorbar.js"></script>
     <script>
       // var tree = tree();
       // tree.initialize();
     </script>
+
+
+
+
   </body>
+
 </html>
