@@ -38,8 +38,6 @@ public class SmoothingUtil {
 	}
 	
 	
-	// FIXME: Integrate this with frontend.
-	//Smoothing function wrapper on deprecated data format.
 	public static double[][]  applySmoothing(
 			double[][] data,
 			ZvQuery zvQuery
@@ -94,8 +92,6 @@ public class SmoothingUtil {
 	   return data;
 	}
 	
-	
-	//Smoothing function wrapper on deprecated data format.
 	public static double[][]  applySmoothing(
 			double[][] data,
 			String type,
