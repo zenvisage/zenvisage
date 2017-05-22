@@ -9,8 +9,8 @@ var outlierDygraphsNew = {};
 
 //displays user results
 
-function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
-{
+function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
+{  console.log("curflipY",flipY)
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
@@ -18,7 +18,6 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
   var pointSize = 1.0;
   var drawPoints = false;
   var strokeWidth = 1.0;
-
   if ( getScatterplotOption() )
   {
     connectSeparatedPoints = false;
@@ -81,7 +80,14 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
 
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
-    var y = d3.scaleLinear().range([height-20, 20]);
+
+    if(flipY){
+        var y = d3.scaleLinear().range([20, height-20]);
+    }
+    else{
+        var y = d3.scaleLinear().range([height-20, 20]);
+    }
+
     x.domain([xmin, xmax]);
     y.domain([ymin, ymax]);
     // x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
@@ -199,6 +205,7 @@ function displayUserQueryResultsHelper( userQueryResults, includeSketch = true )
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
+
     if (getScatterplotOption())
     {
       graph.selectAll("dot")
@@ -245,7 +252,7 @@ function replaceAll(str, find, replace) {
   return str.replace(new RegExp(find, 'g'), replace);
 }
 
-function displayRepresentativeResultsHelper( representativePatternResults )
+function displayRepresentativeResultsHelper( representativePatternResults , flipY )
 {
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
@@ -293,7 +300,13 @@ function displayRepresentativeResultsHelper( representativePatternResults )
 
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
-    var y = d3.scaleLinear().range([height-20, 20]);
+    if(flipY){
+        var y = d3.scaleLinear().range([20, height-20]);
+    }
+    else{
+        var y = d3.scaleLinear().range([height-20, 20]);
+    }
+
     x.domain([xmin, xmax]);
     y.domain([ymin, ymax]);
 
@@ -470,7 +483,13 @@ function displayOutlierResultsHelper( outlierResults )
 
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
-    var y = d3.scaleLinear().range([height-20, 20]);
+    if(flipY){
+        var y = d3.scaleLinear().range([20, height-20]);
+    }
+    else{
+        var y = d3.scaleLinear().range([height-20, 20]);
+    }
+
     x.domain([xmin, xmax]);
     y.domain([ymin, ymax]);
 

@@ -7,8 +7,10 @@ var sketchpadData;
 
 var xrangeNew;
 
-function createSketchpad( data )
+function createSketchpad( data , flipY)
 {
+
+
   // change these values somewhere. hard coded for now
   var topMargin = 0;
   var leftMargin = 30;
@@ -23,7 +25,15 @@ function createSketchpad( data )
 
   // set the ranges
   var x = d3.scaleLinear().range([0, width]);
-  var y = d3.scaleLinear().range([height, 0]);
+  if(flipY){
+      var y = d3.scaleLinear().range([0,height]);
+  }
+  else{
+      var y = d3.scaleLinear().range([height, 0]);
+  }
+
+
+/**************changed*******************/
 
   // range for the zoom
   var x2 = d3.scaleLinear().range([0, width]);
@@ -259,7 +269,7 @@ function plotSketchpadNew( data )//, xType, yType, zType)
 
 // initialize scatter?
 
-function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category)
+function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category , flipY)
 {
   // intialize to 100 points
   var data = [];
@@ -268,7 +278,7 @@ function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category
   }
   // sketchpad = getSketchpadDygraphObject( data, valueRange );
   // getSketchpadDygraphObjectNew( data, valueRange );
-  createSketchpad( data );
+  createSketchpad( data , flipY);
   refreshZoomEventHandler();
 }
 
