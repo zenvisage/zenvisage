@@ -380,6 +380,13 @@
                     </div>
                   </div>
                 </div>
+                <div id="math-equation">
+                  <div class="info-text"><b>Custom Equation</b></div>
+                  <div>
+                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
+                  </div>
+                </div>
+
                 <!--
                 <div class="info-text"><b>Number of Segments</b></div>
                   <div>
@@ -403,7 +410,6 @@
                   </div>
                 </div>
 
-                <br>
                 <div class="info-text"><b>Options</b></div>
                 <div class="checkbox">
                   <form>
@@ -423,26 +429,26 @@
                 </form>
               </div>
 
-
-              <!-- Insert slider-->
-                <p><nobr>
-                  <label for="amount">Smoothing Constant:</label>
-                  <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
-                </nobr></p>
-                <div id="slider-range-max" align = "right" style="width:200px;"></div>
-
-
-
-
-
-                <div id="math-equation">
-                  <div class="info-text"><b>Custom Equation</b></div>
+                
+              </div>
+              <div class="col-md-3" >
+                <div class="info-text"><b>Data Smoothing</b></div>
+                  <!-- <div class="info-text"><b>Type</b></div> -->
+                  <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
+                  <br>
                   <div>
-                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
-                  </div>
+                  <select class="form-control" id="dataset-form-control">
+                    <option value="movingaverage">Moving Average</option>
+                    <option value="exponentialmovingaverage">Exponential</option>
+                    <option value="leossInterpolation">Loess</option>
+                    <option value="gaussian">Gaussian</option>
+                  </select>
+                  <p><nobr>
+                    <label for="amount">Smoothing Constant:</label>
+                    <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
+                  </nobr></p>
+                  <div id="slider-range-max" align = "right" style="width:200px;"></div>
                 </div>
-
-
               </div>
             </div>
           </div>
@@ -451,7 +457,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- drawng interface + zql table END-->
 
