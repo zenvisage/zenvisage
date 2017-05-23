@@ -122,7 +122,7 @@
 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" id="class-creation-close-button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" ng-click="createClasses()"class="btn btn-primary">Create classes</button>
             </div>
           </div>
@@ -195,7 +195,7 @@
             <h5><b>X-axis</b></h5>
             <div ng-repeat="xAxisItem in xAxisItems">
               <label>
-                  <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
+                    <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
               </label>
             </div>
           </div>
@@ -380,6 +380,13 @@
                     </div>
                   </div>
                 </div>
+                <div id="math-equation">
+                  <div class="info-text"><b>Custom Equation</b></div>
+                  <div>
+                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
+                  </div>
+                </div>
+
                 <!--
                 <div class="info-text"><b>Number of Segments</b></div>
                   <div>
@@ -403,31 +410,45 @@
                   </div>
                 </div>
 
-                <br>
                 <div class="info-text"><b>Options</b></div>
                 <div class="checkbox">
                   <form>
                     <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
                   </form>
                   <form>
+                    <input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
+                  </form>
+                  <form>
                     <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                   </form>
                 </div>
-              <!-- Insert slider-->
-                <p><nobr>
-                  <label for="amount">Smoothing Constant:</label>
-                  <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
-                </nobr></p>
-                <div id="slider-range-max" align = "right" style="width:200px;"></div>
 
-                <!--
-                <div id="math-equation">
-                  <div class="info-text"><b>Custom Equation</b></div>
+                <div class="checkbox" ng-controller="datasetController">
+                <form>
+                  <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
+                </form>
+              </div>
+
+                
+              </div>
+              <div class="col-md-3" >
+                <div class="info-text"><b>Data Smoothing</b></div>
+                  <!-- <div class="info-text"><b>Type</b></div> -->
+                  <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
+                  <br>
                   <div>
-                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
-                  </div>
+                  <select class="form-control" id="dataset-form-control">
+                    <option value="movingaverage">Moving Average</option>
+                    <option value="exponentialmovingaverage">Exponential</option>
+                    <option value="leossInterpolation">Loess</option>
+                    <option value="gaussian">Gaussian</option>
+                  </select>
+                  <p><nobr>
+                    <label for="amount">Smoothing Constant:</label>
+                    <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
+                  </nobr></p>
+                  <div id="slider-range-max" align = "right" style="width:200px;"></div>
                 </div>
-                -->
               </div>
             </div>
           </div>
@@ -436,7 +457,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- drawng interface + zql table END-->
 
@@ -500,6 +520,9 @@
     <script>
       // var tree = tree();
       // tree.initialize();
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip({html: true});
+      });
     </script>
 
 

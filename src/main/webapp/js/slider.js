@@ -1,11 +1,10 @@
-console.log('slider')
-
 $( function() {
 	$( "#slider-range-max" ).slider({
 		range: "max",
-		min: 1,
-		max: 10,
-		value: 0,
+		min: 0,
+		max: 1,
+		step:0.05,
+		value: 0.5,
 		slide: function( event, ui ) {
 			$( "#amount" ).val( ui.value );
 			console.log(ui.value);
