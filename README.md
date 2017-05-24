@@ -62,18 +62,15 @@ For making the above change, you could run the following commands:
         
 * In Terminal:
 
-            Make sure your branch is at v2.0 use "git branch" to check 
-            if not, use git checkout origin/v2.0
-            commit you code first(git status;git add ...;git commit -m "blabla"; git push origin v2.0)
             git pull --rebase origin v2.0
             sudo rm -f -r target/
-            sudo rm nohup.out  #(on our server only)
+            sudo rm nohup.out
             sudo kill $(sudo lsof -t -i:8080)  
             
  * Build and deploy code. Inside the zenvisage folder,
  
             sudo sh build.sh
-            sudo sh run.sh  or sudo nohup sh run.sh & #(on our server only)
+            sudo sh run.sh 
 
 * Launch `http://localhost:8080/` (preferably in Chrome, if has error mostly because of uncleared cache, use incognito mode probably fix). 
 
