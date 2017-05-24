@@ -122,6 +122,11 @@ function getScatterplotOption()
   return angular.element($("#table-div")).scope().showScatterplot;
 }
 
+function getShowOriginalSketch()
+{
+  return angular.element($("#table-div")).scope().showOriginalSketch;
+}
+
 function getNumSegments()
 {
   return $('#num-segments input').val()
