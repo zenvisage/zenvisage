@@ -334,7 +334,12 @@ function setPoint(event, g, context) {
   }
 }
 
-
+function patternLoad(){
+  data = JSON.parse($("#pattern-upload-textarea")[0].value);
+  console.log(data);
+  createSketchpad( data );
+  refreshZoomEventHandler();
+}
 
 function Point(x, y){
   this.x=x;
