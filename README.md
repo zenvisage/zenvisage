@@ -53,7 +53,7 @@ For making the above change, you could run the following commands:
             Postgres:
             psql -d postgres -U postgres
             \connect postgres;
-            DROP schema public cascade; CREATE schema public;
+            DROP schema public cascade;
 
 * Data files location:
             Have you data folder under zenvisage folder, same level of src folder, name it data
