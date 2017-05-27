@@ -6,6 +6,8 @@
     <title>Visual Data Exploration</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <!-- <link href="css/draw.css" rel="stylesheet"> -->
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -43,6 +45,29 @@
           </div>
         </div>
       </form>
+
+      <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Upload Query Data Pattern</h4>
+            </div>
+            <div class="modal-body" id="pattern-upload-body">
+                JSON Example:  
+                <br>
+                <small>[{"xval":2450552,"yval":13.847},{"xval":2450567,"yval":13.637},{"xval":2450569,"yval":13.717},{"xval":2450597,"yval":14.825},{"xval":2450607,"yval":15.262}]</small>
+              <form id="pattern-upload-form" onsubmit="return patternLoad();">
+                <textarea rows="10" cols="55" id="pattern-upload-textarea">[{"xval":2450552.8300000001,"yval":13.847},{"xval":2450567.79,"yval":13.637},{"xval":2450569.79,"yval":13.717},{"xval":2450571.8100000001,"yval":13.849},{"xval":2450573.75,"yval":13.89},{"xval":2450575.7599999998,"yval":13.985},{"xval":2450578.73,"yval":14.048},{"xval":2450582.7999999998,"yval":14.162},{"xval":2450597.75,"yval":14.825},{"xval":2450607.75,"yval":15.262}]</textarea>
+                <div class="modal-footer">
+                  <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="modal fade" id="class-creation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
         <div class="modal-dialog" role="document">
@@ -120,7 +145,7 @@
 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" id="class-creation-close-button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" ng-click="createClasses()"class="btn btn-primary">Create classes</button>
             </div>
           </div>
@@ -174,6 +199,9 @@
             </select>
           </div>
           <div>
+            <h5><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+          </div>
+          <div>
             <h5><b>Category</b>
 
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
@@ -193,7 +221,7 @@
             <h5><b>X-axis</b></h5>
             <div ng-repeat="xAxisItem in xAxisItems">
               <label>
-                  <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
+                    <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
               </label>
             </div>
           </div>
@@ -251,7 +279,9 @@
               <div class="col-md-11">
                   <svg id="main-chart">
                   </svg>
+
               </div>
+              <div id="colorbar"></div>
               <div class="row col-md-1">
                   <div class="col-md-12">
                       <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
@@ -269,9 +299,8 @@
                       <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
                   </div>
               </div>
+
           </div>
-
-
 
           </div>
           <!-- drawing interface END-->
@@ -344,7 +373,7 @@
               </table>
             </div>
             <div ng-show="!zqltable" class="row">
-              <div class="col-md-3">
+              <div class="col-md-3" >
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
@@ -377,6 +406,13 @@
                     </div>
                   </div>
                 </div>
+                <div id="math-equation">
+                  <div class="info-text"><b>Custom Equation</b></div>
+                  <div>
+                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
+                  </div>
+                </div>
+
                 <!--
                 <div class="info-text"><b>Number of Segments</b></div>
                   <div>
@@ -400,25 +436,45 @@
                   </div>
                 </div>
 
-                <br>
                 <div class="info-text"><b>Options</b></div>
                 <div class="checkbox">
                   <form>
                     <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
                   </form>
                   <form>
+                    <input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
+                  </form>
+                  <form>
                     <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                   </form>
                 </div>
 
-                <!--
-                <div id="math-equation">
-                  <div class="info-text"><b>Custom Equation</b></div>
+                <div class="checkbox" ng-controller="datasetController">
+                <form>
+                  <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
+                </form>
+              </div>
+
+                
+              </div>
+              <div class="col-md-3" >
+                <div class="info-text"><b>Data Smoothing</b></div>
+                  <!-- <div class="info-text"><b>Type</b></div> -->
+                  <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
+                  <br>
                   <div>
-                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
-                  </div>
+                  <select class="form-control" id="dataset-form-control">
+                    <option value="movingaverage">Moving Average</option>
+                    <option value="exponentialmovingaverage">Exponential</option>
+                    <option value="leossInterpolation">Loess</option>
+                    <option value="gaussian">Gaussian</option>
+                  </select>
+                  <p><nobr>
+                    <label for="amount">Smoothing Constant:</label>
+                    <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
+                  </nobr></p>
+                  <div id="slider-range-max" align = "right" style="width:200px;"></div>
                 </div>
-                -->
               </div>
             </div>
           </div>
@@ -427,6 +483,7 @@
             </div>
           </div>
         </div>
+
         <!-- drawng interface + zql table END-->
 
         <hr>
@@ -458,6 +515,9 @@
         </div>
       </div>
     </div>
+
+
+
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/jquery-ui.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
@@ -471,15 +531,29 @@
     <script src="js/draw.js"></script>
     <script src="js/query.js"></script>
     <script src="js/helper.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <!-- <script src="js/graph.js"></script> -->
     <script src="js/fileUploader.js"></script>
     <script src="js/renderplot.js"></script>
     <script src="js/parsertypes.js"></script>
     <script src="js/zqlparser.js"></script>
     <script src="js/zqlgraph.js"></script>
+    <script src="js/slider.js"></script>
+    <script src="js/colorbar.js"></script>
     <script>
       // var tree = tree();
       // tree.initialize();
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip({html: true});
+      });
     </script>
+
+
+
+
   </body>
+
 </html>

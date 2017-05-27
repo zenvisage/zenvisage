@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 @Controller
@@ -44,7 +46,8 @@ public class ZvBasicAPI {
 	    	stringBuilder.append(scanner.nextLine());
 	    }
 	    String body = stringBuilder.toString();
-	    return zvMain.runCreateClasses(body);
+	    zvMain.runCreateClasses(body);
+	    return new ObjectMapper().writeValueAsString(body);
 	}
 	
 	/*
