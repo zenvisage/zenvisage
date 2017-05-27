@@ -90,9 +90,29 @@ public class GraphExecutionTest {
 			e.printStackTrace();
 		}
 	}
+
 	
 	@Test
+	// does basic scatter fetch then filter
 	public void TestScatterQueryExecution() throws SQLException {
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"x\":\"5\", \"y\":\"200000\"}, {\"x\":\"200\", \"y\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}} , \"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
+		
+		try {
+			ZvMain zvMain = new ZvMain();
+			logger.info("testing Scatter query");
+			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			logger.info("Output");
+			logger.info(outputGraphExecutor);
+			
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// currently unfinished
+	@Test
+	public void TestAdvancedScatterQueryExecution() throws SQLException {
 		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"x\":\"5\", \"y\":\"200000\"}, {\"x\":\"200\", \"y\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}}  },{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"z1\",\"values\":[]}, \"viz\":{\"map\": {\"type\":\"scatter\"}},\"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
 		
 		try {
