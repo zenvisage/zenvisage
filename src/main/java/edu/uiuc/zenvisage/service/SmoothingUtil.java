@@ -15,11 +15,13 @@ public class SmoothingUtil {
 
 	
 	// FIXME: Integrate this with frontend.
-	public static double[] applySmoothing(String type,double[] xvals,double [] yvals, int window, int robustness){
+	public static double[] applySmoothing(String type,double[] xvals,double [] yvals, double windowcoeff){
+		int window= (int) (xvals.length*windowcoeff);
 		if(type=="movingaverage") return movingAverage(yvals, window);
 		if(type=="exponentialmovingaverage") return exponentialMovingAverage(yvals, window);
 		if(type=="leossInterpolation") return leossInterpolation(xvals,yvals,window,robustness);	
 		if(type=="gaussian") return gaussianConvolution(xvals,yvals,window,robustness);	
+	
 		//TODO: Handle this in a better way.
 		return null;
 	}
@@ -55,6 +57,7 @@ public class SmoothingUtil {
 			)
 	{			
 		// Extract type,window,robustness from the zvQuery object and call the below functions.
+		
 		return data;
 	}
 	
@@ -65,8 +68,7 @@ public class SmoothingUtil {
 	public static LinkedHashMap<String,LinkedHashMap<Float,Float>> applySmoothing(
 			LinkedHashMap<String,LinkedHashMap<Float,Float>> data,
 			String type,
-			int window,
-			int robustness
+			double windowcoeff
 			)
 	{		
 		Iterator<String> it = (Iterator<String>) data.keySet();
@@ -83,7 +85,7 @@ public class SmoothingUtil {
 				yvals[pos]=(double)vals.get(xvals[pos]);
 				pos++;	
 			}
-			double[] ysmoothedvals=applySmoothing(type,xvals,yvals,window,robustness);
+			double[] ysmoothedvals=applySmoothing(type,xvals,yvals,windowcoeff);
 			itval = (Iterator<Float>) vals.keySet();
 			for(int i=0;i<xvals.length;i++){
 				vals.put((float)xvals[i], (float)ysmoothedvals[i]);
@@ -95,12 +97,11 @@ public class SmoothingUtil {
 	public static double[][]  applySmoothing(
 			double[][] data,
 			String type,
-			int window,
-			int robustness
+			double windowcoeff
 			)
 	{			
 		for(int i=0;i<data.length;i++){
-			data[i]=applySmoothing(type,null,data[i], window, robustness);
+			data[i]=applySmoothing(type,null,data[i], windowcoeff);
 		}
 		return data;
 	}
