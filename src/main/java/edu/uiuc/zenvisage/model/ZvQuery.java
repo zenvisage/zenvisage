@@ -25,6 +25,8 @@ public class ZvQuery {
 	public float[] xRange;
 	public boolean considerRange;
 	public int kMeansClusterSize;
+	public String smoothingType="";
+	public double smoothingcoefficient=0.0;
 
 	
 	public String getDistance_metric() {
@@ -149,6 +151,18 @@ public class ZvQuery {
 	}
 	public void setKMeansClusterSize(int k) {
 		this.kMeansClusterSize = k;
+	}
+	public String getSmoothingType() {
+		return smoothingType;
+	}
+	public void setSmoothingType(String smoothingType) {
+		this.smoothingType = smoothingType;
+	}
+	public double getSmoothingcoefficient() {
+		return smoothingcoefficient;
+	}
+	public void setSmoothingcoefficient(double smoothingcoefficient) {
+		this.smoothingcoefficient = smoothingcoefficient;
 	}
 	
 }
