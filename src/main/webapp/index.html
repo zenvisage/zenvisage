@@ -54,7 +54,7 @@
                 <h4 class="modal-title">Upload Query Data Pattern</h4>
             </div>
             <div class="modal-body" id="pattern-upload-body">
-                JSON Example:  
+                JSON Example:
                 <br>
                 <small>[{"xval":2450552,"yval":13.847},{"xval":2450567,"yval":13.637},{"xval":2450569,"yval":13.717},{"xval":2450597,"yval":14.825},{"xval":2450607,"yval":15.262}]</small>
               <form id="pattern-upload-form" onsubmit="return patternLoad();">
@@ -406,12 +406,6 @@
                     </div>
                   </div>
                 </div>
-                <div id="math-equation">
-                  <div class="info-text"><b>Custom Equation</b></div>
-                  <div>
-                    y = </label><input class="num-results" type="text" name="number-of-results" value="50">
-                  </div>
-                </div>
 
                 <!--
                 <div class="info-text"><b>Number of Segments</b></div>
@@ -447,15 +441,17 @@
                   <form>
                     <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                   </form>
-                </div>
 
-                <div class="checkbox" ng-controller="datasetController">
-                <form>
-                  <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
-                </form>
-              </div>
 
-                
+                  <!-- <div class="checkbox" ng-controller="datasetController"> -->
+                  <form>
+                    <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
+                  </form>
+                  <!--</div>-->
+
+               </div>
+
+
               </div>
               <div class="col-md-3" >
                 <div class="info-text"><b>Data Smoothing</b></div>
