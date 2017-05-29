@@ -413,7 +413,7 @@ public class ZvMain {
 		 
 		 
 		 //
-		 SmoothingUtil.applySmoothing(output,args);
+		output= SmoothingUtil.applySmoothing(output,args);
 		 
 		 // setup result format
 		 Result finalOutput = new Result();
