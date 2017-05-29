@@ -122,6 +122,11 @@ function getScatterplotOption()
   return angular.element($("#table-div")).scope().showScatterplot;
 }
 
+function getflipY()
+{
+  return angular.element($("#table-div")).scope().flipY;
+}
+
 function getShowOriginalSketch()
 {
   return angular.element($("#table-div")).scope().showOriginalSketch;
@@ -136,4 +141,3 @@ function getSelectedDataset()
 {
   return $("#dataset-form-control option:selected").val();
 }
-

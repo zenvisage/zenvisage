@@ -10,7 +10,7 @@ var outlierDygraphsNew = {};
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
-{  console.log("curflipY",flipY)
+{  console.log("flipY 3", getflipY())
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
@@ -81,7 +81,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
 
-    if(flipY){
+    if(getflipY()){
         var y = d3.scaleLinear().range([20, height-20]);
     }
     else{
@@ -300,7 +300,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
 
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
-    if(flipY){
+    if(getflipY()){
         var y = d3.scaleLinear().range([20, height-20]);
     }
     else{
@@ -483,7 +483,7 @@ function displayOutlierResultsHelper( outlierResults )
 
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scaleLinear().range([20, width-20]);
-    if(flipY){
+    if(getflipY()){
         var y = d3.scaleLinear().range([20, height-20]);
     }
     else{
