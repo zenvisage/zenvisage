@@ -13,7 +13,7 @@ import edu.uiuc.zenvisage.model.ZvQuery;
  */
 public class SmoothingUtil {
 
-	static int robustness=2;
+	static int robustness=1;
 
 	
 	// FIXME: Integrate this with frontend.
@@ -21,8 +21,17 @@ public class SmoothingUtil {
 		System.out.println("Smoothing type="+type+", # vals="+yvals.length + ", windowcoeff="+windowcoeff);
 		int window= (int) (yvals.length*windowcoeff);
 		if(type.equals("movingaverage")) return movingAverage(yvals, window);
-		if(type.equals("exponentialmovingaverage")) return exponentialMovingAverage(yvals, window);
-		if (type.equals("leossInterpolation")) return leossInterpolation(xvals,yvals,window,robustness);	
+		if(type.equals("exponentialmovingaverage")) return exponentialMovingAverage(yvals, windowcoeff);
+		
+		if((type.equals("leossInterpolation") || type.equals("gaussian")) && xvals==null){
+			xvals = new double[yvals.length];
+			for(int i=0;i<yvals.length;i++)
+			{
+				xvals[i]=i;
+			}
+		}
+		
+		if (type.equals("leossInterpolation")) return leossInterpolation(xvals,yvals,windowcoeff,robustness);	
 		if (type.equals("gaussian"))return gaussianConvolution(xvals,yvals,window);	
 			//TODO: Handle this in a better way.
 		System.out.println("No smoothing applied");
@@ -153,7 +162,7 @@ public class SmoothingUtil {
    	}
 	
 	// It looks at only the previous values
-	private static double[] exponentialMovingAverage(double [] yvals, int decayfactor){
+	private static double[] exponentialMovingAverage(double [] yvals, double decayfactor){
 		 double [] ySmoothedVals = new double[yvals.length];
 		 ySmoothedVals[0]=yvals[0];
 		 for(int i=1;i<yvals.length;i++){
@@ -165,8 +174,11 @@ public class SmoothingUtil {
 	
 	
 	
-	private static double[] leossInterpolation(double [] xvals,double [] yvals, int window,int robustness){
+	private static double[] leossInterpolation(double [] xvals,double [] yvals, double window,int robustness){
+		System.out.println("Loess"+xvals.length+":"+yvals.length);
+		
 		LoessInterpolator loess = new LoessInterpolator(window, robustness);
+		
 		double [] ySmoothedVals = loess.smooth(xvals,yvals);
 		return ySmoothedVals;
 	}
