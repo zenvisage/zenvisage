@@ -9,7 +9,7 @@ public class ZColumn {
 	private String attribute; //put z here
 	private List<String> values;
 	private String expression;
-	
+	private boolean aggregate;
 	// after executing expression, implement after set operation is implemented
 	// private List<String> parsedValues;
 	
@@ -22,6 +22,7 @@ public class ZColumn {
 		attribute = "";
 		values = new ArrayList<String>();
 		expression = "";
+		aggregate = false;
 		// parsedValues = new ArrayList<String>();
 	}
 	
@@ -36,6 +37,7 @@ public class ZColumn {
 	public String getExpression() {
 		return expression;
 	}
+	
 	public void setExpression(String source) {
 		expression = source;
 	}
@@ -43,6 +45,7 @@ public class ZColumn {
 	public String getAttribute() {
 		return attribute;
 	}
+	
 	public void setAttribute(String source) {
 		attribute = source;
 	}
@@ -53,5 +56,14 @@ public class ZColumn {
 	public void setValues(List<String> source) {
 		values = source;
 	}
+
+	public boolean isAggregate() {
+		return aggregate;
+	}
+
+	public void setAggregate(boolean aggregate) {
+		this.aggregate = aggregate;
+	}
+	
 	
 }

@@ -79,8 +79,9 @@ public class ZQLParser {
 			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 			VisualComponentNode vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor);
 			Processe process = row.getProcesse();
-			ProcessNode processNode = new ProcessNode(process, lookuptable);	
-			if(vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
+			ProcessNode processNode = new ProcessNode(process, lookuptable);
+			
+			if(vc.getViz().getMap().containsKey(VizColumn.type) && vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
 				vcNode = new ScatterVCNode(vc, lookuptable, sqlQueryExecutor);
 				processNode = new ScatterProcessNode(process, lookuptable);
 			}

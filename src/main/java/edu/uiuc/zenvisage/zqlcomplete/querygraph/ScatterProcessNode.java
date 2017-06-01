@@ -44,6 +44,8 @@ public class ScatterProcessNode extends ProcessNode {
 			if (!rectangles.isEmpty()) {
 				removeNonRectanglePoints(vcNode.getData(), rectangles);
 				output = scatterRepExecution();
+				logger.info("Number of points in first scatterplot: " + output.getOutputCharts().get(0).count);
+				/*
 				try {
 					Chart chart = output.getOutputCharts().get(0);
 					String result = new ObjectMapper().writeValueAsString(chart);
@@ -51,7 +53,8 @@ public class ScatterProcessNode extends ProcessNode {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}			}
+				}*/
+			}
 		}
 		if(process.getMethod().equals("Rep")) {
 			output = scatterRepExecution();
@@ -82,6 +85,7 @@ public class ScatterProcessNode extends ProcessNode {
 			//System.out.println(data.name + Integer.toString(data.count / data.points.size()));
 			chartOutput.setxType((i+1)+" : "+data.name);
 			chartOutput.setyType(q.getY().getAttributes().get(0));
+			chartOutput.count = data.count;
 			for (Point point : data.points) {
 				chartOutput.xData.add(Float.toString(point.getX()));
 				chartOutput.yData.add(Float.toString(point.getY()));
@@ -107,12 +111,15 @@ public class ScatterProcessNode extends ProcessNode {
 	 */
 	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Polygon> polygons) {
 		for (ScatterResult chart : allDataCharts.values()) {
+			int count = 0;
 			for(Iterator<Point> it = chart.points.iterator(); it.hasNext();) {
 				Point point = it.next();
 				if(!inArea(point,polygons)) {
-					it.remove();					
+					it.remove();
+					count++;
 				}
 			}
+			chart.count -= count;		// update count of points for each scatter plot
 		}
 	}
 	
