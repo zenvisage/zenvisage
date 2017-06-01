@@ -1,4 +1,3 @@
-console.log("hi")
 app.factory('ScatterService', function () {
         const factory = {};
         var currentPolygon;
