@@ -20,9 +20,8 @@ public class SmoothingUtil {
 		if(type=="movingaverage") return movingAverage(yvals, window);
 		if(type=="exponentialmovingaverage") return exponentialMovingAverage(yvals, window);
 		if(type=="leossInterpolation") return leossInterpolation(xvals,yvals,window,robustness);	
-		if(type=="gaussian") return gaussianConvolution(xvals,yvals,window,robustness);	
-	
-		//TODO: Handle this in a better way.
+		if(type=="gaussian") return gaussianConvolution(xvals,yvals,window);	
+			//TODO: Handle this in a better way.
 		return null;
 	}
 
@@ -34,8 +33,9 @@ public class SmoothingUtil {
 			ZvQuery zvQuery
 			)
 	{		
-		
-		
+		String type=zvQuery.smoothingType;
+		double coeff=zvQuery.smoothingcoefficient;
+		applySmoothing(data, type,coeff);
 		return data;
 	}
 	
@@ -45,7 +45,9 @@ public class SmoothingUtil {
 			ZvQuery zvQuery
 			)
 	{			
-		// Extract type,window,robustness from the zvQuery object and call the below functions.
+		String type=zvQuery.smoothingType;
+		double coeff=zvQuery.smoothingcoefficient;
+		applySmoothing(data, type,coeff);
 		return data;
 	}
 	
@@ -56,8 +58,9 @@ public class SmoothingUtil {
 			ZvQuery zvQuery
 			)
 	{			
-		// Extract type,window,robustness from the zvQuery object and call the below functions.
-		
+		String type=zvQuery.smoothingType;
+		double coeff=zvQuery.smoothingcoefficient;
+		applySmoothing(type,null,data,coeff);
 		return data;
 	}
 	
@@ -160,7 +163,18 @@ public class SmoothingUtil {
 
 	
 	//currently assuming that Y values are equi-distant, so we look at previous and next windowsize/2 elements. However, in reality Y values might far away. 
-	private static double[] gaussianConvolution(double [] xvals,double [] yvals, int windowsize, double std){
+	private static double[] gaussianConvolution(double [] xvals,double [] yvals, int windowsize){
+		double sum = 0;
+		for (int i = 0; i < yvals.length; i++)
+			sum+=yvals[i];
+		double mean=sum/yvals.length;
+		double std=0;
+		int length=yvals.length;
+		for (int i = 0; i < yvals.length; i++)
+			{	std+=((yvals[i]-mean)*(yvals[i]-mean))/length;
+			}
+	 	std = Math.sqrt(std); 
+	 				 			
 		double[] gkernel=createGaussianfilter(windowsize,std);
 		 double [] ySmoothedVals = new double[yvals.length];
 		 ySmoothedVals[0]=yvals[0];
@@ -184,6 +198,7 @@ public class SmoothingUtil {
 	
 	// windowsize must be odd
 	private static double[] createGaussianfilter(int windowsize, double std){
+		
 		double sigma=2.0*std*std;
 		double sqrt_2pi= Math.sqrt(2*Math.PI);
 		// making windowsize odd if it isn't
