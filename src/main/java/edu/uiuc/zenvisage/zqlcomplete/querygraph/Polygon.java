@@ -40,14 +40,14 @@ public class Polygon {
 			return false;
 		}
 		Point firstPoint = points.get(0);
-		float minX = firstPoint.getX();
-		float maxX = firstPoint.getX();
-		float minY = firstPoint.getY();
-		float maxY = firstPoint.getY();
+		float minX = firstPoint.getXval();
+		float maxX = firstPoint.getXval();
+		float minY = firstPoint.getYval();
+		float maxY = firstPoint.getYval();
 		
 		for (Point p : points) {
-			float x = p.getX();
-			float y = p.getY();
+			float x = p.getXval();
+			float y = p.getYval();
 			
 			if (x < minX) minX = x;
 			else if (x > maxX) maxX = x;
@@ -56,8 +56,8 @@ public class Polygon {
 			else if (y > maxY) maxY = y;
 		}
 		
-		float x = (float) point.getX();
-		float y = (float) point.getY();
+		float x = (float) point.getXval();
+		float y = (float) point.getYval();
 		
 		
 		// check if point is outside bounding box

@@ -222,7 +222,41 @@ public class ZvMain {
 		   return "";
 	   }
    }
+   
+   public String runScatterQueryGraph(String zqlQuery) throws IOException, InterruptedException{
+	   System.out.println(zqlQuery);
+	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+	   ZQLParser parser = new ZQLParser();
+	   QueryGraph graph;
+	   try {
+		   graph = parser.processZQLTable(zqlTable);
+		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   //convert it into front-end format.
+		   String result = new ObjectMapper().writeValueAsString(convertVCListtoScatterOutput(output));
+		   System.out.println("Done");
+		   return result;
+	   } catch (SQLException e) {
+		   e.printStackTrace();
+		   return "";
+	   }
+   }
 
+   public ScatterOutput convertVCListtoScatterOutput(VisualComponentList vcList) {
+	   ScatterOutput finalOutput = new ScatterOutput();
+		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
+	    for(VisualComponent viz : vcList.getVisualComponentList()) {
+	    	ScatterChart outputChart = new ScatterChart();
+
+	    	outputChart.zval = viz.getZValue().toString();
+	    	ArrayList<WrapperType> xList = viz.getPoints().getXList();
+	    	ArrayList<WrapperType> yList = viz.getPoints().getYList();
+	    	for(int i = 0; i < viz.getPoints().getXList().size(); i++) {
+	    		outputChart.points.add(new Point(xList.get(i).getNumberValue(), yList.get(i).getNumberValue()));
+	    	}
+	    	finalOutput.outputCharts.add(outputChart);
+	    }
+		return finalOutput;	   
+   }
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
 		Result finalOutput = new Result();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL

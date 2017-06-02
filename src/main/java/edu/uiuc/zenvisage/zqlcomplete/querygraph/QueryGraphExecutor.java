@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 /**
@@ -52,8 +53,14 @@ public class QueryGraphExecutor {
 						
 						// If this node was selected as an output node (Eg *f2), update the execution output to include this node's output as well
 						if (temp.getVc().getName().getOutput()) {
-							VisualComponentList toAdd = (VisualComponentList) (currNode).lookuptable.get(temp.getVc().getName().getName());
-							outputList.getVisualComponentList().addAll(toAdd.getVisualComponentList());
+							if (temp.getVc().getViz().getMap().containsKey(VizColumn.type) && temp.getVc().getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
+								//Scatter plot case
+								VisualComponentList toAdd = ((ScatterVCNode) currNode).getVcList();
+								outputList.getVisualComponentList().addAll(toAdd.getVisualComponentList());
+							} else {
+								VisualComponentList toAdd = (VisualComponentList) (currNode).lookuptable.get(temp.getVc().getName().getName());
+								outputList.getVisualComponentList().addAll(toAdd.getVisualComponentList());
+							}
 						}
 						//System.out.println("To output = " + temp.getVc().getName().getOutput());
 					}

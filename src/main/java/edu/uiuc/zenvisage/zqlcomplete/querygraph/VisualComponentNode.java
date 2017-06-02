@@ -100,8 +100,8 @@ public class VisualComponentNode extends QueryNode{
 			ArrayList<WrapperType> xList = new ArrayList<WrapperType>();
 			ArrayList<WrapperType> yList = new ArrayList<WrapperType>();
 			for (Point point : sketch.getPoints()) {
-				xList.add(new WrapperType(point.getX()));
-				yList.add(new WrapperType(point.getY()));
+				xList.add(new WrapperType(point.getXval()));
+				yList.add(new WrapperType(point.getYval()));
 			}
 			
 			VisualComponent vc = new VisualComponent(new WrapperType("sketch", "string"), new Points(xList, yList));

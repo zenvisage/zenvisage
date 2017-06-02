@@ -135,9 +135,9 @@ public class ZQLPiecewiseAggregation {
 		float maxYQ = sketchPoint.getMaxY();		
 		float rangeYQ = maxYQ-minYQ;
 		for (Point p : sketchPoint.getPoints()) {		  
-			int segment = (int) ((p.getX()-min)/(rangeX*pAAWidth));
+			int segment = (int) ((p.getXval()-min)/(rangeX*pAAWidth));
 			//System.out.println(segment);
-			float yvalue = minY+((p.getY()-minYQ)*rangeY/(rangeYQ));
+			float yvalue = minY+((p.getYval()-minYQ)*rangeY/(rangeYQ));
 			normalizedValues[segment] = normalizedValues[segment]+yvalue;
 			numberofpoints[segment] = numberofpoints[segment]+1;
 		}
