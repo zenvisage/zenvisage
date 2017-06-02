@@ -2,6 +2,8 @@ package edu.uiuc.zenvisage.service;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
 import edu.uiuc.zenvisage.model.ZvQuery;
 
@@ -11,18 +13,29 @@ import edu.uiuc.zenvisage.model.ZvQuery;
  */
 public class SmoothingUtil {
 
-	static int robustness=2;
+	static int robustness=1;
 
 	
 	// FIXME: Integrate this with frontend.
 	public static double[] applySmoothing(String type,double[] xvals,double [] yvals, double windowcoeff){
-		int window= (int) (xvals.length*windowcoeff);
-		if(type=="movingaverage") return movingAverage(yvals, window);
-		if(type=="exponentialmovingaverage") return exponentialMovingAverage(yvals, window);
-		if(type=="leossInterpolation") return leossInterpolation(xvals,yvals,window,robustness);	
-		if(type=="gaussian") return gaussianConvolution(xvals,yvals,window);	
+		System.out.println("Smoothing type="+type+", # vals="+yvals.length + ", windowcoeff="+windowcoeff);
+		int window= (int) (yvals.length*windowcoeff);
+		if(type.equals("movingaverage")) return movingAverage(yvals, window);
+		if(type.equals("exponentialmovingaverage")) return exponentialMovingAverage(yvals, windowcoeff);
+		
+		if((type.equals("leossInterpolation") || type.equals("gaussian")) && xvals==null){
+			xvals = new double[yvals.length];
+			for(int i=0;i<yvals.length;i++)
+			{
+				xvals[i]=i;
+			}
+		}
+		
+		if (type.equals("leossInterpolation")) return leossInterpolation(xvals,yvals,windowcoeff,robustness);	
+		if (type.equals("gaussian"))return gaussianConvolution(xvals,yvals,window);	
 			//TODO: Handle this in a better way.
-		return null;
+		System.out.println("No smoothing applied");
+		return yvals;
 	}
 
 
@@ -74,22 +87,23 @@ public class SmoothingUtil {
 			double windowcoeff
 			)
 	{		
-		Iterator<String> it = (Iterator<String>) data.keySet();
+		Iterator<String> it = (Iterator<String>) data.keySet().iterator();
 		while(it.hasNext()){
 			String s=it.next();
 		    int length=data.get(s).size();
 		    double []xvals = new double[length];
 			double []yvals = new double[length];
 			LinkedHashMap<Float, Float> vals = data.get(s);
-			Iterator<Float> itval = (Iterator<Float>) vals.keySet();
 			int pos=0;
-			while(itval.hasNext()){
-				xvals[pos]=(double)itval.next();
-				yvals[pos]=(double)vals.get(xvals[pos]);
-				pos++;	
+			for (Map.Entry<Float,Float> entry : vals.entrySet()) {
+				xvals[pos]=(double) entry.getKey();
+				yvals[pos]=(double)entry.getValue();
+				pos++;
 			}
 			double[] ysmoothedvals=applySmoothing(type,xvals,yvals,windowcoeff);
-			itval = (Iterator<Float>) vals.keySet();
+			System.out.println("Smoothing finished");
+			System.out.println("X length:" + xvals.length);
+			System.out.println("Y length:" +ysmoothedvals.length);
 			for(int i=0;i<xvals.length;i++){
 				vals.put((float)xvals[i], (float)ysmoothedvals[i]);
 			}
@@ -114,10 +128,12 @@ public class SmoothingUtil {
 	// Take the average of window/2 elements on both sides. For elements near the boundaries, on one side, we look at fewer elements. 
 	// TODO: Fix: Currently I assume that yvals size will always be more than window size.
 	private static double[] movingAverage(double [] yvals, int window){
+		System.out.println("Moving avergae smoothing function called: # values= "+yvals.length+", window size="+window);
 	    double [] ySmoothedVals = new double[yvals.length];
 	    double sum=yvals[0];
 	    int pos = 0;
 	    int sumsize=0;
+	    int updatePos=-window/2;
 	    while(pos< yvals.length){
 	    	sum+=yvals[pos];
 	    	sumsize++;
@@ -126,24 +142,27 @@ public class SmoothingUtil {
 	    		sum=sum-yvals[pos-window];
 	    		sumsize--;
 	    	}
-	    	if(pos>=window/2)
+	    	if(updatePos>0)
 	    	{
-	    		ySmoothedVals[(pos-sumsize)]=sum/sumsize;	
-	    	}	
+	    		ySmoothedVals[updatePos]=sum/sumsize;	
+	    	}
+	    	pos++;
+	    	updatePos++;
 	    }
 	    
-	    for(int i=(yvals.length-window);i<yvals.length;i++){
+	    for(int i=updatePos;i<yvals.length;i++){
 	    	sum=sum-yvals[i];
 	    	sumsize--;
 	    	ySmoothedVals[i]=sum/sumsize;
 	    }
 	    
+	    System.out.println("Moving average smoothing finished : "+yvals.length+", window size: "+window);
 	    return ySmoothedVals;
 	
    	}
 	
 	// It looks at only the previous values
-	private static double[] exponentialMovingAverage(double [] yvals, int decayfactor){
+	private static double[] exponentialMovingAverage(double [] yvals, double decayfactor){
 		 double [] ySmoothedVals = new double[yvals.length];
 		 ySmoothedVals[0]=yvals[0];
 		 for(int i=1;i<yvals.length;i++){
@@ -155,8 +174,11 @@ public class SmoothingUtil {
 	
 	
 	
-	private static double[] leossInterpolation(double [] xvals,double [] yvals, int window,int robustness){
+	private static double[] leossInterpolation(double [] xvals,double [] yvals, double window,int robustness){
+		System.out.println("Loess"+xvals.length+":"+yvals.length);
+		
 		LoessInterpolator loess = new LoessInterpolator(window, robustness);
+		
 		double [] ySmoothedVals = loess.smooth(xvals,yvals);
 		return ySmoothedVals;
 	}

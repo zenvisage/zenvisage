@@ -10,7 +10,7 @@ var outlierDygraphsNew = {};
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
-{  console.log("flipY 3", getflipY())
+{ 
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
