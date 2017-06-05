@@ -203,7 +203,7 @@ createcolorbar();
 
 
 
-                                            function createcolorbar(){console.log(d3.max(binLengths));
+                                            function createcolorbar(){
                                             var svg = d3.select("#colorbar").append("svg").attr("transform",  "translate(30)")
                                                 .attr("width", 30)
                                                 .attr("height", 180);
