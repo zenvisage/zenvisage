@@ -22,6 +22,9 @@ public class VisualComponentList {
 	}
 	
 	public void addVisualComponent(VisualComponent input){
+		if (this.visualComponentList == null) {
+			this.visualComponentList = new ArrayList<VisualComponent>();
+		}
 		this.visualComponentList.add(input);
 	}
 	

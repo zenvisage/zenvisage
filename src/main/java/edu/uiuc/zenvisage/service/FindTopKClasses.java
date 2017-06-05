@@ -112,8 +112,8 @@ public String findtopKClasses() throws JsonParseException, JsonMappingException,
 	 double[] dataY = new double[nPoints];
 	 double[] dataX = new double[nPoints];
 	 for(int i = 0;i<nPoints;i++){
-		 dataX[i] = points.get(i).getX();
-		 dataY[i] = points.get(i).getY();
+		 dataX[i] = points.get(i).getXval();
+		 dataY[i] = points.get(i).getYval();
 		 if(minX > dataX[i]) minX = dataX[i];
 		 if(maxX < dataX[i]) maxX = dataX[i];
 	 }

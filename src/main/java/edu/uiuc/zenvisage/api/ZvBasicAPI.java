@@ -171,6 +171,14 @@ public class ZvBasicAPI {
 		return outputGraphExecutor;
 	}
 
+	@RequestMapping(value = "/executeScatter", method = RequestMethod.GET)
+	@ResponseBody
+	public String executeScatter(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
+		String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
+
+		// TODO change to graph executor
+		return outputGraphExecutor;
+	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody

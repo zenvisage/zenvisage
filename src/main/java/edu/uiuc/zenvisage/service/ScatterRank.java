@@ -51,8 +51,8 @@ public class ScatterRank {
 			chartOutput.setxType((i+1)+" : "+data.name);
 			chartOutput.setyType(yAxis);
 			for (Point point : data.points) {
-				chartOutput.xData.add(Float.toString(point.getX()));
-				chartOutput.yData.add(Float.toString(point.getY()));
+				chartOutput.xData.add(Float.toString(point.getXval()));
+				chartOutput.yData.add(Float.toString(point.getYval()));
 			}
 			finalOutput.outputCharts.add(chartOutput);
 		}

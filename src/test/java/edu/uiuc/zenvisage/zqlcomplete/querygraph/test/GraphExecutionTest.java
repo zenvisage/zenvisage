@@ -116,12 +116,12 @@ public class GraphExecutionTest {
 	@Test
 	// does basic scatter fetch then filter
 	public void TestScatterQueryExecution() throws SQLException {
-		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"x\":\"5\", \"y\":\"200000\"}, {\"x\":\"200\", \"y\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}} , \"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"xval\":\"5\", \"yval\":\"200000\"}, {\"xval\":\"200\", \"yval\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}} , \"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
 		
 		try {
 			ZvMain zvMain = new ZvMain();
 			logger.info("testing Scatter query");
-			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
 			logger.info("Output");
 			logger.info(outputGraphExecutor);
 
@@ -135,12 +135,12 @@ public class GraphExecutionTest {
 	@Test
 	//aggregates all Z into one scatter plot
 	public void TestAggregateScatterQueryExecution() throws SQLException {
-		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"aggregate\":true,\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"x\":\"5\", \"y\":\"200000\"}, {\"x\":\"200\", \"y\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}} , \"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"aggregate\":true,\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"xval\":\"5\", \"yval\":\"200000\"}, {\"xval\":\"200\", \"yval\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}} , \"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
 		
 		try {
 			ZvMain zvMain = new ZvMain();
 			logger.info("testing Scatter query");
-			String outputGraphExecutor = zvMain.runQueryGraph(arg);
+			String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
 			logger.info("Output");
 			logger.info(outputGraphExecutor);
 
@@ -152,7 +152,7 @@ public class GraphExecutionTest {
 	}	// currently unfinished
 	@Test
 	public void TestAdvancedScatterQueryExecution() throws SQLException {
-		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"x\":\"5\", \"y\":\"200000\"}, {\"x\":\"200\", \"y\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}}  },{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"z1\",\"values\":[]}, \"viz\":{\"map\": {\"type\":\"scatter\"}},\"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
+		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"xval\":\"5\", \"yval\":\"200000\"}, {\"xval\":\"200\", \"yval\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}}  },{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"z1\",\"values\":[]}, \"viz\":{\"map\": {\"type\":\"scatter\"}},\"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
 		
 		try {
 			ZvMain zvMain = new ZvMain();

@@ -36,14 +36,14 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 public class ScatterVCNode extends VisualComponentNode {
 	static final Logger logger = LoggerFactory.getLogger(ScatterVCNode.class);
 
-	private Map<String, ScatterResult> data = new HashMap<String, ScatterResult>();
+	private VisualComponentList vcList;
 	
-	public Map<String, ScatterResult> getData() {
-		return data;
+	public VisualComponentList getVcList() {
+		return vcList;
 	}
 
-	public void setData(Map<String, ScatterResult> data) {
-		this.data = data;
+	public void setVcList(VisualComponentList vcList) {
+		this.vcList = vcList;
 	}
 
 	public ScatterVCNode(VisualComponentQuery vc, LookUpTable table, SQLQueryExecutor sqlQueryExecutor) {
@@ -79,10 +79,10 @@ public class ScatterVCNode extends VisualComponentNode {
 		
 		// data fetcher
 		logger.info("fetching scatter data");
-		data = getScatterData();
+		this.vcList = getScatterData();
 		Result output = new Result();
 
-		ScatterProcessNode.computeScatterRep(data, this.getVc(), output);
+		ScatterProcessNode.computeScatterRep(this.vcList, this.getVc(), output);
 		logger.info("scatter data: first chart size: " + output.getOutputCharts().get(0).count);
 		/*
 		try {
@@ -101,8 +101,7 @@ public class ScatterVCNode extends VisualComponentNode {
 		this.state = State.FINISHED;
 	}
 	
-	private Map<String, ScatterResult> getScatterData() {
-		Map<String, ScatterResult> result = new HashMap<String, ScatterResult>();
+	private VisualComponentList getScatterData() {
 		
 		// old method: grab info from ScatterPlotQuery
 		//String yAxis = query.yAxis; // eg year, yValues = [2001, 2002, ...]
@@ -125,44 +124,42 @@ public class ScatterVCNode extends VisualComponentNode {
 		}
 		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
 		if (this.getVc().getZ().isAggregate()) {
-			createAggregatedScatterResults(vcList, result);
-		} else {
-			createScatterResults(vcList, result);
+			return createAggregatedScatterResults(vcList);
 		}
-		return result;
+		
+		return vcList;
 	}
 	
-private void createScatterResults(VisualComponentList vcList, Map<String, ScatterResult> result) {
+/**
+ * Aggregates a list of one or moreVisualComponent into a list of one VisualComponent
+ * @param vcList
+ */
+private VisualComponentList createAggregatedScatterResults(VisualComponentList vcList) {
+	if (vcList.getVisualComponentList().size() <= 1) {
+		return vcList;
+	}
+	
+	ArrayList<WrapperType> aggregateXList = new ArrayList<WrapperType>();
+	ArrayList<WrapperType> aggregateYList = new ArrayList<WrapperType>();
 	for (VisualComponent vc : vcList.getVisualComponentList()) {
-		String zValue = vc.getZValue().getStrValue();
+		//String zValue = vc.getZValue().getStrValue();
 		Points points = vc.getPoints();
 		List<WrapperType> xValues = points.getXList();
 		List<WrapperType> yValues = points.getYList();
-		List<Point> tuples = new ArrayList<Point>();
-		for(int i = 0; i < points.getXList().size(); i++) {
-			Point tuple = new Point((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
-			tuples.add(tuple);
-		}
-		ScatterResult currResult = new ScatterResult(tuples,tuples.size(),zValue);
-		result.put(zValue, currResult);
+		aggregateXList.addAll(xValues);
+		aggregateYList.addAll(yValues);
 	}
-}
+	Points aggregatePoints = new Points(aggregateXList, aggregateYList);
+	String xAttribute = vcList.getVisualComponentList().get(0).getxAttribute();
+	String yAttribute = vcList.getVisualComponentList().get(0).getyAttribute();
+	VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
 
-private void createAggregatedScatterResults(VisualComponentList vcList, Map<String, ScatterResult> result) {
-	List<Point> tuples = new ArrayList<Point>();
-	for (VisualComponent vc : vcList.getVisualComponentList()) {
-		String zValue = vc.getZValue().getStrValue();
-		Points points = vc.getPoints();
-		List<WrapperType> xValues = points.getXList();
-		List<WrapperType> yValues = points.getYList();
-		for(int i = 0; i < points.getXList().size(); i++) {
-			Point tuple = new Point((xValues.get(i).getNumberValue()), yValues.get(i).getNumberValue());
-			tuples.add(tuple);
-		}
-	}
-	ScatterResult currResult = new ScatterResult(tuples,tuples.size(),"agg");
-	result.put("agg", currResult);
+	VisualComponentList out = new VisualComponentList();
+	out.addVisualComponent(aggregateVisualComponent);
+	
+	return out;
 }
+	//TODO: implement
 	private void simpleBinning(Map<String, ScatterResult> allDataCharts, int bins) {
 		int rows = 100; // height
 		int cols = 200; // width

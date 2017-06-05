@@ -2,6 +2,7 @@ package edu.uiuc.zenvisage.model;
 
 import java.util.List;
 
+@Deprecated
 public class ScatterResult {
 
 	public List<Point> points;

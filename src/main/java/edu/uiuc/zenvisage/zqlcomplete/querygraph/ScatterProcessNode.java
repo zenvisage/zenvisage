@@ -10,6 +10,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.model.Chart;
 import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Result;
@@ -42,7 +45,7 @@ public class ScatterProcessNode extends ProcessNode {
 			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 			List<Polygon> rectangles = vcNode.getVc().getSketch().getPolygons();
 			if (!rectangles.isEmpty()) {
-				removeNonRectanglePoints(vcNode.getData(), rectangles);
+				removeNonRectanglePoints(vcNode.getVcList(), rectangles);
 				output = scatterRepExecution();
 				logger.info("Number of points in first scatterplot: " + output.getOutputCharts().get(0).count);
 				/*
@@ -69,26 +72,28 @@ public class ScatterProcessNode extends ProcessNode {
 		// lookup table the VCNode we depend on
 		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 		Result output = new Result();
-		computeScatterRep(vcNode.getData(), vcNode.getVc(), output);
+		computeScatterRep(vcNode.getVcList(), vcNode.getVc(), output);
 		return output;
 	}
 	
-	public static void computeScatterRep(Map<String, ScatterResult> input, VisualComponentQuery q, Result finalOutput) {
-		List<ScatterResult> datas = new ArrayList<ScatterResult>(input.values());
-		int len = Math.min(datas.size(), q.getNumOfResults());
+	public static void computeScatterRep(VisualComponentList input, VisualComponentQuery q, Result finalOutput) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		int len = Math.min(vcList.size(), q.getNumOfResults());
 		if (q.getNumOfResults() == 0) {
-			len = datas.size();
+			len = vcList.size();
 		}
-		for (int i = 0; i < len; i++) {
+		for (int vc_index = 0; vc_index < len; vc_index++) {
 			Chart chartOutput = new Chart();
-			ScatterResult data = datas.get(i);
+			VisualComponent vc = vcList.get(vc_index);
 			//System.out.println(data.name + Integer.toString(data.count / data.points.size()));
-			chartOutput.setxType((i+1)+" : "+data.name);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
 			chartOutput.setyType(q.getY().getAttributes().get(0));
-			chartOutput.count = data.count;
-			for (Point point : data.points) {
-				chartOutput.xData.add(Float.toString(point.getX()));
-				chartOutput.yData.add(Float.toString(point.getY()));
+			chartOutput.count = vc.getPoints().getXList().size();
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
 			}
 			finalOutput.outputCharts.add(chartOutput);
 		}
@@ -109,17 +114,22 @@ public class ScatterProcessNode extends ProcessNode {
 	 * @param allDataCharts (side effect: modified)
 	 * @param rectangles
 	 */
-	private void removeNonRectanglePoints(Map<String, ScatterResult> allDataCharts, List<Polygon> polygons) {
-		for (ScatterResult chart : allDataCharts.values()) {
-			int count = 0;
-			for(Iterator<Point> it = chart.points.iterator(); it.hasNext();) {
-				Point point = it.next();
+	private void removeNonRectanglePoints(VisualComponentList vcList, List<Polygon> polygons) {
+		
+		for (VisualComponent vc : vcList.getVisualComponentList()) {
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();
+			
+			Iterator<WrapperType> yIt = yList.iterator();
+			for(Iterator<WrapperType> xIt = xList.iterator(); xIt.hasNext();) {
+				float x = xIt.next().getNumberValue();
+				float y = yIt.next().getNumberValue();
+				Point point = new Point(x,y);
 				if(!inArea(point,polygons)) {
-					it.remove();
-					count++;
+					xIt.remove();
+					yIt.remove();
 				}
 			}
-			chart.count -= count;		// update count of points for each scatter plot
 		}
 	}
 	

@@ -181,14 +181,16 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         .attr("transform", "translate(0," + trans + ")")
         .call(d3.axisBottom(x).ticks(5, "s"));
 
-    graph.append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-           (trans + m[0] + 30) + ")")
-      .style("text-anchor", "middle")
-      .attr("count", count.toString())
-      .text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
-      //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
+    if  (!isNaN(similarityDistance)){
+      graph.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+             (trans + m[0] + 30) + ")")
+        .style("text-anchor", "middle")
+        .attr("count", count.toString())
+        .text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
+        //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
+    }
     graph.append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
@@ -198,11 +200,17 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       .text(ylabel + " by " + xlabel);
 
     // Add the Y Axis
-    graph.append("g")
+    if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
+      graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, "s"));
-
+        .call(d3.axisLeft(y).ticks(4, ".2"));
+    }else{
+      graph.append("g")
+        .attr("class", "axis axis--y")
+        .attr("transform", "translate(20,0)")
+        .call(d3.axisLeft(y).ticks(4, ".2s"));  
+    }    
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
 
@@ -411,10 +419,17 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       .text(getSelectedYAxis() + " by " + getSelectedXAxis());
 
     // Add the Y Axis
-    graph.append("g")
+    if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
+      graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, "s"));
+        .call(d3.axisLeft(y).ticks(4, ".2"));
+    }else{
+      graph.append("g")
+        .attr("class", "axis axis--y")
+        .attr("transform", "translate(20,0)")
+        .call(d3.axisLeft(y).ticks(4, ".2s"));  
+    }    
 
 
     // Add the line by appending an svg:path element with the data line we created above
@@ -588,10 +603,18 @@ function displayOutlierResultsHelper( outlierResults )
       .text(getSelectedYAxis() + " by " + getSelectedXAxis());
 
     // Add the Y Axis
-    graph.append("g")
+    if ((Math.log10(ymax)<=2)&(Math.log10(ymax)>=-2)){
+      graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, "s"));
+        .call(d3.axisLeft(y).ticks(4, ".2"));
+    }else{
+      graph.append("g")
+        .attr("class", "axis axis--y")
+        .attr("transform", "translate(20,0)")
+        .call(d3.axisLeft(y).ticks(4, ".2s"));  
+    }
+    
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines

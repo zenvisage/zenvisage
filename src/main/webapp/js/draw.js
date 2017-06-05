@@ -122,9 +122,16 @@ console.log('createSketchpad')
 
 
   // Add the Y Axis
-  focus.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(8, "s"));
+  if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
+    focus.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(8, ".2"));
+    }else{
+    focus.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(8, "s"));
+    }
+
 
   context.append("path")
       .data([data])
