@@ -87,6 +87,7 @@ $Sample Dataset File$
 attribute's name:fundemental attribute's data type,indexed,x-axis,y-axis,z-axis,F,F,0,general attribute's data type
 
 `attribute's name` - needs to be exactly the same as the attribute name in dataset file
+
 `fundemental attribute's data type` - is the type of attribute in dataset (e.g string/int/float)
 `indexed` -  currently detault value per design
 `x-axis` - whether it would be shown on x-axis or not (e.g T/F)
