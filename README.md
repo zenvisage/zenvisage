@@ -94,7 +94,9 @@ Currently, Zenvisage only accepts Comma-separated values (.csv) dataset file. Th
 
 Schema file is a .txt file which specifies the way data are processed on backend and presented on graphs.
 
-* attribute's name:fundemental attribute's data type,indexed,x-axis,y-axis,z-axis,F,F,0,general attribute's data type
+* Schema file format
+          
+          attribute's name:fundemental attribute's data type,indexed,x-axis,y-axis,z-axis,F,F,0,general attribute's data type
 
 `attribute's name` - needs to be exactly the same as the attribute name in dataset file
 
