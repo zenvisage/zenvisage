@@ -146,7 +146,7 @@ public class SmoothingUtil {
 	    		sum=sum-yvals[pos-window];
 	    		sumsize--;
 	    	}
-	    	if(updatePos>0)
+	    	if(updatePos>=0)
 	    	{
 	    		ySmoothedVals[updatePos]=sum/sumsize;	
 	    	}
