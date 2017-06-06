@@ -74,7 +74,7 @@ For making the above change, you could run the following commands:
 
 * Launch `http://localhost:8080/` (preferably in Chrome, if has error mostly because of uncleared cache, use incognito mode probably fix). 
 
-### Dataset Upload Instructions
+### Dataset Upload Requirements
 
 #### Dataset file
 
