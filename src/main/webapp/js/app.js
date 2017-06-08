@@ -818,6 +818,22 @@ app.controller('datasetController', [
         console.log("getUserQueryResults: fail");
       });
 
+
+      // Update globalDatasetInfo['classes']
+      var query = {};
+      query["dataset"] = getSelectedDataset();
+      $http.post('/zv/getClassInfo', query
+      ).then(
+          function (response) {
+            console.log("success: ", response);
+            globalDatasetInfo["classes"] = response.data
+            $scope.classes = response.data["classes"]
+          },
+          function (response) {
+            console.log("failed: ", response);
+          }
+      );
+
     }
 
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()

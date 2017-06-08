@@ -109,41 +109,6 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .attr("height", height)// + m[0] + m[2])
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-    if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
-    {
-      var tooltipText = ""
-      for (i = 0; i < zlabel.split(".").length; i++) {
-        var name = globalDatasetInfo["classes"]["classes"][i]["name"]
-        var value = globalDatasetInfo["classes"]["classes"][i]["values"][zlabel.split(".")[i]]
-        tooltipText += name + ": " + value + " "
-      }
-
-      var tooltip = graph.append("g")
-        .attr("class", "custom-tooltip")
-        .attr("id", "custom-tooltip" + count.toString())
-        .style("display", "none");
-      tooltip.append("rect")
-        .attr("width", 60)
-        .attr("height", 20)
-        .attr("fill", "white")
-        .style("opacity", 0.5);
-      tooltip.append("text")
-        .attr("x", 30)
-        .attr("dy", "1.2em")
-        .attr("text", tooltipText)
-        .style("text-anchor", "left")
-        .attr("font-size", "12px")
-
-      graph.on("mouseover", function() { $($(this).find(".custom-tooltip")[0]).show(); })
-      .on("mouseout", function() { $($(this).find(".custom-tooltip")[0]).hide(); })
-      .on("mousemove", function(d) {
-        var xPosition = d3.mouse(this)[0] - 5;
-        var yPosition = d3.mouse(this)[1] - 5;
-        $($(this).find(".custom-tooltip")[0]).attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-        var ttt = $($($(this).find(".custom-tooltip")[0]).children()[1]).attr("text")
-        $($($(this).find(".custom-tooltip")[0]).children()[1]).text(ttt);
-      });
-    }
 
     graph.append("defs").append("clipPath")
         .attr("id", "clip-" + count.toString())
@@ -240,6 +205,56 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
     }
+  
+    if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
+    {
+      var tooltip = graph.append("g")
+        .attr("class", "custom-tooltip")
+        .attr("id", "custom-tooltip" + count.toString())
+        .style("display", "none");
+      tooltip.append("rect")
+        .attr("width", 110)
+        .attr("height", 18*zlabel.split(".").length)
+        .attr("fill", "black")
+        .style("opacity", 0.65);
+        // svg.html(tooltipText)  
+        //   .style("left", (d3.event.pageX) + "px")     
+        //   .style("top", (d3.event.pageY - 28) + "px");
+      
+
+      // var tooltipText = ""
+      for (i = 0; i < zlabel.split(".").length; i++) {
+        var name = globalDatasetInfo["classes"]["classes"][i]["name"]
+        var value = globalDatasetInfo["classes"]["classes"][i]["values"][zlabel.split(".")[i]]
+        tooltipText = name + ": " +"    "+ "["+value+"]"
+        // tooltipText += name + ": " + "["+value+"]"
+        tooltip.append("text")
+        .each(function (d) {
+           d3.select(this).append("tspan")
+               .text(tooltipText)
+               .attr("dy", i ? (1.3*i).toString() + "em" : 0)
+               .attr("x", 3)
+               .attr("y", 15)
+               .attr("fill", "white")
+               .attr("text-anchor", "left")
+               .attr("class", "tspan" + i)
+               .attr("font-size", "13px");
+        });
+      }
+
+
+      graph.on("mouseover", function() { $($(this).find(".custom-tooltip")[0]).show(); })
+      .on("mouseout", function() { $($(this).find(".custom-tooltip")[0]).hide(); })
+      .on("mousemove", function(d) {
+        var xPosition = d3.mouse(this)[0] - 100;
+        var yPosition = d3.mouse(this)[1] - 47;
+        $($(this).find(".custom-tooltip")[0]).attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+        var ttt = $($($(this).find(".custom-tooltip")[0]).children()[1]).attr("text")
+        $($($(this).find(".custom-tooltip")[0]).children()[1]).text(ttt);
+      });
+    }
+
+
   }
 
   $(".draggable-graph").draggable({
