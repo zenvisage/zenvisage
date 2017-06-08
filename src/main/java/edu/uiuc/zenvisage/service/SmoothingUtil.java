@@ -20,6 +20,10 @@ public class SmoothingUtil {
 	public static double[] applySmoothing(String type,double[] xvals,double [] yvals, double windowcoeff){
 		System.out.println("Smoothing type="+type+", # vals="+yvals.length + ", windowcoeff="+windowcoeff);
 		int window= (int) (yvals.length*windowcoeff);
+		if(windowcoeff<0.01 || window<1){
+			return yvals;
+		}
+			
 		if(type.equals("movingaverage")) return movingAverage(yvals, window);
 		if(type.equals("exponentialmovingaverage")) return exponentialMovingAverage(yvals, windowcoeff);
 		
@@ -142,7 +146,7 @@ public class SmoothingUtil {
 	    		sum=sum-yvals[pos-window];
 	    		sumsize--;
 	    	}
-	    	if(updatePos>0)
+	    	if(updatePos>=0)
 	    	{
 	    		ySmoothedVals[updatePos]=sum/sumsize;	
 	    	}
@@ -166,7 +170,7 @@ public class SmoothingUtil {
 		 double [] ySmoothedVals = new double[yvals.length];
 		 ySmoothedVals[0]=yvals[0];
 		 for(int i=1;i<yvals.length;i++){
-		    ySmoothedVals[i]=yvals[i]+decayfactor*ySmoothedVals[i-1];
+		    ySmoothedVals[i]=decayfactor*yvals[i]+(1-decayfactor)*ySmoothedVals[i-1];
 		 }
 		return ySmoothedVals;
 	}
@@ -184,7 +188,7 @@ public class SmoothingUtil {
 	}
 
 	
-	//currently assuming that Y values are equi-distant, so we look at previous and next windowsize/2 elements. However, in reality Y values might far away. 
+	//currently assuming that Y values are equi-distant, so we look at previous and next windowsize/2 elements. However, in reality Y values might be far away. 
 	private static double[] gaussianConvolution(double [] xvals,double [] yvals, int windowsize){
 		double sum = 0;
 		for (int i = 0; i < yvals.length; i++)
@@ -202,7 +206,7 @@ public class SmoothingUtil {
 		 ySmoothedVals[0]=yvals[0];
 		 int halfwindowsize=(int) Math.floor(windowsize/2);
 		 for(int i=0;i<yvals.length;i++){
-			 ySmoothedVals[i]=0.0;
+			 ySmoothedVals[i]=yvals[i];
 			 int j=i-halfwindowsize;
 			 int pos=0;
 			 while(j<i+halfwindowsize){

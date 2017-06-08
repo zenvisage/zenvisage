@@ -74,6 +74,60 @@ For making the above change, you could run the following commands:
 
 * Launch `http://localhost:8080/` (preferably in Chrome, if has error mostly because of uncleared cache, use incognito mode probably fix). 
 
+### Dataset Upload Requirements
+
+#### Dataset file
+
+Currently, Zenvisage only accepts Comma-separated values (.csv) dataset file. The top row is attributes name and the following rows for data.
+
+* Sample Dataset File
+
+          location,month,dayofyear,year,temperature
+          ABTIRANA,4,111,1997,55.4
+          ABTIRANA,4,115,1997,56.8
+          ABTIRANA,4,116,1997,61.5
+          ABTIRANA,4,117,1997,60.8
+          ABTIRANA,4,118,1997,57.2
+          ABTIRANA,5,121,1997,66.2
+
+#### Schema file
+
+Schema file is a .txt file which specifies the way data are processed on backend and presented on graphs.
+
+* Schema file format
+          
+          attribute's name:fundemental attribute's data type,indexed,x-axis,y-axis,z-axis,F,F,0,general attribute's data type
+
+`attribute's name` - needs to be exactly the same as the attribute name in dataset file
+
+`fundemental attribute's data type` - is the type of attribute in dataset (e.g string/int/float)
+
+`indexed` -  currently detault value per design
+
+`x-axis` - whether it would be shown on x-axis or not (e.g T/F)
+
+`y-axis` - whether it would be shown on y-axis or not (e.g T/F)
+
+`z-axis` - whether it would be shown on z-axis or not (e.g T/F)
+
+`F` - currently detault value per design
+
+`F` - currently detault value per design
+
+`0` - currently detault value per design
+
+`general attribute's data type` - is the type of attribute in dataset (e.g O/C/Q) (O for Ordinal, C for Categorical, Q for Qualitative)
+
+
+* Sample Schema File
+
+          location:string,indexed,F,F,T,F,F,0,C
+          month:int,indexed,T,F,F,F,F,0,O
+          dayofyear:int,indexed,T,F,F,F,F,0,O
+          year:int,indexed,T,F,F,F,F,0,O
+          temperature:float,indexed,F,T,F,F,F,0,O
+
+
 License
 ----
 

@@ -9,7 +9,7 @@ var xrangeNew;
 
 function createSketchpad( data , flipY)
 {
-
+console.log('createSketchpad')
 
   // change these values somewhere. hard coded for now
   var topMargin = 0;
@@ -25,7 +25,7 @@ function createSketchpad( data , flipY)
 
   // set the ranges
   var x = d3.scaleLinear().range([0, width]);
-  if(flipY){
+  if(getflipY()){
       var y = d3.scaleLinear().range([0,height]);
   }
   else{
@@ -37,7 +37,12 @@ function createSketchpad( data , flipY)
 
   // range for the zoom
   var x2 = d3.scaleLinear().range([0, width]);
-  var y2 = d3.scaleLinear().range([height2, 0]);
+  if(getflipY()){
+      var y2 = d3.scaleLinear().range([0,height2]);
+  }
+  else{
+      var y2 = d3.scaleLinear().range([height2, 0]);
+  }
   var miny = 0;
   var maxy = height;
 
@@ -117,9 +122,16 @@ function createSketchpad( data , flipY)
 
 
   // Add the Y Axis
-  focus.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(8, "s"));
+  if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
+    focus.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(8, ".2"));
+    }else{
+    focus.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(8, "s"));
+    }
+
 
   context.append("path")
       .data([data])
