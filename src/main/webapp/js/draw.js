@@ -342,6 +342,6 @@ function patternLoad(){
 }
 
 function Point(x, y){
-  this.x=x;
-  this.y=y;
+  this.xval=x;
+  this.yval=y;
 }
