@@ -461,7 +461,7 @@
                   <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
                   <br>
                   <div>
-                  <select class="form-control" id="smoothing-form-control">
+                  <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
                     <option value="none">None</option>
                     <option value="movingaverage">Moving Average</option>
                     <option value="exponentialmovingaverage">Exponential</option>
@@ -538,7 +538,7 @@
     <script src="js/parsertypes.js"></script>
     <script src="js/zqlparser.js"></script>
     <script src="js/zqlgraph.js"></script>
-    <script src="js/slider.js"></script>
+
 
     <script>
       // var tree = tree();

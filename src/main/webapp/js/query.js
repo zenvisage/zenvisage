@@ -139,6 +139,11 @@ function getflipY()
   return angular.element($("#table-div")).scope().flipY;
 }
 
+function usingPattern()
+{
+  return angular.element($("#table-div")).scope().flipY;
+}
+
 function getShowOriginalSketch()
 {
   return angular.element($("#table-div")).scope().showOriginalSketch;
