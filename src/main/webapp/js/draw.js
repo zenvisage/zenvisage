@@ -1,6 +1,7 @@
 var isDrawing = false;
 var lastDrawRow = null;
 var lastDrawValue = null;
+var usingPattern = false;
 
 var sketchpadNew; // to store the data
 var sketchpadData;
@@ -348,7 +349,7 @@ function setPoint(event, g, context) {
 
 function patternLoad(){
   data = JSON.parse($("#pattern-upload-textarea")[0].value);
-  console.log(data);
+  usingPattern = true; 
   createSketchpad( data );
   refreshZoomEventHandler();
 }
