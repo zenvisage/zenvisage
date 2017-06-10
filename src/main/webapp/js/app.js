@@ -158,9 +158,23 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $compile($el)($scope);
   }});
 
-
+  $scope.filterZQL = function () {
+    console.log("Filter working!")
+    var xAxis = getSelectedXAxis();
+    var yAxis = getSelectedYAxis();
+    var zAxis = getSelectedCategory();
+    var constraint = $("#filter.form-control").val();
+    $( ".tabler" ).each(function( index ) {
+      $(this).find(".name").val("*f1") 
+      $(this).find(".x-val").val("x<-{'"+xAxis+"'}") 
+      $(this).find(".y-val").val("y<-{'"+yAxis+"'}") 
+      $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
+      $(this).find(".constraints").val(constraint) 
+    })
+    $scope.submitZQL();
+  }
   $scope.submitZQL = function () {
-
+    console.log("submitZQL");
     $("#graph-div").empty();
     createZQLGraph( submitNodeZQL );
 
@@ -371,6 +385,7 @@ app.controller('options-controller', [
     $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
     $scope.flipY = false;
     $scope.selectedSmoothing = "none";
+    // $scope.filter= '';
 
     $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -420,6 +435,14 @@ app.controller('options-controller', [
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
+
+    // $scope.$watchGroup(['filter'], function( newValue, oldValue ) {
+    //   console.log("Filter working!")
+    //   if (newValue !== oldValue)
+    //   {
+    //     console.log("Filter working!")
+    //   }
+    // });
 
     $scope.removeAndInsertRows = function( n ){
       $scope.$broadcast('removeAndInsertRowshelper', {n} );

@@ -402,7 +402,7 @@
                 <div>
                   <div class="info-text"><b>Input equation</b></div>
                   <div class="input-group">
-                    <input ng-model="equation" type="text" class="form-control">
+                    <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
                     <div class="input-group-btn">
                       <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
                     </div>
@@ -473,6 +473,15 @@
                     <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
                   </nobr></p>
                   <div id="slider-range-max" align = "right" style="width:200px;"></div>
+                </div>
+
+                <div>
+                  <!-- <h5><b>Filter Constraint</b> -->
+                  <div class="info-text"><b>Filter Constraint</b></div>
+                  <div ng-controller='zqlTableController'>
+                    <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20"> 
+                    <br><button type="submit" style="float: right;"><a ng-click="filterZQL()">Submit</a></button>
+                  </div>
                 </div>
               </div>
             </div>
