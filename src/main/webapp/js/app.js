@@ -322,6 +322,7 @@ function checkProcessInput(input)
 }
 
 app.factory('datasetInfo', function() {
+  var tablelist;
   var categoryData;
   var xAxisData;
   var yAxisData;
@@ -332,6 +333,11 @@ app.factory('datasetInfo', function() {
     xAxisData = response.xAxisColumns;
     yAxisData = response.yAxisColumns;
   };
+
+  datasetService.storetablelist = function( response ) {
+    tablelist = response.data
+  };
+
   datasetService.getCategoryData = function()
   {
     return categoryData;
@@ -343,6 +349,10 @@ app.factory('datasetInfo', function() {
   datasetService.getYAxisData = function()
   {
     return yAxisData;
+  }
+  datasetService.getTablelist = function()
+  {
+    return tablelist;
   }
   return datasetService;
 });
@@ -781,6 +791,20 @@ app.controller('datasetController', [
   '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
   function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
 
+    $scope.inittablelist = function () {
+      $http.get('/zv/gettablelist'
+      ).then(
+          function (response) { 
+            console.log("success: ", response);
+            // $scope.tablelist = response.data
+            datasetInfo.storetablelist(response)
+            $scope.tablelist = datasetInfo.getTablelist()
+          },
+          function (response) {
+            console.log("failed: ", response);
+          }
+      );
+    };
 
 
     $scope.chartSettings = ChartSettings;

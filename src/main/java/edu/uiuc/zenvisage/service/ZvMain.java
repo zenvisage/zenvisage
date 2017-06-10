@@ -353,6 +353,12 @@ public class ZvMain {
 		System.out.println("Retrieved Dynamic Classes Configuration Query:"+retrieved);
 		return retrieved;
 	}
+	
+	public ArrayList<String> getTablelist() throws IOException, SQLException{
+		ArrayList<String> retrieved = sqlQueryExecutor.gettablelist();
+		System.out.println("Retrieved table list in db:"+retrieved);
+		return retrieved;
+	}
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database

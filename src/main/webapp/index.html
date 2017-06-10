@@ -190,14 +190,8 @@
             <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
-            <select class="form-control" ng-change="onDatasetChange()" ng-model="selectedDataset" id="dataset-form-control">
-              <option value="real_estate">Real Estate</option>
-              <option value="flights">flights</option>
-              <option value="cmu">cmu</option>
-              <option value="sales">sales</option>
-              <option value="weather">weather</option>
-              <option value="gene3">gene</option>
-              <option value="astro_sample1000">astro</option>
+            <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()" ng-model="selectedDataset" id="dataset-form-control">
+              <option ng-repeat="table in tablelist">{{table}}</option>
             </select>
           </div>
           <div>

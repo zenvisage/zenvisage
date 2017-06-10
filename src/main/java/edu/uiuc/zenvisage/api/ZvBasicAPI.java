@@ -2,6 +2,7 @@ package edu.uiuc.zenvisage.api;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
@@ -64,6 +65,13 @@ public class ZvBasicAPI {
 	    }
 	    String body = stringBuilder.toString();
 	    return zvMain.runRetrieveClasses(body);
+	}
+	
+	@RequestMapping(value = "/gettablelist", method = RequestMethod.GET)
+	@ResponseBody
+	public ArrayList<String> gettablelist() throws JsonGenerationException, JsonMappingException, IOException, InterruptedException, SQLException {
+//		System.out.println(arg);
+		return zvMain.getTablelist();
 	}
 
 //    /* Will be obsolete after separated calls*/

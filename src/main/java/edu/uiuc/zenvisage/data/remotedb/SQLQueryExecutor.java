@@ -96,6 +96,19 @@ public class SQLQueryExecutor {
 //	    System.out.println("Table " + tableName + " deleted in given database...");
 	    stmt.close();
 	}
+	
+	
+	public ArrayList<String> gettablelist() throws SQLException {
+		Statement stmt = c.createStatement();
+		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation'";
+		ResultSet rs = stmt.executeQuery(sql);
+		ArrayList<String> tablelist = new ArrayList<String>();
+		while ( rs.next() ) {
+            String tablename = rs.getString("table_name");
+            tablelist.add(tablename);
+		}
+        return tablelist;
+	}
 
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
@@ -507,14 +520,16 @@ public class SQLQueryExecutor {
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		try {
-			sqlQueryExecutor.dropTable("COMPANY");
+//			sqlQueryExecutor.dropTable("COMPANY");
 
-			//sqlQueryExecutor.query("SELECT * FROM COMPANY");
+//			sqlQueryExecutor.query("SELECT * FROM cmu");
+			System.out.println(sqlQueryExecutor.gettablelist());
+//			sqlQueryExecutor.gettablelist();
 
 			//sqlQueryExecutor.ZQLQuery("State", "Quarter", "SoldPrice", "real_estate", null);
 
 
-		} catch (PSQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			sqlQueryExecutor.createTable("CREATE TABLE COMPANY " +
 	                "(ID INT PRIMARY KEY     NOT NULL," +
