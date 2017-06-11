@@ -134,21 +134,38 @@ console.log('createSketchpad')
     }
 
 
+    // Add the second x axis
+    if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
+    focus.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(8, "s"));
+    }
+  else{
+    focus.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(5, "s"));
+    }
+
   context.append("path")
       .data([data])
       .attr("class", "line")
       .attr("d", valueline2);
 
-  // Add the second x axis
-  focus.append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).ticks(8, "s"));
-
+  if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
   context.append("g")
     .attr("class", "axis axis--x")
     .attr("transform", "translate(0," + height2 + ")")
     .call(d3.axisBottom(x).ticks(8, "s"));
+  }
+
+  else{
+  context.append("g")
+    .attr("class", "axis axis--x")
+    .attr("transform", "translate(0," + height2 + ")")
+    .call(d3.axisBottom(x).ticks(5, "s"));
+  }
 
   context.append("g")
       .attr("class", "brush")
@@ -349,7 +366,7 @@ function setPoint(event, g, context) {
 
 function patternLoad(){
   data = JSON.parse($("#pattern-upload-textarea")[0].value);
-  usingPattern = true; 
+  usingPattern = true;
   createSketchpad( data );
   refreshZoomEventHandler();
 }
