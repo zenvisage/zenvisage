@@ -80,14 +80,14 @@ svg#treesvg {
 }
 
 #middle-left{
-  height: 400px !important;
+  height: 100% !important;
   overflow-x: auto;
   -webkit-flex: 1;
   flex:1;
 }
 
 #middle-right{
-  height: 400px !important;
+  height: 100% !important;
   -webkit-flex: 1;
   overflow-x: auto;
   flex:1;
