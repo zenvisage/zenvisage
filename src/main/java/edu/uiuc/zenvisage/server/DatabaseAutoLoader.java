@@ -7,15 +7,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 public class DatabaseAutoLoader {
 
-	private static String metatable="zenvisage_metatable";
-	private static String metafilelocation="zenvisage_metafilelocation";
+	private static String metatable;
+	private static String metafilelocation;
 	private ZvServer zvServer;
-
+	
+	static{
+		metatable=Readconfig.getMetatable();
+		metafilelocation=Readconfig.getMetafilelocation();
+	}
+	
 	public DatabaseAutoLoader(ZvServer zvServer){
 		this.zvServer = zvServer;
 	}
