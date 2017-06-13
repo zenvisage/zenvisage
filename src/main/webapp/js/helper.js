@@ -10,7 +10,7 @@ var outlierDygraphsNew = {};
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
-{ 
+{
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
@@ -75,7 +75,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
-    var width = 220//200// - m[1] - m[3]; // width
+    var width = 275//200// - m[1] - m[3]; // width
     var height = 105//85// - m[0] - m[2]; // height
 
     // X scale will fit all values from data[] within pixels 0-w
@@ -174,8 +174,8 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2s"));  
-    }    
+        .call(d3.axisLeft(y).ticks(4, ".2s"));
+    }
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
 
@@ -205,7 +205,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
     }
-  
+
     if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
     {
       var tooltip = graph.append("g")
@@ -217,10 +217,10 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         .attr("height", 18*zlabel.split(".").length)
         .attr("fill", "black")
         .style("opacity", 0.65);
-        // svg.html(tooltipText)  
-        //   .style("left", (d3.event.pageX) + "px")     
+        // svg.html(tooltipText)
+        //   .style("left", (d3.event.pageX) + "px")
         //   .style("top", (d3.event.pageY - 28) + "px");
-      
+
 
       // var tooltipText = ""
       for (i = 0; i < zlabel.split(".").length; i++) {
@@ -443,8 +443,8 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2s"));  
-    }    
+        .call(d3.axisLeft(y).ticks(4, ".2s"));
+    }
 
 
     // Add the line by appending an svg:path element with the data line we created above
@@ -627,9 +627,9 @@ function displayOutlierResultsHelper( outlierResults )
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2s"));  
+        .call(d3.axisLeft(y).ticks(4, ".2s"));
     }
-    
+
 
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines

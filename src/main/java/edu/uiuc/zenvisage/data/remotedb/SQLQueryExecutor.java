@@ -516,6 +516,46 @@ public class SQLQueryExecutor {
 		st.execute(sql);
 		st.close();
 	}
+	
+// jaewoo new function 
+
+	public void createDynamicClassAggregation() throws SQLException{
+		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+		
+		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations")){
+				createTable("CREATE TABLE dynamic_class_aggregations  " +
+	                "(ID INT PRIMARY KEY     NOT NULL," +
+	                " Table_Name           TEXT    NOT NULL, " +
+	                " Tag            TEXT     NOT NULL, " +
+	                " Count          INT     NOT NULL) ");
+		}
+		else{
+			sqlQueryExecutor.dropTable("dynamic_class_aggregations");
+			createTable("CREATE TABLE dynamic_class_aggregations  " +
+	                " (Table_Name           TEXT    NOT NULL, " +
+	                " Tag            TEXT     NOT NULL, " +
+	                " Count          INT     NOT NULL) ");
+			
+		}
+
+		//insert elements 
+		List<String> tables = new ArrayList<String>();
+		tables.add("real_estate");
+		tables.add("cmu");
+		Statement st= c.createStatement();
+		for(String t:tables){
+		String sql = String.format("INSERT INTO dynamic_class_aggregations(table_name,tag,count)"
+				+ "SELECT '%s', dynamic_class,COUNT(dynamic_class)"
+				+ "FROM " + t + " GROUP BY dynamic_class", t);
+		st.execute(sql);
+		System.out.print(t);
+		}
+		st.close(); 
+	//	Statement st= c.createStatement();
+	//	String sql; 
+	//	st.execute(sql);
+		
+	}
 
 	public static void main(String[] args) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();

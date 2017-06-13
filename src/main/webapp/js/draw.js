@@ -136,16 +136,18 @@ console.log('createSketchpad')
 
     // Add the second x axis
     if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
+      console.log("small1");
     focus.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x).ticks(8, "s"));
     }
   else{
+    console.log("big1");
     focus.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(5, "s"));
+      .call(d3.axisBottom(x).ticks(6, "s"));
     }
 
   context.append("path")
@@ -177,7 +179,14 @@ console.log('createSketchpad')
     var s = d3.event.selection || x2.range();
     x.domain(s.map(x2.invert, x2));
     focus.select(".line").attr("d", valueline);
-    focus.select(".axis--x").call(d3.axisBottom(x));
+    if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
+      console.log("small2");
+    focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, "s"));
+    }
+    else{
+      console.log("big2");
+      focus.select(".axis--x").call(d3.axisBottom(x).ticks(6, "s"));
+    }
     // svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
     //     .scale(width / (s[1] - s[0]))
     //     .translate(-s[0], 0));
