@@ -21,6 +21,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
+import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.model.ClassElement;
 import java.util.Arrays;
 
@@ -36,14 +37,15 @@ public class SQLQueryExecutor {
 	 */
 	private String database = "postgres";
 	private String host = "jdbc:postgresql://localhost:5432/"+database;
-	private String username = "postgres";
-	private String password = "zenvisage";
+	private String username;
+	private String password;
 	Connection c = null;
 	public VisualComponentList visualComponentList;
 
 	// Initialize connection
 	public SQLQueryExecutor() {
-
+		this.username = Readconfig.getUsername();
+		this.password = Readconfig.getPassword();
 	      try {
 		         Class.forName("org.postgresql.Driver");
 		         c = DriverManager
