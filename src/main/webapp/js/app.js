@@ -733,6 +733,7 @@ app.controller('options-controller', [
     }
 
     $scope.drawFunction = function() {
+      log.info(Date.now(),'input equation:',$scope.equation)
       var xval = [];
       var plotData = [];
 
