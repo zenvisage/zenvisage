@@ -89,7 +89,20 @@ console.log('createSketchpad')
       .attr('pointer-events', 'all')
       //.on("mouseout", mouseoutEvent )
       .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin.left + "," + margin.top + ")")
+      .call(d3.zoom().on("zoom", zoomed)      // zoom y axis behavior
+      .scaleExtent([1, Infinity])
+      .translateExtent([[0, 0], [width, height]]).extent([[0, 0], [width, height]]))
+      .on("mousedown.zoom", null)
+      .on("mousemove.zoom", null)
+      .on("mouseup.zoom", null)
+      .on("selectstart.zoom", null)
+      .on("click.zoom", null)
+      .on("dblclick.zoom", null)
+      .on("touchstart.zoom", null)
+      .on("touchmove.zoom", null)
+      .on("touchend.zoom", null)
+      .on("touchcancel.zoom", null);
 
   svg.append("defs").append("clipPath")
       .attr("id", "clip")
@@ -115,6 +128,25 @@ console.log('createSketchpad')
       .attr("class", "line")
       .attr("d", valueline);
 
+      var zoom = d3.zoom().on("zoom", zoomed)
+          .scaleExtent([1, Infinity])
+          .translateExtent([[0, 0], [width, height]])
+          .extent([[0, 0], [width, height]])
+          ;
+
+      function zoomed() {
+      var t = d3.event.transform;
+      y.domain(t.rescaleY(y2).domain());
+      focus.select(".line").attr("d",valueline);
+      focus.select(".axis--y").call(d3.axisLeft(y).ticks(8, ".2"));
+    //  x.domain(t.rescaleX(x2).domain());
+    //  focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, ".2"));
+    }
+
+    function reset() {
+     d3.select("#draw-div").transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+      }
+     d3.select(".reset").on("click", reset);
   //Add the X Axis
   // focus.append("g")
   //     .attr("class", "axis x")

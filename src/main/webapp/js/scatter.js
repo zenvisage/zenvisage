@@ -410,7 +410,30 @@ createcolorbar();
         return factory;
     });
 
-app.controller('scatterController', ['$scope', '$rootScope', 'ScatterService', function ($scope, $rootScope, ScatterService) {
+app.controller('scatterController', ['$scope','$http', '$rootScope', 'ScatterService', function ($scope, $http, $rootScope, ScatterService) {
+$scope.data;
+
+/*  $http.get('/zv/executeScatter', {params: {'query': {"db":"real_estate", "zqlRows":[{"name":{"output":true,"sketch":true,"name":"f1"},"x":{"variable":"x1","attributes":["'year'"]},"y":{"variable":"y1","attributes":["'soldprice'"]},"z":{"variable":"z1","aggregate":true,"attribute":"'state'","values":["*"]}, "viz":{"map": {"type":"scatter"}} }]}}}
+  ).then(
+      function (response) {
+          $scope.data = response.data.outputCharts[0].points;
+          //$scope.scatterService = ScatterService.drawScatter( $scope.data );
+          //$scope.scatterService = ScatterService.drawScatter( data2 );
+          console.log("data: ", response.data.outputCharts[0].points);
+          $scope.scatterService = ScatterService.drawScatter( $scope.data );
+          $scope.submit;
+          setTimeout(function () {
+              $rootScope.shared = {value:"The input controller just changed this"};
+              $rootScope.$digest();
+          }, 3000);
+      },
+      function (response) {
+      //    console.log("failed: ", escape(response));
+      }
+  );*/
+
+
+
         var data = [{'xval': 4, 'yval': 55.5}, {'xval': 3.5, 'yval': 30},{'xval': 0.5, 'yval':7},
                     {'xval': 3, 'yval':15},{'xval': 3.2, 'yval':20},{'xval': 3.2, 'yval':20},
                     {'xval': 3.2, 'yval':35},{'xval': 3.2, 'yval':45},{'xval': 3.8, 'yval':50},
@@ -419,7 +442,8 @@ app.controller('scatterController', ['$scope', '$rootScope', 'ScatterService', f
                     {'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},
                     {'xval': 1.6, 'yval': 10}, {'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17},
                     {'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17}]
-        $scope.scatterService = ScatterService.drawScatter( data );
+
+        //$scope.scatterService = ScatterService.drawScatter( $scope.data );
         //currentRepresentativePlot = ScatterService.drawScatter( data );
         //drawRandomChart();
         // $scope.scatterService = ScatterService;
