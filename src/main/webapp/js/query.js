@@ -55,8 +55,8 @@ function Query( searchMethod ) {
   this.xRange = getXRange();
   //this.segmentCount = getNumSegments();
   this.considerRange = getConsiderRange();
-  this.smoothingType = getSmoothingType();// fix to dynamically fetch
-  this.smoothingcoefficient = getSmoothingCoefficient();// fix to dynamically fetch
+  this.smoothingType = getSmoothingType();
+  this.smoothingcoefficient = getSmoothingCoefficient();
 }
 
 function SketchPoints(xAxisName, yAxisName, points){

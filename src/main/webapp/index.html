@@ -381,6 +381,7 @@
                 </div>
                 <div>
                   <div class="info-text"><b>K-means Cluster Size</b></div>
+                  <p></p>
                   <div>
                     <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
                   </div>
@@ -395,6 +396,7 @@
 
                 <div>
                   <div class="info-text"><b>Input equation</b></div>
+                  <p></p>
                   <div class="input-group">
                     <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
                     <div class="input-group-btn">
@@ -421,6 +423,7 @@
 
                 <div id="num-results">
                   <div class="info-text"><b>Number of Results</b></div>
+                  <p></p>
                   <div>
                     <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
                   </div>
@@ -470,12 +473,15 @@
                 </div>
 
                 <div>
-                  <!-- <h5><b>Filter Constraint</b> -->
                   <div class="info-text"><b>Filter Constraint</b></div>
-                  <div ng-controller='zqlTableController'>
-                    <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20"> 
-                    <br><button type="submit" style="float: right;"><a ng-click="filterZQL()">Submit</a></button>
-                  </div>
+                  <p></p>
+                    <div class="input-group" ng-controller='zqlTableController'>
+                      <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20"> 
+                      <div class="input-group-btn">
+                        <button class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="filterZQL()">
+                        Submit </button>
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -527,6 +533,7 @@
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/d3.v4.min.js"></script>
     <script src="js/lib/d3-hexbin.v0.2.min.js"></script>
+    <script src="js/lib/log4javascript.js"></script>
     <script src="js/app.js"></script>
     <script src="js/scatter.js"></script>
     <script src="js/draw.js"></script>
@@ -549,6 +556,17 @@
       $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip({html: true});
       });
+      // Logging
+      // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
+      var log = log4javascript.getDefaultLogger();
+      log.info(Date.now(),"Begin Session")
+      // var log = log4javascript.getLogger();
+      // var ajaxAppender = new log4javascript.AjaxAppender('http://example.com/api/logger');
+      // ajaxAppender.setTimed(true);
+      // ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
+      // log.addAppender(ajaxAppender);
+
+      // log.info("hello world")
     </script>
 
 

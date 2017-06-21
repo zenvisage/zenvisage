@@ -618,7 +618,7 @@ function displayOutlierResultsHelper( outlierResults )
       .text(getSelectedYAxis() + " by " + getSelectedXAxis());
 
     // Add the Y Axis
-    if ((Math.log10(ymax)<=2)&(Math.log10(ymax)>=-2)){
+    if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")

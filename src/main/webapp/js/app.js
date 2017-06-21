@@ -171,6 +171,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
       $(this).find(".constraints").val(constraint) 
     })
+    log.info(Date.now(),"filter constraint: ",constraint)
     $scope.submitZQL();
   }
   $scope.submitZQL = function () {
@@ -397,16 +398,27 @@ app.controller('options-controller', [
     $scope.selectedSmoothing = "none";
     // $scope.filter= '';
 
-    $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
+    $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info(Date.now(),"similarity :",$scope.similarity)
         $scope.callGetUserQueryResults();
       }
     });
 
+    $scope.$watchGroup(['numResults'], function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        log.info(Date.now(),"numResults :",$scope.numResults)
+        $scope.callGetUserQueryResults();
+      }
+    });
+    
+
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info(Date.now(),"clusterSize :",$scope.clusterSize)
         $scope.callgetRepresentativeTrends();
       }
     });
@@ -414,6 +426,7 @@ app.controller('options-controller', [
     $scope.$watch('showScatterplot', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info(Date.now(),"showScatterplot :",$scope.showScatterplot)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -421,6 +434,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info(Date.now(),"considerRange :",$scope.considerRange)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -428,24 +442,33 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['showOriginalSketch' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info(Date.now(),"showOriginalSketch :",$scope.showOriginalSketch)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
 
-    $scope.$watch('representative', function( newValue, oldValue ) {
-      if (newValue !== oldValue)
-      {
-        $scope.callgetRepresentativeTrends();
-      }
-    });
+    // $scope.$watch('representative', function( newValue, oldValue ) {
+    //   if (newValue !== oldValue)
+    //   {
+    //     $scope.callgetRepresentativeTrends();
+    //   }
+    // });
 
     $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info(Date.now(),"aggregation :",$scope.aggregation)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
 
+    $scope.$watch('flipY', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        log.info(Date.now(),"flipY :",$scope.flipY)
+        $scope.callGetUserQueryResultsWithCallBack();
+      }
+    });
     // $scope.$watchGroup(['filter'], function( newValue, oldValue ) {
     //   console.log("Filter working!")
     //   if (newValue !== oldValue)
@@ -465,13 +488,6 @@ app.controller('options-controller', [
     $scope.insertProcessRow = function(){
       $scope.$broadcast('insertProcessRowhelper');
     }
-
-    $scope.$watch('flipY', function( newValue, oldValue ) {
-      if (newValue !== oldValue)
-      {
-        $scope.callGetUserQueryResultsWithCallBack();
-      }
-    });
 
     // TOP K
     $scope.getTopK = function()
@@ -503,12 +519,12 @@ app.controller('options-controller', [
   }
 
   $scope.onSmoothingChange = function() {
+    log.info(Date.now(),"selectedSmoothing :",$scope.selectedSmoothing)
     $scope.callGetUserQueryResultsWithCallBack();
     $scope.callgetRepresentativeTrends();
-
   };
 
-    $scope.clearQuery = function() {
+  $scope.clearQuery = function() {
       $scope.removeAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("")
       $($( ".tabler" )[0]).find(".x-val").val("")
@@ -516,9 +532,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".z-val").val("")
       $($( ".tabler" )[0]).find(".constraints").val("")
       $($( ".tabler" )[0]).find(".process").val("")
-    }
+  }
 
-    $scope.populateWeatherQuery1 = function() {
+  $scope.populateWeatherQuery1 = function() {
 
       $scope.removeAndInsertRows( 1 );
 
@@ -549,7 +565,7 @@ app.controller('options-controller', [
 
       // $($( ".tabler" )[2]).find(".process").val("")
 
-    }
+  }
 
     $scope.populateWeatherQuery2 = function() {
       $scope.removeAndInsertRows( 2 );
@@ -717,6 +733,7 @@ app.controller('options-controller', [
     }
 
     $scope.drawFunction = function() {
+      log.info(Date.now(),'input equation:',$scope.equation)
       var xval = [];
       var plotData = [];
 
@@ -1036,10 +1053,12 @@ app.controller('datasetController', [
     	$( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
     	$( "#slider-range-max"  ).slider({
         change: function( event, ui ) {
+            var smoothingcoefficient=$( "#slider-range-max" ).slider( "value" )
+            log.info(Date.now(),"smoothingcoefficient :",smoothingcoefficient)
             if(getSmoothingType() != "none"){
-            $scope.getUserQueryResults();
-            $scope.getRepresentativeTrendsWithoutCallback();
-          }
+              $scope.getUserQueryResults();
+              $scope.getRepresentativeTrendsWithoutCallback();
+            }
         }
     })
 
