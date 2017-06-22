@@ -37,7 +37,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     }
     query["dataset"] = getSelectedDataset();
     query["classes"] = classList;
-
+    
     $http.post('/zv/createClasses', query
     ).then(
         function (response) {
@@ -49,6 +49,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           console.log("failed: ", response);
         }
     );
+    log.info(Date.now(),"Dynamic Class created : ",classList)
   }
 }]);
 
@@ -838,6 +839,7 @@ app.controller('datasetController', [
     }
 
     $scope.callGetClassInfo = function() {
+      log.info(Date.now(),"show dynamic class info")
       $rootScope.$emit("callGetClassInfo", {});
     }
 
@@ -952,7 +954,7 @@ app.controller('datasetController', [
     };
 
    $scope.onDatasetChange = function() {
-
+      log.info(Date.now(),"dataset selected: ",$('#dataset-form-control').val())
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
@@ -988,6 +990,7 @@ app.controller('datasetController', [
            $scope.yAxisItems.push(key);
           });
           $scope.selectedYAxis = $scope.yAxisItems[0];
+          log.info(Date.now(),"initialized data attribute: ",getSelectedCategory(),',',getSelectedXAxis(),',',getSelectedYAxis())
           //send in first item info
 
           // $.when(initializeSketchpadOnDataAttributeChange(
@@ -1016,6 +1019,7 @@ app.controller('datasetController', [
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      log.info(Date.now(),"data attribute changed:",getSelectedCategory(),',',getSelectedXAxis(),',',getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
       //   getRepresentativeTrends( getOutlierTrends );

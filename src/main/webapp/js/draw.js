@@ -408,6 +408,7 @@ function setPoint(event, g, context) {
 function patternLoad(){
   data = JSON.parse($("#pattern-upload-textarea")[0].value);
   usingPattern = true;
+  log.info(Date.now(),"patternLoad : ",$("#pattern-upload-textarea")[0].value)
   createSketchpad( data );
   refreshZoomEventHandler();
 }

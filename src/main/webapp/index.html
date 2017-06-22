@@ -46,7 +46,7 @@
         </div>
       </form>
 
-      <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
+      <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -207,7 +207,6 @@
             </h5>
             <div ng-repeat="category in categories">
               <label>
-
                 <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
               </label>
             </div>
@@ -559,12 +558,19 @@
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
       var log = log4javascript.getDefaultLogger();
-      log.info(Date.now(),"Begin Session")
+      
       // var log = log4javascript.getLogger();
-      // var ajaxAppender = new log4javascript.AjaxAppender('http://example.com/api/logger');
+      // var ajaxAppender = new log4javascript.AjaxAppender("logger");
       // ajaxAppender.setTimed(true);
       // ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
       // log.addAppender(ajaxAppender);
+      // //convert to JSON format
+      // jsonLayout = new log4javascript.JsonLayout(false, false); //readable, combineMessages
+      // ajaxAppender.setLayout(jsonLayout);
+      // ajaxAppender.addHeader("Content-Type", "application/json");
+      // log.info("Begin Session")
+      // log.info(JSON.stringify("Begin Session"))
+      // log.info(Date.now(),"Begin Session")
 
       // log.info("hello world")
     </script>
