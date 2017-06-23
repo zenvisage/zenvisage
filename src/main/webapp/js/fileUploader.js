@@ -23,7 +23,7 @@ $('#uploaderForm').on('submit', function(e) {
             alert(errorThrown);
         }
     });
-    log.info(Date.now(),"dataset upload: ",$("#datasetNameInput").val())
+    log.info("dataset upload: ",$("#datasetNameInput").val())
 });
 
 $("#pattern-upload").on('submit', function(e) {

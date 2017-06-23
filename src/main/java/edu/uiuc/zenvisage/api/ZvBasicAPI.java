@@ -1,11 +1,18 @@
 package edu.uiuc.zenvisage.api;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -134,6 +141,19 @@ public class ZvBasicAPI {
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 
+	@RequestMapping(value = "/logger", method = RequestMethod.POST)
+	@ResponseBody
+	public void logger(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		File file = new File("zv.log");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+		String log = request.getParameter("timestamp")+','+request.getParameter("message")+'\n';
+        System.out.println(log);
+        writer.write(log);
+        writer.close();
+        // return "Test successful:" + request;
+	}
+	 
+	
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
 	public String getDissimilarity(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {

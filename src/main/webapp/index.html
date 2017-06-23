@@ -557,22 +557,18 @@
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
-      var log = log4javascript.getDefaultLogger();
+      // var log = log4javascript.getDefaultLogger();
       
-      // var log = log4javascript.getLogger();
-      // var ajaxAppender = new log4javascript.AjaxAppender("logger");
-      // ajaxAppender.setTimed(true);
-      // ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
-      // log.addAppender(ajaxAppender);
-      // //convert to JSON format
-      // jsonLayout = new log4javascript.JsonLayout(false, false); //readable, combineMessages
+      var log = log4javascript.getLogger();
+      var ajaxAppender = new log4javascript.AjaxAppender("/zv/logger");
+      ajaxAppender.setTimed(true);
+      ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
+      log.addAppender(ajaxAppender);
+      //convert to JSON format
+      // jsonLayout = new log4javascript.JsonLayout(true, true); //readable, combineMessages
       // ajaxAppender.setLayout(jsonLayout);
       // ajaxAppender.addHeader("Content-Type", "application/json");
-      // log.info("Begin Session")
-      // log.info(JSON.stringify("Begin Session"))
-      // log.info(Date.now(),"Begin Session")
-
-      // log.info("hello world")
+      log.info(Date.now(),"Begin Session")
     </script>
 
 

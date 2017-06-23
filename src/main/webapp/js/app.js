@@ -49,7 +49,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           console.log("failed: ", response);
         }
     );
-    log.info(Date.now(),"Dynamic Class created : ",classList)
+    log.info("Dynamic Class created : ",classList)
   }
 }]);
 
@@ -172,7 +172,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
       $(this).find(".constraints").val(constraint) 
     })
-    log.info(Date.now(),"filter constraint: ",constraint)
+    log.info("filter constraint: ",constraint)
     $scope.submitZQL();
   }
   $scope.submitZQL = function () {
@@ -402,7 +402,7 @@ app.controller('options-controller', [
     $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"similarity :",$scope.similarity)
+        log.info("similarity :",$scope.similarity)
         $scope.callGetUserQueryResults();
       }
     });
@@ -410,7 +410,7 @@ app.controller('options-controller', [
     $scope.$watchGroup(['numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"numResults :",$scope.numResults)
+        log.info("numResults :",$scope.numResults)
         $scope.callGetUserQueryResults();
       }
     });
@@ -419,7 +419,7 @@ app.controller('options-controller', [
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"clusterSize :",$scope.clusterSize)
+        log.info("clusterSize :",$scope.clusterSize)
         $scope.callgetRepresentativeTrends();
       }
     });
@@ -427,7 +427,7 @@ app.controller('options-controller', [
     $scope.$watch('showScatterplot', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"showScatterplot :",$scope.showScatterplot)
+        log.info("showScatterplot :",$scope.showScatterplot)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -435,7 +435,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"considerRange :",$scope.considerRange)
+        log.info("considerRange :",$scope.considerRange)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -443,7 +443,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['showOriginalSketch' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"showOriginalSketch :",$scope.showOriginalSketch)
+        log.info("showOriginalSketch :",$scope.showOriginalSketch)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -458,7 +458,7 @@ app.controller('options-controller', [
     $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"aggregation :",$scope.aggregation)
+        log.info("aggregation :",$scope.aggregation)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -466,7 +466,7 @@ app.controller('options-controller', [
     $scope.$watch('flipY', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info(Date.now(),"flipY :",$scope.flipY)
+        log.info("flipY :",$scope.flipY)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -520,7 +520,7 @@ app.controller('options-controller', [
   }
 
   $scope.onSmoothingChange = function() {
-    log.info(Date.now(),"selectedSmoothing :",$scope.selectedSmoothing)
+    log.info("selectedSmoothing :",$scope.selectedSmoothing)
     $scope.callGetUserQueryResultsWithCallBack();
     $scope.callgetRepresentativeTrends();
   };
@@ -734,7 +734,7 @@ app.controller('options-controller', [
     }
 
     $scope.drawFunction = function() {
-      log.info(Date.now(),'input equation:',$scope.equation)
+      log.info('input equation:',$scope.equation)
       var xval = [];
       var plotData = [];
 
@@ -839,7 +839,7 @@ app.controller('datasetController', [
     }
 
     $scope.callGetClassInfo = function() {
-      log.info(Date.now(),"show dynamic class info")
+      log.info("show dynamic class info")
       $rootScope.$emit("callGetClassInfo", {});
     }
 
@@ -954,7 +954,7 @@ app.controller('datasetController', [
     };
 
    $scope.onDatasetChange = function() {
-      log.info(Date.now(),"dataset selected: ",$('#dataset-form-control').val())
+      log.info("dataset selected: ",$('#dataset-form-control').val())
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
@@ -990,7 +990,7 @@ app.controller('datasetController', [
            $scope.yAxisItems.push(key);
           });
           $scope.selectedYAxis = $scope.yAxisItems[0];
-          log.info(Date.now(),"initialized data attribute: ",getSelectedCategory(),',',getSelectedXAxis(),',',getSelectedYAxis())
+          log.info("initialized data attribute: ",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
           //send in first item info
 
           // $.when(initializeSketchpadOnDataAttributeChange(
@@ -1019,7 +1019,7 @@ app.controller('datasetController', [
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
-      log.info(Date.now(),"data attribute changed:",getSelectedCategory(),',',getSelectedXAxis(),',',getSelectedYAxis())
+      log.info("data attribute changed:",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
       //   getRepresentativeTrends( getOutlierTrends );
@@ -1058,7 +1058,7 @@ app.controller('datasetController', [
     	$( "#slider-range-max"  ).slider({
         change: function( event, ui ) {
             var smoothingcoefficient=$( "#slider-range-max" ).slider( "value" )
-            log.info(Date.now(),"smoothingcoefficient :",smoothingcoefficient)
+            log.info("smoothingcoefficient :",smoothingcoefficient)
             if(getSmoothingType() != "none"){
               $scope.getUserQueryResults();
               $scope.getRepresentativeTrendsWithoutCallback();
