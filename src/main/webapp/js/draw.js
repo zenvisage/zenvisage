@@ -32,7 +32,7 @@ console.log('createSketchpad')
   else{
       var y = d3.scaleLinear().range([height, 0]);
   }
-
+  log.info("initialize canvas axis",y.domain()[0],y.domain()[1])
 
 /**************changed*******************/
 
@@ -135,13 +135,14 @@ console.log('createSketchpad')
           ;
 
       function zoomed() {
-      var t = d3.event.transform;
-      y.domain(t.rescaleY(y2).domain());
-      focus.select(".line").attr("d",valueline);
-      focus.select(".axis--y").call(d3.axisLeft(y).ticks(8, ".2"));
-    //  x.domain(t.rescaleX(x2).domain());
-    //  focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, ".2"));
-    }
+        var t = d3.event.transform;
+        y.domain(t.rescaleY(y2).domain());
+        log.info("zoomed axis",y.domain()[0],y.domain()[1])
+        focus.select(".line").attr("d",valueline);
+        focus.select(".axis--y").call(d3.axisLeft(y).ticks(8, ".2"));
+      //  x.domain(t.rescaleX(x2).domain());
+      //  focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, ".2"));
+      }
 
     function reset() {
      d3.select("#draw-div").transition().duration(750).call(zoom.transform, d3.zoomIdentity);
@@ -227,6 +228,7 @@ console.log('createSketchpad')
     var right = Number($(".selection")[0].getAttribute("width"))
     xrangeNew = [x2.invert(left), x2.invert(left+right)];
     angular.element($("#sidebar")).scope().getUserQueryResults();
+    log.info("brushing x range",xrangeNew[0],xrangeNew[1])
   }
 
   function setPointNew( ref )
@@ -358,6 +360,7 @@ function finishDraw(event, g, context) {
   lastDrawRow = null;
   lastDrawValue = null;
   angular.element($("#sidebar")).scope().getUserQueryResults();
+  log.info("sketched query",JSON.stringify(sketchpadData))
 }
 
 function setPoint(event, g, context) {

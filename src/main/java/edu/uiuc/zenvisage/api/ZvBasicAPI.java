@@ -147,10 +147,9 @@ public class ZvBasicAPI {
 		File file = new File("zv.log");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		String log = request.getParameter("timestamp")+','+request.getParameter("message")+'\n';
-        System.out.println(log);
+//        System.out.println(log);
         writer.write(log);
         writer.close();
-        // return "Test successful:" + request;
 	}
 	 
 	

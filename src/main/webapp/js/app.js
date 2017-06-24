@@ -176,7 +176,6 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     $scope.submitZQL();
   }
   $scope.submitZQL = function () {
-    console.log("submitZQL");
     $("#graph-div").empty();
     createZQLGraph( submitNodeZQL );
 
@@ -402,7 +401,7 @@ app.controller('options-controller', [
     $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("similarity :",$scope.similarity)
+        log.info("similarity",$scope.similarity)
         $scope.callGetUserQueryResults();
       }
     });
@@ -410,7 +409,7 @@ app.controller('options-controller', [
     $scope.$watchGroup(['numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("numResults :",$scope.numResults)
+        log.info("numResults",$scope.numResults)
         $scope.callGetUserQueryResults();
       }
     });
@@ -419,7 +418,7 @@ app.controller('options-controller', [
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("clusterSize :",$scope.clusterSize)
+        log.info("clusterSize",$scope.clusterSize)
         $scope.callgetRepresentativeTrends();
       }
     });
@@ -427,7 +426,7 @@ app.controller('options-controller', [
     $scope.$watch('showScatterplot', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("showScatterplot :",$scope.showScatterplot)
+        log.info("showScatterplot",$scope.showScatterplot)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -435,7 +434,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("considerRange :",$scope.considerRange)
+        log.info("considerRange",$scope.considerRange)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -443,7 +442,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['showOriginalSketch' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("showOriginalSketch :",$scope.showOriginalSketch)
+        log.info("showOriginalSketch",$scope.showOriginalSketch)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -458,7 +457,7 @@ app.controller('options-controller', [
     $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("aggregation :",$scope.aggregation)
+        log.info("aggregation",$scope.aggregation)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -466,7 +465,7 @@ app.controller('options-controller', [
     $scope.$watch('flipY', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
-        log.info("flipY :",$scope.flipY)
+        log.info("flipY",$scope.flipY)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
