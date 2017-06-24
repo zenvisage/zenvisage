@@ -232,6 +232,9 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
              (trans + m[0] + 30) + ")")
         .style("text-anchor", "middle")
         .attr("count", count.toString())
+        .attr("id",'ztitle')
+        .attr("type",'queryResult')
+        .attr('label',zlabel)
         .text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
         //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
     }
@@ -339,6 +342,14 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
   $(".draggable-graph").draggable({
     opacity: 0.5,
     appendTo: 'body',
+    start : function(){
+      try{
+        if (typeof($(this)[0].querySelector('#ztitle').innerHTML)=='string'){
+          var textObj = $(this)[0].querySelector('#ztitle')
+          log.info(textObj.getAttribute('type')+" dragging ", textObj.getAttribute('label'))
+        }  
+      }catch(err){;}
+    },
     helper: function() {
       return $(this).clone().css({
         width: $(event.target).width(),
@@ -520,6 +531,9 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       .attr("transform",
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
+      .attr("id",'ztitle')
+      .attr("type",'representativeResult')
+      .attr('label',xlabel)
       .style("text-anchor", "middle")
       .text(xlabel + " (" + clusterCount + ")");
 
@@ -781,12 +795,22 @@ function displayOutlierResultsHelper( outlierResults )
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
+      .attr("id",'ztitle')
+      .attr("type",'outlierResult')
+      .attr('label',xlabel)
       .text(xlabel);
-      //.text(xlabel + " (" + clusterCount + ")");
   }
 
   $(".draggable-graph").draggable({
     opacity: 0.5,
+    start : function(){
+      try{
+        if (typeof($(this)[0].querySelector('#ztitle').innerHTML)=='string'){
+          var textObj = $(this)[0].querySelector('#ztitle')
+          log.info(textObj.getAttribute('type')+" dragging ", textObj.getAttribute('label'))
+        }  
+      }catch(err){;}
+    },
     helper: function() {
       return $(this).clone().css({
         width: $(event.target).width(),
@@ -840,6 +864,7 @@ $(document).ready(function(){
     accept: ".draggable-graph",
     drop: function( event, ui )
     {
+      log.info("dropped successfully to canvas")
       uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
     }
   });
