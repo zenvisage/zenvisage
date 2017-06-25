@@ -49,16 +49,38 @@ function Query( searchMethod ) {
   this.clustering = "KMeans"; // fix to dynamically fetch
   this.kMeansClusterSize = getClusterSize();
   this.distance_metric = getDistanceMethod(); // fix to dynamically fetch
-  this.predicateOperator = "="; // fix to dynamically fetch
-  this.predicateColumn = getSelectedCategory();
-  this.predicateValue = ""; // fix to dynamically fetch
+  var parsedPredicate = getParsePredicate();
+  this.predicateOperator = parsedPredicate[0]; 
+  this.predicateColumn = parsedPredicate[1];
+  this.predicateValue = parsedPredicate[2];
   this.xRange = getXRange();
   //this.segmentCount = getNumSegments();
   this.considerRange = getConsiderRange();
   this.smoothingType = getSmoothingType();
   this.smoothingcoefficient = getSmoothingCoefficient();
 }
-
+function getParsePredicate(){
+  var constraint = $("#filter.form-control").val();
+  var predicateOperator = "=";
+  var predicateColumn = getSelectedCategory();
+  var predicateValue = ""
+  if (constraint.includes(">")){
+    predicateOperator=">";
+  }
+  else if (constraint.includes("<")){
+    predicateOperator="<";
+  }
+  else if (constraint.includes("=")){
+    predicateOperator="=";
+  }
+  else{
+    //not a constraint statement 
+    return [predicateOperator,predicateColumn,predicateValue]
+  }
+  predicateColumn= constraint.split(">")[0]
+  predicateValue= constraint.split(">")[1]
+  return [predicateOperator,predicateColumn,predicateValue]
+}
 function SketchPoints(xAxisName, yAxisName, points){
   var xAxisData = globalDatasetInfo.xAxisColumns;
   var yAxisData = globalDatasetInfo.yAxisColumns;

@@ -160,20 +160,27 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
   }});
 
   $scope.filterZQL = function () {
-    console.log("Filter working!")
-    var xAxis = getSelectedXAxis();
-    var yAxis = getSelectedYAxis();
-    var zAxis = getSelectedCategory();
+    // console.log("Filter working!")
+    // var xAxis = getSelectedXAxis();
+    // var yAxis = getSelectedYAxis();
+    // var zAxis = getSelectedCategory();
     var constraint = $("#filter.form-control").val();
-    $( ".tabler" ).each(function( index ) {
-      $(this).find(".name").val("*f1") 
-      $(this).find(".x-val").val("x<-{'"+xAxis+"'}") 
-      $(this).find(".y-val").val("y<-{'"+yAxis+"'}") 
-      $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
-      $(this).find(".constraints").val(constraint) 
-    })
+    // //Populate ZQL table 
+    // // $( ".tabler" ).each(function( index ) {
+    // //   $(this).find(".name").val("*f1") 
+    // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}") 
+    // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}") 
+    // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
+    // //   $(this).find(".constraints").val(constraint) 
+    // // })
+    // // $scope.submitZQL();
+    //$scope.getUserQueryResultsWithCallBack();
+    // getRepresentativeTrendsWithoutCallback();
+    // constructUserQuery();
+    // constructRepresentativeTrendQuery();
+    // constructOutlierTrendQuery();
     log.info("filter constraint: ",constraint)
-    $scope.submitZQL();
+    
   }
   $scope.submitZQL = function () {
     $("#graph-div").empty();
