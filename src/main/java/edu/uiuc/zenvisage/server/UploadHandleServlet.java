@@ -36,23 +36,23 @@ public class UploadHandleServlet extends HttpServlet {
                 return;
             }
             this.fileList = upload.parseRequest(request);
-//            System.out.println(fileList.size());
+            System.out.println(fileList.size());
+            
             for(FileItem item : fileList){
                	if(item.isFormField()){
-                  String value = item.getString("UTF-8");
-                  System.out.print(value);
+                  String value = item.getString("UTF-8");              
                   names.add(value);
                	} else{
             		String filename = item.getName();
             		if(filename==null) continue;
-            		File newFile = new File(filename);
-//            		System.out.println(newFile.getCanonicalPath());
+            		File newFile = new File("../src/main/resources/uploaded_data/"+filename);
+//            		System.out.println(newFile.getCanonicalPath()); 
             		item.write(newFile);
                     message = "success";
                     this.names.add(newFile.getAbsolutePath().toString());
                 }
             }
-            
+            System.out.println("names: " + names);
         }catch (Exception e) {
             message= "fail";
             e.printStackTrace();

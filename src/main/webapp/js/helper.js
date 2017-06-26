@@ -6,6 +6,7 @@ var outlierDygraphs = {};
 var userQueryDygraphsNew = {};
 var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
+var globCount = 0;
 
 //displays user results
 
@@ -107,6 +108,9 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
+          .attr("id","resultsvg-" + count.toString())
+          .attr("xmlns","http://www.w3.org/2000/svg")
+          .attr("version","1.1")
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
 
@@ -359,6 +363,77 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     }
   });
 
+// Set double click handlers for exporting results graphs
+var id = "#resultsvg-"
+
+  $("#resultsvg-0").dblclick(function() {
+    createcanvas(id,0);
+  });
+
+  $("#resultsvg-1").dblclick(function() {
+    createcanvas(id,1);
+  });
+
+  $("#resultsvg-2").dblclick(function() {
+    createcanvas(id,2);
+  });
+
+  $("#resultsvg-3").dblclick(function() {
+    createcanvas(id,3);
+  });
+
+  $("#resultsvg-4").dblclick(function() {
+    createcanvas(id,4);
+  });
+
+  $("#resultsvg-5").dblclick(function() {
+    createcanvas(id,5);
+  });
+
+  $("#resultsvg-6").dblclick(function() {
+    createcanvas(id,6);
+  });
+  $("#resultsvg-7").dblclick(function() {
+    createcanvas(id,7);
+  });
+
+  $("#resultsvg-8").dblclick(function() {
+    createcanvas(id,8);
+  });
+
+  $("#resultsvg-9").dblclick(function() {
+    createcanvas(id,9);
+  });
+  $("#resultsvg-10").dblclick(function() {
+    createcanvas(id,10);
+  });
+
+  $("#resultsvg-11").dblclick(function() {
+    createcanvas(id,11);
+  });
+  $("#resultsvg-12").dblclick(function() {
+    createcanvas(id,12);
+  });
+
+  $("#resultsvg-13").dblclick(function() {
+    createcanvas(id,13);
+  });
+  $("#resultsvg-14").dblclick(function() {
+    createcanvas(id,14);
+  });
+
+}
+
+var createcanvas = function(id,number) {
+  // the canvg call that takes the svg xml and converts it to a canvas
+  canvg('canvas', $(id+number.toString())[0].outerHTML);
+  // the canvas calls to output a png
+  var canvas = document.getElementById("canvas");
+  canvas.toBlob(function(blob) {
+      saveAs(blob, "png");
+  });
+  canvas.style.display="none";
+
 }
 
 function replaceAll(str, find, replace) {
@@ -437,6 +512,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
           .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
+          .attr("id","representativesvg-"+ count.toString())
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     var trans = height-20
@@ -579,6 +655,16 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
           .attr("fill", "none");
     }
   }
+var id = "#representativesvg-"
+  $("#representativesvg-0").dblclick(function() {
+    createcanvas(id,0);
+  });
+  $("#representativesvg-1").dblclick(function() {
+    createcanvas(id,1);
+  });
+  $("#representativesvg-2").dblclick(function() {
+    createcanvas(id,2);
+  });
 }
 
 function displayOutlierResultsHelper( outlierResults )
@@ -649,6 +735,7 @@ function displayOutlierResultsHelper( outlierResults )
           .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
+          .attr("id","outliersvg-" + count.toString())
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     var trans = height-20
@@ -799,7 +886,18 @@ function displayOutlierResultsHelper( outlierResults )
       .attr("type",'outlierResult')
       .attr('label',xlabel)
       .text(xlabel);
+      //.text(xlabel + " (" + clusterCount + ")");
   }
+  var id = "#outliersvg-"
+    $("#outliersvg-0").dblclick(function() {
+      createcanvas(id,0);
+    });
+    $("#outliersvg-1").dblclick(function() {
+      createcanvas(id,1);
+    });
+    $("#outliersvg-2").dblclick(function() {
+      createcanvas(id,2);
+    });
 
   $(".draggable-graph").draggable({
     opacity: 0.5,
@@ -1014,3 +1112,19 @@ function getEvaluatingRange( xmin, xmax, xrange )
   }
   return [first_left, first_right, second_left, second_right]
 }
+
+$("#resultsvg-0").dblclick(function() {
+
+// the canvg call that takes the svg xml and converts it to a canvas
+canvg('canvas', $("#resultsvg-0")[0].outerHTML);
+
+// the canvas calls to output a png
+var canvas = document.getElementById("canvas");
+canvas.toBlob(function(blob) {
+    saveAs(blob, "png");
+});
+canvas.style.display="none";
+//var img = canvas.toDataURL("image/png");
+
+
+});
