@@ -253,5 +253,38 @@ svg#treesvg {
   font-size: 20;
 }
 
+/*Tooltip for question mark info*/
+.qtooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
 
+.qtooltip .qtooltiptext {
+    visibility: hidden;
+    width: 250px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
 
+.qtooltip .qtooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    margin-left: -10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.qtooltip:hover .qtooltiptext {
+    visibility: visible;
+}

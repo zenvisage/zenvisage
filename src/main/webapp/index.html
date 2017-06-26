@@ -506,15 +506,23 @@
             <div>
               <table id="representative-table">
                 <tr class="middle-right-headers">
-                  <td><h5><b>Representative patterns </b><span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span></h5>
-                  </td>
+                  <td><h5><b>Representative patterns </b>
+                  <div class="qtooltip"><span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('representative explaination')"></span>
+                    <span class="qtooltiptext">Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.</span>
+                  </div>
+                  </h5></td>
                 </tr>
               </table>
             </div>
             <div>
               <table id="outlier-table">
                 <tr class="middle-right-headers">
-                  <td><h5><b>Outliers </b><span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span></h5></td>
+                  <td><h5><b>Outliers </b>
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>
+                    <span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>
+                  </div>
+                  </h5></td>
                 </tr>
               </table>
             </div>
