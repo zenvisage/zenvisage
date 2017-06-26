@@ -22,6 +22,7 @@ public class ZvQuery {
 	public String predicateColumn;
 	public String predicateOperator;
 	public String predicateValue;
+	public String filter;
 	public float[] xRange;
 	public boolean considerRange;
 	public int kMeansClusterSize;
@@ -164,5 +165,11 @@ public class ZvQuery {
 	public void setSmoothingcoefficient(double smoothingcoefficient) {
 		this.smoothingcoefficient = smoothingcoefficient;
 	}
-	
+
+	public String getFilter() {
+		return filter;
+	}
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
 }

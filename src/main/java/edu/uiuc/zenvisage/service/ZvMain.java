@@ -656,6 +656,8 @@ public class ZvMain {
 	 */
 	public void setFilter(Query q, ZvQuery arg) {
 		if (arg.predicateValue.equals("")) return;
+		if (!arg.filter.equals(""))
+			q.setCompositeFilter(arg.filter);
 		Query.Filter filter = new Query.FilterPredicate(arg.predicateColumn,Query.FilterOperator.fromString(arg.predicateOperator),arg.predicateValue);
 		q.setFilter(filter);
 	}

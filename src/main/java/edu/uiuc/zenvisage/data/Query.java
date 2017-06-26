@@ -16,6 +16,7 @@ public class Query {
   
   private List<String> projections;	
   private Filter filter;
+  private String compositeFilter="";
   private String groupBy;	
   private String aggregationFunc;
   private String aggregationVarible;
@@ -44,10 +45,21 @@ public class Query {
 		String zAndX[] = groupBy.split(",");
 		VizColumn vc = new VizColumn();
 		vc.getMap().put(VizColumn.aggregation, aggregationFunc);
-		ZQLRow zqlRow = new ZQLRow(new XColumn(zAndX[1]), new YColumn(aggregationVarible), new ZColumn(zAndX[0]), null, vc);
+		ZQLRow zqlRow=null;
+		if(!compositeFilter.equals(""))
+		zqlRow = new ZQLRow(new XColumn(zAndX[1]), new YColumn(aggregationVarible), new ZColumn(zAndX[0]), compositeFilter, vc);
+		else{
+		zqlRow = new ZQLRow(new XColumn(zAndX[1]), new YColumn(aggregationVarible), new ZColumn(zAndX[0]), null, vc);}
 		return zqlRow;
 	}
   	
+  public String getCompositeFilter() {
+			return compositeFilter;
+		}
+		public void setCompositeFilter(String compositeFilter) {
+			this.compositeFilter = compositeFilter;
+		}
+
   public static class Filter{
 	private boolean  isComposite;
 	public boolean isComposite() {
