@@ -49,7 +49,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           console.log("failed: ", response);
         }
     );
-    log.info("Dynamic Class created : ",classList)
+    log.info("Dynamic Class created",JSON.stringify(classList))
   }
 }]);
 
@@ -159,29 +159,29 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $compile($el)($scope);
   }});
 
-  $scope.filterZQL = function () {
-    // console.log("Filter working!")
-    // var xAxis = getSelectedXAxis();
-    // var yAxis = getSelectedYAxis();
-    // var zAxis = getSelectedCategory();
-    var constraint = $("#filter.form-control").val();
-    // //Populate ZQL table 
-    // // $( ".tabler" ).each(function( index ) {
-    // //   $(this).find(".name").val("*f1") 
-    // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}") 
-    // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}") 
-    // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
-    // //   $(this).find(".constraints").val(constraint) 
-    // // })
-    // // $scope.submitZQL();
-    //$scope.getUserQueryResultsWithCallBack();
-    // getRepresentativeTrendsWithoutCallback();
-    // constructUserQuery();
-    // constructRepresentativeTrendQuery();
-    // constructOutlierTrendQuery();
-    log.info("filter constraint: ",constraint)
+  // $scope.filterZQL = function () {
+  //   console.log("Filter working!")
+  //   // var xAxis = getSelectedXAxis();
+  //   // var yAxis = getSelectedYAxis();
+  //   // var zAxis = getSelectedCategory();
+  //   // var constraint = $("#filter.form-control").val();
+  //   // //Populate ZQL table 
+  //   // // $( ".tabler" ).each(function( index ) {
+  //   // //   $(this).find(".name").val("*f1") 
+  //   // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}") 
+  //   // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}") 
+  //   // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
+  //   // //   $(this).find(".constraints").val(constraint) 
+  //   // // })
+  //   // // $scope.submitZQL();
+  //   // $scope.getUserQueryResultsWithCallBack();
+  //   // getRepresentativeTrendsWithoutCallback();
+  //   // constructUserQuery();
+  //   // constructRepresentativeTrendQuery();
+  //   // constructOutlierTrendQuery();
+  //   log.info("filter constraint: ",constraint)
     
-  }
+  // }
   $scope.submitZQL = function () {
     $("#graph-div").empty();
     createZQLGraph( submitNodeZQL );
@@ -526,7 +526,13 @@ app.controller('options-controller', [
   }
 
   $scope.onSmoothingChange = function() {
-    log.info("selectedSmoothing :",$scope.selectedSmoothing)
+    log.info("selectedSmoothing",$scope.selectedSmoothing)
+    $scope.callGetUserQueryResultsWithCallBack();
+    $scope.callgetRepresentativeTrends();
+  };
+
+  $scope.onFilterChange = function() {
+    log.info("filter change", $("#filter.form-control").val());
     $scope.callGetUserQueryResultsWithCallBack();
     $scope.callgetRepresentativeTrends();
   };
@@ -740,7 +746,7 @@ app.controller('options-controller', [
     }
 
     $scope.drawFunction = function() {
-      log.info('input equation:',$scope.equation)
+      log.info('input equation',$scope.equation)
       var xval = [];
       var plotData = [];
 
@@ -960,7 +966,7 @@ app.controller('datasetController', [
     };
 
    $scope.onDatasetChange = function() {
-      log.info("dataset selected: ",$('#dataset-form-control').val())
+      log.info("dataset selected",$('#dataset-form-control').val())
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
@@ -996,7 +1002,7 @@ app.controller('datasetController', [
            $scope.yAxisItems.push(key);
           });
           $scope.selectedYAxis = $scope.yAxisItems[0];
-          log.info("initialized data attribute: ",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
+          log.info("initialized data attribute",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
           //send in first item info
 
           // $.when(initializeSketchpadOnDataAttributeChange(
@@ -1025,7 +1031,7 @@ app.controller('datasetController', [
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
-      log.info("data attribute changed:",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
+      log.info("data attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
       //   getRepresentativeTrends( getOutlierTrends );
@@ -1064,7 +1070,7 @@ app.controller('datasetController', [
     	$( "#slider-range-max"  ).slider({
         change: function( event, ui ) {
             var smoothingcoefficient=$( "#slider-range-max" ).slider( "value" )
-            log.info("smoothingcoefficient :",smoothingcoefficient)
+            log.info("smoothingcoefficient",smoothingcoefficient)
             if(getSmoothingType() != "none"){
               $scope.getUserQueryResults();
               $scope.getRepresentativeTrendsWithoutCallback();
