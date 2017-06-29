@@ -915,9 +915,12 @@ app.controller('datasetController', [
       var data = q;
       q.outlierCount = $("#num-results-download").val();
       console.log("calling downloadSimilarity");
-      if document.getElementById('yOnly').checked{
-        q.yOnly = true;
-      }
+      // if document.getElementById('yOnly').checked{
+      //   q.yOnly = "checked";
+      // }
+      // if $("#yOnly").is(':checked'){
+      //   q.yOnly = "checked";
+      // }
       $http.post('/zv/downloadSimilarity', data).
       success(function(response) {
         console.log("downloadSimilarity: success");
