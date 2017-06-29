@@ -913,13 +913,14 @@ app.controller('datasetController', [
       console.log("downloading results")
       var q = constructUserQuery(); //goes to query.js
       var data = q;
-
+      q.outlierCount = $("#num-results-download").val();
       console.log("calling downloadSimilarity");
+      if document.getElementById('yOnly').checked{
+        q.yOnly = true;
+      }
       $http.post('/zv/downloadSimilarity', data).
       success(function(response) {
         console.log("downloadSimilarity: success");
-        if (response.length == 0){console.log("empty response")}
-        console.log(response);
       }).
       error(function(response) {
         console.log("downloadSimilarity: fail");

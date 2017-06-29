@@ -131,7 +131,9 @@ public class ZvBasicAPI {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
-	        stringBuilder.append(scanner.nextLine());
+	    		String line = scanner.nextLine();
+	        stringBuilder.append(line);
+	        System.out.println(line);
 	    }
 	    String body = stringBuilder.toString();
 	    

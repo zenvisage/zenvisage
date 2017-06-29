@@ -578,16 +578,26 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 		 BufferedWriter bw = null;
 		 FileWriter fw = null;
-		 fw = new FileWriter("download.csv");
-		 bw = new BufferedWriter(fw);
-		 bw.write("schema\n");
+		 
 		 ArrayList<Chart> outputCharts = result.outputCharts;
-		 System.out.println(outputCharts);
+//		 System.out.println(result.xUnit);
+//		 System.out.println(result.yUnit); //null
+		 Chart sampleChartSchema = outputCharts.get(0);
+		 fw = new FileWriter(sampleChartSchema.yType+".csv");
+		 bw = new BufferedWriter(fw);
+		 
+//		 System.out.println(outputCharts.get(0));
+//		 System.out.println(outputCharts.get(0).xType);
+//		 System.out.println(outputCharts.get(0).yType);
+//		 System.out.println(outputCharts.get(0).zType);
+//		 System.out.println(outputCharts.get(0).title);
+//		 System.out.println(outputCharts);
 		 for (int i = 0; i < outputCharts.size(); i++){
 			 Chart viz = outputCharts.get(i);
-			 System.out.println(viz);
-			 System.out.println(viz.xData);
-			 System.out.println(viz.yData);
+			 bw.write(viz.title+','+ String.join(",", viz.yData)+"\n");
+//			 System.out.println(viz);
+//			 System.out.println(viz.xData);
+//			 System.out.println(viz.yData);
 		 }
 		 bw.close();
 	}

@@ -541,7 +541,10 @@
               <h4 class="modal-title">Download Query Results</h4>
             </div>
             <div class="modal-body" id="class-info-body">
-                Number of Results:<input ng-model="numResults"  type="text" id="num-results" name="number-of-results" value="50">
+                Number of Results: 
+                <input ng-model="numResults" type="text" id="num-results-download">
+                <br>
+                <input type="checkbox" id="yOnly"> Export y only <br>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults() ">Export as csv file</button>
