@@ -572,34 +572,51 @@ public class ZvMain {
 		 return res;
 	}
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		// Save Results Query to a csv file
+		 System.out.println("saveDragnDropInterfaceQuerySeparated:");
+		 
 		 Result result = runDragnDropInterfaceQuery(query,method);
-		 System.out.println("Result:"+result);
+//		 System.out.println("Result:"+result);
 		 ObjectMapper mapper = new ObjectMapper();
 		 System.out.println("After Interpolation and normalization");
-		 BufferedWriter bw = null;
-		 FileWriter fw = null;
 		 
 		 ArrayList<Chart> outputCharts = result.outputCharts;
-//		 System.out.println(result.xUnit);
-//		 System.out.println(result.yUnit); //null
-		 Chart sampleChartSchema = outputCharts.get(0);
-		 fw = new FileWriter(sampleChartSchema.yType+".csv");
-		 bw = new BufferedWriter(fw);
+
+//		 System.out.println("query:"+query);
 		 
-//		 System.out.println(outputCharts.get(0));
-//		 System.out.println(outputCharts.get(0).xType);
-//		 System.out.println(outputCharts.get(0).yType);
-//		 System.out.println(outputCharts.get(0).zType);
-//		 System.out.println(outputCharts.get(0).title);
-//		 System.out.println(outputCharts);
+		 String[] parts = query.split(",");
+ 
+		 boolean downloadX = true;
+		 try{
+			 if (parts[parts.length-1].substring(9,16).equals("checked")){
+				 System.out.println("download Y only");
+				 downloadX = false;
+			 }	 
+		 }catch(java.lang.StringIndexOutOfBoundsException e){
+			 System.out.println("download both X and Y");
+		 }
+//		 System.out.println("downloadX:");
+//		 System.out.println(downloadX);
+ 
+		 FileWriter fx = null;
+		 BufferedWriter bx = null;
+		 Chart sampleChartSchema = outputCharts.get(0);
+		 if (downloadX){
+			 fx = new FileWriter(sampleChartSchema.xType+".csv");
+			 bx = new BufferedWriter(fx);
+		 }
+		 FileWriter fy = new FileWriter(sampleChartSchema.yType+".csv");
+		 BufferedWriter by = new BufferedWriter(fy);
+		  
 		 for (int i = 0; i < outputCharts.size(); i++){
 			 Chart viz = outputCharts.get(i);
-			 bw.write(viz.title+','+ String.join(",", viz.yData)+"\n");
-//			 System.out.println(viz);
-//			 System.out.println(viz.xData);
-//			 System.out.println(viz.yData);
+			 by.write(viz.title+','+ String.join(",", viz.yData)+"\n");
+			 if (downloadX){
+				 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+			 }
 		 }
-		 bw.close();
+		 if (downloadX){bx.close();}
+		 by.close();
 	}
 
 
