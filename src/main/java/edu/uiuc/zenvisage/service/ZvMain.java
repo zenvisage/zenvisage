@@ -4,8 +4,10 @@
 package edu.uiuc.zenvisage.service;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -423,9 +425,7 @@ public class ZvMain {
 //		 ObjectMapper mapper = new ObjectMapper();
 //		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 //	}
-
-
-	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 //		System.out.println(query);
 
@@ -558,13 +558,38 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 
 		 analysis.compute(output, normalizedgroups, args);
+		 
 		 System.out.println("After Distance calulations");
+		 return analysis.getChartOutput().finalOutput;
+	}
 
+	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Result result = runDragnDropInterfaceQuery(query,method);
 		 ObjectMapper mapper = new ObjectMapper();
 		 System.out.println("After Interpolation and normalization");
 		 String res = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 		 System.out.println("After mapping to output string");
 		 return res;
+	}
+	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Result result = runDragnDropInterfaceQuery(query,method);
+		 System.out.println("Result:"+result);
+		 ObjectMapper mapper = new ObjectMapper();
+		 System.out.println("After Interpolation and normalization");
+		 BufferedWriter bw = null;
+		 FileWriter fw = null;
+		 fw = new FileWriter("download.csv");
+		 bw = new BufferedWriter(fw);
+		 bw.write("schema\n");
+		 ArrayList<Chart> outputCharts = result.outputCharts;
+		 System.out.println(outputCharts);
+		 for (int i = 0; i < outputCharts.size(); i++){
+			 Chart viz = outputCharts.get(i);
+			 System.out.println(viz);
+			 System.out.println(viz.xData);
+			 System.out.println(viz.yData);
+		 }
+		 bw.close();
 	}
 
 

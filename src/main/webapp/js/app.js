@@ -785,7 +785,7 @@ app.controller('options-controller', [
       //angular.element($("#sidebar")).scope().getUserQueryResults();
     }
 
-    $scope.callGetUserQueryResults = function() {
+    $scope.callGetUserQueryResulcalts = function() {
       $rootScope.$emit("callGetUserQueryResults", {});
     }
 
@@ -909,7 +909,22 @@ app.controller('datasetController', [
       );
 
     }
+    $scope.downloadResults =function downloadResults(){
+      console.log("downloading results")
+      var q = constructUserQuery(); //goes to query.js
+      var data = q;
 
+      console.log("calling downloadSimilarity");
+      $http.post('/zv/downloadSimilarity', data).
+      success(function(response) {
+        console.log("downloadSimilarity: success");
+        if (response.length == 0){console.log("empty response")}
+        console.log(response);
+      }).
+      error(function(response) {
+        console.log("downloadSimilarity: fail");
+          });
+    }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
       getRepresentativeTrends( getOutlierTrends );

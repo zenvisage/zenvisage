@@ -497,7 +497,10 @@
         <div id="bottom-middle-bar">
 
           <div id="middle-left" class="col-md-6">
-            <h5><b>Results</b></h5>
+            <h5>
+            <b>Results </b>
+            <button type="button" class="textButton" data-toggle="modal" data-target="#download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
+            </h5>
             <div>
               <table id="results-table"></table>
             </div>
@@ -530,7 +533,22 @@
         </div>
       </div>
     </div>
-
+    <div class="modal fade" id="download-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Download Query Results</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+                Number of Results:<input ng-model="numResults"  type="text" id="num-results" name="number-of-results" value="50">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults() ">Export as csv file</button>
+            </div>
+          </div>
+        </div>
+      </div>
 <canvas id="canvas" width="100%" height="600px"></canvas>
   <img id="result"/>
 
