@@ -127,6 +127,37 @@ Schema file is a .txt file which specifies the way data are processed on backend
           year:int,indexed,T,F,F,F,F,0,O
           temperature:float,indexed,F,T,F,F,F,0,O
 
+#### Running Docker
+
+TO BUILD:
+     Make sure Dockerfile and in the same folder:
+    
+          docker build -t zenvisage .
+
+Note the period at the end, i.e. current path, zenvisage is the name of the image, it can be versioned e.g., zenvisage:2.0, etc...
+
+TO RUN:
+    
+     docker run --name zenv -d -p 8080:8080 zenvisage
+
+zenv is the name of the container,  -d is for deamon and -p 8080:8080 is exposing the 8080 from the container to the localhost (it can be 8888:8080, which will expose the app in 8888)
+
+Wait a few seconds and go to  localhost:8080
+
+TO SEE THE LOGS:
+
+     docker logs zenv
+
+Will print the logs from inside the container....
+
+To make sure the container is running:
+     
+      docker ps
+
+TO STOP IT AND REMOVE
+
+      docker stop zenv
+      docker rm zenv
 
 License
 ----
