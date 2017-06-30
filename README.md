@@ -134,7 +134,7 @@ Install:
  
 Start Docker daemon (in ubuntu):
      
-     sudo service docker status
+     sudo service docker start
      
 Check Docker daemon is running (in ubuntu): 
 
