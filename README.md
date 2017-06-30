@@ -132,11 +132,11 @@ Install:
     
      https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#uninstall-old-versions
  
-Start Docker daemon:
+Start Docker daemon (in ubuntu):
      
      sudo service docker status
      
-Check Docker daemon is running:
+Check Docker daemon is running (in ubuntu): 
 
      sudo service docker status
      
@@ -151,7 +151,7 @@ TO RUN:
     
      docker run --name zenv -d -p 8080:8080 zenvisage
 
-zenv is the name of the container,  -d is for deamon and -p 8080:8080 is exposing the 8080 from the container to the localhost (it can be 8888:8080, which will expose the app in 8888)
+zenv is the name of the container,  -d is for daemon and -p 8080:8080 is exposing the 8080 from the container to the localhost (it can be 8888:8080, which will expose the app in 8888)
 
 Wait a few seconds and go to  localhost:8080
 
