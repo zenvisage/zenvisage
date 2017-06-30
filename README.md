@@ -128,9 +128,20 @@ Schema file is a .txt file which specifies the way data are processed on backend
           temperature:float,indexed,F,T,F,F,F,0,O
 
 #### Running Docker
+Install:
+    
+     https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#uninstall-old-versions
+ 
+Start Docker daemon:
+     
+     sudo service docker status
+     
+Check Docker daemon is running:
 
-TO BUILD:
-     Make sure Dockerfile and in the same folder:
+     sudo service docker status
+     
+TO BUILD codebase:
+     Make sure Dockerfile is in the same folder:
     
           docker build -t zenvisage .
 
