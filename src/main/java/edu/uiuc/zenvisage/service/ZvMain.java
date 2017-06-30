@@ -4,8 +4,10 @@
 package edu.uiuc.zenvisage.service;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -423,9 +425,7 @@ public class ZvMain {
 //		 ObjectMapper mapper = new ObjectMapper();
 //		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 //	}
-
-
-	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 //		System.out.println(query);
 
@@ -558,13 +558,65 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 
 		 analysis.compute(output, normalizedgroups, args);
+		 
 		 System.out.println("After Distance calulations");
+		 return analysis.getChartOutput().finalOutput;
+	}
 
+	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Result result = runDragnDropInterfaceQuery(query,method);
 		 ObjectMapper mapper = new ObjectMapper();
 		 System.out.println("After Interpolation and normalization");
 		 String res = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 		 System.out.println("After mapping to output string");
 		 return res;
+	}
+	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		// Save Results Query to a csv file
+		 System.out.println("saveDragnDropInterfaceQuerySeparated:");
+		 
+		 Result result = runDragnDropInterfaceQuery(query,method);
+//		 System.out.println("Result:"+result);
+		 ObjectMapper mapper = new ObjectMapper();
+		 System.out.println("After Interpolation and normalization");
+		 
+		 ArrayList<Chart> outputCharts = result.outputCharts;
+
+//		 System.out.println("query:"+query);
+		 
+		 String[] parts = query.split(",");
+ 
+		 boolean downloadX = true;
+		 try{
+			 if (parts[parts.length-1].substring(9,16).equals("checked")){
+				 System.out.println("download Y only");
+				 downloadX = false;
+			 }	 
+		 }catch(java.lang.StringIndexOutOfBoundsException e){
+			 System.out.println("download both X and Y");
+		 }
+//		 System.out.println("downloadX:");
+//		 System.out.println(downloadX);
+ 
+		 FileWriter fx = null;
+		 BufferedWriter bx = null;
+		 Chart sampleChartSchema = outputCharts.get(0);
+		 if (downloadX){
+			 fx = new FileWriter(sampleChartSchema.xType+".csv");
+			 bx = new BufferedWriter(fx);
+		 }
+		 FileWriter fy = new FileWriter(sampleChartSchema.yType+".csv");
+		 BufferedWriter by = new BufferedWriter(fy);
+		  
+		 for (int i = 0; i < outputCharts.size(); i++){
+			 Chart viz = outputCharts.get(i);
+			 by.write(viz.title+','+ String.join(",", viz.yData)+"\n");
+			 if (downloadX){
+				 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+			 }
+		 }
+		 if (downloadX){bx.close();}
+		 by.close();
 	}
 
 
