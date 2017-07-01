@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.JsonNode;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -584,20 +586,50 @@ public class ZvMain {
 
 //		 System.out.println("query:"+query);
 		 
-		 String[] parts = query.split(",");
- 
+//		 String[] parts = query.split(",");
+//		 System.out.println("parts:"+parts);
+//		 System.out.println("parts -1 :"+parts[parts.length-1]);
+//		 System.out.println("parts -2 :"+parts[parts.length-2]);
+
+		 JsonNode rootNode = mapper.readTree(query);
+		 JsonNode includeQueryTxt = rootNode.path("includeQuery");
+		 System.out.println("includeQuery = "+includeQueryTxt.asText());
+		 
+		 JsonNode yOnlyTxt = rootNode.path("yOnly");
+		 System.out.println("yOnly = "+ yOnlyTxt.asText());
+
 		 boolean downloadX = true;
-		 try{
-			 if (parts[parts.length-1].substring(9,16).equals("checked")){
-				 System.out.println("download Y only");
-				 downloadX = false;
-			 }	 
-		 }catch(java.lang.StringIndexOutOfBoundsException e){
-			 System.out.println("download both X and Y");
+		 boolean includeQuery = false;
+
+		 if (includeQueryTxt.asText().equals("checked")){
+			 System.out.println("includeQuery");
+			 includeQuery = true;
 		 }
-//		 System.out.println("downloadX:");
-//		 System.out.println(downloadX);
- 
+		 if (yOnlyTxt.asText().equals("checked")){
+			 System.out.println("download Y only");
+			 downloadX = false;
+		 }
+//		 try{
+//			 if (parts[parts.length-1].substring(9,16).equals("checked")){
+//				 System.out.println("download Y only");
+//				 downloadX = false;
+//			 }	 
+//		 }catch(java.lang.StringIndexOutOfBoundsException e){
+//			 System.out.println("download both X and Y");
+//		 }
+//		 try{
+//			 if (parts[parts.length-2].substring(15,22).equals("checked")){
+//				 System.out.println("includeQuery");
+//				 includeQuery = true;
+//			 }	 
+//		 }catch(java.lang.StringIndexOutOfBoundsException e){
+//			 System.out.println("don't includeQuery");
+//		 }
+		 System.out.println("downloadX:");
+		 System.out.println(downloadX);
+		 System.out.println("includeQuery:");
+		 System.out.println(includeQuery);
+// 
 		 FileWriter fx = null;
 		 BufferedWriter bx = null;
 		 Chart sampleChartSchema = outputCharts.get(0);
@@ -607,7 +639,31 @@ public class ZvMain {
 		 }
 		 FileWriter fy = new FileWriter(sampleChartSchema.yType+".csv");
 		 BufferedWriter by = new BufferedWriter(fy);
-		  
+		 
+		 
+		 if (includeQuery) {
+			 final JsonNode arrNode = rootNode.get("dataY");
+			 String  yDataStr="";
+			 if (arrNode.isArray()) {
+			     for (final JsonNode objNode : arrNode) {
+			         yDataStr += objNode.asText()+',';
+			     }
+			 }
+//			 System.out.println("yData = "+ yDataStr.substring(0, yDataStr.length() - 1));
+			 by.write("query ,"+ yDataStr.substring(0, yDataStr.length() - 1)+"\n");
+
+			 if (downloadX){
+				 final JsonNode xArrNode = rootNode.get("dataX");
+				 String  xDataStr="";
+				 if (xArrNode.isArray()) {
+				     for (final JsonNode xObjNode : xArrNode) {
+				         xDataStr += xObjNode.asText()+",";
+				     }
+				 }
+//				 System.out.println("xData = "+ xDataStr.substring(0, xDataStr.length() - 1));
+				 bx.write("query ,"+ xDataStr.substring(0, xDataStr.length() - 1)+"\n");
+			 }
+		 }
 		 for (int i = 0; i < outputCharts.size(); i++){
 			 Chart viz = outputCharts.get(i);
 			 by.write(viz.title+','+ String.join(",", viz.yData)+"\n");

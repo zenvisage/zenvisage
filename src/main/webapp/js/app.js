@@ -916,20 +916,23 @@ app.controller('datasetController', [
       q.outlierCount = $("#num-results-download").val();
 
       console.log("calling downloadSimilarity");
+      var includeQuery = getIncludeQuery();
       var yOnly = getyOnlyCheck();
       if (yOnly){
-        q.yOnly = "checked";
-        log.info("csv download:",q.outlierCount,"yOnly");
-      }else{
-        log.info("csv download:",q.outlierCount,"xy");
+        q.yOnly = "checked"; 
+      }
+      if (includeQuery){
+        q.includeQuery = "checked";
       }
       $http.post('/zv/downloadSimilarity', data).
       success(function(response) {
         console.log("downloadSimilarity: success");
+        alert("Sucessfully saved to zenvisage/target")
       }).
       error(function(response) {
         console.log("downloadSimilarity: fail");
           });
+      log.info("csv download:",q.outlierCount,q.yOnly,q.includeQuery);
     }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
@@ -958,6 +961,10 @@ app.controller('datasetController', [
     }
     function getyOnlyCheck(){
       return $("#yOnly").is(':checked');
+    }
+
+    function getIncludeQuery(){
+      return $("#includeQuery").is(':checked');
     }
 
     function getOutlierTrends()

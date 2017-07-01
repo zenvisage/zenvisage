@@ -136,8 +136,6 @@ public class ZvBasicAPI {
 	        System.out.println(line);
 	    }
 	    String body = stringBuilder.toString();
-	    
-	    String path = "fake path/";
 	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 	

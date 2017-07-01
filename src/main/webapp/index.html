@@ -513,6 +513,7 @@
                   <div class="qtooltip"><span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('representative explaination')"></span>
                     <span class="qtooltiptext">Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.</span>
                   </div>
+                  <!-- <button type="button" class="textButton" data-toggle="modal" data-target="#download-cluster"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button> -->
                   </h5></td>
                 </tr>
               </table>
@@ -545,6 +546,7 @@
                 <input ng-model="numResults" type="text" id="num-results-download">
                 <br>
                 <input type="checkbox" id="yOnly"> Export y only <br>
+                <input type="checkbox" id="includeQuery"> Include Query Pattern <br>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults() ">Export as csv file</button>
