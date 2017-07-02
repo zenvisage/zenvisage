@@ -56,10 +56,10 @@ public class ClassCreationTest {
 	public void TestInputParsing() throws SQLException {
 		long startTime = System.currentTimeMillis();
 		
-		String input = "{\"dataset\":\"real_estate\",\"classes\":["
-				+ "{\"name\":\"soldpricepersqft\",\"values\":[[0,200],[201,2002]]},"
-				+ "{\"name\":\"pctincreasing\",\"values\":[[0,90],[90,100]]},"
-				+ "{\"name\":\"month\",\"values\":[[0,5],[5,10],[10,13]]}"
+		String input = "{\"dataset\":\"cmu\",\"classes\":["
+				+ "{\"name\":\"li\",\"values\":[[0,200],[201,2002]]},"
+				+ "{\"name\":\"bp\",\"values\":[[0,90],[90,1000]]},"
+				+ "{\"name\":\"lio2\",\"values\":[[0,5],[5,10],[10,13]]}"
 				+ "]}";
 	    
 		try {

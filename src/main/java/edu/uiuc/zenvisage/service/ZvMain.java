@@ -345,7 +345,7 @@ public class ZvMain {
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
 	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
 	    sqlQueryExecutor.persistDynamicClassDetails(dc);
-	    sqlQueryExecutor.createDynamicClassAggregation();
+	    sqlQueryExecutor.createDynamicClassAggregation(dc);
 	}
 	
 	public String runRetrieveClasses(String query) throws IOException, SQLException{

@@ -521,41 +521,70 @@ public class SQLQueryExecutor {
 	
 // jaewoo new function 
 
-	public void createDynamicClassAggregation() throws SQLException{
+	public void createDynamicClassAggregation(DynamicClass dc) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 		
-		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations")){
-				createTable("CREATE TABLE dynamic_class_aggregations  " +
-	                "(ID INT PRIMARY KEY     NOT NULL," +
-	                " Table_Name           TEXT    NOT NULL, " +
+		// create temporary table to store initial permutations 
+		
+		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations_temp")){
+				createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
+	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
-	                " Count          INT     NOT NULL) ");
+	                " Ranges            TEXT     NOT NULL) " );
+	            
 		}
 		else{
-			sqlQueryExecutor.dropTable("dynamic_class_aggregations");
-			createTable("CREATE TABLE dynamic_class_aggregations  " +
+			sqlQueryExecutor.dropTable("dynamic_class_aggregations_temp");
+			createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
 	                " (Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
-	                " Count          INT     NOT NULL) ");
+	                " Ranges            TEXT     NOT NULL) " );
 			
 		}
-
-		//insert elements 
-		List<String> tables = new ArrayList<String>();
-		tables.add("real_estate");
-		tables.add("cmu");
+		
+		// generate the sql to insert all permutations. Eg. 0.0.0 to 1.1.2
+		Statement st_ranges= c.createStatement();
+		String sql_ranges = dc.retrieveSQL_aggregation();
+		System.out.println("sql: "+sql_ranges);
+		st_ranges.execute(sql_ranges);
+		st_ranges.close();
+		
+		// create the final table to hold the aggregations 
+	if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations")){
+		createTable("CREATE TABLE dynamic_class_aggregations  " +
+                " (Table_Name           TEXT    NOT NULL, " +
+                " Tag            TEXT     NOT NULL, " +
+                " Ranges            TEXT     NOT NULL, " +
+                " Count           INT     NOT NULL) " );
+            
+	}
+	else{
+		sqlQueryExecutor.dropTable("dynamic_class_aggregations");
+		createTable("CREATE TABLE dynamic_class_aggregations  " +
+                " (Table_Name           TEXT    NOT NULL, " +
+                " Tag            TEXT     NOT NULL, " +
+                " Ranges            TEXT     NOT NULL, " +
+                " Count           INT     NOT NULL) " );
+		
+	}
+		
+		//insert tuples that are a left join between the data table and the temporary table on the tags. 
+	
 		Statement st= c.createStatement();
-		for(String t:tables){
-		String sql = String.format("INSERT INTO dynamic_class_aggregations(table_name,tag,count)"
-				+ "SELECT '%s', dynamic_class,COUNT(dynamic_class)"
-				+ "FROM " + t + " GROUP BY dynamic_class", t);
+		
+		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,ranges,count)"
+				+ "SELECT d.table_name,d.ranges, d.tag, COUNT(r.dynamic_class)\n"
+				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.dynamic_class = d.tag\n"
+				+ "GROUP BY d.table_name, d.tag,d.ranges;");
+		
 		st.execute(sql);
-		System.out.print(t);
-		}
+		//System.out.print(t);
+
 		st.close(); 
-	//	Statement st= c.createStatement();
-	//	String sql; 
-	//	st.execute(sql);
+
+		// drop the temporary table 
+		
+		sqlQueryExecutor.dropTable("dynamic_class_aggregations_temp");
 		
 	}
 
