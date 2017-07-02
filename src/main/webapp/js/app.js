@@ -785,7 +785,7 @@ app.controller('options-controller', [
       //angular.element($("#sidebar")).scope().getUserQueryResults();
     }
 
-    $scope.callGetUserQueryResults = function() {
+    $scope.callGetUserQueryResulcalts = function() {
       $rootScope.$emit("callGetUserQueryResults", {});
     }
 
@@ -909,7 +909,31 @@ app.controller('datasetController', [
       );
 
     }
+    $scope.downloadResults =function downloadResults(){
+      console.log("downloading results")
+      var q = constructUserQuery(); //goes to query.js
+      var data = q;
+      q.outlierCount = $("#num-results-download").val();
 
+      console.log("calling downloadSimilarity");
+      var includeQuery = getIncludeQuery();
+      var yOnly = getyOnlyCheck();
+      if (yOnly){
+        q.yOnly = "checked"; 
+      }
+      if (includeQuery){
+        q.includeQuery = "checked";
+      }
+      $http.post('/zv/downloadSimilarity', data).
+      success(function(response) {
+        console.log("downloadSimilarity: success");
+        alert("Sucessfully saved to zenvisage/target")
+      }).
+      error(function(response) {
+        console.log("downloadSimilarity: fail");
+          });
+      log.info("csv download:",q.outlierCount,q.yOnly,q.includeQuery);
+    }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
       getRepresentativeTrends( getOutlierTrends );
@@ -934,6 +958,13 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
       });
+    }
+    function getyOnlyCheck(){
+      return $("#yOnly").is(':checked');
+    }
+
+    function getIncludeQuery(){
+      return $("#includeQuery").is(':checked');
     }
 
     function getOutlierTrends()
@@ -1055,19 +1086,19 @@ app.controller('datasetController', [
     });
 
     $( function() {
-    	$( "#slider-range-max" ).slider({
-    		range: "max",
-    		min: 0,
-    		max: 1,
-    		step:0.05,
-    		value: 0.5,
-    		slide: function( event, ui ) {
-    			$( "#amount" ).val( ui.value );
-    		//	console.log(ui.value);
-    		}
-    	} );
-    	$( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
-    	$( "#slider-range-max"  ).slider({
+      $( "#slider-range-max" ).slider({
+        range: "max",
+        min: 0,
+        max: 1,
+        step:0.05,
+        value: 0.5,
+        slide: function( event, ui ) {
+          $( "#amount" ).val( ui.value );
+        //  console.log(ui.value);
+        }
+      } );
+      $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+      $( "#slider-range-max"  ).slider({
         change: function( event, ui ) {
             var smoothingcoefficient=$( "#slider-range-max" ).slider( "value" )
             log.info("smoothingcoefficient",smoothingcoefficient)

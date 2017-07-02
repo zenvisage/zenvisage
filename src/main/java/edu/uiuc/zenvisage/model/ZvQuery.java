@@ -28,6 +28,8 @@ public class ZvQuery {
 	public int kMeansClusterSize;
 	public String smoothingType="";
 	public double smoothingcoefficient=0.0;
+	public String includeQuery="";
+	public String yOnly="";
 
 	
 	public String getDistance_metric() {
