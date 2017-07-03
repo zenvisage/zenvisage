@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -579,91 +580,36 @@ public class ZvMain {
 		 
 		 Result result = runDragnDropInterfaceQuery(query,method);
 //		 System.out.println("Result:"+result);
-		 ObjectMapper mapper = new ObjectMapper();
+		 
 		 System.out.println("After Interpolation and normalization");
 		 
 		 ArrayList<Chart> outputCharts = result.outputCharts;
+		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 boolean downloadX = args.getDownloadX();
+		 boolean includeQuery = args.getIncludeQuery();
+		 String dataX = String.join(",", Arrays.toString(args.getDataX()));
+		 String dataY = String.join(",", Arrays.toString(args.getDataY()));
+ 
 
-//		 System.out.println("query:"+query);
-		 
-//		 String[] parts = query.split(",");
-//		 System.out.println("parts:"+parts);
-//		 System.out.println("parts -1 :"+parts[parts.length-1]);
-//		 System.out.println("parts -2 :"+parts[parts.length-2]);
-
-		 JsonNode rootNode = mapper.readTree(query);
-		 JsonNode includeQueryTxt = rootNode.path("includeQuery");
-		 System.out.println("includeQuery = "+includeQueryTxt.asText());
-		 
-		 JsonNode yOnlyTxt = rootNode.path("yOnly");
-		 System.out.println("yOnly = "+ yOnlyTxt.asText());
-
-		 boolean downloadX = true;
-		 boolean includeQuery = false;
-
-		 if (includeQueryTxt.asText().equals("checked")){
-			 System.out.println("includeQuery");
-			 includeQuery = true;
-		 }
-		 if (yOnlyTxt.asText().equals("checked")){
-			 System.out.println("download Y only");
-			 downloadX = false;
-		 }
-//		 try{
-//			 if (parts[parts.length-1].substring(9,16).equals("checked")){
-//				 System.out.println("download Y only");
-//				 downloadX = false;
-//			 }	 
-//		 }catch(java.lang.StringIndexOutOfBoundsException e){
-//			 System.out.println("download both X and Y");
-//		 }
-//		 try{
-//			 if (parts[parts.length-2].substring(15,22).equals("checked")){
-//				 System.out.println("includeQuery");
-//				 includeQuery = true;
-//			 }	 
-//		 }catch(java.lang.StringIndexOutOfBoundsException e){
-//			 System.out.println("don't includeQuery");
-//		 }
-		 System.out.println("downloadX:");
-		 System.out.println(downloadX);
-		 System.out.println("includeQuery:");
-		 System.out.println(includeQuery);
-// 
 		 FileWriter fx = null;
 		 BufferedWriter bx = null;
 		 Chart sampleChartSchema = outputCharts.get(0);
-		 if (downloadX){
+		 if (args.getDownloadX()){
 			 fx = new FileWriter(sampleChartSchema.xType+".csv");
 			 bx = new BufferedWriter(fx);
 		 }
 		 FileWriter fy = new FileWriter(sampleChartSchema.yType+".csv");
 		 BufferedWriter by = new BufferedWriter(fy);
 		 
-		 
+		 // Writing query
 		 if (includeQuery) {
-			 final JsonNode arrNode = rootNode.get("dataY");
-			 String  yDataStr="";
-			 if (arrNode.isArray()) {
-			     for (final JsonNode objNode : arrNode) {
-			         yDataStr += objNode.asText()+',';
-			     }
-			 }
-//			 System.out.println("yData = "+ yDataStr.substring(0, yDataStr.length() - 1));
-			 by.write("query ,"+ yDataStr.substring(0, yDataStr.length() - 1)+"\n");
-
+			 by.write("query ,"+ dataY.substring(1, dataY.length() - 1)+"\n");
 			 if (downloadX){
-				 final JsonNode xArrNode = rootNode.get("dataX");
-				 String  xDataStr="";
-				 if (xArrNode.isArray()) {
-				     for (final JsonNode xObjNode : xArrNode) {
-				         xDataStr += xObjNode.asText()+",";
-				     }
-				 }
-//				 System.out.println("xData = "+ xDataStr.substring(0, xDataStr.length() - 1));
-				 bx.write("query ,"+ xDataStr.substring(0, xDataStr.length() - 1)+"\n");
+				 bx.write("query ,"+ dataX.substring(1, dataX.length() - 1)+"\n");
 			 }
 		 }
+		 
+		 // Writing individual visualizations
 		 for (int i = 0; i < outputCharts.size(); i++){
 			 Chart viz = outputCharts.get(i);
 			 by.write(viz.title+','+ String.join(",", viz.yData)+"\n");

@@ -58,7 +58,8 @@ function Query( searchMethod ) {
   this.considerRange = getConsiderRange();
   this.smoothingType = getSmoothingType();
   this.smoothingcoefficient = getSmoothingCoefficient();
-  this.includeQuery=";"
+  this.download="";
+  this.includeQuery="";
   this.yOnly="";
 }
 function getFilter(){

@@ -28,6 +28,7 @@ public class ZvQuery {
 	public int kMeansClusterSize;
 	public String smoothingType="";
 	public double smoothingcoefficient=0.0;
+	public String download="";
 	public String includeQuery="";
 	public String yOnly="";
 
@@ -174,4 +175,33 @@ public class ZvQuery {
 	public void setFilter(String filter) {
 		this.filter = filter;
 	}
+
+	public String getDownload() {
+		return download;
+	}
+	public boolean getIncludeQuery() {
+		 boolean includeQ = false;
+
+		 if (includeQuery.equals("checked")){
+			 System.out.println("includeQuery");
+			 includeQ = true;
+		 }
+		 
+		return includeQ;
+		
+	}
+	public String getyOnly() {
+		return yOnly;
+	}
+	
+	public boolean getDownloadX(){
+		boolean downloadX = true;
+		if (yOnly.equals("checked")){
+			 System.out.println("download Y only");
+			 downloadX = false;
+		}
+		return downloadX;
+	}
+	
+	
 }
