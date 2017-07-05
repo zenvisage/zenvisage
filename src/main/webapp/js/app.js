@@ -37,7 +37,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     }
     query["dataset"] = getSelectedDataset();
     query["classes"] = classList;
-    
+
     $http.post('/zv/createClasses', query
     ).then(
         function (response) {
@@ -165,13 +165,13 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
   //   // var yAxis = getSelectedYAxis();
   //   // var zAxis = getSelectedCategory();
   //   // var constraint = $("#filter.form-control").val();
-  //   // //Populate ZQL table 
+  //   // //Populate ZQL table
   //   // // $( ".tabler" ).each(function( index ) {
-  //   // //   $(this).find(".name").val("*f1") 
-  //   // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}") 
-  //   // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}") 
-  //   // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*") 
-  //   // //   $(this).find(".constraints").val(constraint) 
+  //   // //   $(this).find(".name").val("*f1")
+  //   // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}")
+  //   // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}")
+  //   // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*")
+  //   // //   $(this).find(".constraints").val(constraint)
   //   // // })
   //   // // $scope.submitZQL();
   //   // $scope.getUserQueryResultsWithCallBack();
@@ -180,7 +180,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
   //   // constructRepresentativeTrendQuery();
   //   // constructOutlierTrendQuery();
   //   log.info("filter constraint: ",constraint)
-    
+
   // }
   $scope.submitZQL = function () {
     $("#graph-div").empty();
@@ -420,7 +420,7 @@ app.controller('options-controller', [
         $scope.callGetUserQueryResults();
       }
     });
-    
+
 
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
       if (newValue !== oldValue)

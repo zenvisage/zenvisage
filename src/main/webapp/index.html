@@ -11,15 +11,16 @@
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link href="css/introjs.css" rel="stylesheet">
   </head>
-  <body>
+  <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
 
     <div id="everything">
       <!-- Modal -->
       <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
         <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog" role="document" >
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -182,11 +183,11 @@
 
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
-        <div id="sidebar" class="interface" ng-controller="datasetController">
-          <h4>
+        <div id="sidebar" class="interface" ng-controller="datasetController"  >
+          <h4  data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more.' data-step="1">
             ZenVisage
           </h4>
-          <div class="dropdown" id="dataset">
+          <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. Please select a dataset' data-step="2">
             <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
@@ -195,9 +196,9 @@
             </select>
           </div>
           <div>
-            <h5><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5 data-intro= 'Alternatively, enter json data to sketch patterns.' data-step="5"><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
-          <div>
+          <div data-intro= 'The current loaded dataset and columns of the dataset will be shown in the left panel.' data-step="3">
             <h5><b>Category</b>
 
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
@@ -205,6 +206,7 @@
             <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button>
 
             </h5>
+            <div>
             <div ng-repeat="category in categories">
               <label>
                 <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
@@ -228,6 +230,7 @@
               </label>
             </div>
           </div>
+        </div>
         </div> <!-- end side bar -->
       </div> <!-- end left bar -->
 
@@ -238,8 +241,8 @@
         <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
           <!-- drawing interface -->
-          <div class="col-md-4">
-            <div class="input-group" id="graph-buttons" >
+            <div class="col-md-4">
+            <div class="input-group" id="graph-buttons">
 
               <div class="btn-group" id="left-button-group">
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
@@ -269,7 +272,7 @@
               </div>
             </div>
 
-            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'"></div>
+            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "Desired patterns can be drawn in this sketchpad." data-step ="4"></div>
             <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="chartSettings.selectedChartOption=='Scatter'">
               <div class="col-md-11">
                   <svg id="main-chart">
@@ -367,8 +370,9 @@
                 </tfoot>
               </table>
             </div>
-            <div ng-show="!zqltable" class="row">
+            <div ng-show="!zqltable" class="row" >
               <div class="col-md-3" >
+                <div data-intro = "Different similarity metrics can be specified." data-step ="7" data-position = "left">
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
@@ -378,8 +382,9 @@
                     <input ng-model="similarity" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
                   </form>
                 </div>
+              </div>
                 <div>
-                  <div class="info-text"><b>K-means Cluster Size</b></div>
+                  <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="9" data-position = "left"><b>K-means Cluster Size</b></div>
                   <p></p>
                   <div>
                     <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
@@ -394,7 +399,7 @@
                 </div>-->
 
                 <div>
-                  <div class="info-text"><b>Input equation</b></div>
+                  <div class="info-text" data-intro = "Insert Description" data-step ="11" data-position = "left" ><b>Input equation</b></div>
                   <p></p>
                   <div class="input-group">
                     <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
@@ -412,7 +417,7 @@
                 -->
               </div>
               <div class="col-md-3">
-                <div class="info-text"><b>Aggregation Method</b></div>
+                <div class="info-text" data-intro = "Insert Description" data-step ="12" data-position = "left"><b>Aggregation Method</b></div>
                 <div class="radio">
                   <form>
                     <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
@@ -421,14 +426,14 @@
                 </div>
 
                 <div id="num-results">
-                  <div class="info-text"><b>Number of Results</b></div>
+                  <div class="info-text" data-intro = "Number of similarity search results to show can be modified." data-step ="13" data-position = "left"><b>Number of Results</b></div>
                   <p></p>
                   <div>
                     <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
                   </div>
                 </div>
 
-                <div class="info-text"><b>Options</b></div>
+                <div class="info-text" data-intro = "Insert Description" data-step ="14" data-position = "left"><b>Options</b></div>
                 <div class="checkbox">
                   <form>
                     <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
@@ -452,7 +457,7 @@
 
               </div>
               <div class="col-md-3" >
-                <div class="info-text"><b>Data Smoothing</b></div>
+                <div class="info-text" data-intro = "Insert Description" data-step ="15" data-position = "left"><b>Data Smoothing</b></div>
                   <!-- <div class="info-text"><b>Type</b></div> -->
                   <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
                   <br>
@@ -475,7 +480,7 @@
                   <div class="info-text"><b>Filter Constraint</b></div>
                   <p></p>
                     <div class="input-group" ng-controller='zqlTableController'>
-                      <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20"> 
+                      <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
                       <div class="input-group-btn">
                         <button class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">
                         Submit </button>
@@ -497,7 +502,7 @@
         <div id="bottom-middle-bar">
 
           <div id="middle-left" class="col-md-6">
-            <h5>
+            <h5 data-intro = "Similarity search results are shown for the submitted user defined pattern." data-step ="6" data-position = "right">
             <b>Results </b>
             <button type="button" class="textButton" data-toggle="modal" data-target="#download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
             </h5>
@@ -509,7 +514,7 @@
             <div>
               <table id="representative-table">
                 <tr class="middle-right-headers">
-                  <td><h5><b>Representative patterns </b>
+                  <td><h5 data-intro = "Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets." data-step ="8" data-position = "left"><b>Representative patterns </b>
                   <div class="qtooltip"><span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('representative explaination')"></span>
                     <span class="qtooltiptext">Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.</span>
                   </div>
@@ -521,7 +526,7 @@
             <div>
               <table id="outlier-table">
                 <tr class="middle-right-headers">
-                  <td><h5><b>Outliers </b>
+                  <td><h5 data-intro = "Outlier results highlight anomalies that look different from most visualizations in the dataset." data-step ="10" data-position = "left"><b>Outliers </b>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>
                     <span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>
@@ -542,7 +547,7 @@
               <h4 class="modal-title">Download Query Results</h4>
             </div>
             <div class="modal-body" id="class-info-body">
-                Number of Results: 
+                Number of Results:
                 <input ng-model="numResults" type="text" id="num-results-download">
                 <br>
                 <input type="checkbox" id="yOnly"> Export y only <br>
@@ -583,8 +588,18 @@
     <script type="text/javascript" src="js/lib/rgbcolor.js"></script>
     <script type="text/javascript" src="js/lib/StackBlur.js"></script>
     <script type="text/javascript" src="js/lib/canvg.js"></script>
+    <script src="js/intro.js"></script>
 
     <script>
+    var startintro = false;
+    var secondtutorial = function(input){
+      if(startintro == false){
+        startintro = true;
+        introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
+        }
+      };
+
+
       // var tree = tree();
       // tree.initialize();
       $(document).ready(function(){

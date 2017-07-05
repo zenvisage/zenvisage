@@ -8,6 +8,7 @@ var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
 var globCount = 0;
 
+
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
@@ -351,7 +352,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         if (typeof($(this)[0].querySelector('#ztitle').innerHTML)=='string'){
           var textObj = $(this)[0].querySelector('#ztitle')
           log.info(textObj.getAttribute('type')+" dragging ", textObj.getAttribute('label'))
-        }  
+        }
       }catch(err){;}
     },
     helper: function() {
@@ -421,7 +422,6 @@ var id = "#resultsvg-"
   $("#resultsvg-14").dblclick(function() {
     createcanvas(id,14);
   });
-
 }
 
 var createcanvas = function(id,number) {
@@ -602,7 +602,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
 
       }
     }
-    
+
     graph.append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
@@ -826,9 +826,9 @@ function displayOutlierResultsHelper( outlierResults )
 
       }
     }
-    
+
     //}
-    
+
 
     // graph.append("g")
     //   .attr("class", "axis axis--x")
@@ -906,7 +906,7 @@ function displayOutlierResultsHelper( outlierResults )
         if (typeof($(this)[0].querySelector('#ztitle').innerHTML)=='string'){
           var textObj = $(this)[0].querySelector('#ztitle')
           log.info(textObj.getAttribute('type')+" dragging ", textObj.getAttribute('label'))
-        }  
+        }
       }catch(err){;}
     },
     helper: function() {
@@ -917,6 +917,7 @@ function displayOutlierResultsHelper( outlierResults )
       });
     }
   });
+  secondtutorial(introJs);
 }
 
 function uploadToSketchpadNew( draggableId, graphType )
