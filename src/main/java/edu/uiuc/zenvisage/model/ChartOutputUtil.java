@@ -139,10 +139,10 @@ public class ChartOutputUtil {
 			// chartOutput.setxType(repTrend.getKey());
 			// chartOutput.setRank(i+1);
 			// chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
-
-			chartOutput.setxType(outTrend.getKey());
+			chartOutput.setxType(args.xAxis);
 			chartOutput.setyType(args.yAxis);
 			chartOutput.setzType(args.groupBy);
+			chartOutput.title = outTrend.getKey();
 			chartOutput.setRank(i+1);
 
 			// fill in chart data

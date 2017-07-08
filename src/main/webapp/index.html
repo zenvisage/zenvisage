@@ -557,7 +557,7 @@
                 <input type="checkbox" id="includeQuery"> Include Query Pattern <br>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults() ">Export as csv file</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('query')">Export as csv file</button>
             </div>
           </div>
         </div>
@@ -578,7 +578,7 @@
                 <input type="checkbox" id="yOnly"> Export y only <br>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadRepresentative() ">Export as csv file</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('representative')">Export as csv file</button>
             </div>
           </div>
         </div>
@@ -599,7 +599,7 @@
                 <input type="checkbox" id="yOnly"> Export y only <br>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadOutliers() ">Export as csv file</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('outlier')" >Export as csv file</button>
             </div>
           </div>
         </div>

@@ -153,6 +153,21 @@ public class ZvBasicAPI {
 	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 	
+	@RequestMapping(value = "/downloadOutlier", method = RequestMethod.POST)
+	@ResponseBody
+	public void downloadOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		System.out.println("downloadOutlier");
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	    		String line = scanner.nextLine();
+	        stringBuilder.append(line);
+	        System.out.println(line);
+	    }
+	    String body = stringBuilder.toString();
+	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "Outlier");
+	}
+	
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {

@@ -909,34 +909,10 @@ app.controller('datasetController', [
       );
 
     }
-    $scope.downloadRepresentative =function downloadRepresentative(){
-      console.log("calling downloadRepresentative");
-      var q = constructUserQuery(); //goes to query.js
-      var data = q;
-      q.kMeansClusterSize = $("#num-clusters-download").val();
-      q.download = true;
-      
-      
-      var yOnly = getyOnlyCheck();
-      if (yOnly){
-        q.yOnly = "checked"; 
-      }
-      
-      $http.post('/zv/downloadRepresentative', data).
-      success(function(response) {
-        console.log("downloadSimilarity: success");
-        alert("Sucessfully saved to zenvisage/target")
-      }).
-      error(function(response) {
-        console.log("downloadSimilarity: fail");
-          });
-      log.info("representative download:",q.outlierCount,q.yOnly,q.includeQuery);
-    }
-    $scope.downloadResults =function downloadResults(){
+    $scope.downloadResults =function downloadResults(args){
       console.log("downloading results")
       var q = constructUserQuery(); //goes to query.js
       var data = q;
-      q.outlierCount = $("#num-results-download").val();
       q.download = true;
       console.log("calling downloadSimilarity");
       var includeQuery = getIncludeQuery();
@@ -947,15 +923,30 @@ app.controller('datasetController', [
       if (includeQuery){
         q.includeQuery = "checked";
       }
-      $http.post('/zv/downloadSimilarity', data).
+      console.log("args",args)
+      var address = '/zv/downloadSimilarity';
+      if (args=='query'){
+        q.outlierCount = $("#num-results-download").val();
+        address = '/zv/downloadSimilarity';
+        log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery);
+      }else if (args == 'representative'){
+        q.kMeansClusterSize = $("#num-clusters-download").val();
+        address = '/zv/downloadRepresentative';
+        log.info("representative result download:",q.kMeansClusterSize,q.yOnly);
+      }else if (args == 'outlier'){
+        address = '/zv/downloadOutlier';
+        q.kMeansClusterSize = $("#num-outlier-download").val();
+        log.info("outlier result download:",q.kMeansClusterSize,q.yOnly);
+      }
+
+      $http.post(address, data).
       success(function(response) {
-        console.log("downloadSimilarity: success");
+        console.log("download : success");
         alert("Sucessfully saved to zenvisage/target")
       }).
       error(function(response) {
-        console.log("downloadSimilarity: fail");
+        console.log("download : fail");
           });
-      log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery);
     }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {

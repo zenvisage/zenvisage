@@ -581,9 +581,9 @@ public class ZvMain {
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 System.out.println("saveDragnDropInterfaceQuerySeparated:");
-		 
+		 System.out.println("method:"+method);
 		 Result result = runDragnDropInterfaceQuery(query,method);
-//		 System.out.println("Result:"+result);
+		 System.out.println("Result:"+result);
 		 
 		 System.out.println("After Interpolation and normalization");
 		 
@@ -593,20 +593,27 @@ public class ZvMain {
 		 boolean includeQuery = args.getIncludeQuery();
 		 String dataX = String.join(",", Arrays.toString(args.getDataX()));
 		 String dataY = String.join(",", Arrays.toString(args.getDataY()));
- 
-
+		 
 		 FileWriter fx = null;
 		 BufferedWriter bx = null;
 		 Chart sampleChartSchema = outputCharts.get(0);
+		 String prefix = "";
+//		 if (method.equals("SimilaritySearch")) {
+//			 prefi
+//		 }else 
+		 if (method.equals("Outlier")) {
+			 prefix = "outlier_";
+		 }
+		 
 		 if (args.getDownloadX()){
-			 fx = new FileWriter(sampleChartSchema.xType+".csv");
+			 fx = new FileWriter(prefix+sampleChartSchema.xType+".csv");
 			 bx = new BufferedWriter(fx);
 		 }
-		 FileWriter fy = new FileWriter(sampleChartSchema.yType+".csv");
+		 FileWriter fy = new FileWriter(prefix+sampleChartSchema.yType+".csv");
 		 BufferedWriter by = new BufferedWriter(fy);
-		 
+
 		 // Writing query
-		 if (includeQuery) {
+		 if (method.equals("SimilaritySearch") && includeQuery) {
 			 by.write("query ,"+ dataY.substring(1, dataY.length() - 1)+"\n");
 			 if (downloadX){
 				 bx.write("query ,"+ dataX.substring(1, dataX.length() - 1)+"\n");

@@ -688,6 +688,7 @@ function displayOutlierResultsHelper( outlierResults )
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
+    var title = varFinalArray[count]["title"];
 
     var clusterCount = varFinalArray[count]["count"];
 
@@ -885,7 +886,7 @@ function displayOutlierResultsHelper( outlierResults )
       .attr("id",'ztitle')
       .attr("type",'outlierResult')
       .attr('label',xlabel)
-      .text(xlabel);
+      .text(title);
       //.text(xlabel + " (" + clusterCount + ")");
   }
   var id = "#outliersvg-"
