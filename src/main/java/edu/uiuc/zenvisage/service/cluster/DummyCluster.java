@@ -6,6 +6,7 @@ import org.apache.commons.math3.ml.clustering.DoublePoint;
 public class DummyCluster {
 	List<CentroidCluster<DoublePoint>> clusters;
 	int[] realSizes;
+	List<List<Double>> clusteredTrends;
 	public DummyCluster (List<CentroidCluster<DoublePoint>> c, int[] rs) {
 		this.clusters = c;
 		this.realSizes = rs;

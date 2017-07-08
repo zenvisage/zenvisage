@@ -81,20 +81,57 @@ public class KMeans extends Clustering {
 		for (int i = 0; i < clusters2.size(); i++) {
 			clustersFinal.add(new CentroidCluster<DoublePoint>(null));
 		}
-		
+		List<List<Double>> clusteredTrends = new ArrayList();
+		List<Double> clusterDist = new ArrayList();
 		for (int i = 0; i < clusters1.size(); i++) {
 			double minDistance = Double.MAX_VALUE;
 			int minDistanceIndex = 0;
 			for (int j = 0; j < clusters2.size(); j++) {
 				double d = distance.calculateDistance(clusters1.get(i).getCenter().getPoint(), clusters2.get(j).getCenter().getPoint());
+				clusterDist.add(d);
 				if (d < minDistance) {
 					minDistance = d;
 					minDistanceIndex = j;
 				}
 			}
+			List <DoublePoint> c = clusters1.get(i).getPoints();
+			System.out.println("Looping through time series in cluster1:");
+			for (int z=0 ; z< c.size();z++){
+//				System.out.print(c.get(z).getPoint());
+//				System.out.print(c.get(z).getPoint().length);
+//				System.out.print(c.get(z).getPoint().toString());
+				System.out.print("[");
+				for (int zi =0 ; zi < c.get(z).getPoint().length;zi++){
+					System.out.print(c.get(z).getPoint()[zi]);
+					System.out.print(',');
+				}
+				System.out.println("]");
+//				System.out.println("toString:");
+//				System.out.println(c.get(z).getPoint().toString());
+			}
+				
+//			System.out.println("clusters1.get(i).getPoints():   ");
+//			System.out.println(clusters1.get(i).getPoints());
+//			System.out.println((double[]) clusters1.get(i));
+			
 			clusters2RealSizes[minDistanceIndex] += clusters1.get(i).getPoints().size();
 		}
-		
+		System.out.println("clusterDist:");
+		System.out.println(clusterDist);
+//		System.out.println(Collections.sort(clusterDist));
+		Collections.sort(clusterDist);
+		List<Double> topk = new ArrayList<Double>(clusterDist.subList(0,clusters2RealSizes[0]));
+		//Argsort and insert topk time sereies for each cluster into clusterTrends
+//		clusteredTrends[]
+		System.out.println("topk:");
+		System.out.println(topk);
+		System.out.println("clusters2RealSizes:");
+		System.out.println(clusters2RealSizes);
+		for (int r = 0; r<clusters2RealSizes.length;r++){
+			System.out.println(clusters2RealSizes[r]);
+		}
+		System.out.println("clusters2:");
+		System.out.println(clusters2);
 		return new DummyCluster(clusters2, clusters2RealSizes);
 	}
 	
@@ -191,6 +228,7 @@ public class KMeans extends Clustering {
 	@Override
 	public List<RepresentativeTrend> computeRepresentativeTrends(List clusters,ArrayList<String> mappings,double[][] normalizedGroups) {
 		// TODO Auto-generated method stub
+		System.out.println("computeRepresentativeTrends");
 	//	double[][] representativeTrends = new double[clusters.size()][];
 		List<RepresentativeTrend> representativeTrends = new ArrayList<RepresentativeTrend>();
 	    for (int k = 0; k < clusters.size(); k++) {	    
@@ -198,15 +236,21 @@ public class KMeans extends Clustering {
 	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();    
 	  	  	double[] p = point.getPoint();
 	  	  	int min = 0;
+			
 	  	  	double mindist = distance.calculateDistance(p, normalizedGroups[0]);
 	  	  	for (int l = 1; l < normalizedGroups.length; l++) {
 	  	  		double d = distance.calculateDistance(p, normalizedGroups[l]);
+		  	  	System.out.println("normalizedGroups[l]:");
+				System.out.println(normalizedGroups[l]);
 	  	  		if (d < mindist ) {
 	  	  			min = l;
 	  	  		 	mindist = d;
 	  	  		 	
 	  	  		}
 	  	  	}
+	  	  	System.out.println("mappings:");
+	  	    System.out.println(mappings);
+	  	    
 	  	  	repTrend.setP(normalizedGroups[min]);
 	  	  	repTrend.setKey(mappings.get(min));
 	  	  	repTrend.setSimilarTrends( ((CentroidCluster<DoublePoint>) clusters.get(k)).getPoints().size());

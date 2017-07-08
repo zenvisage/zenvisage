@@ -61,12 +61,15 @@ public class Representative extends Analysis {
 		for(String key : output.keySet()) {
 			 mappings.add(key);
 		}
+		System.out.println("normalizedgroups[0]:");
+		System.out.println(normalizedgroups[0]);
 //		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
 		double eps = 0;  //unused in calculateClusters
 		@SuppressWarnings({ "rawtypes"})
 		DummyCluster dc = cluster.calculateClusters(eps, 0, normalizedgroups);
 		List clusters = dc.getClusters();		
-		
+		System.out.println("dc clusters:");
+		System.out.println(clusters);
 		//List<RepresentativeTrend> representativeTrends = cluster.computeRepresentativeTrends(clusters,mappings,normalizedgroups);
 		//removeDuplicate(representativeTrends);
 		//double[][] centers = cluster.getCenters(clusters);
@@ -86,6 +89,8 @@ public class Representative extends Analysis {
 	  	  		 	
 	  	  		}
 	  	  	}
+	  	  	System.out.println("mappings:");
+	  	  System.out.println(mappings);
 	  	  	repTrend.setP(normalizedgroups[min]);
 	  	  	repTrend.setKey(mappings.get(min));
 	  	  	repTrend.setSimilarTrends( dc.getRealSizes()[k]);

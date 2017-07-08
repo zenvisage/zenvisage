@@ -561,7 +561,11 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 
 		 analysis.compute(output, normalizedgroups, args);
-		 
+		 if (args.getDownload()){
+			 System.out.println("downloaded!");
+		 }
+		 System.out.println("normalizedegroups:");
+		 System.out.println(normalizedgroups);
 		 System.out.println("After Distance calulations");
 		 return analysis.getChartOutput().finalOutput;
 	}

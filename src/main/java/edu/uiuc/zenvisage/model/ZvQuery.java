@@ -28,7 +28,7 @@ public class ZvQuery {
 	public int kMeansClusterSize;
 	public String smoothingType="";
 	public double smoothingcoefficient=0.0;
-	public String download="";
+	public boolean download=false;
 	public String includeQuery="";
 	public String yOnly="";
 
@@ -176,7 +176,7 @@ public class ZvQuery {
 		this.filter = filter;
 	}
 
-	public String getDownload() {
+	public boolean getDownload() {
 		return download;
 	}
 	public boolean getIncludeQuery() {

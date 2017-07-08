@@ -909,12 +909,35 @@ app.controller('datasetController', [
       );
 
     }
+    $scope.downloadRepresentative =function downloadRepresentative(){
+      console.log("calling downloadRepresentative");
+      var q = constructUserQuery(); //goes to query.js
+      var data = q;
+      q.kMeansClusterSize = $("#num-clusters-download").val();
+      q.download = true;
+      
+      
+      var yOnly = getyOnlyCheck();
+      if (yOnly){
+        q.yOnly = "checked"; 
+      }
+      
+      $http.post('/zv/downloadRepresentative', data).
+      success(function(response) {
+        console.log("downloadSimilarity: success");
+        alert("Sucessfully saved to zenvisage/target")
+      }).
+      error(function(response) {
+        console.log("downloadSimilarity: fail");
+          });
+      log.info("representative download:",q.outlierCount,q.yOnly,q.includeQuery);
+    }
     $scope.downloadResults =function downloadResults(){
       console.log("downloading results")
       var q = constructUserQuery(); //goes to query.js
       var data = q;
       q.outlierCount = $("#num-results-download").val();
-
+      q.download = true;
       console.log("calling downloadSimilarity");
       var includeQuery = getIncludeQuery();
       var yOnly = getyOnlyCheck();
@@ -932,7 +955,7 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("downloadSimilarity: fail");
           });
-      log.info("csv download:",q.outlierCount,q.yOnly,q.includeQuery);
+      log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery);
     }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {

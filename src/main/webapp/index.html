@@ -515,6 +515,8 @@
               <table id="representative-table">
                 <tr class="middle-right-headers">
                   <td><h5 data-intro = "Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets." data-step ="8" data-position = "left"><b>Representative patterns </b>
+                  <button type="button" class="textButton" data-toggle="modal" data-target="#cluster-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
+                  </b>
                   <div class="qtooltip"><span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('representative explaination')"></span>
                     <span class="qtooltiptext">Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.</span>
                   </div>
@@ -527,6 +529,7 @@
               <table id="outlier-table">
                 <tr class="middle-right-headers">
                   <td><h5 data-intro = "Outlier results highlight anomalies that look different from most visualizations in the dataset." data-step ="10" data-position = "left"><b>Outliers </b>
+                  <button type="button" class="textButton" data-toggle="modal" data-target="#outlier-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>
                     <span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>
@@ -547,7 +550,7 @@
               <h4 class="modal-title">Download Query Results</h4>
             </div>
             <div class="modal-body" id="class-info-body">
-                Number of Results:
+                Number of Results: 
                 <input ng-model="numResults" type="text" id="num-results-download">
                 <br>
                 <input type="checkbox" id="yOnly"> Export y only <br>
@@ -555,6 +558,48 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults() ">Export as csv file</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="cluster-download-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Download Clustering Results</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+                Number of Results: 
+                <input ng-model="numResults" type="text" id="num-clusters-download">
+                <br>
+                <input type="checkbox" id="yOnly"> Export y only <br>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadRepresentative() ">Export as csv file</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="outlier-download-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Download Outlier Results</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+                Number of Results: 
+                <input ng-model="numResults" type="text" id="num-outlier-download">
+                <br>
+                <input type="checkbox" id="yOnly"> Export y only <br>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadOutliers() ">Export as csv file</button>
             </div>
           </div>
         </div>
