@@ -22,7 +22,7 @@ public class LinearNormalization implements Normalization {
 			}
 		}
 		
-		if (max == min) {
+		if (max == min || (max-min<1)) {
 			return;
 		}
 		
