@@ -46,7 +46,7 @@ public abstract class Analysis {
 	 * @param normalizedgroups TODO
 	 * @throws JsonProcessingException 
 	 */
-	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException;
+	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException;
 
 	/**
 	 * @return the chartOutput
