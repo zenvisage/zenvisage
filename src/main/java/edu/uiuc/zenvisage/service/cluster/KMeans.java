@@ -93,37 +93,8 @@ public class KMeans extends Clustering {
 				}
 			}
 			List <DoublePoint> c = clusters1.get(i).getPoints();
-			System.out.println("Looping through time series in cluster1:");
-//			for (int z=0 ; z< c.size();z++){
-//				System.out.print("[");
-//				for (int zi =0 ; zi < c.get(z).getPoint().length;zi++){
-//					System.out.print(c.get(z).getPoint()[zi]);
-//					System.out.print(',');
-//				}
-//				System.out.println("]");
-//			}
-				
-//			System.out.println("clusters1.get(i).getPoints():   ");
-//			System.out.println(clusters1.get(i).getPoints());
-//			System.out.println((double[]) clusters1.get(i));
-			
 			clusters2RealSizes[minDistanceIndex] += clusters1.get(i).getPoints().size();
 		}
-		
-//		System.out.println(Collections.sort(clusterDist));
-		
-//		List<Double> topk = new ArrayList<Double>(clusterDist.subList(0,clusters2RealSizes[0]));
-		//Argsort and insert topk time sereies for each cluster into clusterTrends
-//		clusteredTrends[]
-//		System.out.println("topk:");
-//		System.out.println(topk);
-		System.out.println("clusters2RealSizes:");
-		System.out.println(clusters2RealSizes);
-		for (int r = 0; r<clusters2RealSizes.length;r++){
-			System.out.println(clusters2RealSizes[r]);
-		}
-		System.out.println("clusters2:");
-		System.out.println(clusters2);
 		return new DummyCluster(clusters2, clusters2RealSizes);
 	}
 	

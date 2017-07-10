@@ -18,7 +18,7 @@ public class SmoothingUtil {
 	
 	// FIXME: Integrate this with frontend.
 	public static double[] applySmoothing(String type,double[] xvals,double [] yvals, double windowcoeff){
-		System.out.println("Smoothing type="+type+", # vals="+yvals.length + ", windowcoeff="+windowcoeff);
+//		System.out.println("Smoothing type="+type+", # vals="+yvals.length + ", windowcoeff="+windowcoeff);
 		int window= (int) (yvals.length*windowcoeff);
 		if(windowcoeff<0.01 || window<1){
 			return yvals;
@@ -38,7 +38,7 @@ public class SmoothingUtil {
 		if (type.equals("leossInterpolation")) return leossInterpolation(xvals,yvals,windowcoeff,robustness);	
 		if (type.equals("gaussian"))return gaussianConvolution(xvals,yvals,window);	
 			//TODO: Handle this in a better way.
-		System.out.println("No smoothing applied");
+//		System.out.println("No smoothing applied");
 		return yvals;
 	}
 
@@ -105,9 +105,9 @@ public class SmoothingUtil {
 				pos++;
 			}
 			double[] ysmoothedvals=applySmoothing(type,xvals,yvals,windowcoeff);
-			System.out.println("Smoothing finished");
-			System.out.println("X length:" + xvals.length);
-			System.out.println("Y length:" +ysmoothedvals.length);
+//			System.out.println("Smoothing finished");
+//			System.out.println("X length:" + xvals.length);
+//			System.out.println("Y length:" +ysmoothedvals.length);
 			for(int i=0;i<xvals.length;i++){
 				vals.put((float)xvals[i], (float)ysmoothedvals[i]);
 			}

@@ -562,13 +562,12 @@ public class ZvMain {
 
 		 analysis.compute(output, normalizedgroups, args);
 		 
-		 System.out.println("normalizedegroups:");
-		 System.out.println(normalizedgroups);
 		 System.out.println("After Distance calulations");
 		 return analysis.getChartOutput().finalOutput;
 	}
 
 	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		 System.out.println("runDragnDropInterfaceQuerySeparated:");
 		 Result result = runDragnDropInterfaceQuery(query,method);
 		 ObjectMapper mapper = new ObjectMapper();
 		 System.out.println("After Interpolation and normalization");

@@ -923,7 +923,6 @@ app.controller('datasetController', [
       if (includeQuery){
         q.includeQuery = "checked";
       }
-      console.log("args",args)
       var address = '/zv/downloadSimilarity';
       if (args=='query'){
         q.outlierCount = $("#num-results-download").val();
@@ -931,7 +930,7 @@ app.controller('datasetController', [
         log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery);
       }else if (args == 'representative'){
         q.kMeansClusterSize = $("#num-clusters-download").val();
-        address = '/zv/downloadRepresentative';
+        address = '/zv/postRepresentative';
         log.info("representative result download:",q.kMeansClusterSize,q.yOnly);
       }else if (args == 'outlier'){
         address = '/zv/downloadOutlier';

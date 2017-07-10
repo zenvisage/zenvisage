@@ -106,25 +106,24 @@ public class ZvBasicAPI {
 	    while (scanner.hasNextLine()) {
 	        stringBuilder.append(scanner.nextLine());
 	    }
-
 	    String body = stringBuilder.toString();
 	    System.out.println("Representative:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 	
-	@RequestMapping(value = "/downloadRepresentative", method = RequestMethod.POST)
-	@ResponseBody
-	public void downloadRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		StringBuilder stringBuilder = new StringBuilder();
-	    Scanner scanner = new Scanner(request.getInputStream());
-	    while (scanner.hasNextLine()) {
-	        stringBuilder.append(scanner.nextLine());
-	    }
-
-	    String body = stringBuilder.toString();
-//	    System.out.println("Representative:"+body);
-		zvMain.saveDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
-	}
+//	@RequestMapping(value = "/downloadRepresentative", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String downloadRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+//		StringBuilder stringBuilder = new StringBuilder();
+//	    Scanner scanner = new Scanner(request.getInputStream());
+//	    while (scanner.hasNextLine()) {
+//	        stringBuilder.append(scanner.nextLine());
+//	    }
+//
+//	    String body = stringBuilder.toString();
+////	    System.out.println("Representative:"+body);
+//		zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
+//	}
 
 	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody

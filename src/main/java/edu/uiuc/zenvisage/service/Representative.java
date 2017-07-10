@@ -85,37 +85,25 @@ public class Representative extends Analysis {
 		for(String key : output.keySet()) {
 			 mappings.add(key);
 		}
-		
-//		System.out.print("normalizedgroups:");
-//		System.out.println(normalizedgroups);
-//		System.out.println(normalizedgroups.length);
-//		System.out.println("normalizedgroups[0]:");
-//		System.out.println(normalizedgroups[0].toString());
 //		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
 		double eps = 0;  //unused in calculateClusters
 		@SuppressWarnings({ "rawtypes"})
 		DummyCluster dc = cluster.calculateClusters(eps, 0, normalizedgroups);
 		List clusters = dc.getClusters();		
-		System.out.println("dc clusters:");
-		System.out.println(clusters);
 		//List<RepresentativeTrend> representativeTrends = cluster.computeRepresentativeTrends(clusters,mappings,normalizedgroups);
 		//removeDuplicate(representativeTrends);
 		//double[][] centers = cluster.getCenters(clusters);
 		BufferedWriter bx = null;
 		BufferedWriter by = null;
 		if (args.getDownload()){
-			 System.out.println("downloading RepresentativeTrends!");
-//			 if (args.getDownloadX()){
-//				 FileWriter fx = new FileWriter("representative_"+args.xAxis+".csv");
-//				 bx = new BufferedWriter(fx);
-//			 }
+//			 System.out.println("downloading RepresentativeTrends!");
 			 FileWriter fy = new FileWriter("representative_"+args.yAxis+".csv");
 			 by = new BufferedWriter(fy);
 		 }
 		List<RepresentativeTrend> representativeTrends = new ArrayList<RepresentativeTrend>();
 		List<List<Double>> clusteredTrends = new ArrayList();
 	    for (int k = 0; k < clusters.size(); k++) {	    
-	    		System.out.println("Cluster #"+ Integer.toString(k));
+//	    		System.out.println("Cluster #"+ Integer.toString(k));
 	    		RepresentativeTrend repTrend = new RepresentativeTrend();
 	    		DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();
 	    		List<Double> clustTrend = new ArrayList();
@@ -123,18 +111,7 @@ public class Representative extends Analysis {
 	  	  	double[] p = point.getPoint();
 	  	  	int min = 0;
 	  	  	double mindist = distance.calculateDistance(p, normalizedgroups[0]);
-//	  	    System.out.println("normalized groups size:"+ Integer.toString(normalizedgroups[l].length));
 	  	  	for (int l = 1; l < normalizedgroups.length; l++) {
-//		  	  	System.out.print("normalizedgroups[l].toString():");
-//				//System.out.println(normalizedgroups[l].toString());
-//				
-//				System.out.print("[");
-//				for (int z=0 ; z< normalizedgroups[l].length;z++){
-//					System.out.print(normalizedgroups[l][z]);
-//					System.out.print(',');
-//				}
-//				System.out.println("]");
-				
 	  	  		double d = distance.calculateDistance(p, normalizedgroups[l]);
 	  	  		clusterDist.add(d);
 	  	  		if (d < mindist ) {
@@ -146,61 +123,35 @@ public class Representative extends Analysis {
 	  	  	repTrend.setKey(mappings.get(min));
 	  	  	repTrend.setSimilarTrends(dc.getRealSizes()[k]);
 	  	    representativeTrends.add(repTrend);
-	  	    System.out.println("cluster size:"+Integer.toString(dc.getRealSizes()[k]));
-	  	    System.out.print("clusterDist:");
-			System.out.println(clusterDist);
+//	  	    System.out.println("cluster size:"+Integer.toString(dc.getRealSizes()[k]));
+//	  	    System.out.print("clusterDist:");
+//			System.out.println(clusterDist);
 			if (args.getDownload()){
 				int [] minK_idx = minKIndex(clusterDist,dc.getRealSizes()[k]);
-				System.out.print("minK_idx:");
+//				System.out.print("minK_idx:");
 				for (int i =0 ; i<minK_idx.length ; i++){
 					String data_str = "";
 					for (int n=0 ; n<normalizedgroups[minK_idx[i]].length;n++){
 						data_str+=Double.toString(normalizedgroups[minK_idx[i]][n]) +",";
 					}
+					// Cluster # , z title, data (y1,y2...,yn,...)
 					by.write(Integer.toString(k)+','+mappings.get(minK_idx[i])+','+ data_str.subSequence(0, data_str.length()-1)+"\n");
-//					if (args.getDownloadX()){
-//						bx.write(mappings.get(minK_idx[i])+','+ String.join(",", viz.xData)+"\n");
-//					}
 					 
-					System.out.print('[');
-					System.out.print(k+',');//Cluster label 
-	//				System.out.print(Integer.toString(minK_idx[i])+',');
-	//				System.out.print(clusterDist.get(minK_idx[i])); //min dist
-					System.out.print(mappings.get(minK_idx[i])+',');
-					System.out.print('(');
-					for (int n=0 ; n<normalizedgroups[minK_idx[i]].length;n++){
-						System.out.print(normalizedgroups[minK_idx[i]][n]);
-					}
-					System.out.print(')');
-					System.out.println(']');
+//					System.out.print('[');
+//					System.out.print(k+',');//Cluster label 
+//	//				System.out.print(Integer.toString(minK_idx[i])+',');
+//	//				System.out.print(clusterDist.get(minK_idx[i])); //min dist
+//					System.out.print(mappings.get(minK_idx[i])+',');
+//					System.out.print('(');
+//					for (int n=0 ; n<normalizedgroups[minK_idx[i]].length;n++){
+//						System.out.print(normalizedgroups[minK_idx[i]][n]);
+//					}
+//					System.out.print(')');
+//					System.out.println(']');
 				}
 			}
-//			Collections.sort(clusterDist);
-//			System.out.println("clusterDist:");
-//			System.out.println(clusterDist);
-//			Comparator<double []> comparator = Comparator.comparingDouble();
-//	        IntStream.range(0,clusterDist.length)
-//	                .mapToObj(i-> new Pair<>(i,clusterDist[i]))
-//	                .sorted(comparator.reversed())
-//	                .mapToInt(Pair::getFirst).toArray();
-//			int[] sortedIdx = IntStream.range(0, clusterDist.size())
-//			                .boxed()//.sorted()
-//			                .sorted((i,j) ->  (clusterDist.get(i) - clusterDist.get(j)))
-//			                .mapToInt(ele -> ele).toArray();
-//			System.out.print("[");
-//			for (int i =0 ; i<sortedIdx.length;i++){
-//				System.out.print(sortedIdx[i]);
-//				System.out.print(",");
-//			}
-//			System.out.println("]");
-			 
-//			System.out.print("mappings[sortedIdx]:");
-//			System.out.println(mappings[sortedIdx]);
 	    }
-//	    System.out.println("mappings:");
-//  	  	System.out.println(mappings);
-//  	  	System.out.println(mappings.size());
-  	  
+	    if (args.getDownload()){by.close();}
 	    Collections.sort(representativeTrends, new Comparator<RepresentativeTrend>() {
 
 	        public int compare(RepresentativeTrend o1, RepresentativeTrend o2) {
@@ -212,10 +163,6 @@ public class Representative extends Analysis {
 	            	return 0;
 	        }
 	    });	
-	    if (args.getDownload()){
-//	    		 if (args.getDownloadX()){bx.close();}
-			 by.close();
-	    }
 	    
 		chartOutput.chartOutput(representativeTrends,output,chartOutput.args,chartOutput.finalOutput);
 	}
