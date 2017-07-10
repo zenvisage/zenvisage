@@ -184,9 +184,10 @@
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController"  >
-          <h4  data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more.' data-step="1">
-            ZenVisage
+          <h4>
+            <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more.' data-step="1">ZenVisage</span><button style="margin-left:10px;width:60px;height:30px;padding: 0px;font-size:13px" type="button" class="btn btn-primary" onclick="javascript:starttutorial();">Tutorial</button>
           </h4>
+
           <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. Please select a dataset' data-step="2">
             <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
@@ -198,7 +199,7 @@
           <div>
             <h5 data-intro= 'Alternatively, enter json data to sketch patterns.' data-step="5"><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
-          <div data-intro= 'The current loaded dataset and columns of the dataset will be shown in the left panel.' data-step="3">
+          <div data-intro= 'The current loaded dataset and columns of the dataset will be shown in the left panel.' data-step="3" data-position = "right">
             <h5><b>Category</b>
 
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
@@ -383,8 +384,8 @@
                   </form>
                 </div>
               </div>
-                <div>
-                  <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="9" data-position = "left"><b>K-means Cluster Size</b></div>
+                <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="9" data-position = "left">
+                  <div><b>K-means Cluster Size</b></div>
                   <p></p>
                   <div>
                     <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
@@ -398,8 +399,8 @@
                   </form>
                 </div>-->
 
-                <div>
-                  <div class="info-text" data-intro = "Insert Description" data-step ="11" data-position = "left" ><b>Input equation</b></div>
+                <div class="info-text" data-intro = "Insert Description" data-step ="11" data-position = "left" >
+                  <div ><b>Input equation</b></div>
                   <p></p>
                   <div class="input-group">
                     <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
@@ -417,23 +418,25 @@
                 -->
               </div>
               <div class="col-md-3">
-                <div class="info-text" data-intro = "Insert Description" data-step ="12" data-position = "left"><b>Aggregation Method</b></div>
+                <div class="info-text" data-intro = "Insert Description" data-step ="12" data-position = "left">
+                <div ><b>Aggregation Method</b></div>
                 <div class="radio">
                   <form>
                     <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
                     <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
                   </form>
                 </div>
+              </div>
 
-                <div id="num-results">
-                  <div class="info-text" data-intro = "Number of similarity search results to show can be modified." data-step ="13" data-position = "left"><b>Number of Results</b></div>
+                <div id="num-results" class="info-text" data-intro = "Number of similarity search results to show can be modified." data-step ="13" data-position = "left">
+                  <div><b>Number of Results</b></div>
                   <p></p>
                   <div>
                     <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
                   </div>
                 </div>
 
-                <div class="info-text" data-intro = "Insert Description" data-step ="14" data-position = "left"><b>Options</b></div>
+                <div class="info-text" data-intro = "Insert Description" data-step ="14" data-position = "left"><b>Options</b>
                 <div class="checkbox">
                   <form>
                     <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
@@ -451,13 +454,13 @@
                     <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
                   </form>
                   <!--</div>-->
-
+                  </div>
                </div>
 
 
               </div>
-              <div class="col-md-3" >
-                <div class="info-text" data-intro = "Insert Description" data-step ="15" data-position = "left"><b>Data Smoothing</b></div>
+              <div class="col-md-3"  class="info-text" data-intro = "Insert Description" data-step ="15" data-position = "left">
+                <div><b>Data Smoothing</b></div>
                   <!-- <div class="info-text"><b>Type</b></div> -->
                   <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
                   <br>
@@ -502,7 +505,7 @@
         <div id="bottom-middle-bar">
 
           <div id="middle-left" class="col-md-6">
-            <h5 data-intro = "Similarity search results are shown for the submitted user defined pattern." data-step ="6" data-position = "right">
+            <h5>
             <b>Results </b>
             <button type="button" class="textButton" data-toggle="modal" data-target="#download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
             </h5>
@@ -636,12 +639,16 @@
     <script src="js/intro.js"></script>
 
     <script>
-    var startintro = false;
-    var secondtutorial = function(input){
-      if(startintro == false){
+    //code for intro tutorial
+
+    var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
+    var starttutorial = function(input){
         startintro = true;
-        introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
-        }
+        //introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
+      //  console.log("hi",$("#dataset-form-control").val());
+        $("#dataset-form-control").val('real_estate_test');
+        angular.element($("#sidebar")).scope().onDatasetChange('initialize');
+        setTimeout(callintro, 2000);
       };
 
 

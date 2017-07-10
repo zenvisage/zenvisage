@@ -1009,13 +1009,15 @@ app.controller('datasetController', [
       params: params,
     };
 
-   $scope.onDatasetChange = function() {
+   $scope.onDatasetChange = function(input) {
       log.info("dataset selected",$('#dataset-form-control').val())
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
+console.log('selected dataset',getSelectedDataset());
+      if(input == 'initialize'){var q = constructDatasetChangeQuery('real_estate_test');} //just for tutorial purposes
+      else{ var q = constructDatasetChangeQuery(getSelectedDataset());}
 
-      var q = constructDatasetChangeQuery(getSelectedDataset());
 
       var params = {
         "query": q,
@@ -1123,6 +1125,13 @@ app.controller('datasetController', [
     })
 
     });
+
+    // this init is just for tutorial purpose
+    var init = function () {
+       $scope.onDatasetChange('initialize');
+    };
+      //  init();
+    // and fire it after definition
 
 
 }]);

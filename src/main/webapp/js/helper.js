@@ -343,6 +343,10 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
 
   }
+  d3.select('#resultsvg-0')
+  .attr("data-intro","Similarity search results are shown for the submitted user defined pattern.")
+  .attr("data-step","6")
+  .attr("data-position","right");
 
   $(".draggable-graph").draggable({
     opacity: 0.5,
@@ -655,6 +659,11 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
           .attr("fill", "none");
     }
   }
+  d3.select('#representativesvg-0')
+  .attr("data-intro","Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.")
+  .attr("data-step","8")
+  .attr("data-position","left");
+
 var id = "#representativesvg-"
   $("#representativesvg-0").dblclick(function() {
     createcanvas(id,0);
@@ -889,6 +898,13 @@ function displayOutlierResultsHelper( outlierResults )
       .text(title);
       //.text(xlabel + " (" + clusterCount + ")");
   }
+  d3.select('#outliersvg-0')
+  .attr("data-intro","Outlier results highlight anomalies that look different from most visualizations in the dataset.")
+  .attr("data-step","10")
+  .attr("data-position","left");
+
+
+
   var id = "#outliersvg-"
     $("#outliersvg-0").dblclick(function() {
       createcanvas(id,0);
@@ -918,7 +934,6 @@ function displayOutlierResultsHelper( outlierResults )
       });
     }
   });
-  secondtutorial(introJs);
 }
 
 function uploadToSketchpadNew( draggableId, graphType )
