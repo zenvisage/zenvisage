@@ -661,7 +661,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
   }
   d3.select('#representativesvg-0')
   .attr("data-intro","Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.")
-  .attr("data-step","8")
+  .attr("data-step","11")
   .attr("data-position","left");
 
 var id = "#representativesvg-"
@@ -900,7 +900,7 @@ function displayOutlierResultsHelper( outlierResults )
   }
   d3.select('#outliersvg-0')
   .attr("data-intro","Outlier results highlight anomalies that look different from most visualizations in the dataset.")
-  .attr("data-step","10")
+  .attr("data-step","13")
   .attr("data-position","left");
 
 
