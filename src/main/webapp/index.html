@@ -185,10 +185,12 @@
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController"  >
           <h4>
-            <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more.' data-step="1">ZenVisage</span><button style="margin-left:10px;width:60px;height:30px;padding: 0px;font-size:13px" type="button" class="btn btn-primary" onclick="javascript:starttutorial();">Tutorial</button>
+            <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1">ZenVisage</span>
+            <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button>
+            <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
           </h4>
 
-          <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. Please select a dataset' data-step="2">
+          <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. An existing dataset can also be selected from the dropdown.' data-step="2">
             <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
@@ -197,9 +199,9 @@
             </select>
           </div>
           <div>
-            <h5 data-intro= 'Alternatively, enter json data to sketch patterns.' data-step="5"><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5 data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="5"><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
-          <div data-intro= 'The current loaded dataset and columns of the dataset will be shown in the left panel.' data-step="3" data-position = "right">
+          <div data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
             <h5><b>Category</b>
 
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
@@ -273,7 +275,7 @@
               </div>
             </div>
 
-            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "Desired patterns can be drawn in this sketchpad." data-step ="4"></div>
+            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step ="4"></div>
             <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="chartSettings.selectedChartOption=='Scatter'">
               <div class="col-md-11">
                   <svg id="main-chart">
@@ -399,7 +401,7 @@
                   </form>
                 </div>-->
 
-                <div class="info-text" data-intro = "Insert Description" data-step ="11" data-position = "left" >
+                <div class="info-text" data-intro = "You can insert an equation to specify the shape of the query pattern." data-step ="11" data-position = "left" >
                   <div ><b>Input equation</b></div>
                   <p></p>
                   <div class="input-group">
@@ -418,7 +420,7 @@
                 -->
               </div>
               <div class="col-md-3">
-                <div class="info-text" data-intro = "Insert Description" data-step ="12" data-position = "left">
+                <div class="info-text" data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="12" data-position = "left">
                 <div ><b>Aggregation Method</b></div>
                 <div class="radio">
                   <form>
@@ -428,7 +430,7 @@
                 </div>
               </div>
 
-                <div id="num-results" class="info-text" data-intro = "Number of similarity search results to show can be modified." data-step ="13" data-position = "left">
+                <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="13" data-position = "left">
                   <div><b>Number of Results</b></div>
                   <p></p>
                   <div>
@@ -436,21 +438,20 @@
                   </div>
                 </div>
 
-                <div class="info-text" data-intro = "Insert Description" data-step ="14" data-position = "left"><b>Options</b>
+                <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step ="14" data-position = "left"><b>Options</b>
                 <div class="checkbox">
-                  <form>
+                  <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-step ="14" data-position = "left" data-step ="15" >
                     <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
                   </form>
-                  <form>
-                    <input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
+                  <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="16" ><input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
                   </form>
-                  <form>
+                  <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="17">
                     <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                   </form>
 
 
                   <!-- <div class="checkbox" ng-controller="datasetController"> -->
-                  <form>
+                  <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="18">
                     <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
                   </form>
                   <!--</div>-->
@@ -459,36 +460,35 @@
 
 
               </div>
-              <div class="col-md-3"  class="info-text" data-intro = "Insert Description" data-step ="15" data-position = "left">
-                <div><b>Data Smoothing</b></div>
-                  <!-- <div class="info-text"><b>Type</b></div> -->
-                  <!-- ng-change="onDatasetChange()" ng-model="selectedDataset" -->
-                  <br>
-                  <div>
-                  <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
-                    <option value="none">None</option>
-                    <option value="movingaverage">Moving Average</option>
-                    <option value="exponentialmovingaverage">Exponential</option>
-                    <option value="leossInterpolation">Loess</option>
-                    <option value="gaussian">Gaussian</option>
-                  </select>
-                  <p><nobr>
-                    <label for="amount">Smoothing Constant:</label>
-                    <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;">
-                  </nobr></p>
-                  <div id="slider-range-max" align = "right" style="width:200px;"></div>
+              <div class="col-md-3" style="width: 230px;">
+                <div class="info-text" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="19" data-position = "left">
+                  <div><b>Data Smoothing</b></div>
+                    <br>
+                    <div>
+                    <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
+                      <option value="none">None</option>
+                      <option value="movingaverage">Moving Average</option>
+                      <option value="exponentialmovingaverage">Exponential</option>
+                      <option value="leossInterpolation">Loess</option>
+                      <option value="gaussian">Gaussian</option>
+                    </select>
+                    <p><nobr>
+                      <label for="amount">Smoothing Constant:</label>
+                      <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;width: 30px;">
+                    </nobr></p>
+                    <div id="slider-range-max" align = "right" style="width:200px;"></div>
+                  </div>
                 </div>
-
-                <div>
-                  <div class="info-text"><b>Filter Constraint</b></div>
-                  <p></p>
-                    <div class="input-group" ng-controller='zqlTableController'>
-                      <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
-                      <div class="input-group-btn">
-                        <button class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">
-                        Submit </button>
+                <div data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="20">
+                    <div class="info-text"><b>Filter Constraint</b></div>
+                    <p></p>
+                      <div class="input-group" ng-controller='zqlTableController'>
+                        <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
+                        <div class="input-group-btn">
+                          <button class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">
+                          Submit </button>
+                        </div>
                       </div>
-                    </div>
                 </div>
               </div>
             </div>
@@ -520,9 +520,9 @@
                   <td><h5 data-intro = "Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets." data-step ="8" data-position = "left"><b>Representative patterns </b>
                   <button type="button" class="textButton" data-toggle="modal" data-target="#cluster-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
                   </b>
-                  <div class="qtooltip"><span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('representative explaination')"></span>
+                  <!-- <div class="qtooltip"><span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('representative explaination')"></span>
                     <span class="qtooltiptext">Representative patterns show KMeans clustering results, sorted from largest to smallest clusters. A representative visualization from each of the cluster is shown and labelled by the the visualization identifier with the number of visualizations in that cluster in brackets.</span>
-                  </div>
+                  </div> -->
                   <!-- <button type="button" class="textButton" data-toggle="modal" data-target="#download-cluster"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button> -->
                   </h5></td>
                 </tr>
@@ -533,10 +533,10 @@
                 <tr class="middle-right-headers">
                   <td><h5 data-intro = "Outlier results highlight anomalies that look different from most visualizations in the dataset." data-step ="10" data-position = "left"><b>Outliers </b>
                   <button type="button" class="textButton" data-toggle="modal" data-target="#outlier-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
-                  <div class="qtooltip">
+                  <!-- <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>
                     <span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>
-                  </div>
+                  </div> -->
                   </h5></td>
                 </tr>
               </table>
@@ -646,7 +646,7 @@
         startintro = true;
         //introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
       //  console.log("hi",$("#dataset-form-control").val());
-        $("#dataset-form-control").val('real_estate_test');
+        $("#dataset-form-control").val('real_estate_tutorial');
         angular.element($("#sidebar")).scope().onDatasetChange('initialize');
         setTimeout(callintro, 2000);
       };

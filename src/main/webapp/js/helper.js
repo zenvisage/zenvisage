@@ -344,7 +344,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
   }
   d3.select('#resultsvg-0')
-  .attr("data-intro","Similarity search results are shown for the submitted user defined pattern.")
+  .attr("data-intro","Similarity search results are shown for the submitted user defined pattern. The query pattern is overlaid in green for comparison.")
   .attr("data-step","6")
   .attr("data-position","right");
 

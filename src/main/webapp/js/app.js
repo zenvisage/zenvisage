@@ -1014,8 +1014,8 @@ app.controller('datasetController', [
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
-console.log('selected dataset',getSelectedDataset());
-      if(input == 'initialize'){var q = constructDatasetChangeQuery('real_estate_test');} //just for tutorial purposes
+      console.log('selected dataset',getSelectedDataset());
+      if(input == 'initialize'){var q = constructDatasetChangeQuery('real_estate_tutorial');} //just for tutorial purposes
       else{ var q = constructDatasetChangeQuery(getSelectedDataset());}
 
 
