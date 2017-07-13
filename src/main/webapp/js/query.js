@@ -58,9 +58,11 @@ function Query( searchMethod ) {
   this.considerRange = getConsiderRange();
   this.smoothingType = getSmoothingType();
   this.smoothingcoefficient = getSmoothingCoefficient();
-  this.download="";
-  this.includeQuery="";
-  this.yOnly="";
+  this.download=false;
+  this.includeQuery=false;
+  this.yOnly=false;
+  this.downloadAll=false;
+  this.downloadThresh=0.0;
 }
 function getFilter(){
   return $("#filter.form-control").val();

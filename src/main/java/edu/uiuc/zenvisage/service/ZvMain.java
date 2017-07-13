@@ -588,6 +588,13 @@ public class ZvMain {
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 boolean downloadX = args.getDownloadX();
 		 boolean includeQuery = args.getIncludeQuery();
+		 System.out.println("downloadAll");
+		 if (args.getDownloadAll()){
+			 System.out.println("downloading All!!");
+		 }
+		 System.out.print("downloadThresh:");
+		 System.out.println(args.downloadThresh);
+
 		 String dataX = String.join(",", Arrays.toString(args.getDataX()));
 		 String dataY = String.join(",", Arrays.toString(args.getDataY()));
 		 
@@ -595,9 +602,7 @@ public class ZvMain {
 		 BufferedWriter bx = null;
 		 Chart sampleChartSchema = outputCharts.get(0);
 		 String prefix = "";
-//		 if (method.equals("SimilaritySearch")) {
-//			 prefi
-//		 }else 
+
 		 if (method.equals("Outlier")) {
 			 prefix = "outlier_";
 		 }
@@ -611,7 +616,7 @@ public class ZvMain {
 
 		 // Writing query
 		 if (method.equals("SimilaritySearch") && includeQuery) {
-			 by.write("query ,"+ dataY.substring(1, dataY.length() - 1)+"\n");
+			 by.write("query ,"+"1.0,"+ dataY.substring(1, dataY.length() - 1)+"\n");
 			 if (downloadX){
 				 bx.write("query ,"+ dataX.substring(1, dataX.length() - 1)+"\n");
 			 }
@@ -620,7 +625,7 @@ public class ZvMain {
 		 // Writing individual visualizations
 		 for (int i = 0; i < outputCharts.size(); i++){
 			 Chart viz = outputCharts.get(i);
-			 by.write(viz.title+','+ String.join(",", viz.yData)+"\n");
+			 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
 			 if (downloadX){
 				 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
 			 }

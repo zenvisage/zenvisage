@@ -288,3 +288,12 @@ svg#treesvg {
 .qtooltip:hover .qtooltiptext {
     visibility: visible;
 }
+.btn-circle {
+    width: 25px;
+    height: 24px;
+    text-align: center;
+    padding: 3px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}

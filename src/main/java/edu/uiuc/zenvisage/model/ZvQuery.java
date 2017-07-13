@@ -29,8 +29,10 @@ public class ZvQuery {
 	public String smoothingType="";
 	public double smoothingcoefficient=0.0;
 	public boolean download=false;
-	public String includeQuery="";
-	public String yOnly="";
+	public boolean includeQuery=false;
+	public boolean yOnly=false;
+	public boolean downloadAll=false;
+	public double downloadThresh= 0.0;
 
 	
 	public String getDistance_metric() {
@@ -179,29 +181,24 @@ public class ZvQuery {
 	public boolean getDownload() {
 		return download;
 	}
+	public boolean getDownloadAll() {
+		return downloadAll;
+	}
 	public boolean getIncludeQuery() {
-		 boolean includeQ = false;
-
-		 if (includeQuery.equals("checked")){
-			 System.out.println("includeQuery");
-			 includeQ = true;
-		 }
-		 
-		return includeQ;
-		
+		return includeQuery;
 	}
-	public String getyOnly() {
+	public boolean getyOnly() {
 		return yOnly;
-	}
-	
+	}	
 	public boolean getDownloadX(){
 		boolean downloadX = true;
-		if (yOnly.equals("checked")){
+		if (yOnly){
 			 System.out.println("download Y only");
 			 downloadX = false;
 		}
 		return downloadX;
 	}
-	
-	
+	public double getDownloadThresh(){
+		return downloadThresh;
+	}
 }

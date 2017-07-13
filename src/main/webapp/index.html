@@ -548,12 +548,15 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title">Download Query Results</h4>
             </div>
-            <div class="modal-body" id="class-info-body">
-                Number of Results: 
+            <div class="modal-body" id="class-info-body"> 
+                <br> Number of results:
                 <input ng-model="numResults" type="text" id="num-results-download">
+                <br> Minimum similarity threshold: 
+                <input ng-model="minThresh" type="text" id="min-thresh-download">
                 <br>
                 <input type="checkbox" id="yOnly"> Export y only <br>
                 <input type="checkbox" id="includeQuery"> Include Query Pattern <br>
+                <input type="checkbox" id="downloadAll"> Download all data<br>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('query')">Export as csv file</button>

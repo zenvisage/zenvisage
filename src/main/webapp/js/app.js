@@ -915,23 +915,19 @@ app.controller('datasetController', [
       var data = q;
       q.download = true;
       console.log("calling downloadSimilarity");
-      var includeQuery = getIncludeQuery();
-      var yOnly = getyOnlyCheck();
-      if (yOnly){
-        q.yOnly = "checked"; 
-      }
-      if (includeQuery){
-        q.includeQuery = "checked";
-      }
+      q.includeQuery = getIncludeQuery();
+      q.yOnly = getyOnlyCheck();
+      q.downloadAll = getDownloadAll();
+      q.downloadThresh = $("#min-thresh-download").val();;
       var address = '/zv/downloadSimilarity';
       if (args=='query'){
         q.outlierCount = $("#num-results-download").val();
         address = '/zv/downloadSimilarity';
-        log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery);
+        log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery,q.downloadAll,q.downloadThresh);
       }else if (args == 'representative'){
         q.kMeansClusterSize = $("#num-clusters-download").val();
         address = '/zv/postRepresentative';
-        log.info("representative result download:",q.kMeansClusterSize,q.yOnly);
+        log.info("representative result download:",q.kMeansClusterSize,q.yOnly,q.downloadAll);
       }else if (args == 'outlier'){
         address = '/zv/downloadOutlier';
         q.kMeansClusterSize = $("#num-outlier-download").val();
@@ -978,6 +974,10 @@ app.controller('datasetController', [
 
     function getIncludeQuery(){
       return $("#includeQuery").is(':checked');
+    }
+
+    function getDownloadAll(){
+      return $("#downloadAll").is(':checked');
     }
 
     function getOutlierTrends()
