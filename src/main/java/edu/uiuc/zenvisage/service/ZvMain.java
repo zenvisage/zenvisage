@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +107,17 @@ public class ZvMain {
 		sqlQueryExecutor = new SQLQueryExecutor();
 		System.out.println("ZVMAIN LOADED");
 	}
-
+	
+	public int getDatasetLength(String zAttr, String datasetname) throws SQLException{
+		String query = "SELECT COUNT(DISTINCT("+zAttr+")) FROM "+datasetname+';';
+		System.out.println("query:"+query);
+		ResultSet ret = sqlQueryExecutor.query(query);
+		int size = 0;
+		while (ret.next()){
+			size = ret.getInt("count");
+		}
+		return size;
+	}
 //	public void loadData() throws IOException, InterruptedException{
 //
 //		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
@@ -430,10 +441,11 @@ public class ZvMain {
 //	}
 	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
-//		System.out.println(query);
-
+		 System.out.println("runDragnDropInterfaceQuery");
+		 System.out.println("query:"+query);
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-
+		 System.out.println("args:"+args.toString());
+		 System.out.println("args.outlierCount:"+Integer.toString(args.outlierCount));
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
@@ -577,6 +589,15 @@ public class ZvMain {
 	}
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
+		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 System.out.println("old query:"+query);
+		 if (args.downloadAll){
+			 int size = getDatasetLength(args.groupBy,args.databasename);
+			 System.out.println("size:"+Integer.toString(size));
+			 args.setOutlierCount(size);
+			 query = new ObjectMapper().writeValueAsString(args);
+			 System.out.println("query:"+query);
+		 }
 		 System.out.println("saveDragnDropInterfaceQuerySeparated:");
 		 System.out.println("method:"+method);
 		 Result result = runDragnDropInterfaceQuery(query,method);
@@ -585,7 +606,6 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 		 
 		 ArrayList<Chart> outputCharts = result.outputCharts;
-		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 boolean downloadX = args.getDownloadX();
 		 boolean includeQuery = args.getIncludeQuery();
 		 System.out.println("downloadAll");

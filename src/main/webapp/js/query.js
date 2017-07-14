@@ -23,6 +23,7 @@ function constructOutlierTrendQuery()
 
 function Query( searchMethod ) {
   this.method = searchMethod; // fix to dynamically fetch
+  this.databasename = getSelectedDataset();
   this.xAxis = getSelectedXAxis();
   this.yAxis = getSelectedYAxis();
   this.groupBy = getSelectedCategory();

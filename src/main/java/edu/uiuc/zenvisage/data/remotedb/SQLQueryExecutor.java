@@ -72,7 +72,7 @@ public class SQLQueryExecutor {
 	public ResultSet query(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      ResultSet ret = stmt.executeQuery(sQLQuery);
-	      stmt.close();
+	      //stmt.close();
 	      return ret;
 	}
 	

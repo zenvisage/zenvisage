@@ -4,6 +4,7 @@ public class ZvQuery {
 	public String method;
 	public String xAxis;
 	public String yAxis;
+	public String databasename;
 	public String groupBy;
 	public String aggrFunc;
 	public String aggrVar;
@@ -200,5 +201,8 @@ public class ZvQuery {
 	}
 	public double getDownloadThresh(){
 		return downloadThresh;
+	}
+	public String getDatabaseName(){
+		return databasename;
 	}
 }
