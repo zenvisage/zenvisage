@@ -26,7 +26,7 @@ public class ZvQuery {
 	public String filter;
 	public float[] xRange;
 	public boolean considerRange;
-	public int kMeansClusterSize;
+	public int kmeansClusterSize;
 	public String smoothingType="";
 	public double smoothingcoefficient=0.0;
 	public boolean download=false;
@@ -105,18 +105,6 @@ public class ZvQuery {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	public String getYaxis() {
-		return yAxis;
-	}
-	public void setYaxis(String yaxis) {
-		yAxis = yaxis;
-	}
-	public String getXaxis() {
-		return xAxis;
-	}
-	public void setXaxis(String xaxis) {
-		xAxis = xaxis;
-	}
 	public String getGroupBy() {
 		return groupBy;
 	}
@@ -135,8 +123,8 @@ public class ZvQuery {
 	public void setAggrVar(String aggrVar) {
 		this.aggrVar = aggrVar;
 	}
-	public int getOutlierCount() {
-		return outlierCount;
+	public String getOutlierCount() {
+		return Integer.toString(outlierCount);
 	}
 	public void setOutlierCount(int outlierCount) {
 		this.outlierCount = outlierCount;
@@ -153,11 +141,11 @@ public class ZvQuery {
 	public void setDataY(float[] dataY) {
 		this.dataY = dataY;
 	}
-	public int getKMeansClusterSize() {
-		return this.kMeansClusterSize;
+	public int getkmeansClusterSize() {
+		return kmeansClusterSize;
 	}
-	public void setKMeansClusterSize(int k) {
-		this.kMeansClusterSize = k;
+	public void setkmeansClusterSize(int k) {
+		this.kmeansClusterSize = k;
 	}
 	public String getSmoothingType() {
 		return smoothingType;
@@ -191,7 +179,7 @@ public class ZvQuery {
 	public boolean getyOnly() {
 		return yOnly;
 	}	
-	public boolean getDownloadX(){
+	public boolean deriveDownloadX(){
 		boolean downloadX = true;
 		if (yOnly){
 			 System.out.println("download Y only");
@@ -202,7 +190,7 @@ public class ZvQuery {
 	public double getDownloadThresh(){
 		return downloadThresh;
 	}
-	public String getDatabaseName(){
+	public String getdatabasename(){
 		return databasename;
 	}
 }

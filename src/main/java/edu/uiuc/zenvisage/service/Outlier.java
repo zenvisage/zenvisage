@@ -80,7 +80,7 @@ public class Outlier extends Analysis {
 	        }
 	    });
 		
-		outlierTrends = outlierTrends.subList(0, args.kMeansClusterSize);
+		outlierTrends = outlierTrends.subList(0, args.kmeansClusterSize);
 		
 		chartOutput.chartOutput(outlierTrends,output,chartOutput.args,chartOutput.finalOutput, 1);
 	}

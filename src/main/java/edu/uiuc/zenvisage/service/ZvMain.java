@@ -590,13 +590,12 @@ public class ZvMain {
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
-		 System.out.println("old query:"+query);
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
 			 args.setOutlierCount(size);
 			 query = new ObjectMapper().writeValueAsString(args);
-			 System.out.println("query:"+query);
+//			 System.out.println("query:"+query);
 		 }
 		 System.out.println("saveDragnDropInterfaceQuerySeparated:");
 		 System.out.println("method:"+method);
@@ -606,12 +605,9 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 		 
 		 ArrayList<Chart> outputCharts = result.outputCharts;
-		 boolean downloadX = args.getDownloadX();
+		 boolean downloadX = args.deriveDownloadX();
 		 boolean includeQuery = args.getIncludeQuery();
-		 System.out.println("downloadAll");
-		 if (args.getDownloadAll()){
-			 System.out.println("downloading All!!");
-		 }
+		 
 		 System.out.print("downloadThresh:");
 		 System.out.println(args.downloadThresh);
 
@@ -627,7 +623,7 @@ public class ZvMain {
 			 prefix = "outlier_";
 		 }
 		 
-		 if (args.getDownloadX()){
+		 if (args.deriveDownloadX()){
 			 fx = new FileWriter(prefix+sampleChartSchema.xType+".csv");
 			 bx = new BufferedWriter(fx);
 		 }
