@@ -442,10 +442,19 @@ public class ZvMain {
 	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
-		 System.out.println("query:"+query);
+//		 System.out.println("query:"+query);
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		 System.out.println("args:"+args.toString());
-		 System.out.println("args.outlierCount:"+Integer.toString(args.outlierCount));
+		 System.out.println("args.downloadAll:");
+		 System.out.println(args.downloadAll);
+		 if (args.downloadAll){
+			 int size = getDatasetLength(args.groupBy,args.databasename);
+			 System.out.println("size:"+Integer.toString(size));
+			 args.setOutlierCount(size);
+			 query = new ObjectMapper().writeValueAsString(args);
+//			 System.out.println("query:"+query);
+		 }
+//		 System.out.println("args:"+args.toString());
+//		 System.out.println("args.outlierCount:"+Integer.toString(args.outlierCount));
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
@@ -590,6 +599,8 @@ public class ZvMain {
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 System.out.println("args.downloadAll:");
+		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
