@@ -442,7 +442,6 @@ public class ZvMain {
 	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
-//		 System.out.println("query:"+query);
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 System.out.println("args.downloadAll:");
 		 System.out.println(args.downloadAll);
@@ -451,10 +450,7 @@ public class ZvMain {
 			 System.out.println("size:"+Integer.toString(size));
 			 args.setOutlierCount(size);
 			 query = new ObjectMapper().writeValueAsString(args);
-//			 System.out.println("query:"+query);
 		 }
-//		 System.out.println("args:"+args.toString());
-//		 System.out.println("args.outlierCount:"+Integer.toString(args.outlierCount));
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
@@ -652,9 +648,18 @@ public class ZvMain {
 		 // Writing individual visualizations
 		 for (int i = 0; i < outputCharts.size(); i++){
 			 Chart viz = outputCharts.get(i);
-			 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
-			 if (downloadX){
-				 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+			 if (args.downloadThresh!=0.0){ // If nonzero downloadThresh set, then use it as a cutoff
+				 if (viz.normalizedDistance>=args.downloadThresh){
+					 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+					 if (downloadX){
+						 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+					 }	 
+				 }
+			 }else{
+				 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+				 if (downloadX){
+					 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+				 }	 
 			 }
 		 }
 		 if (downloadX){bx.close();}
