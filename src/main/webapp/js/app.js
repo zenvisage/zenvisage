@@ -917,9 +917,10 @@ app.controller('datasetController', [
       console.log("calling downloadSimilarity");
       q.includeQuery = getIncludeQuery();
       q.yOnly = getyOnlyCheck();
-      q.downloadThresh = $("#min-thresh-download").val();;
+      
       var address = '/zv/downloadSimilarity';
       if (args=='query'){
+        q.downloadThresh = getMinThresh();
         q.outlierCount = $("#num-results-download").val();
         q.downloadAll = getDownloadAll();
         address = '/zv/downloadSimilarity';
@@ -931,6 +932,7 @@ app.controller('datasetController', [
         log.info("representative result download",q.kmeansClusterSize,q.yOnly,q.downloadAll);
       }else if (args == 'outlier'){
         address = '/zv/downloadOutlier';
+        q.downloadThresh =  getMinOutlierThresh();
         q.kmeansClusterSize = $("#num-outlier-download").val();
         log.info("outlier result download",q.kmeansClusterSize,q.yOnly);
       }
@@ -983,6 +985,12 @@ app.controller('datasetController', [
     function getDownloadAllRepresentative(){
       return $("#downloadAllRepresentative").is(':checked');
     }
+    function getMinThresh(){
+        return $("#min-thresh-download").val();;
+      }
+      function getMinOutlierThresh(){
+        return $("#min-thresh-download-outlier").val();;
+      }
 
     function getOutlierTrends()
     {

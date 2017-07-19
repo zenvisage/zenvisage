@@ -596,10 +596,11 @@
               <h4 class="modal-title">Download Outlier Results</h4>
             </div>
             <div class="modal-body" id="class-info-body">
-                Number of Results: 
+                <br> Number of Results: 
                 <input ng-model="numResults" type="text" id="num-outlier-download">
-                <br>
-                <input type="checkbox" id="yOnly"> Export y only <br>
+                <br> Minimum dissimilarity threshold: 
+                <input ng-model="minThresh" type="text" id="min-thresh-download-outlier">
+                <br> <input type="checkbox" id="yOnly"> Export y only <br>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('outlier')" >Export as csv file</button>

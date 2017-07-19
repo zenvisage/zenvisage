@@ -109,7 +109,6 @@ public class Outlier extends Analysis {
 		for (int k = 0; k < clusters.size(); k++) {
 			DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();
 	  	  	double[] p = point.getPoint();
-//    		System.out.println("Cluster #"+ Integer.toString(k));
 			List<Double> clusterDist =  new ArrayList();
 	  	  	for (int l = 1; l < normalizedgroups.length; l++) {
 	  	  		double d = distance.calculateDistance(p, normalizedgroups[l]);
@@ -129,28 +128,12 @@ public class Outlier extends Analysis {
 			}
 			double average = sumDist/dc.getRealSizes()[k];
 			double normalizedDistance  = (average-min)/average;
-			normalizedDistances[k] += normalizedDistance ;
-//			System.out.print("sumDist:");
-//			System.out.println(sumDist);
-//			System.out.print("average:");
-//			System.out.println(average);
-//			System.out.print("min:");
-//			System.out.println(min);
-//			System.out.print("normalizedDistance:");
-//			System.out.println(normalizedDistance);
-			
+			normalizedDistances[k] += normalizedDistance ;	
 	    }
-		////////
-//		System.out.print("outlierTrends.size():");
-//		System.out.println(outlierTrends.size());
-//		System.out.print("normalizedDistances.length:");
-//		System.out.println(normalizedDistances.length);
 		for (int i=0;i<outlierTrends.size();i++){
 			outlierTrends.get(i).setNormalizedDistance(normalizedDistances[i]);
 		}
-		
 		outlierTrends = outlierTrends.subList(0, args.kmeansClusterSize);
-		
 		chartOutput.chartOutput(outlierTrends,output,chartOutput.args,chartOutput.finalOutput, 1);
 	}
 
@@ -177,29 +160,11 @@ public class Outlier extends Analysis {
 		
 		double[] normalizedDistances= new double[normalizedgroups.length];
 		Arrays.fill(normalizedDistances, 0);
-		
-//		int[] maxIndex = new int[clusters.size()];
-		// now compute which cluster every data point belongs to
 		for (int i = 0; i < normalizedgroups.length; i++) {
-//			double sumDist = 0;
-//			double min = Double.MAX_VALUE;
-//			int minIndex = -1;
 			for (int j = 0; j < centerPoints.length; j++) {
 				double dist = distance.calculateDistance(normalizedgroups[i], centerPoints[j]);
-//				if (dist <= min) {
-//					min = dist;
-////					minIndex = j;
-//				}
 				weightedDistances[i] += dist * centerPointsSize[j];
-//				sumDist+= dist;
 			}
-//			if (min >= maxDistance[minIndex]) {
-//				maxIndex[minIndex] = i;
-//				maxDistance[minIndex] = min;
-//			}
-//			double average = sumDist/centerPoints.length;
-//			double normalizedDistance  = (average-min)/average;
-//			normalizedDistances[i] += normalizedDistance ;
 		}
 		
 		// add the outliers into result
@@ -208,7 +173,6 @@ public class Outlier extends Analysis {
 			outlierTrend.setP(normalizedgroups[i]);
 			outlierTrend.setKey(mappings.get(i));
 			outlierTrend.setWeightedDistance(weightedDistances[i]);
-//			outlierTrend.setNormalizedDistance(normalizedDistances[i]);
 			outliers.add(outlierTrend);
 		}
 		return outliers;
