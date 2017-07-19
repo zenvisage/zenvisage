@@ -8,6 +8,7 @@ public class OutlierTrend {
 	private String key;
 	private int similarTrendsCount;
 	private double weightedDistance;
+	private double normalizedDistance;
 	
 	public double[] getP() {
 		return p;
@@ -35,7 +36,12 @@ public class OutlierTrend {
 	public double getWeightedDistance() {
 		return weightedDistance;
 	}
-	
+	public double getNormalizedDistance() {
+		return normalizedDistance;
+	}
+	public void setNormalizedDistance(double normalizedDistance) {
+		this.normalizedDistance = normalizedDistance;
+	}
 	
 
 }

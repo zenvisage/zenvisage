@@ -923,16 +923,16 @@ app.controller('datasetController', [
         q.outlierCount = $("#num-results-download").val();
         q.downloadAll = getDownloadAll();
         address = '/zv/downloadSimilarity';
-        log.info("query result download:",q.outlierCount,q.yOnly,q.includeQuery,q.downloadAll,q.downloadThresh);
+        log.info("query result download",q.outlierCount,q.yOnly,q.includeQuery,q.downloadAll,q.downloadThresh);
       }else if (args == 'representative'){
         q.kmeansClusterSize = $("#num-clusters-download").val();
         q.downloadAll = getDownloadAllRepresentative();
         address = '/zv/postRepresentative';
-        log.info("representative result download:",q.kMeansClusterSize,q.yOnly,q.downloadAll);
+        log.info("representative result download",q.kmeansClusterSize,q.yOnly,q.downloadAll);
       }else if (args == 'outlier'){
         address = '/zv/downloadOutlier';
         q.kmeansClusterSize = $("#num-outlier-download").val();
-        log.info("outlier result download:",q.kMeansClusterSize,q.yOnly);
+        log.info("outlier result download",q.kmeansClusterSize,q.yOnly);
       }
 
       $http.post(address, data).

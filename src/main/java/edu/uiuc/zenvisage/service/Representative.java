@@ -136,18 +136,6 @@ public class Representative extends Analysis {
 					}
 					// Cluster # , z title, data (y1,y2...,yn,...)
 					by.write(Integer.toString(k)+','+mappings.get(minK_idx[i])+','+ data_str.subSequence(0, data_str.length()-1)+"\n");
-					 
-//					System.out.print('[');
-//					System.out.print(k+',');//Cluster label 
-//	//				System.out.print(Integer.toString(minK_idx[i])+',');
-//	//				System.out.print(clusterDist.get(minK_idx[i])); //min dist
-//					System.out.print(mappings.get(minK_idx[i])+',');
-//					System.out.print('(');
-//					for (int n=0 ; n<normalizedgroups[minK_idx[i]].length;n++){
-//						System.out.print(normalizedgroups[minK_idx[i]][n]);
-//					}
-//					System.out.print(')');
-//					System.out.println(']');
 				}
 			}
 	    }

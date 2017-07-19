@@ -184,7 +184,7 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/logger", method = RequestMethod.POST)
 	@ResponseBody
 	public void logger(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		File file = new File("zv.log");
+		File file = new File("../zv.log");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		String log = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+request.getParameter("message")+'\n';
         System.out.println(log);

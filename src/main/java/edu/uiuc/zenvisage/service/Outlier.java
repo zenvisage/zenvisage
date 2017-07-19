@@ -37,6 +37,28 @@ import edu.uiuc.zenvisage.model.*;
  */
 public class Outlier extends Analysis {
 	/**
+	  * Return the indexes correspond to the top-k smallest in an array.
+	  */
+	public static int[] minKIndex(List<Double> array, int top_k) {
+	    double[] min = new double[top_k];
+	    int[] minIndex = new int[top_k];
+	    Arrays.fill(min, Double.POSITIVE_INFINITY);
+	    Arrays.fill(minIndex, -1);
+
+	    top: for(int i = 0; i < array.size(); i++) {
+	        for(int j = 0; j < top_k; j++) {
+	            if(array.get(i) < min[j]) {
+	                for(int x = top_k - 1; x > j; x--) {
+	                    minIndex[x] = minIndex[x-1]; min[x] = min[x-1];
+	                }
+	                minIndex[j] = i; min[j] = array.get(i);
+	                continue top;
+	            }
+	        }
+	    }
+	    return minIndex;
+	}
+	/**
 	 * Cluster class for clustering.
 	 */
 	public Clustering cluster;
@@ -68,6 +90,7 @@ public class Outlier extends Analysis {
 		List clusters = dc.getClusters();
 		
 		List<OutlierTrend> outlierTrends = computeOutliers(clusters,normalizedgroups,mappings);
+		
 		Collections.sort(outlierTrends, new Comparator<OutlierTrend>() {
 
 	        public int compare(OutlierTrend o1, OutlierTrend o2) {
@@ -79,6 +102,52 @@ public class Outlier extends Analysis {
 	            	    return 0;
 	        }
 	    });
+		///////
+		double[] normalizedDistances= new double[normalizedgroups.length];
+		Arrays.fill(normalizedDistances, 0);
+		
+		for (int k = 0; k < clusters.size(); k++) {
+			DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();
+	  	  	double[] p = point.getPoint();
+//    		System.out.println("Cluster #"+ Integer.toString(k));
+			List<Double> clusterDist =  new ArrayList();
+	  	  	for (int l = 1; l < normalizedgroups.length; l++) {
+	  	  		double d = distance.calculateDistance(p, normalizedgroups[l]);
+	  	  		clusterDist.add(d);
+	  	  	}
+	  	  	
+			int [] minK_idx = minKIndex(clusterDist,dc.getRealSizes()[k]);
+			double sumDist = 0;
+			double min = Double.MAX_VALUE;
+			// Looping through everything in this cluster
+			for (int i =0 ; i<minK_idx.length ; i++){
+				double dist = distance.calculateDistance(p, normalizedgroups[minK_idx[i]]);
+				if (dist <= min) {
+					min = dist;
+				}
+				sumDist+= dist;
+			}
+			double average = sumDist/dc.getRealSizes()[k];
+			double normalizedDistance  = (average-min)/average;
+			normalizedDistances[k] += normalizedDistance ;
+//			System.out.print("sumDist:");
+//			System.out.println(sumDist);
+//			System.out.print("average:");
+//			System.out.println(average);
+//			System.out.print("min:");
+//			System.out.println(min);
+//			System.out.print("normalizedDistance:");
+//			System.out.println(normalizedDistance);
+			
+	    }
+		////////
+//		System.out.print("outlierTrends.size():");
+//		System.out.println(outlierTrends.size());
+//		System.out.print("normalizedDistances.length:");
+//		System.out.println(normalizedDistances.length);
+		for (int i=0;i<outlierTrends.size();i++){
+			outlierTrends.get(i).setNormalizedDistance(normalizedDistances[i]);
+		}
 		
 		outlierTrends = outlierTrends.subList(0, args.kmeansClusterSize);
 		
@@ -105,30 +174,41 @@ public class Outlier extends Analysis {
 		// cluster's outlier and its index in normalizedgroups
 		double[] weightedDistances = new double[normalizedgroups.length];
 		Arrays.fill(weightedDistances, 0);
+		
+		double[] normalizedDistances= new double[normalizedgroups.length];
+		Arrays.fill(normalizedDistances, 0);
+		
 //		int[] maxIndex = new int[clusters.size()];
 		// now compute which cluster every data point belongs to
 		for (int i = 0; i < normalizedgroups.length; i++) {
+//			double sumDist = 0;
 //			double min = Double.MAX_VALUE;
 //			int minIndex = -1;
 			for (int j = 0; j < centerPoints.length; j++) {
 				double dist = distance.calculateDistance(normalizedgroups[i], centerPoints[j]);
 //				if (dist <= min) {
 //					min = dist;
-//					minIndex = j;
+////					minIndex = j;
 //				}
 				weightedDistances[i] += dist * centerPointsSize[j];
+//				sumDist+= dist;
 			}
 //			if (min >= maxDistance[minIndex]) {
 //				maxIndex[minIndex] = i;
 //				maxDistance[minIndex] = min;
 //			}
+//			double average = sumDist/centerPoints.length;
+//			double normalizedDistance  = (average-min)/average;
+//			normalizedDistances[i] += normalizedDistance ;
 		}
+		
 		// add the outliers into result
 		for (int i = 0; i < normalizedgroups.length; i++) {
 			OutlierTrend outlierTrend = new OutlierTrend();
 			outlierTrend.setP(normalizedgroups[i]);
 			outlierTrend.setKey(mappings.get(i));
 			outlierTrend.setWeightedDistance(weightedDistances[i]);
+//			outlierTrend.setNormalizedDistance(normalizedDistances[i]);
 			outliers.add(outlierTrend);
 		}
 		return outliers;

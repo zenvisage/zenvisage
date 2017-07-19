@@ -142,6 +142,7 @@ public class ChartOutputUtil {
 			chartOutput.setxType(args.xAxis);
 			chartOutput.setyType(args.yAxis);
 			chartOutput.setzType(args.groupBy);
+			chartOutput.setNormalizedDistance(outTrend.getNormalizedDistance());
 			chartOutput.title = outTrend.getKey();
 			chartOutput.setRank(i+1);
 

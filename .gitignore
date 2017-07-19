@@ -26,3 +26,4 @@ hs_err_pid*
 
 /.metadata/
 src/main/resources/uploaded_data/*
+zv.log
