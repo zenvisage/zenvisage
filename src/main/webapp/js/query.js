@@ -63,7 +63,11 @@ function Query( searchMethod ) {
   this.includeQuery=false;
   this.yOnly=false;
   this.downloadAll=false;
-  this.downloadThresh=0.0;
+  this.downloadThresh=getDownloadThresh();
+  this.minDisplayThresh=getMinDisplayThresh();
+}
+function getDownloadThresh(){
+  return $("#min-thresh-download").val();
 }
 function getFilter(){
   return $("#filter.form-control").val();
@@ -148,6 +152,15 @@ function getDistanceMethod()
 function getNumResults()
 {
   return angular.element($("#table-div")).scope().numResults;
+}
+function getMinDisplayThresh()
+{
+  // console.log("getMinDisplayThresh:");  
+  // console.log($("#min-display-thresh").val());
+  // return $("#min-display-thresh").val();
+  console.log("getMinDisplayThresh:");  
+  console.log(angular.element($("#table-div")).scope().minDisplayThresh);
+  return angular.element($("#table-div")).scope().minDisplayThresh;
 }
 
 function getClusterSize()

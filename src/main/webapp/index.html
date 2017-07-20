@@ -341,16 +341,6 @@
                     <td>
                       <input class="form-control zql-table constraints" ng-model="input.constraints" type="text" size="5" value=" ">
                     </td>
-                    <!--
-                    <td>
-                      <input class="form-control zql-table viz" ng-model="input.viz" type="text" size="1" value=" ">
-                    </td>
-                    -->
-                    <!--
-                    <td>
-                      <input class="form-control zql-table process" ng-model="input.processe"type="text" size="36" value=" ">
-                    </td>
-                    -->
                     <td></td>
                   </tr>
                 </tbody>
@@ -393,14 +383,6 @@
                     <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
                   </div>
                 </div>
-
-                <!--<b>Representative/Outlier</b>
-                <div class="radio">
-                  <form>
-                    <input ng-model="representative" id="kmeans" class="active" type="radio" name="search-method" value="kmeans" checked ><label for="kmeans">K-means</label> <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span><br>
-                  </form>
-                </div>-->
-
                 <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
                   <div ><b>Input equation</b></div>
                   <p></p>
@@ -411,13 +393,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!--
-                <div class="info-text"><b>Number of Segments</b></div>
-                  <div>
-                    <input class="num-segments" type="text" name="number-of-segments" value="30">
-                  </div>
-                -->
               </div>
               <div class="col-md-3">
                 <div class="info-text" data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="14" data-position = "left">
@@ -438,30 +413,16 @@
                   </div>
                 </div>
 
-                <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step ="16" data-position = "left"><b>Options</b>
-                <div class="checkbox">
-                  <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-position = "left" data-step ="17" >
-                    <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
-                  </form>
-                  <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="18" ><input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
-                  </form>
-                  <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="19">
-                    <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
-                  </form>
-
-
-                  <!-- <div class="checkbox" ng-controller="datasetController"> -->
-                  <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="20">
-                    <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
-                  </form>
-                  <!--</div>-->
+                <div id="min-thresh-tutorial" class="info-text" data-intro = "Here you can specify the minimum simmilarity score for the visualizations to be displayed in the Results panel." data-step="16" data-position = "left">
+                  <div><b>Minimum Simmilarity Cutoff</b></div>
+                  <p></p>
+                  <div>
+                    <input ng-model="minDisplayThresh" class="form-control" type="text" id="min-display-thresh"   value="0.0">
                   </div>
-               </div>
-
-
+                </div>
               </div>
               <div class="col-md-3" style="width: 230px;">
-                <div class="info-text" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="21" data-position = "left">
+                <div class="info-text" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="22" data-position = "left">
                   <div><b>Data Smoothing</b></div>
                     <br>
                     <div>
@@ -490,6 +451,23 @@
                         </div>
                       </div>
                 </div>
+              </div>
+              <div class="col-md-3" style="width: 230px;">
+                <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="17" data-position = "left"><b>Options</b>
+                    <div class="checkbox">
+                      <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-position = "left" data-step ="18" >
+                        <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
+                      </form>
+                      <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="19" ><input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
+                      </form>
+                      <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="20">
+                        <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
+                      </form>
+                      <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="21">
+                        <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
+                      </form>
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -552,7 +530,7 @@
                 <br> Number of results:
                 <input ng-model="numResults" type="text" id="num-results-download">
                 <br> Minimum similarity threshold: 
-                <input ng-model="minThresh" type="text" id="min-thresh-download">
+                <input  type="text" id="min-thresh-download">
                 <br>
                 <input type="checkbox" id="yOnly"> Export y only <br>
                 <input type="checkbox" id="includeQuery"> Include Query Pattern <br>
@@ -599,7 +577,7 @@
                 <br> Number of Results: 
                 <input ng-model="numResults" type="text" id="num-outlier-download">
                 <br> Minimum dissimilarity threshold: 
-                <input ng-model="minThresh" type="text" id="min-thresh-download-outlier">
+                <input type="text" id="min-thresh-download-outlier">
                 <br> <input type="checkbox" id="yOnly"> Export y only <br>
             </div>
             <div class="modal-footer">

@@ -34,8 +34,14 @@ public class ZvQuery {
 	public boolean yOnly=false;
 	public boolean downloadAll=false;
 	public double downloadThresh= 0.0;
-
+	public double minDisplayThresh=0.0;
 	
+	public double getMinDisplayThresh() {
+		return minDisplayThresh;
+	}
+	public void setMinDisplayThresh(double minDisplayThresh) {
+		this.minDisplayThresh = minDisplayThresh;
+	}
 	public String getDistance_metric() {
 		return distance_metric;
 	}

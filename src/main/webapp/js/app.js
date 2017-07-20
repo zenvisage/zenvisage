@@ -403,6 +403,7 @@ app.controller('options-controller', [
     $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
     $scope.flipY = false;
     $scope.selectedSmoothing = "none";
+    $scope.minDisplayThresh =0.0;
     // $scope.filter= '';
 
     $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
@@ -421,7 +422,14 @@ app.controller('options-controller', [
       }
     });
 
-
+    $scope.$watch('minDisplayThresh', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        log.info("minThresh display changed",$scope.minDisplayThresh)
+        console.log("minThresh display changed",$scope.minDisplayThresh)
+        $scope.callGetUserQueryResultsWithCallBack();
+      }
+    });
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
@@ -987,10 +995,10 @@ app.controller('datasetController', [
     }
     function getMinThresh(){
         return $("#min-thresh-download").val();;
-      }
-      function getMinOutlierThresh(){
-        return $("#min-thresh-download-outlier").val();;
-      }
+    }
+    function getMinOutlierThresh(){
+      return $("#min-thresh-download-outlier").val();;
+    }
 
     function getOutlierTrends()
     {

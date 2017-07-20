@@ -54,7 +54,23 @@ public class ChartOutputUtil {
 		}
 
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
-			// initialize a new chart
+			double normDist =normalize(orderedDistances, range, i);
+			System.out.print("args.minDisplayThresh:");
+			System.out.println(args.minDisplayThresh);
+			System.out.print("normDist:");
+			System.out.println(normDist);
+			boolean displayThisViz = false;
+			if (args.minDisplayThresh!=0.0){
+				 if (normDist>=args.minDisplayThresh){
+					 System.out.println("downloadThresh!");
+					 displayThisViz = true;
+				 }
+			}else{
+				displayThisViz = true;
+			}
+			System.out.println(displayThisViz);
+			if (displayThisViz){
+				// initialize a new chart
 				Chart chartOutput = new Chart();
 				/*Separate this call to rank and x axix and return separately*/
 				//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
@@ -63,7 +79,7 @@ public class ChartOutputUtil {
 				chartOutput.setzType(args.groupBy);
 				chartOutput.title = mappings.get(orders.get(i));
 				chartOutput.setRank(i+1);
-				chartOutput.setNormalizedDistance(normalize(orderedDistances, range, i));
+				chartOutput.setNormalizedDistance(normDist);
 				// chartOutput.setyType(args.getSketchPoints()[j].aggrFunc+"("+args.getSketchPoints()[j].yAxis+")");
 				chartOutput.setDistance(orderedDistances.get(i));
 				chartOutput.setXRange(args.xRange);
@@ -79,6 +95,7 @@ public class ChartOutputUtil {
 				}
 				finalOutput.outputCharts.add(chartOutput);
 			}
+		}
 
 		return;
 	}
@@ -109,7 +126,7 @@ public class ChartOutputUtil {
 			chartOutput.setyType(args.yAxis);
 			chartOutput.setzType(args.groupBy);
 			chartOutput.setRank(i+1);
-
+			
 			// fill in chart data
 			LinkedHashMap<Float,Float> points = orig.get(repTrend.getKey());
 			int c = 0;
