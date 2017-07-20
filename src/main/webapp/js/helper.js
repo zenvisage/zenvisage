@@ -434,7 +434,7 @@ var createcanvas = function(id,number) {
   // the canvas calls to output a png
   var canvas = document.getElementById("canvas");
   canvas.toBlob(function(blob) {
-      saveAs(blob, "png");
+      saveAs(blob, "output_viz.png");
   });
   canvas.style.display="none";
 
@@ -1138,7 +1138,7 @@ canvg('canvas', $("#resultsvg-0")[0].outerHTML);
 // the canvas calls to output a png
 var canvas = document.getElementById("canvas");
 canvas.toBlob(function(blob) {
-    saveAs(blob, "png");
+    saveAs(blob,  "output_viz.png");
 });
 canvas.style.display="none";
 //var img = canvas.toDataURL("image/png");
