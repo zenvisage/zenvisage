@@ -107,6 +107,7 @@ public class ZvBasicAPI {
 	        stringBuilder.append(scanner.nextLine());
 	    }
 	    String body = stringBuilder.toString();
+	   // System.out.println("Representative:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 	
@@ -166,6 +167,20 @@ public class ZvBasicAPI {
 	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 	
+	@RequestMapping(value = "/postSimilarity_error", method = RequestMethod.POST)
+	@ResponseBody
+	public String postSimilarity_error(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
+
+	    String body = stringBuilder.toString();
+
+		return zvMain.runDragnDropInterfaceQuerySeparated_error(body, "SimilaritySearch");
+	}
+	
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
@@ -184,7 +199,7 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/logger", method = RequestMethod.POST)
 	@ResponseBody
 	public void logger(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		File file = new File("../zv.log");
+		File file = new File("zv.log");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		String log = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+request.getParameter("message")+'\n';
         System.out.println(log);

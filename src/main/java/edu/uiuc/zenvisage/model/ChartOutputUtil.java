@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import edu.uiuc.zenvisage.model.BaselineQuery;
@@ -29,7 +30,36 @@ public class ChartOutputUtil {
 		this.args = args;
 		this.xMap = xMap.inverse();
 	}
+	
+	
+  public void chartOutput(LinkedHashMap<String,LinkedHashMap<Float,Float>> orig,ZvQuery args, Result finalOutput)
+  {		 System.out.println("chartoutput executing!");
+  		Iterator<String> it =orig.keySet().iterator();
+  		
+  		
+		while(it.hasNext()){
+		    String entry = it.next();
+			Chart chartOutput = new Chart();
+			/*Separate this call to rank and x axix and return separately*/
+			//chartOutput.setxType((i+1)+" : "+mappings.get(orders.get(i)));
+			chartOutput.setxType(args.xAxis);
+			chartOutput.setyType(args.yAxis);
+			chartOutput.setzType(args.groupBy);
+			chartOutput.title = entry;
+			chartOutput.setXRange(args.xRange);
+			chartOutput.setConsiderRange(args.considerRange);
 
+			// fill in chart data
+			LinkedHashMap<Float,Float> points = orig.get(entry);
+			if (points == null) continue;
+			for(Float k : points.keySet()) {
+				chartOutput.xData.add(Double.toString(k));
+				chartOutput.yData.add(Double.toString(points.get(k)));
+			}
+			finalOutput.outputCharts.add(chartOutput);
+			
+        }
+}
 	/**
 	 * @param result
 	 * @param orig

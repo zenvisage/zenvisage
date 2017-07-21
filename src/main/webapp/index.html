@@ -233,6 +233,21 @@
               </label>
             </div>
           </div>
+          <div>
+
+            <h5><b>Error Attribute</b></h5>
+            <div ng-repeat="yAxisItem in yAxisItems">
+              <label>
+                  <input type="radio" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedErrorAxis"/><span>{{yAxisItem}}</span>
+              </label>
+            </div>
+
+            <!-- <select class="form-control" ng-change="onErrorAttributeChange()" ng-model="$parent.selectedErrorAxis" id="dataset-form-control">
+              <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
+            </select> -->
+          </div>
+
+
         </div>
         </div> <!-- end side bar -->
       </div> <!-- end left bar -->

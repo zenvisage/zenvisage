@@ -34,6 +34,8 @@ function Query( searchMethod ) {
   this.dataY = []; // fix to dynamically fetch
   this.yMax = null; // fix to dynamically fetch. is this field necessary?
   this.yMin = null; // fix to dynamically fetch. is this field necessary?
+  this.error = getSelectedErrorAxis(); // error column use for errorbars
+  //  this.error = 'listingpricepersqft'; // error column use for errorbars
   var points = []
 
   for(var i = 0; i < sketchpadData.length; i++){
@@ -87,7 +89,7 @@ function getFilter(){
 //     predicateOperator="=";
 //   }
 //   else{
-//     //not a constraint statement 
+//     //not a constraint statement
 //     return [predicateOperator,predicateColumn,predicateValue]
 //   }
 //   predicateColumn= constraint.split(">")[0]
@@ -122,6 +124,11 @@ function getSelectedYAxis()
 function getSelectedCategory()
 {
   return angular.element($("#sidebar")).scope().selectedCategory;
+}
+
+function getSelectedErrorAxis()
+{
+  return angular.element($("#sidebar")).scope().selectedErrorAxis;
 }
 
 function getSmoothingCoefficient()
@@ -201,4 +208,18 @@ function getNumSegments()
 function getSelectedDataset()
 {
   return $("#dataset-form-control option:selected").val();
+}
+
+function mergejoin(outputcharts_orig,outputcharts_error)
+{
+  // first, build an easier lookup of author data:
+  var errochartsmap = {};
+  outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
+
+  // now do the "join":
+  outputcharts_orig.forEach(function(outputcharts_orig) {
+      outputcharts_orig["error"] = errochartsmap[outputcharts_orig.title];
+  });
+
+  return outputcharts_orig;
 }

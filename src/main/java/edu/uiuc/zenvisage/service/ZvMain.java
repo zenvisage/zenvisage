@@ -439,6 +439,53 @@ public class ZvMain {
 //		 ObjectMapper mapper = new ObjectMapper();
 //		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 //	}
+	public Result runErrorQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+		 System.out.println("runErrorQuery executing!");
+		 ZvQuery args_error = new ObjectMapper().readValue(query,ZvQuery.class);
+		 args_error.setYaxisAsError(); 
+
+		 Query q_error = new Query("query").setGrouby(args_error.groupBy+","+args_error.xAxis).setAggregationFunc(args_error.aggrFunc).setAggregationVaribale(args_error.getAggrVar());
+		 if (method.equals("SimilaritySearch"))
+			 setFilter(q_error, args_error);
+		 System.out.println("args_error:"+args_error.toString());
+		 System.out.println("Before SQL");
+		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q_error.getZQLRow(), this.databaseName);
+		 System.out.println("After SQL");
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+		 
+		 System.out.println("After To HashMap");
+		 output = cleanUpDataWithAllZeros(output);
+		 
+		 
+		 //
+		output= SmoothingUtil.applySmoothing(output,args_error);
+		 
+		 // setup result format
+		 Result finalOutput = new Result();
+		 finalOutput.method = method;
+		 
+
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args_error, HashBiMap.create());
+		 chartOutput.chartOutput(output, args_error, finalOutput);
+		 
+		 return finalOutput;
+						 // jaewoo implementation for error bars 
+//		 DataReformation dataReformatter = new DataReformation(normalization);
+//		 double[][] normalizedgroups;
+//			
+//
+//			 normalizedgroups = dataReformatter.reformatData(output);
+//			 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args_error);
+//			 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args_error.dataX, args_error.dataY, args_error.xRange, normalizedgroups[0].length);
+//			 interpolatedQuery= SmoothingUtil.applySmoothing(interpolatedQuery,args_error);
+//				Analysis analysis_error = new Similarity(chartOutput,distance,normalization,paa,args_error,dataReformatter, interpolatedQuery);
+//				((Similarity) analysis_error).setDescending(false);
+//				//analysis_error.compute(output, normalizedgroups, args_error);
+//				return analysis_error.getChartOutput().finalOutput;
+		 
+		
+	}
 	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
@@ -592,6 +639,14 @@ public class ZvMain {
 		 System.out.println("After mapping to output string");
 		 return res;
 	}
+	
+	public synchronized String runDragnDropInterfaceQuerySeparated_error(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Result result = runErrorQuery(query,method);
+		 ObjectMapper mapper = new ObjectMapper();
+		 String res = mapper.writeValueAsString(result);
+		 return res;
+	}
+	
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);

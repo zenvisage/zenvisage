@@ -874,12 +874,29 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getUserQueryResults: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayUserQueryResults(response.outputCharts,true);
-        $scope.getRepresentativeTrendsWithoutCallback();
-      }).
-      error(function(response) {
+        if(data.error != null)
+        {
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
+            plotResults.displayUserQueryResults(response.outputCharts,true);
+            $scope.getRepresentativeTrendsWithoutCallback();
+          }).
+          error(function(response_error) {
+            console.log("getUserQueryResults: fail");
+          });
+
+        }
+        else{plotResults.displayUserQueryResults(response.outputCharts,true);
+            $scope.getRepresentativeTrendsWithoutCallback();}
+
+        }).
+        error(function(response) {
         console.log("getUserQueryResults: fail");
-      });
+        });
     }
 
     // for all other normal queries
@@ -894,7 +911,27 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getUserQueryResults: success");
         if (response.length == 0){console.log("empty response")}
+        if(data.error != null)
+        {
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
+            plotResults.displayUserQueryResults(response.outputCharts,true);
+            $scope.getRepresentativeTrendsWithoutCallback();
+          }).
+          error(function(response_error) {
+            console.log("getUserQueryResults: fail");
+          });
+
+        }
+
+        else{
         plotResults.displayUserQueryResults(response.outputCharts,true);
+        $scope.getRepresentativeTrendsWithoutCallback();}
+
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
@@ -1056,6 +1093,7 @@ app.controller('datasetController', [
           $scope.selectedCategory;
           $scope.selectedXAxis;
           $scope.selectedYAxis;
+          $scope.selectedErrorAxis = null;
           angular.forEach(response.zAxisColumns, function(value, key) {
            $scope.categories.push(key);
           });
@@ -1098,6 +1136,19 @@ app.controller('datasetController', [
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
       log.info("data attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
+      // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
+      // .done(function(){
+      //   getRepresentativeTrends( getOutlierTrends );
+      // });
+      initializeSketchpadOnDataAttributeChange(xData, yData, categoryData);
+      $scope.getUserQueryResultsWithCallBack();
+    };
+
+    $scope.onErrorAttributeChange = function() {
+      var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
+      var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
+      var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      log.info("error attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
       //   getRepresentativeTrends( getOutlierTrends );

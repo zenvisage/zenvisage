@@ -13,6 +13,7 @@ public class ZvQuery {
 	public float[] dataY;
 	public double yMax;
 	public double yMin;
+	public String error;
 	public Sketch[] sketchPoints;
 	public double minX;
 	public double maxX;
@@ -69,6 +70,11 @@ public class ZvQuery {
 	public void setDistanceNormalized(boolean distanceNormalized) {
 		this.distanceNormalized = distanceNormalized;
 	}
+	
+	public void setYaxisAsError() {
+		this.yAxis = this.error;
+		this.aggrVar = this.error;
+	}
 	// constructor for args
 	public ZvQuery (String method, String Yaxis, String Xaxis, String groupBy, String aggrFunc, String aggrVar, int outlierCount, boolean outputNormalized) {
 		this.method = method;
@@ -110,6 +116,18 @@ public class ZvQuery {
 	}
 	public void setMethod(String method) {
 		this.method = method;
+	}
+	public String getYaxis() {
+		return yAxis;
+	}
+	public void setYaxis(String yaxis) {
+		yAxis = yaxis;
+	}
+	public String getXaxis() {
+		return xAxis;
+	}
+	public void setXaxis(String xaxis) {
+		xAxis = xaxis;
 	}
 	public String getGroupBy() {
 		return groupBy;

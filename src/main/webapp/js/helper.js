@@ -41,7 +41,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
   {
     var xData = userQueryResults[count]["xData"];
     var yData = userQueryResults[count]["yData"];
-
+    var errorData = userQueryResults[count]["error"];
     var xlabel = replaceAll(userQueryResults[count]["xType"], "'", "");
     var ylabel = replaceAll(userQueryResults[count]["yType"], "'", "");
     var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", "");
@@ -68,10 +68,17 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
     var data = [];
     var arrayLength = xData.length;
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
-    }
 
+    if(errorData != null){
+    for (var i = 0; i < arrayLength; i++ ) {
+      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+    }
+  }
+    else{
+      for (var i = 0; i < arrayLength; i++ ) {
+        data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
+      }
+    }
     var data2 = sketchpadData;
     userQueryDygraphsNew["result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
 
@@ -282,6 +289,62 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .attr("stroke", "black")
           .attr("stroke-width", 1)
           .attr("fill", "none");
+    if(errorData != null){
+      graph.selectAll("dot")
+        .data(data)
+        .enter().append("line")
+        .attr("r", 1)
+        .attr("x1", function(d) {
+          return x(d.xval);
+        })
+        .attr("y1", function(d) {
+          return y(d.yval + (d.errorval / 2));
+        })
+        .attr("x2", function(d) {
+          return x(d.xval);
+        })
+        .attr("y2", function(d) {
+          return y(d.yval - (d.errorval / 2));
+        })
+        .style("stroke", "blue");
+
+      graph.selectAll("dot")
+        .data(data)
+        .enter().append("line")
+        .attr("r", 1)
+        .attr("x1", function(d) {
+          return x(d.xval)-2;
+        })
+        .attr("y1", function(d) {
+          return y(d.yval + (d.errorval / 2));
+        })
+        .attr("x2", function(d) {
+          return x(d.xval)+2;
+        })
+        .attr("y2", function(d) {
+          return y(d.yval + (d.errorval / 2));
+        })
+        .style("stroke", "blue");
+
+        graph.selectAll("dot")
+          .data(data)
+          .enter().append("line")
+          .attr("r", 1)
+          .attr("x1", function(d) {
+            return x(d.xval)-2;
+          })
+          .attr("y1", function(d) {
+            return y(d.yval - (d.errorval / 2));
+          })
+          .attr("x2", function(d) {
+            return x(d.xval)+2;
+          })
+          .attr("y2", function(d) {
+            return y(d.yval - (d.errorval / 2));
+          })
+          .style("stroke", "blue");
+
+            }
     }
 
     if (data2 != null && data2 != undefined && includeSketch && getShowOriginalSketch())
