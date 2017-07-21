@@ -247,32 +247,30 @@
             <div class="col-md-4">
             <div class="input-group" id="graph-buttons">
 
-              <div class="btn-group" id="left-button-group">
+            <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
+            <!--  <div class="btn-group" id="left-button-group">
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
                 </select>
               </div>
 
-              <div class="btn-group" >
+              <div class="btn-group">
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
                 <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button>
-
                 <div ng-show="zqltable">
                   <div class="btn-group">
                     <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
                     <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
-                    <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
-                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>-->
+                     <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
                     <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
                     <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
                     <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>
                   </div>
                   <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
                 </div>
-
-
-              </div>
+              </div> -->
             </div>
 
             <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
@@ -364,7 +362,7 @@
               </table>
             </div>
             <div ng-show="!zqltable" class="row" >
-              <div class="col-md-3" >
+              <div class="col-md-3" style="width: 200px;">
                 <div data-intro = "Different similarity metrics can be specified." data-step="10" data-position = "left">
                 <b>Similarity</b>
                 <div class="radio">
@@ -375,7 +373,6 @@
                     <input ng-model="similarity" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
                   </form>
                 </div>
-              </div>
                 <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
                   <div><b>K-means Cluster Size</b></div>
                   <p></p>
@@ -392,9 +389,10 @@
                       <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
                     </div>
                   </div>
-                </div>
+                  </div>
+                  </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3" style="width: 200px;">
                 <div class="info-text" data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="14" data-position = "left">
                 <div ><b>Aggregation Method</b></div>
                 <div class="radio">
@@ -403,8 +401,6 @@
                     <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
                   </form>
                 </div>
-              </div>
-
                 <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="15" data-position = "left">
                   <div><b>Number of Results</b></div>
                   <p></p>
@@ -421,7 +417,10 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-3" style="width: 230px;">
+              </div>
+
+                
+              <div class="col-md-3" style="width: 200px;">
                 <div class="info-text" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="22" data-position = "left">
                   <div><b>Data Smoothing</b></div>
                     <br>
@@ -437,7 +436,7 @@
                       <label for="amount">Smoothing Constant:</label>
                       <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;width: 30px;">
                     </nobr></p>
-                    <div id="slider-range-max" align = "right" style="width:200px;"></div>
+                    <div id="slider-range-max" align = "right" style="width:180px;"></div>
                   </div>
                 </div>
                 <div data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="22">
@@ -452,7 +451,8 @@
                       </div>
                 </div>
               </div>
-              <div class="col-md-3" style="width: 230px;">
+
+              <div class="col-md-3" style="width: 200px;">
                 <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="17" data-position = "left"><b>Options</b>
                     <div class="checkbox">
                       <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-position = "left" data-step ="18" >
