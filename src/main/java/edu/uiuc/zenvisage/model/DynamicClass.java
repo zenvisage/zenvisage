@@ -77,7 +77,6 @@ public class DynamicClass {
 		}
 		ret.append("('"+this.dataset+"','"+updateList_tags.get(updateList_tags.size()-1)+"','"+updateList_ranges.get(updateList_tags.size()-1)+"');\n");
 		return ret.toString();
-	
 	}
 	
 	public void GeneratePermutations(ClassElement[] classes, List<String> updateList, List<String> sqlList, int depth, String current, String currentSQL)

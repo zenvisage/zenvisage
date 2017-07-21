@@ -471,7 +471,9 @@ public class SQLQueryExecutor {
 		 */
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
-		String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+		String sql = "SELECT tag, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
+		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		DynamicClass dc = new DynamicClass();
@@ -523,6 +525,15 @@ public class SQLQueryExecutor {
 
 	public void createDynamicClassAggregation(DynamicClass dc) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+
+		String sql = "SELECT attribute FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		ArrayList<String> attributeList = new ArrayList<String>();
+		while(rs.next()){
+			attributeList.add(rs.getString(1));
+		}
+		System.out.println(attributeList);
 		
 		// create temporary table to store initial permutations 
 		
@@ -573,9 +584,9 @@ public class SQLQueryExecutor {
 		Statement st= c.createStatement();
 		
 		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,ranges,count)"
-				+ "SELECT d.table_name,d.ranges, d.tag, COUNT(r.dynamic_class)\n"
+				+ "SELECT d.table_name, d.tag, d.ranges, COUNT(r.dynamic_class)\n"
 				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.dynamic_class = d.tag\n"
-				+ "GROUP BY d.table_name, d.tag,d.ranges;");
+				+ "GROUP BY d.table_name, d.tag, d.ranges;");
 		
 		st.execute(sql);
 		//System.out.print(t);
