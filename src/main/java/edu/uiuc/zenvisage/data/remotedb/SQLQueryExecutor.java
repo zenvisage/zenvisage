@@ -526,14 +526,14 @@ public class SQLQueryExecutor {
 	public void createDynamicClassAggregation(DynamicClass dc) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 
-		String sql = "SELECT attribute FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-		Statement st = c.createStatement();
-		ResultSet rs = st.executeQuery(sql);
-		ArrayList<String> attributeList = new ArrayList<String>();
-		while(rs.next()){
-			attributeList.add(rs.getString(1));
-		}
-		System.out.println(attributeList);
+//		String sql = "SELECT attribute FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+//		Statement st = c.createStatement();
+//		ResultSet rs = st.executeQuery(sql);
+//		ArrayList<String> attributeList = new ArrayList<String>();
+//		while(rs.next()){
+//			attributeList.add(rs.getString(1));
+//		}
+//		System.out.println(attributeList);
 		
 		// create temporary table to store initial permutations 
 		
