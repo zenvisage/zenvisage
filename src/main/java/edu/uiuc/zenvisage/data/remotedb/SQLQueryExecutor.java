@@ -526,14 +526,14 @@ public class SQLQueryExecutor {
 	public void createDynamicClassAggregation(DynamicClass dc) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 
-//		String sql = "SELECT attribute FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-//		Statement st = c.createStatement();
-//		ResultSet rs = st.executeQuery(sql);
-//		ArrayList<String> attributeList = new ArrayList<String>();
-//		while(rs.next()){
-//			attributeList.add(rs.getString(1));
-//		}
-//		System.out.println(attributeList);
+		String sql_attribute = "SELECT attribute FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + dc.dataset + "'";
+		Statement st_attribute = c.createStatement();
+		ResultSet rs = st_attribute.executeQuery(sql_attribute);
+		ArrayList<String> attributeList = new ArrayList<String>();
+		while(rs.next()){
+			attributeList.add(rs.getString(1));
+		}
+		System.out.println(attributeList);
 		
 		// create temporary table to store initial permutations 
 		
@@ -541,21 +541,23 @@ public class SQLQueryExecutor {
 				createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
 	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
-	                " Ranges            TEXT     NOT NULL) " );
+	                " Ranges            TEXT     NOT NULL, "+
+	                " Attributes           TEXT     NOT NULL) " );
 	            
 		}
 		else{
 			sqlQueryExecutor.dropTable("dynamic_class_aggregations_temp");
 			createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
-	                " (Table_Name           TEXT    NOT NULL, " +
+	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
-	                " Ranges            TEXT     NOT NULL) " );
+	                " Ranges            TEXT     NOT NULL, "+
+	                " Attributes           TEXT     NOT NULL) " );
 			
 		}
 		
 		// generate the sql to insert all permutations. Eg. 0.0.0 to 1.1.2
 		Statement st_ranges= c.createStatement();
-		String sql_ranges = dc.retrieveSQL_aggregation();
+		String sql_ranges = dc.retrieveSQL_aggregation(attributeList);
 		System.out.println("sql: "+sql_ranges);
 		st_ranges.execute(sql_ranges);
 		st_ranges.close();
@@ -565,6 +567,7 @@ public class SQLQueryExecutor {
 		createTable("CREATE TABLE dynamic_class_aggregations  " +
                 " (Table_Name           TEXT    NOT NULL, " +
                 " Tag            TEXT     NOT NULL, " +
+                " Attributes            TEXT     NOT NULL, " +
                 " Ranges            TEXT     NOT NULL, " +
                 " Count           INT     NOT NULL) " );
             
@@ -574,6 +577,7 @@ public class SQLQueryExecutor {
 		createTable("CREATE TABLE dynamic_class_aggregations  " +
                 " (Table_Name           TEXT    NOT NULL, " +
                 " Tag            TEXT     NOT NULL, " +
+                " Attributes            TEXT     NOT NULL, " +
                 " Ranges            TEXT     NOT NULL, " +
                 " Count           INT     NOT NULL) " );
 		
@@ -583,10 +587,10 @@ public class SQLQueryExecutor {
 	
 		Statement st= c.createStatement();
 		
-		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,ranges,count)"
-				+ "SELECT d.table_name, d.tag, d.ranges, COUNT(r.dynamic_class)\n"
+		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)"
+				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.dynamic_class)\n"
 				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.dynamic_class = d.tag\n"
-				+ "GROUP BY d.table_name, d.tag, d.ranges;");
+				+ "GROUP BY d.table_name, d.tag, d.attributes,d.ranges;");
 		
 		st.execute(sql);
 		//System.out.print(t);
