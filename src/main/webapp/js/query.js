@@ -162,10 +162,10 @@ function getNumResults()
 }
 function getMinDisplayThresh()
 {
-  // console.log("getMinDisplayThresh:");  
+  // console.log("getMinDisplayThresh:");
   // console.log($("#min-display-thresh").val());
   // return $("#min-display-thresh").val();
-  console.log("getMinDisplayThresh:");  
+  console.log("getMinDisplayThresh:");
   console.log(angular.element($("#table-div")).scope().minDisplayThresh);
   return angular.element($("#table-div")).scope().minDisplayThresh;
 }
@@ -212,7 +212,8 @@ function getSelectedDataset()
 
 function mergejoin(outputcharts_orig,outputcharts_error)
 {
-  // first, build an easier lookup of author data:
+ console.log("original: ",outputcharts_orig);
+ console.log("error: ",outputcharts_error);
   var errochartsmap = {};
   outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
 
@@ -220,6 +221,21 @@ function mergejoin(outputcharts_orig,outputcharts_error)
   outputcharts_orig.forEach(function(outputcharts_orig) {
       outputcharts_orig["error"] = errochartsmap[outputcharts_orig.title];
   });
+console.log("final: ",outputcharts_orig);
+  return outputcharts_orig;
+}
 
+function mergejoin_representative(outputcharts_orig,outputcharts_error)
+{
+ console.log("original: ",outputcharts_orig);
+ console.log("error: ",outputcharts_error);
+  var errochartsmap = {};
+  outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
+
+  // now do the "join":
+  outputcharts_orig.forEach(function(outputcharts_orig) {
+      outputcharts_orig["error"] = errochartsmap[outputcharts_orig.xType];
+  });
+console.log("final: ",outputcharts_orig);
   return outputcharts_orig;
 }

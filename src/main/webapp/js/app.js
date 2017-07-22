@@ -962,7 +962,7 @@ app.controller('datasetController', [
       console.log("calling downloadSimilarity");
       q.includeQuery = getIncludeQuery();
       q.yOnly = getyOnlyCheck();
-      
+
       var address = '/zv/downloadSimilarity';
       if (args=='query'){
         q.downloadThresh = getMinThresh();
@@ -1009,8 +1009,24 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getRepresentativeTrends: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayRepresentativeResults( response.outputCharts );
-        outlierCallback();
+        if(data.error != null)
+        { console.log("original representative: ",response.outputCharts);
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result in representative: ", mergejoin_representative(response.outputCharts,response_error.outputCharts));
+            plotResults.displayRepresentativeResults(response.outputCharts,true);
+            outlierCallback();
+          }).
+          error(function(response_error) {
+            console.log("getRepresentativeTrends: fail");
+          });
+
+        }
+        else{plotResults.displayRepresentativeResults( response.outputCharts );
+        outlierCallback();}
       }).
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
@@ -1049,7 +1065,22 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getOutlierTrends: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayOutlierResults( response.outputCharts );
+        if(data.error != null)
+        {
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
+            plotResults.displayOutlierResults(response.outputCharts,true);
+          }).
+          error(function(response_error) {
+            console.log("getUserQueryResults: fail");
+          });
+
+        }
+        else{plotResults.displayOutlierResults( response.outputCharts )};
       }).
       error(function(response) {
         console.log("getOutlierTrends: fail");
