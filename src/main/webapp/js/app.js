@@ -247,6 +247,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
         },
         function (response) {
             console.log("failed: ", escape(response));
+            document.getElementById("loadingEclipse").style.display = "none";
         }
     );
   };
@@ -287,6 +288,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
         },
         function (response) {
             console.log("failed: ", escape(response));
+            document.getElementById("loadingEclipse").style.display = "none";
         }
     );
   }
@@ -528,6 +530,7 @@ app.controller('options-controller', [
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
+        document.getElementById("loadingEclipse").style.display = "none";
       });
 
     }
@@ -898,6 +901,7 @@ app.controller('datasetController', [
           }).
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
+            document.getElementById("loadingEclipse").style.display = "none";
           });
 
         }
@@ -935,6 +939,7 @@ app.controller('datasetController', [
           }).
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
+            document.getElementById("loadingEclipse").style.display = "none";
           });
 
         }
@@ -1033,6 +1038,7 @@ app.controller('datasetController', [
           }).
           error(function(response_error) {
             console.log("getRepresentativeTrends: fail");
+            document.getElementById("loadingEclipse2").style.display = "none";
           });
 
         }
@@ -1041,6 +1047,7 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
+        document.getElementById("loadingEclipse2").style.display = "none";
       });
     }
     function getyOnlyCheck(){
@@ -1117,7 +1124,9 @@ app.controller('datasetController', [
       clearUserQueryResultsTable();
       console.log('selected dataset',getSelectedDataset());
       if(input == 'initialize'){var q = constructDatasetChangeQuery('real_estate_tutorial');} //just for tutorial purposes
-      else{ var q = constructDatasetChangeQuery(getSelectedDataset());}
+      else{
+            var q = constructDatasetChangeQuery(getSelectedDataset());
+          }
 
 
       var params = {
@@ -1165,11 +1174,15 @@ app.controller('datasetController', [
                 response.zAxisColumns[$scope.categories[0]]
               );
           $scope.getUserQueryResultsWithCallBack();
+
         }).
 
         error(function(response) {
           alert('Request failed: /getformdata');
+          document.getElementById("loadingEclipse").style.display = "none";
+          document.getElementById("loadingEclipse2").style.display = "none";
         });
+        resetSelectedErrorAxis();
     }
 
     // when the data selection is changed, the graphs needs to be re-initialized
@@ -1191,6 +1204,7 @@ app.controller('datasetController', [
 
     $scope.onErrorAttributeChange = function() {
      document.getElementById("loadingEclipse").style.display = "inline";
+    document.getElementById("loadingEclipse2").style.display = "inline";
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]

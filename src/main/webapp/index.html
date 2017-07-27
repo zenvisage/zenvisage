@@ -189,7 +189,7 @@
             <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button>
             <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
           </h4>
-
+<hr>
           <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. An existing dataset can also be selected from the dropdown.' data-step="2">
             <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
@@ -198,11 +198,11 @@
               <option ng-repeat="table in tablelist">{{table}}</option>
             </select>
           </div>
-          <div data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
-            <h5><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+          <div class = 'side-info-text' data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
+            <h5 style = 'width:130px'><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
 
-          <div class="dropdown">
+          <div class="dropdown" id="error" >
             <h5><b>Error Attribute</b></h5>
             <!-- Button trigger modal -->
 
@@ -212,7 +212,7 @@
             </select>
           </div>
 
-          <div data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
+          <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
             <h5><b>Category</b>
 
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
@@ -253,6 +253,10 @@
       <div id="middle-bar">
 
         <!-- this div contains the drawng interface and the zql table -->
+<div id="login-bar" style="height:15px; leftMargin:-15px; rightMargin:-15px;">
+<!-- <button type="button" name="options" data-toggle="button" aria-pressed="false" style="float: right; vertical-align: middle; border-radius:3px; background-color:lightcyan; right:-10px;" >Login</button> -->
+</div>
+<hr>
         <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
           <!-- drawing interface -->
@@ -375,7 +379,8 @@
             </div>
             <div ng-show="!zqltable" class="row" >
               <div class="col-md-3" style="width: 200px;">
-                <div data-intro = "Different similarity metrics can be specified." data-step="10" data-position = "left">
+                <div  data-intro = "Different similarity metrics can be specified." data-step="10" data-position = "left">
+                <div class="info-text">
                 <b>Similarity</b>
                 <div class="radio">
                   <form>
@@ -385,14 +390,17 @@
                     <input ng-model="similarity" id="MVIP" type="radio" name="distance-method" value="MVIP" ><label for="MVIP">MVIP</label>
                   </form>
                 </div>
-                <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
-                  <div><b>K-means Cluster Size</b></div>
-                  <p></p>
-                  <div>
-                    <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
-                  </div>
+              </div>
+                <div class="info-text">
+                <div ><b>Aggregation Method</b></div>
+                <div class="radio">
+                  <form>
+                    <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
+                    <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
+                  </form>
                 </div>
-                <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
+              </div>
+                <!-- <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
                   <div ><b>Input equation</b></div>
                   <p></p>
                   <div class="input-group">
@@ -401,18 +409,18 @@
                       <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
                     </div>
                   </div>
-                  </div>
+                </div> -->
                   </div>
               </div>
               <div class="col-md-3" style="width: 200px;">
-                <div class="info-text" data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="14" data-position = "left">
-                <div ><b>Aggregation Method</b></div>
-                <div class="radio">
-                  <form>
-                    <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
-                    <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label>
-                  </form>
+                <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="14" data-position = "left">
+              <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
+                <div><b>K-means Cluster Size</b></div>
+                <p></p>
+                <div>
+                  <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
                 </div>
+              </div>
                 <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="15" data-position = "left">
                   <div><b>Number of Results</b></div>
                   <p></p>
@@ -422,21 +430,23 @@
                 </div>
 
                 <div id="min-thresh-tutorial" class="info-text" data-intro = "Here you can specify the minimum simmilarity score for the visualizations to be displayed in the Results panel." data-step="16" data-position = "left">
-                  <div><b>Minimum Simmilarity Cutoff</b></div>
+                  <div><b>Min Similarity Cutoff</b></div>
                   <p></p>
                   <div>
                     <input ng-model="minDisplayThresh" class="form-control" type="text" id="min-display-thresh"   value="0.0">
                   </div>
                 </div>
+
               </div>
               </div>
 
 
               <div class="col-md-3" style="width: 200px;">
-                <div class="info-text" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="22" data-position = "left">
+                <div data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="22" data-position = "left">
+                  <div class="info-text">
                   <div><b>Data Smoothing</b></div>
                     <br>
-                    <div>
+
                     <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
                       <option value="none">None</option>
                       <option value="movingaverage">Moving Average</option>
@@ -444,15 +454,18 @@
                       <option value="leossInterpolation">Loess</option>
                       <option value="gaussian">Gaussian</option>
                     </select>
+                  </div>
+                  <div class="info-text">
                     <p><nobr>
                       <label for="amount">Smoothing Constant:</label>
-                      <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;width: 30px;">
+                      <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:#F5F5F5;">
                     </nobr></p>
-                    <div id="slider-range-max" align = "right" style="width:180px;"></div>
+                    <div id="slider-range-max" align = "right" style="width:165px;"></div>
                   </div>
+
                 </div>
-                <div data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="22">
-                    <div class="info-text"><b>Filter Constraint</b></div>
+                <div class="info-text" data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="22">
+                    <div><b>Filter Constraint</b></div>
                     <p></p>
                       <div class="input-group" ng-controller='zqlTableController'>
                         <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
@@ -478,6 +491,17 @@
                       <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="21">
                         <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
                       </form>
+                    </div>
+                  </div>
+
+                  <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
+                    <div ><b>Input equation</b></div>
+                    <p></p>
+                    <div class="input-group">
+                      <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
+                      <div class="input-group-btn">
+                        <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
+                      </div>
                     </div>
                   </div>
 
@@ -552,10 +576,10 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title">Download Query Results</h4>
             </div>
-            <div class="modal-body" id="class-info-body"> 
+            <div class="modal-body" id="class-info-body">
                 <br> Number of results:
                 <input ng-model="numResults" type="text" id="num-results-download">
-                <br> Minimum similarity threshold: 
+                <br> Minimum similarity threshold:
                 <input  type="text" id="min-thresh-download">
                 <br>
                 <input type="checkbox" id="yOnly"> Export y only <br>
@@ -578,10 +602,10 @@
               <h4 class="modal-title">Download Clustering Results</h4>
             </div>
             <div class="modal-body" id="class-info-body">
-                Number of Clusters: 
+                Number of Clusters:
                 <input ng-model="numResults" type="text" id="num-clusters-download"><br>
                 <input type="checkbox" id="downloadAllRepresentative"> Download all data<br>
-                
+
                 <!-- <input type="checkbox" id="yOnly"> Export y only <br> -->
             </div>
             <div class="modal-footer">
@@ -600,9 +624,9 @@
               <h4 class="modal-title">Download Outlier Results</h4>
             </div>
             <div class="modal-body" id="class-info-body">
-                <br> Number of Results: 
+                <br> Number of Results:
                 <input ng-model="numResults" type="text" id="num-outlier-download">
-                <br> Minimum dissimilarity threshold: 
+                <br> Minimum dissimilarity threshold:
                 <input type="text" id="min-thresh-download-outlier">
                 <br> <input type="checkbox" id="yOnly"> Export y only <br>
             </div>

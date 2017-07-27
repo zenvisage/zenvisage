@@ -137,6 +137,11 @@ function getSelectedErrorAxis()
   }
 }
 
+function resetSelectedErrorAxis()
+{
+  angular.element($("#sidebar")).scope().selectedErrorAxis = "none"; 
+}
+
 function getSmoothingCoefficient()
 {
   return $( "#slider-range-max" ).slider( "value" );

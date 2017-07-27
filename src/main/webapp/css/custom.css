@@ -247,6 +247,23 @@ svg#treesvg {
   width: 295px;
 }
 
+#dataset {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#FAFAFA;
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+
+#error {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#FAFAFA;
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+
+
 .filestyle {
   display: block;
   margin: auto;
@@ -312,4 +329,19 @@ svg#treesvg {
     font-size: 12px;
     line-height: 1.428571429;
     border-radius: 15px;
+}
+.side-info-text {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#F7F7F7;
+  border-radius: 3px;
+  margin-bottom: 15px;
+  width: 150px;
+}
+.info-text {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#FAFAFA;
+  border-radius: 3px;
+  margin-bottom: 15px;
 }
