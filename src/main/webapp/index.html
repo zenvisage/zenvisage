@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Data Exploration</title>
+    <title>Zenvisage</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
@@ -202,18 +202,8 @@
             <h5 style = 'width:130px'><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
 
-          <div class="dropdown" id="error" >
-            <h5><b>Error Attribute</b></h5>
-            <!-- Button trigger modal -->
-
-            <select class="form-control" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="selectedErrorAxis">
-              <option>none</option>
-              <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
-            </select>
-          </div>
-
           <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
-            <h5><b>Category</b>
+            <!-- <h5><b>Category</b>
 
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
 
@@ -226,26 +216,55 @@
                 <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
               </label>
             </div>
-          </div>
+          </div> -->
 
-          <div>
+          <h5><b>Category</b><span>
+          <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+
+          <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button> </h5>
+
+          <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory">
+            <option ng-repeat="category in categories">{{category}}</option>
+          </select>
+
+          <!-- <div>
             <h5><b>X-axis</b></h5>
             <div ng-repeat="xAxisItem in xAxisItems">
               <label>
                     <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
               </label>
             </div>
-          </div>
-          <div>
+          </div> -->
+          <!-- <div>
             <h5><b>Y-axis</b></h5>
             <div ng-repeat="yAxisItem in yAxisItems">
               <label>
                   <input type="radio" ng-change="onDataAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedYAxis"/><span>{{yAxisItem}}</span>
               </label>
             </div>
-          </div>
+          </div> -->
+          <h5><b>X-axis</b></h5>
+          <select class="form-control" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="selectedXAxis">
+            <option ng-repeat="xAxisItem in xAxisItems">{{xAxisItem}}</option>
+          </select>
+
+          <h5><b>Y-axis</b></h5>
+          <select class="form-control" ng-change="onDataAttributeChange()" value={{yAxisItem}} ng-model="selectedYAxis">
+            <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
+          </select>
 
         </div>
+
+        <div class="dropdown" id="error" >
+          <h5><b>Error Attribute</b></h5>
+          <!-- Button trigger modal -->
+
+          <select class="form-control" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="selectedErrorAxis">
+            <option>none</option>
+            <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
+          </select>
+        </div>
+
         </div> <!-- end side bar -->
       </div> <!-- end left bar -->
 
@@ -253,10 +272,10 @@
       <div id="middle-bar">
 
         <!-- this div contains the drawng interface and the zql table -->
-<div id="login-bar" style="height:15px; leftMargin:-15px; rightMargin:-15px;">
+<div id="login-bar" style="height:10px; leftMargin:-15px; rightMargin:-15px;">
 <!-- <button type="button" name="options" data-toggle="button" aria-pressed="false" style="float: right; vertical-align: middle; border-radius:3px; background-color:lightcyan; right:-10px;" >Login</button> -->
 </div>
-<hr>
+
         <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
           <!-- drawing interface -->
