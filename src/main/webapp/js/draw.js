@@ -108,7 +108,7 @@ console.log('createSketchpad')
   var context = svg.append("g")
       .attr("class", "context")
       .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
+//zoom here
       var zoomclip = svg.append("rect")
         .attr("width", zoomwidth)
         .attr("height", zoomheight)
@@ -140,6 +140,7 @@ console.log('createSketchpad')
       .attr("class", "line")
       .attr("d", valueline);
 
+//zoom here
       function zoomed() {
       var t = d3.event.transform;
       y.domain(t.rescaleY(y2).domain());
@@ -334,6 +335,7 @@ console.log('createSketchpad')
 
 function plotSketchpadNew( data )//, xType, yType, zType)
 {
+    document.getElementById("loadingEclipse").style.display = "inline";
   $("#draw-div").children().remove();
   sketchpad = createSketchpad( data )
 

@@ -185,7 +185,7 @@
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController"  >
           <h4>
-            <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1">ZenVisage</span>
+            <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"><img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
             <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button>
             <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
           </h4>
@@ -201,6 +201,17 @@
           <div data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
             <h5><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
+
+          <div class="dropdown">
+            <h5><b>Error Attribute</b></h5>
+            <!-- Button trigger modal -->
+
+            <select class="form-control" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="selectedErrorAxis">
+              <option>none</option>
+              <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
+            </select>
+          </div>
+
           <div data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
             <h5><b>Category</b>
 
@@ -233,20 +244,6 @@
               </label>
             </div>
           </div>
-          <div>
-
-            <h5><b>Error Attribute</b></h5>
-            <div ng-repeat="yAxisItem in yAxisItems">
-              <label>
-                  <input type="radio" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedErrorAxis"/><span>{{yAxisItem}}</span>
-              </label>
-            </div>
-
-            <!-- <select class="form-control" ng-change="onErrorAttributeChange()" ng-model="$parent.selectedErrorAxis" id="dataset-form-control">
-              <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
-            </select> -->
-          </div>
-
 
         </div>
         </div> <!-- end side bar -->
@@ -434,7 +431,7 @@
               </div>
               </div>
 
-                
+
               <div class="col-md-3" style="width: 200px;">
                 <div class="info-text" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="22" data-position = "left">
                   <div><b>Data Smoothing</b></div>
@@ -483,6 +480,19 @@
                       </form>
                     </div>
                   </div>
+
+
+                  <!-- <div id="sidebar" class="interface" ng-controller="datasetController"  >
+                    <div>
+                  <h5><b>Error Attribute</b></h5>
+                  <div ng-repeat="yAxisItem in yAxisItems">
+                    <label>
+                        <input type="radio" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedErrorAxis"/><span>{{yAxisItem}}</span>
+                    </label>
+                  </div>
+                  </div>
+                  </div> -->
+
               </div>
             </div>
           </div>
@@ -496,7 +506,6 @@
 
         <hr>
         <div id="bottom-middle-bar">
-
           <div id="middle-left" class="col-md-6">
             <h5>
             <b>Results</b>
@@ -505,6 +514,7 @@
             <div>
               <table id="results-table"></table>
             </div>
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 50%; z-index: 10; width: 15%; height: 15%; ">
           </div>
           <div id="middle-right" class="col-md-6">
             <div>
@@ -530,6 +540,7 @@
                 </tr>
               </table>
             </div>
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse2' style="display: none; position: relative; top: 8px; left: 35%; z-index: 10; width: 15%; height: 15%; ">
           </div>
         </div>
       </div>
@@ -600,9 +611,11 @@
             </div>
           </div>
         </div>
+
       </div>
 <canvas id="canvas" width="100%" height="600px"></canvas>
   <img id="result"/>
+
 
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>

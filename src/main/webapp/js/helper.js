@@ -34,7 +34,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
       current = count;
     }
-    $("#row-" + current.toString()).append("<td><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></td>");
+    $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
   }
 
   for (var count = 0; count < userQueryResults.length; count++)
@@ -238,7 +238,11 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       }
     }
     if  (!isNaN(similarityDistance)){
-      graph.append("text")
+
+      // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
+      d3.select("#undraggable-result-"+count.toString()).append("g")
+
+      d3.select("#undraggable-result-"+count.toString()).append("text")
         .attr("transform",
               "translate(" + (width/2) + " ," +
              (trans + m[0] + 30) + ")")
@@ -263,12 +267,12 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2"));
+        .call(d3.axisLeft(y).ticks(4, ".1"));
     }else{
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2s"));
+        .call(d3.axisLeft(y).ticks(4, ".1s"));
     }
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -432,63 +436,13 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
   });
 
 // Set double click handlers for exporting results graphs
-var id = "#resultsvg-"
+for(let i = 0; i < getNumResults(); i++) {
+  $('#resultsvg-' + i).dblclick(function() {
+    createcanvas("#resultsvg-",i);
+  });
+}
 
-  $("#resultsvg-0").dblclick(function() {
-    createcanvas(id,0);
-  });
-
-  $("#resultsvg-1").dblclick(function() {
-    createcanvas(id,1);
-  });
-
-  $("#resultsvg-2").dblclick(function() {
-    createcanvas(id,2);
-  });
-
-  $("#resultsvg-3").dblclick(function() {
-    createcanvas(id,3);
-  });
-
-  $("#resultsvg-4").dblclick(function() {
-    createcanvas(id,4);
-  });
-
-  $("#resultsvg-5").dblclick(function() {
-    createcanvas(id,5);
-  });
-
-  $("#resultsvg-6").dblclick(function() {
-    createcanvas(id,6);
-  });
-  $("#resultsvg-7").dblclick(function() {
-    createcanvas(id,7);
-  });
-
-  $("#resultsvg-8").dblclick(function() {
-    createcanvas(id,8);
-  });
-
-  $("#resultsvg-9").dblclick(function() {
-    createcanvas(id,9);
-  });
-  $("#resultsvg-10").dblclick(function() {
-    createcanvas(id,10);
-  });
-
-  $("#resultsvg-11").dblclick(function() {
-    createcanvas(id,11);
-  });
-  $("#resultsvg-12").dblclick(function() {
-    createcanvas(id,12);
-  });
-
-  $("#resultsvg-13").dblclick(function() {
-    createcanvas(id,13);
-  });
-  $("#resultsvg-14").dblclick(function() {
-    createcanvas(id,14);
-  });
+  document.getElementById("loadingEclipse").style.display = "none";
 }
 
 var createcanvas = function(id,number) {
@@ -518,7 +472,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"representative-row-" + count.toString() + "\"></tr>")
-    $("#representative-row-" + count.toString()).append("<td><div class=\"representative-results draggable-graph\" data-graph-type=\"representativeQuery\" id=\"representative-result-" + count.toString() + "\"></div></td>");
+    $("#representative-row-" + count.toString()).append("<td><div class=\"undraggable-representative-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-representative-result-" + count.toString() + "\"><div class=\"representative-results draggable-graph\" data-graph-type=\"representativeQuery\" id=\"representative-result-" + count.toString() + "\"></div></div></td>");
     varFinalArray.push( representativePatternResults[count] );
   }
 
@@ -560,7 +514,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
     representativeDygraphsNew["representative-result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
-    var width = 220//200// - m[1] - m[3]; // width
+    var width = 250//200// - m[1] - m[3]; // width
     var height = 105//85// - m[0] - m[2]; // height
 
     // X scale will fit all values from data[] within pixels 0-w
@@ -680,7 +634,9 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       }
     }
 
-    graph.append("text")
+    d3.select("#undraggable-representative-result-"+count.toString()).append("g")
+
+    d3.select("#undraggable-representative-result-"+count.toString()).append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
@@ -703,12 +659,12 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2"));
+        .call(d3.axisLeft(y).ticks(4, ".1"));
     }else{
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2s"));
+        .call(d3.axisLeft(y).ticks(4, ".1s"));
     }
 
 
@@ -793,16 +749,12 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
   .attr("data-step","11")
   .attr("data-position","left");
 
-var id = "#representativesvg-"
-  $("#representativesvg-0").dblclick(function() {
-    createcanvas(id,0);
-  });
-  $("#representativesvg-1").dblclick(function() {
-    createcanvas(id,1);
-  });
-  $("#representativesvg-2").dblclick(function() {
-    createcanvas(id,2);
-  });
+  for(let i = 0; i < getClusterSize(); i++) {
+    $('#representativesvg-' + i).dblclick(function() {
+      createcanvas('#representativesvg-',i);
+    });
+  }
+    document.getElementById("loadingEclipse2").style.display = "none";
 }
 
 function displayOutlierResultsHelper( outlierResults )
@@ -814,7 +766,7 @@ function displayOutlierResultsHelper( outlierResults )
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
-    $("#outlier-row-" + count.toString()).append("<td><div class=\"outlier-results draggable-graph\" data-graph-type=\"outlierQuery\" id=\"outlier-result-" + count.toString() + "\"></div></td>");
+    $("#outlier-row-" + count.toString()).append("<td><div class=\"undraggable-outlier-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-outlier-result-" + count.toString() + "\"><div class=\"outlier-results draggable-graph\" data-graph-type=\"outlierQuery\" id=\"outlier-result-" + count.toString() + "\"></div></div></td>");
     varFinalArray.push(outlierResults[count]);
   }
 
@@ -853,7 +805,7 @@ function displayOutlierResultsHelper( outlierResults )
 
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
-    var width = 220//200// - m[1] - m[3]; // width
+    var width = 250//200// - m[1] - m[3]; // width
     var height = 105//85// - m[0] - m[2]; // height
 
     // X scale will fit all values from data[] within pixels 0-w
@@ -882,7 +834,8 @@ function displayOutlierResultsHelper( outlierResults )
           .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
-          .attr("id","outliersvg-" + count.toString())
+          .attr("id","outliersvg-" + count.toString());
+
           //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     var trans = height-20
@@ -995,12 +948,12 @@ function displayOutlierResultsHelper( outlierResults )
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2"));
+        .call(d3.axisLeft(y).ticks(4, ".1"));
     }else{
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2s"));
+        .call(d3.axisLeft(y).ticks(4, ".1s"));
     }
 
 
@@ -1081,7 +1034,10 @@ function displayOutlierResultsHelper( outlierResults )
                   }
     }
 
-    graph.append("text")
+    d3.select("#undraggable-outlier-result-"+count.toString()).append("g");
+
+    d3.select("#undraggable-outlier-result-"+count.toString()).append("text")
+    .append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
@@ -1100,15 +1056,12 @@ function displayOutlierResultsHelper( outlierResults )
 
 
   var id = "#outliersvg-"
-    $("#outliersvg-0").dblclick(function() {
-      createcanvas(id,0);
+
+  for(let i = 0; i < getClusterSize(); i++) {
+    $("#outliersvg-" + i).dblclick(function() {
+      createcanvas("#outliersvg-",i);
     });
-    $("#outliersvg-1").dblclick(function() {
-      createcanvas(id,1);
-    });
-    $("#outliersvg-2").dblclick(function() {
-      createcanvas(id,2);
-    });
+  }
 
   $(".draggable-graph").draggable({
     opacity: 0.5,

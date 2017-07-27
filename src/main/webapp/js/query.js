@@ -128,7 +128,13 @@ function getSelectedCategory()
 
 function getSelectedErrorAxis()
 {
-  return angular.element($("#sidebar")).scope().selectedErrorAxis;
+  var selectedError = angular.element($("#sidebar")).scope().selectedErrorAxis;
+  if(selectedError == "none"){
+    return null;
+  }
+  else{
+    return selectedError;
+  }
 }
 
 function getSmoothingCoefficient()

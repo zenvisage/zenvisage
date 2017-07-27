@@ -409,6 +409,7 @@ app.controller('options-controller', [
     $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("similarity",$scope.similarity)
         $scope.callGetUserQueryResults();
       }
@@ -417,6 +418,7 @@ app.controller('options-controller', [
     $scope.$watchGroup(['numResults'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+       document.getElementById("loadingEclipse").style.display = "inline";
         log.info("numResults",$scope.numResults)
         $scope.callGetUserQueryResults();
       }
@@ -425,6 +427,7 @@ app.controller('options-controller', [
     $scope.$watch('minDisplayThresh', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("minThresh display changed",$scope.minDisplayThresh)
         console.log("minThresh display changed",$scope.minDisplayThresh)
         $scope.callGetUserQueryResultsWithCallBack();
@@ -441,6 +444,7 @@ app.controller('options-controller', [
     $scope.$watch('showScatterplot', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showScatterplot",$scope.showScatterplot)
         $scope.callGetUserQueryResultsWithCallBack();
       }
@@ -449,6 +453,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("considerRange",$scope.considerRange)
         $scope.callGetUserQueryResultsWithCallBack();
       }
@@ -457,6 +462,7 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['showOriginalSketch' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showOriginalSketch",$scope.showOriginalSketch)
         $scope.callGetUserQueryResultsWithCallBack();
       }
@@ -472,6 +478,7 @@ app.controller('options-controller', [
     $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("aggregation",$scope.aggregation)
         $scope.callGetUserQueryResultsWithCallBack();
       }
@@ -480,6 +487,7 @@ app.controller('options-controller', [
     $scope.$watch('flipY', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
         log.info("flipY",$scope.flipY)
         $scope.callGetUserQueryResultsWithCallBack();
       }
@@ -525,6 +533,7 @@ app.controller('options-controller', [
     }
 
     $scope.onflipYChange = function() {
+      document.getElementById("loadingEclipse").style.display = "inline";
       if(usingPattern == true){
         patternLoad();
       }
@@ -534,6 +543,7 @@ app.controller('options-controller', [
   }
 
   $scope.onSmoothingChange = function() {
+    document.getElementById("loadingEclipse").style.display = "inline";
     log.info("selectedSmoothing",$scope.selectedSmoothing)
     $scope.callGetUserQueryResultsWithCallBack();
     $scope.callgetRepresentativeTrends();
@@ -793,7 +803,8 @@ app.controller('options-controller', [
       //angular.element($("#sidebar")).scope().getUserQueryResults();
     }
 
-    $scope.callGetUserQueryResulcalts = function() {
+    $scope.callGetUserQueryResults = function() {
+
       $rootScope.$emit("callGetUserQueryResults", {});
     }
 
@@ -1098,6 +1109,8 @@ app.controller('datasetController', [
     };
 
    $scope.onDatasetChange = function(input) {
+      document.getElementById("loadingEclipse").style.display = "inline";
+      document.getElementById("loadingEclipse2").style.display = "inline";
       log.info("dataset selected",$('#dataset-form-control').val())
       clearRepresentativeTable();
       clearOutlierTable();
@@ -1124,7 +1137,6 @@ app.controller('datasetController', [
           $scope.selectedCategory;
           $scope.selectedXAxis;
           $scope.selectedYAxis;
-          $scope.selectedErrorAxis = null;
           angular.forEach(response.zAxisColumns, function(value, key) {
            $scope.categories.push(key);
           });
@@ -1163,6 +1175,8 @@ app.controller('datasetController', [
     // when the data selection is changed, the graphs needs to be re-initialized
     // and the rest of the graphs have to be fetched
     $scope.onDataAttributeChange = function() {
+      document.getElementById("loadingEclipse").style.display = "inline";
+      document.getElementById("loadingEclipse2").style.display = "inline";
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
@@ -1176,6 +1190,7 @@ app.controller('datasetController', [
     };
 
     $scope.onErrorAttributeChange = function() {
+     document.getElementById("loadingEclipse").style.display = "inline";
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
