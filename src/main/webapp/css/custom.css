@@ -22,8 +22,24 @@ hr {
 
 .user-query-results, .representative-results, .outlier-results{
  width: 220px;
- height: 105px;
+ height: 85px;
+ margin-bottom: 5px;
 }
+
+.undraggable-user-query-results, .undraggable-representative-results, .undraggable-outlier-results{
+ width: 275px;
+ height: 105px;
+ text-align: center;
+ font-size: 12px;
+}
+
+.undraggable-representative-results, .undraggable-outlier-results{
+ width: 250px;
+ height: 105px;
+ text-align: center;
+ font-size: 12px;
+}
+
 
 .radio input[type=radio]{
   margin-left: 0px; !important
