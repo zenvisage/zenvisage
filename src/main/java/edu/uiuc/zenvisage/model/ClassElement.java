@@ -12,10 +12,24 @@ public class ClassElement {
 	 * its [n][2], intervals e.g. [0-100] [101-200]... and such
 	 */
 	public float[][] values;
+	public String tag;
+	public String attributes;
+	public String ranges;
+	public int count;
+	
 	public ClassElement(){}
 	public ClassElement(String name, float[][] values) {
 		this.name = name;
 		this.values = values;
+	}
+	
+	public ClassElement(String name, float[][] values, String tag, String attributes, String ranges, int count) {
+		this.name = name;
+		this.values = values;
+		this.tag = tag;
+		this.attributes = attributes;
+		this.ranges = ranges;
+		this.count = count;
 	}
 	
 	public String getName(){

@@ -472,7 +472,7 @@ public class SQLQueryExecutor {
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
 		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-		String sql = "SELECT tag, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
+		String sql = "SELECT tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
 		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
@@ -480,13 +480,16 @@ public class SQLQueryExecutor {
 		
 		dc.dataset = tableName;
 		List<String[]> l = new ArrayList<String[]>();
+		float[][] testArray = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f}};
+		
 		while(rs.next()){
-			l.add(new String[]{rs.getString(1),rs.getString(2)});
+			System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+			l.add(new String[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)});
 		}
 		dc.classes = new ClassElement[l.size()];
 		for(int i = 0; i < l.size(); i++){
 			String[] cur = l.get(i);
-			dc.classes[i] = new ClassElement(cur[0], ClassElement.fromStringToFloatArray(cur[1]));
+			dc.classes[i] = new ClassElement(dc.dataset,testArray, cur[0], cur[1], cur[2], Integer.parseInt(cur[3]));
 		}
 		return dc;
 	}
