@@ -164,10 +164,16 @@
               <div ng-repeat="class in classes" >
                 <div class="row">
                   <div class="col-md-2 text-left">
-                    {{class.name}}
+                    {{class.tag}}
                   </div>
-                  <div class="col-md-10 text-left">
-                    {{class.values}}
+                  <div class="col-md-2 text-left">
+                    {{class.attributes}}
+                  </div>
+                  <div class="col-md-6 text-left">
+                    {{class.ranges}}
+                  </div>
+                  <div class="col-md-2 text-left">
+                    {{class.count}}
                   </div>
                 </div>
                 <hr ng-if="!$last">
