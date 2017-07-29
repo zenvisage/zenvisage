@@ -85,20 +85,14 @@ public class ChartOutputUtil {
 
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
 			double normDist =normalize(orderedDistances, range, i);
-			System.out.print("args.minDisplayThresh:");
-			System.out.println(args.minDisplayThresh);
-			System.out.print("normDist:");
-			System.out.println(normDist);
 			boolean displayThisViz = false;
 			if (args.minDisplayThresh!=0.0){
 				 if (normDist>=args.minDisplayThresh){
-					 System.out.println("downloadThresh!");
 					 displayThisViz = true;
 				 }
 			}else{
 				displayThisViz = true;
 			}
-			System.out.println(displayThisViz);
 			if (displayThisViz){
 				// initialize a new chart
 				Chart chartOutput = new Chart();

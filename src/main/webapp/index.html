@@ -12,9 +12,32 @@
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <link href="css/introjs.css" rel="stylesheet">
-  </head>
+    <script type="text/javascript" src="secret.json"></script>
+    </head>
   <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
+    
+<!--   <div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+     <div id="loginDialog" class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" align="center">
+            <img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                <label>Username:</label><input type="text" id="username" class="form-control input-lg">
+              </div>
+              <div class="form-group">
+                <label>Password:</label><input type="password" id="password" class="form-control input-lg">
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary btn-lg btn-block" id="signIn">Sign In</button>
+              </div>              
+           </div>
+          <div class="modal-footer"></div>
+        </div>
+     </div>
+  </div> -->
 
     <div id="everything">
       <!-- Modal -->
@@ -278,10 +301,6 @@
       <div id="middle-bar">
 
         <!-- this div contains the drawng interface and the zql table -->
-<div id="login-bar" style="height:10px; leftMargin:-15px; rightMargin:-15px;">
-<!-- <button type="button" name="options" data-toggle="button" aria-pressed="false" style="float: right; vertical-align: middle; border-radius:3px; background-color:lightcyan; right:-10px;" >Login</button> -->
-</div>
-
         <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
           <!-- drawing interface -->
@@ -289,10 +308,10 @@
             <div class="input-group" id="graph-buttons">
 
             <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
-            <!--  <div class="btn-group" id="left-button-group">
+             <!-- <div class="btn-group" id="left-button-group">
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
                 </select>
-              </div>
+              </div> -->
 
               <div class="btn-group">
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
@@ -311,7 +330,7 @@
                   </div>
                   <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
                 </div>
-              </div> -->
+              </div>
             </div>
 
             <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
@@ -679,6 +698,7 @@
     <script src="js/draw.js"></script>
     <script src="js/query.js"></script>
     <script src="js/helper.js"></script>
+    <script src="js/login.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
