@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -267,5 +269,22 @@ public class ZvBasicAPI {
 	public String test(@RequestParam(value="query") String arg) {
 		return "Test successful:" + arg;
 	}
+	
+	@RequestMapping(value = "/verifyPassword", method = RequestMethod.GET)
+	@ResponseBody
+	public String verifyPassword(@RequestParam(value="query") String arg) throws IOException {
+		System.out.println("arg:");
+		System.out.println(arg);
+		// Creates a FileReader Object
+		System.out.println("verifyPassword");
+	    FileReader fr = new FileReader("../secret.txt"); 
+	    char [] a = new char[50];
+	    fr.read(a);   // reads the content to the array
+	    for(char c : a)
+	       System.out.print(c);   // prints the characters one by one
+	    fr.close();
+		return "Test successful:" + arg;
+	}
+	
 
 }
