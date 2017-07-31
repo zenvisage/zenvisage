@@ -185,7 +185,6 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
   $scope.submitZQL = function () {
     $("#graph-div").empty();
     createZQLGraph( submitNodeZQL );
-
     clearUserQueryResultsTable();
     $scope.queries['zqlRows'] = [];
     var processRow = [];
@@ -193,6 +192,9 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       if ( $(this).hasClass("processRow") )
       {
         var processe = $(this).find(".process").val()
+        if (processe !== undefined) {
+          processe = parseProcess(processe);
+        }
         processRow.push(processe);
       }
       else
@@ -323,6 +325,7 @@ function checkInput(input) {
     return (name && x && y && z && constraints && viz) !== undefined;
 }
 
+// checks the input process variable and converts it to proper object format to sent to backend
 function checkProcessInput(input)
 {
     if (input.processe !== undefined) {
