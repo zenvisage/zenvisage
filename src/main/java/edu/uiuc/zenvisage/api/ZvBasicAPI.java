@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -36,11 +38,11 @@ public class ZvBasicAPI {
 
 	@Autowired
 	private ZvMain zvMain;
-
+	public String logFilename="";
     public ZvBasicAPI(){
 
 	}
-
+    
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
@@ -201,7 +203,15 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/logger", method = RequestMethod.POST)
 	@ResponseBody
 	public void logger(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		File file = new File("zv.log");
+		System.out.print("logFilename:");
+		System.out.println(logFilename);
+		if (logFilename.equals("")){
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+			logFilename = "../"+sdf.format(timestamp)+".log";
+		}
+		File file = new File(logFilename);
+		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		String log = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+request.getParameter("message")+'\n';
         System.out.println(log);
