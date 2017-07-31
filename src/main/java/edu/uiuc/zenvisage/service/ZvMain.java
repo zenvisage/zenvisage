@@ -28,6 +28,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -70,6 +72,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowResult;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowVizResult;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
+import edu.uiuc.zenvisage.zqlcomplete.querygraph.ScatterProcessNode;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 import edu.uiuc.zenvisage.service.distance.*;
 
@@ -95,7 +98,9 @@ public class ZvMain {
 	public ArrayList<List<Double>> data;
 	public String databaseName;
 	public String buffer = null;
+	
 	private static SQLQueryExecutor sqlQueryExecutor;
+	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
 	public ZvMain() throws IOException, InterruptedException, SQLException{
 		sqlQueryExecutor = new SQLQueryExecutor();
@@ -225,12 +230,23 @@ public class ZvMain {
    
    public String runScatterQueryGraph(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
+	   long startTime = System.currentTimeMillis();
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+	   long endTime = System.currentTimeMillis();
+	   logger.info("Mapping json to table took " + (endTime - startTime) + "ms");
+	   
 	   ZQLParser parser = new ZQLParser();
 	   QueryGraph graph;
 	   try {
+		   startTime = System.currentTimeMillis();
 		   graph = parser.processZQLTable(zqlTable);
+		   endTime = System.currentTimeMillis();
+		   logger.info("Parsing ZQLTable to Graph took " + (endTime - startTime) + "ms");
+		   
+		   startTime = System.currentTimeMillis();
 		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   endTime = System.currentTimeMillis();
+		   logger.info("Execution took " + (endTime - startTime) + "ms");		   
 		   //convert it into front-end format.
 		   String result = new ObjectMapper().writeValueAsString(convertVCListtoScatterOutput(output));
 		   System.out.println("Done");
