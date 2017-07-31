@@ -1,9 +1,13 @@
 
 $('#uploaderForm').on('submit', function(e) {
+    document.getElementById("loadingEclipse_upload").style.display = "block";
+    document.getElementById("submitButton").style.display = "none";
     e.preventDefault();
     var formData = new FormData(this);
     if (formData.get("csv").name == "" || formData.get("schema").name == "" ) {
       alert("Please select corresponding files!");
+      document.getElementById("loadingEclipse_upload").style.display = "none";
+      document.getElementById("submitButton").style.display = "block";
       return;
     }
     $.ajax({
@@ -18,9 +22,13 @@ $('#uploaderForm').on('submit', function(e) {
                           .text( formData.get("datasetName")));
             $('#uploaderModal').modal('toggle');
             alert("Uploaded");
+            document.getElementById("loadingEclipse_upload").style.display = "none";
+            document.getElementById("submitButton").style.display = "block";
         },
         error: function (jXHR, textStatus, errorThrown) {
             alert(errorThrown);
+            document.getElementById("loadingEclipse_upload").style.display = "none";
+            document.getElementById("submitButton").style.display = "block";
         }
     });
     log.info("dataset upload: ",$("#datasetNameInput").val())
