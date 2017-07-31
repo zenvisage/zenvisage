@@ -7,15 +7,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 public class DatabaseAutoLoader {
 
-	private static String metatable="zenvisage_metatable";
-	private static String metafilelocation="zenvisage_metafilelocation";
+	private static String metatable;
+	private static String metafilelocation;
 	private ZvServer zvServer;
-
+	
+	static{
+		metatable=Readconfig.getMetatable();
+		metafilelocation=Readconfig.getMetafilelocation();
+	}
+	
 	public DatabaseAutoLoader(ZvServer zvServer){
 		this.zvServer = zvServer;
 	}
@@ -88,13 +94,18 @@ public class DatabaseAutoLoader {
 		dataset4.add(file.getAbsolutePath());
 
 
-		//		List<String> dataset3 = new ArrayList<String>(); //flight
-//		List<String> dataset4 = new ArrayList<String>(); //cmu
+		List<String> dataset5 = new ArrayList<String>(); //cmu
+		dataset5.add("real_estate_tutorial");
+		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate_tutorial.csv")).getFile());
+		dataset5.add(file.getAbsolutePath());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
+		dataset5.add(file.getAbsolutePath());
 
 		ZvMain.uploadDatasettoDB(dataset1,false);
 		ZvMain.uploadDatasettoDB(dataset2,false);
 		ZvMain.uploadDatasettoDB(dataset3,false);
 		ZvMain.uploadDatasettoDB(dataset4,false);
+		ZvMain.uploadDatasettoDB(dataset5,false);
 	}
 
 	public void run() throws SQLException, IOException, InterruptedException{

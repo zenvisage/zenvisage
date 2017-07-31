@@ -1,6 +1,7 @@
 var isDrawing = false;
 var lastDrawRow = null;
 var lastDrawValue = null;
+var usingPattern = false;
 
 var sketchpadNew; // to store the data
 var sketchpadData;
@@ -23,6 +24,9 @@ console.log('createSketchpad')
   var margin2 = {top: 180, right: 0, bottom: 0, left: 30};
   var height2 = height + margin.top + margin.bottom - margin2.top - margin2.bottom;
 
+  var zoomwidth = 320 ;
+  var zoomheight = 154 ;
+
   // set the ranges
   var x = d3.scaleLinear().range([0, width]);
   if(getflipY()){
@@ -31,7 +35,7 @@ console.log('createSketchpad')
   else{
       var y = d3.scaleLinear().range([height, 0]);
   }
-
+  log.info("initialize canvas axis",y.domain()[0],y.domain()[1])
 
 /**************changed*******************/
 
@@ -76,6 +80,7 @@ console.log('createSketchpad')
       .y(function(d) { return y2(d.yval); });
 
 
+
   d3.select("#draw-div").selectAll("*").remove();//new
   var svg = d3.select("#draw-div").append("svg")
       .attr("viewBox", "-30 0 420 220") //new
@@ -88,7 +93,7 @@ console.log('createSketchpad')
       .attr('pointer-events', 'all')
       //.on("mouseout", mouseoutEvent )
       .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin.left + "," + margin.top + ")")
 
   svg.append("defs").append("clipPath")
       .attr("id", "clip")
@@ -103,6 +108,27 @@ console.log('createSketchpad')
   var context = svg.append("g")
       .attr("class", "context")
       .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+//zoom here
+      var zoomclip = svg.append("rect")
+        .attr("width", zoomwidth)
+        .attr("height", zoomheight)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .call(d3.zoom()      // zoom y axis behavior
+        .scaleExtent([1, Infinity])
+        .translateExtent([[0, 0], [width, height]]).extent([[0, 0], [width, height]])
+        .on("zoom", zoomed))
+        .on("mousedown.zoom", null)
+        .on("mousemove.zoom", null)
+        .on("mouseup.zoom", null)
+        .on("selectstart.zoom", null)
+        .on("click.zoom", null)
+        .on("dblclick.zoom", null)
+        .on("touchstart.zoom", null)
+        .on("touchmove.zoom", null)
+        .on("touchend.zoom", null)
+        .on("touchcancel.zoom", null);
 
   var brush = d3.brushX()
       //.scaleExtent([1, Infinity])
@@ -114,6 +140,20 @@ console.log('createSketchpad')
       .attr("class", "line")
       .attr("d", valueline);
 
+//zoom here
+      function zoomed() {
+      var t = d3.event.transform;
+      y.domain(t.rescaleY(y2).domain());
+      focus.select(".axis--y").call(d3.axisLeft(y).ticks(8, ".2"));
+      focus.select(".line").attr("d",valueline);
+    //  x.domain(t.rescaleX(x2).domain());
+    //  focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, ".2"));
+    }
+
+    function reset() {
+     d3.select("#draw-div").transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+      }
+     d3.select(".reset").on("click", reset);
   //Add the X Axis
   // focus.append("g")
   //     .attr("class", "axis x")
@@ -133,21 +173,40 @@ console.log('createSketchpad')
     }
 
 
+    // Add the second x axis
+    if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
+      console.log("small1");
+    focus.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(8, "s"));
+    }
+  else{
+    console.log("big1");
+    focus.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(6, "s"));
+    }
+
   context.append("path")
       .data([data])
       .attr("class", "line")
       .attr("d", valueline2);
 
-  // Add the second x axis
-  focus.append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).ticks(8, "s"));
-
+  if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
   context.append("g")
     .attr("class", "axis axis--x")
     .attr("transform", "translate(0," + height2 + ")")
     .call(d3.axisBottom(x).ticks(8, "s"));
+  }
+
+  else{
+  context.append("g")
+    .attr("class", "axis axis--x")
+    .attr("transform", "translate(0," + height2 + ")")
+    .call(d3.axisBottom(x).ticks(5, "s"));
+  }
 
   context.append("g")
       .attr("class", "brush")
@@ -159,7 +218,14 @@ console.log('createSketchpad')
     var s = d3.event.selection || x2.range();
     x.domain(s.map(x2.invert, x2));
     focus.select(".line").attr("d", valueline);
-    focus.select(".axis--x").call(d3.axisBottom(x));
+    if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
+      console.log("small2");
+    focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, "s"));
+    }
+    else{
+      console.log("big2");
+      focus.select(".axis--x").call(d3.axisBottom(x).ticks(6, "s"));
+    }
     // svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
     //     .scale(width / (s[1] - s[0]))
     //     .translate(-s[0], 0));
@@ -168,6 +234,7 @@ console.log('createSketchpad')
     var right = Number($(".selection")[0].getAttribute("width"))
     xrangeNew = [x2.invert(left), x2.invert(left+right)];
     angular.element($("#sidebar")).scope().getUserQueryResults();
+    log.info("brushing x range",xrangeNew[0],xrangeNew[1])
   }
 
   function setPointNew( ref )
@@ -268,6 +335,7 @@ console.log('createSketchpad')
 
 function plotSketchpadNew( data )//, xType, yType, zType)
 {
+    document.getElementById("loadingEclipse").style.display = "inline";
   $("#draw-div").children().remove();
   sketchpad = createSketchpad( data )
 
@@ -299,6 +367,7 @@ function finishDraw(event, g, context) {
   lastDrawRow = null;
   lastDrawValue = null;
   angular.element($("#sidebar")).scope().getUserQueryResults();
+  log.info("sketched query",JSON.stringify(sketchpadData))
 }
 
 function setPoint(event, g, context) {
@@ -348,7 +417,8 @@ function setPoint(event, g, context) {
 
 function patternLoad(){
   data = JSON.parse($("#pattern-upload-textarea")[0].value);
-  console.log(data);
+  usingPattern = true;
+  log.info("patternLoad : ",$("#pattern-upload-textarea")[0].value)
   createSketchpad( data );
   refreshZoomEventHandler();
 }

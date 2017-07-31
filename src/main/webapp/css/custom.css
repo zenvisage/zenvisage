@@ -22,8 +22,24 @@ hr {
 
 .user-query-results, .representative-results, .outlier-results{
  width: 220px;
- height: 105px;
+ height: 85px;
+ margin-bottom: 5px;
 }
+
+.undraggable-user-query-results, .undraggable-representative-results, .undraggable-outlier-results{
+ width: 275px;
+ height: 105px;
+ text-align: center;
+ font-size: 12px;
+}
+
+.undraggable-representative-results, .undraggable-outlier-results{
+ width: 250px;
+ height: 105px;
+ text-align: center;
+ font-size: 12px;
+}
+
 
 .radio input[type=radio]{
   margin-left: 0px; !important
@@ -80,14 +96,14 @@ svg#treesvg {
 }
 
 #middle-left{
-  height: 400px !important;
+  height: 100% !important;
   overflow-x: auto;
   -webkit-flex: 1;
   flex:1;
 }
 
 #middle-right{
-  height: 400px !important;
+  height: 100% !important;
   -webkit-flex: 1;
   overflow-x: auto;
   flex:1;
@@ -231,6 +247,26 @@ svg#treesvg {
   width: 295px;
 }
 
+#dataset {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#FAFAFA;
+  border-radius: 3px;
+  margin-bottom: 15px;
+  margin-left: 7px;
+  margin-top: 12px;
+}
+
+#error {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#FAFAFA;
+  border-radius: 3px;
+  margin-bottom: 15px;
+  margin-left: 7px;
+}
+
+
 .filestyle {
   display: block;
   margin: auto;
@@ -253,5 +289,63 @@ svg#treesvg {
   font-size: 20;
 }
 
+/*Tooltip for question mark info*/
+.qtooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
 
+.qtooltip .qtooltiptext {
+    visibility: hidden;
+    width: 250px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
 
+.qtooltip .qtooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    margin-left: -10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.qtooltip:hover .qtooltiptext {
+    visibility: visible;
+}
+.btn-circle {
+    width: 25px;
+    height: 24px;
+    text-align: center;
+    padding: 3px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.side-info-text {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#F7F7F7;
+  border-radius: 3px;
+  margin-bottom: 15px;
+  margin-left: 7px;
+  width: 150px;
+}
+.info-text {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border:4px solid #FAFAFA;
+  background-color:#FAFAFA;
+  border-radius: 3px;
+  margin-bottom: 15px;
+}

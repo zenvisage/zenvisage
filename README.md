@@ -25,7 +25,7 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
 * Apache Maven 3.0.5;  many ways to install this, including `brew install maven` on Mac OSX.
 
 ### Installation Instructions
-The installation of Zenvisage is straightforward, assuming Postgres, Java, and Maven are installed.
+The installation of Zenvisage is straightforward, assuming Postgres, Java, and Maven are installed. If you want to install using a Docker container, the instructions are [here](https://github.com/zenvisage/zenvisage/wiki/Docker-Installation-Instruction).
 
 * Clone the zenvisage repository. (Alternatively, you can download the source as a zip.)
 
@@ -46,7 +46,7 @@ For making the above change, you could run the following commands:
               
 * Update Database Schema
         
-            DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT,       csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT);
+            DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT); CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);
 
 * Clean Postgres
 
@@ -126,7 +126,6 @@ Schema file is a .txt file which specifies the way data are processed on backend
           dayofyear:int,indexed,T,F,F,F,F,0,O
           year:int,indexed,T,F,F,F,F,0,O
           temperature:float,indexed,F,T,F,F,F,0,O
-
 
 License
 ----

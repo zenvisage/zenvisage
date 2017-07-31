@@ -1,6 +1,7 @@
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
 
+
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.AxisInfo = [];
@@ -48,6 +49,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           console.log("failed: ", response);
         }
     );
+    log.info("Dynamic Class created",JSON.stringify(classList))
   }
 }]);
 
@@ -157,9 +159,30 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
       $compile($el)($scope);
   }});
 
+  // $scope.filterZQL = function () {
+  //   console.log("Filter working!")
+  //   // var xAxis = getSelectedXAxis();
+  //   // var yAxis = getSelectedYAxis();
+  //   // var zAxis = getSelectedCategory();
+  //   // var constraint = $("#filter.form-control").val();
+  //   // //Populate ZQL table
+  //   // // $( ".tabler" ).each(function( index ) {
+  //   // //   $(this).find(".name").val("*f1")
+  //   // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}")
+  //   // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}")
+  //   // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*")
+  //   // //   $(this).find(".constraints").val(constraint)
+  //   // // })
+  //   // // $scope.submitZQL();
+  //   // $scope.getUserQueryResultsWithCallBack();
+  //   // getRepresentativeTrendsWithoutCallback();
+  //   // constructUserQuery();
+  //   // constructRepresentativeTrendQuery();
+  //   // constructOutlierTrendQuery();
+  //   log.info("filter constraint: ",constraint)
 
+  // }
   $scope.submitZQL = function () {
-
     $("#graph-div").empty();
     createZQLGraph( submitNodeZQL );
 
@@ -220,10 +243,11 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
-            plotResults.displayUserQueryResults(response.data.outputCharts, $scope.flipY,false);
+            plotResults.displayUserQueryResults(response.data.outputCharts, false);
         },
         function (response) {
             console.log("failed: ", escape(response));
+            document.getElementById("loadingEclipse").style.display = "none";
         }
     );
   };
@@ -260,10 +284,11 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
-            plotResults.displayUserQueryResults(response.data.outputCharts,$scope.flipY, false);
+            plotResults.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
             console.log("failed: ", escape(response));
+            document.getElementById("loadingEclipse").style.display = "none";
         }
     );
   }
@@ -307,6 +332,7 @@ function checkProcessInput(input)
 }
 
 app.factory('datasetInfo', function() {
+  var tablelist;
   var categoryData;
   var xAxisData;
   var yAxisData;
@@ -317,6 +343,11 @@ app.factory('datasetInfo', function() {
     xAxisData = response.xAxisColumns;
     yAxisData = response.yAxisColumns;
   };
+
+  datasetService.storetablelist = function( response ) {
+    tablelist = response.data
+  };
+
   datasetService.getCategoryData = function()
   {
     return categoryData;
@@ -329,20 +360,24 @@ app.factory('datasetInfo', function() {
   {
     return yAxisData;
   }
+  datasetService.getTablelist = function()
+  {
+    return tablelist;
+  }
   return datasetService;
 });
 
 app.factory('plotResults', function() {
 
     var plottingService = {};
-    plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults, flipY , includeSketch = true )
+    plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults,  includeSketch = true )
     {
-      displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch );
+      displayUserQueryResultsHelper( userQueryResults, includeSketch );
     }
 
-    plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults,flipY )
+    plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
     {
-      displayRepresentativeResultsHelper( representativePatternResults,flipY )
+      displayRepresentativeResultsHelper( representativePatternResults )
     }
 
     plottingService.displayOutlierResults = function displayOutlierResults( outlierResults )
@@ -369,17 +404,41 @@ app.controller('options-controller', [
     $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
     $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
     $scope.flipY = false;
+    $scope.selectedSmoothing = "none";
+    $scope.minDisplayThresh =0.0;
+    // $scope.filter= '';
 
-    $scope.$watchGroup(['similarity', 'numResults'], function( newValue, oldValue ) {
+    $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("similarity",$scope.similarity)
         $scope.callGetUserQueryResults();
       }
     });
 
+    $scope.$watchGroup(['numResults'], function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+       document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("numResults",$scope.numResults)
+        $scope.callGetUserQueryResults();
+      }
+    });
+
+    $scope.$watch('minDisplayThresh', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("minThresh display changed",$scope.minDisplayThresh)
+        console.log("minThresh display changed",$scope.minDisplayThresh)
+        $scope.callGetUserQueryResultsWithCallBack();
+      }
+    });
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        log.info("clusterSize",$scope.clusterSize)
         $scope.callgetRepresentativeTrends();
       }
     });
@@ -387,6 +446,8 @@ app.controller('options-controller', [
     $scope.$watch('showScatterplot', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("showScatterplot",$scope.showScatterplot)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -394,6 +455,8 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("considerRange",$scope.considerRange)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
@@ -401,23 +464,43 @@ app.controller('options-controller', [
     $scope.$watchGroup( ['showOriginalSketch' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("showOriginalSketch",$scope.showOriginalSketch)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
 
-    $scope.$watch('representative', function( newValue, oldValue ) {
-      if (newValue !== oldValue)
-      {
-        $scope.callgetRepresentativeTrends();
-      }
-    });
+    // $scope.$watch('representative', function( newValue, oldValue ) {
+    //   if (newValue !== oldValue)
+    //   {
+    //     $scope.callgetRepresentativeTrends();
+    //   }
+    // });
 
     $scope.$watch('aggregation', function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("aggregation",$scope.aggregation)
         $scope.callGetUserQueryResultsWithCallBack();
       }
     });
+
+    $scope.$watch('flipY', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("flipY",$scope.flipY)
+        $scope.callGetUserQueryResultsWithCallBack();
+      }
+    });
+    // $scope.$watchGroup(['filter'], function( newValue, oldValue ) {
+    //   console.log("Filter working!")
+    //   if (newValue !== oldValue)
+    //   {
+    //     console.log("Filter working!")
+    //   }
+    // });
 
     $scope.removeAndInsertRows = function( n ){
       $scope.$broadcast('removeAndInsertRowshelper', {n} );
@@ -431,16 +514,6 @@ app.controller('options-controller', [
       $scope.$broadcast('insertProcessRowhelper');
     }
 
-    $scope.$watch('flipY', function( newValue, oldValue ) {
-      if (newValue !== oldValue)
-      {
-        //console.log("flipped?",$scope.flipY);
-        $scope.callGetUserQueryResultsWithCallBack();
-        $scope.callgetRepresentativeTrends();
-      }
-    });
-
-
     // TOP K
     $scope.getTopK = function()
     {
@@ -453,34 +526,39 @@ app.controller('options-controller', [
       success(function(response) {
         console.log("getTopK: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayUserQueryResults(response.outputCharts,$scope.flipY,true);
+        plotResults.displayUserQueryResults(response.outputCharts,true);
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
+        document.getElementById("loadingEclipse").style.display = "none";
       });
 
     }
 
     $scope.onflipYChange = function() {
-      var zdata = datasetInfo.getCategoryData()[getSelectedCategory()]
-      var xdata = datasetInfo.getXAxisData()[getSelectedXAxis()]
-      var ydata = datasetInfo.getYAxisData()[getSelectedYAxis()]
-      // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
-      // .done(function(){
-      //   getRepresentativeTrends( getOutlierTrends );
-      // });
-      initializeSketchpadNew(
-        xdata["min"],xdata["max"],ydata["min"],ydata["max"],
-        xdata["name"],ydata["name"],zdata["name"] , $scope.flipY
-       );
-    //  $scope.callGetUserQueryResultsWithCallBack();
-    //  $scope.callgetRepresentativeTrends();
-      console.log("flipY 1", getflipY())
+      document.getElementById("loadingEclipse").style.display = "inline";
+      if(usingPattern == true){
+        patternLoad();
+      }
+      else{
+        createSketchpad(sketchpadData);
     };
+  }
 
+  $scope.onSmoothingChange = function() {
+    document.getElementById("loadingEclipse").style.display = "inline";
+    log.info("selectedSmoothing",$scope.selectedSmoothing)
+    $scope.callGetUserQueryResultsWithCallBack();
+    $scope.callgetRepresentativeTrends();
+  };
 
+  $scope.onFilterChange = function() {
+    log.info("filter change", $("#filter.form-control").val());
+    $scope.callGetUserQueryResultsWithCallBack();
+    $scope.callgetRepresentativeTrends();
+  };
 
-    $scope.clearQuery = function() {
+  $scope.clearQuery = function() {
       $scope.removeAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("")
       $($( ".tabler" )[0]).find(".x-val").val("")
@@ -488,9 +566,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".z-val").val("")
       $($( ".tabler" )[0]).find(".constraints").val("")
       $($( ".tabler" )[0]).find(".process").val("")
-    }
+  }
 
-    $scope.populateWeatherQuery1 = function() {
+  $scope.populateWeatherQuery1 = function() {
 
       $scope.removeAndInsertRows( 1 );
 
@@ -521,7 +599,7 @@ app.controller('options-controller', [
 
       // $($( ".tabler" )[2]).find(".process").val("")
 
-    }
+  }
 
     $scope.populateWeatherQuery2 = function() {
       $scope.removeAndInsertRows( 2 );
@@ -687,7 +765,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".constraints").val("")
       $($( ".tabler" )[3]).find(".process").val("")
     }
+
     $scope.drawFunction = function() {
+      log.info('input equation',$scope.equation)
       var xval = [];
       var plotData = [];
 
@@ -727,6 +807,7 @@ app.controller('options-controller', [
     }
 
     $scope.callGetUserQueryResults = function() {
+
       $rootScope.$emit("callGetUserQueryResults", {});
     }
 
@@ -748,12 +829,26 @@ app.controller('datasetController', [
   '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
   function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
 
+    $scope.inittablelist = function () {
+      $http.get('/zv/gettablelist'
+      ).then(
+          function (response) {
+            console.log("success: ", response);
+            // $scope.tablelist = response.data
+            datasetInfo.storetablelist(response)
+            $scope.tablelist = datasetInfo.getTablelist()
+          },
+          function (response) {
+            console.log("failed: ", response);
+          }
+      );
+    };
 
 
     $scope.chartSettings = ChartSettings;
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
     {
-      console.log("flipY 2: ", getflipY());
+
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
@@ -767,7 +862,7 @@ app.controller('datasetController', [
           default: // Line
               initializeSketchpadNew(
                 xdata["min"],xdata["max"],ydata["min"],ydata["max"],
-                xdata["name"],ydata["name"],zdata["name"] , $scope.flipY
+                xdata["name"],ydata["name"],zdata["name"]
                );
               break;
       }
@@ -778,6 +873,7 @@ app.controller('datasetController', [
     }
 
     $scope.callGetClassInfo = function() {
+      log.info("show dynamic class info")
       $rootScope.$emit("callGetClassInfo", {});
     }
 
@@ -792,12 +888,30 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getUserQueryResults: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayUserQueryResults(response.outputCharts,$scope.flipY,true);
-        $scope.getRepresentativeTrendsWithoutCallback();
-      }).
-      error(function(response) {
+        if(data.error != null)
+        {
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
+            plotResults.displayUserQueryResults(response.outputCharts,true);
+            $scope.getRepresentativeTrendsWithoutCallback();
+          }).
+          error(function(response_error) {
+            console.log("getUserQueryResults: fail");
+            document.getElementById("loadingEclipse").style.display = "none";
+          });
+
+        }
+        else{plotResults.displayUserQueryResults(response.outputCharts,true);
+            $scope.getRepresentativeTrendsWithoutCallback();}
+
+        }).
+        error(function(response) {
         console.log("getUserQueryResults: fail");
-      });
+        });
     }
 
     // for all other normal queries
@@ -812,14 +926,87 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getUserQueryResults: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayUserQueryResults(response.outputCharts,$scope.flipY,true);
+        if(data.error != null)
+        {
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
+            plotResults.displayUserQueryResults(response.outputCharts,true);
+            $scope.getRepresentativeTrendsWithoutCallback();
+          }).
+          error(function(response_error) {
+            console.log("getUserQueryResults: fail");
+            document.getElementById("loadingEclipse").style.display = "none";
+          });
+
+        }
+
+        else{
+        plotResults.displayUserQueryResults(response.outputCharts,true);
+        $scope.getRepresentativeTrendsWithoutCallback();}
+
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
       });
 
-    }
 
+       // Update globalDatasetInfo['classes']
+      var query = {};
+      query["dataset"] = getSelectedDataset();
+      $http.post('/zv/getClassInfo', query
+      ).then(
+          function (response) {
+            console.log("success: ", response);
+            globalDatasetInfo["classes"] = response.data
+            $scope.classes = response.data["classes"]
+          },
+          function (response) {
+            console.log("failed: ", response);
+          }
+      );
+
+    }
+    $scope.downloadResults =function downloadResults(args){
+      console.log("downloading results")
+      var q = constructUserQuery(); //goes to query.js
+      var data = q;
+      q.download = true;
+      console.log("calling downloadSimilarity");
+      q.includeQuery = getIncludeQuery();
+      q.yOnly = getyOnlyCheck();
+
+      var address = '/zv/downloadSimilarity';
+      if (args=='query'){
+        q.downloadThresh = getMinThresh();
+        q.outlierCount = $("#num-results-download").val();
+        q.downloadAll = getDownloadAll();
+        address = '/zv/downloadSimilarity';
+        log.info("query result download",q.outlierCount,q.yOnly,q.includeQuery,q.downloadAll,q.downloadThresh);
+      }else if (args == 'representative'){
+        q.kmeansClusterSize = $("#num-clusters-download").val();
+        q.downloadAll = getDownloadAllRepresentative();
+        address = '/zv/postRepresentative';
+        log.info("representative result download",q.kmeansClusterSize,q.yOnly,q.downloadAll);
+      }else if (args == 'outlier'){
+        address = '/zv/downloadOutlier';
+        q.downloadThresh =  getMinOutlierThresh();
+        q.kmeansClusterSize = $("#num-outlier-download").val();
+        log.info("outlier result download",q.kmeansClusterSize,q.yOnly);
+      }
+
+      $http.post(address, data).
+      success(function(response) {
+        console.log("download : success");
+        alert("Sucessfully saved to zenvisage/target")
+      }).
+      error(function(response) {
+        console.log("download : fail");
+          });
+    }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
       getRepresentativeTrends( getOutlierTrends );
@@ -838,12 +1025,50 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getRepresentativeTrends: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayRepresentativeResults( response.outputCharts , $scope.flipY );
-        outlierCallback();
+        if(data.error != null)
+        { console.log("original representative: ",response.outputCharts);
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result in representative: ", mergejoin_representative(response.outputCharts,response_error.outputCharts));
+            plotResults.displayRepresentativeResults(response.outputCharts,true);
+            outlierCallback();
+          }).
+          error(function(response_error) {
+            console.log("getRepresentativeTrends: fail");
+            document.getElementById("loadingEclipse2").style.display = "none";
+          });
+
+        }
+        else{plotResults.displayRepresentativeResults( response.outputCharts );
+        outlierCallback();}
       }).
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
+        document.getElementById("loadingEclipse2").style.display = "none";
       });
+    }
+    function getyOnlyCheck(){
+      return $("#yOnly").is(':checked');
+    }
+
+    function getIncludeQuery(){
+      return $("#includeQuery").is(':checked');
+    }
+
+    function getDownloadAll(){
+      return $("#downloadAll").is(':checked');
+    }
+    function getDownloadAllRepresentative(){
+      return $("#downloadAllRepresentative").is(':checked');
+    }
+    function getMinThresh(){
+        return $("#min-thresh-download").val();;
+    }
+    function getMinOutlierThresh(){
+      return $("#min-thresh-download-outlier").val();;
     }
 
     function getOutlierTrends()
@@ -858,7 +1083,22 @@ app.controller('datasetController', [
       success(function(response) {
         console.log("getOutlierTrends: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayOutlierResults( response.outputCharts );
+        if(data.error != null)
+        {
+          console.log("calling getErrorResults");
+          $http.post('/zv/postSimilarity_error', data).
+          success(function(response_error) {
+            console.log("getErrorResults: success");
+            if (response_error.length == 0){console.log("empty response")}
+            console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
+            plotResults.displayOutlierResults(response.outputCharts,true);
+          }).
+          error(function(response_error) {
+            console.log("getUserQueryResults: fail");
+          });
+
+        }
+        else{plotResults.displayOutlierResults( response.outputCharts )};
       }).
       error(function(response) {
         console.log("getOutlierTrends: fail");
@@ -875,13 +1115,19 @@ app.controller('datasetController', [
       params: params,
     };
 
-   $scope.onDatasetChange = function() {
-
+   $scope.onDatasetChange = function(input) {
+      document.getElementById("loadingEclipse").style.display = "inline";
+      document.getElementById("loadingEclipse2").style.display = "inline";
+      log.info("dataset selected",$('#dataset-form-control').val())
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
+      console.log('selected dataset',getSelectedDataset());
+      if(input == 'initialize'){var q = constructDatasetChangeQuery('real_estate_tutorial');} //just for tutorial purposes
+      else{
+            var q = constructDatasetChangeQuery(getSelectedDataset());
+          }
 
-      var q = constructDatasetChangeQuery(getSelectedDataset());
 
       var params = {
         "query": q,
@@ -912,6 +1158,7 @@ app.controller('datasetController', [
            $scope.yAxisItems.push(key);
           });
           $scope.selectedYAxis = $scope.yAxisItems[0];
+          log.info("initialized data attribute",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
           //send in first item info
 
           // $.when(initializeSketchpadOnDataAttributeChange(
@@ -927,19 +1174,26 @@ app.controller('datasetController', [
                 response.zAxisColumns[$scope.categories[0]]
               );
           $scope.getUserQueryResultsWithCallBack();
+
         }).
 
         error(function(response) {
           alert('Request failed: /getformdata');
+          document.getElementById("loadingEclipse").style.display = "none";
+          document.getElementById("loadingEclipse2").style.display = "none";
         });
+        resetSelectedErrorAxis();
     }
 
     // when the data selection is changed, the graphs needs to be re-initialized
     // and the rest of the graphs have to be fetched
     $scope.onDataAttributeChange = function() {
+      document.getElementById("loadingEclipse").style.display = "inline";
+      document.getElementById("loadingEclipse2").style.display = "inline";
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      log.info("data attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
       //   getRepresentativeTrends( getOutlierTrends );
@@ -948,19 +1202,22 @@ app.controller('datasetController', [
       $scope.getUserQueryResultsWithCallBack();
     };
 
-    $scope.onflipYChange = function() {
+    $scope.onErrorAttributeChange = function() {
+     document.getElementById("loadingEclipse").style.display = "inline";
+    document.getElementById("loadingEclipse2").style.display = "inline";
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      log.info("error attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
       //   getRepresentativeTrends( getOutlierTrends );
       // });
       initializeSketchpadOnDataAttributeChange(xData, yData, categoryData);
-    //  $scope.callGetUserQueryResultsWithCallBack();
-    //  $scope.callgetRepresentativeTrends();
-      console.log("flipY 1", getflipY())
+      $scope.getUserQueryResultsWithCallBack();
     };
+
+
 
     $rootScope.$on("callGetUserQueryResultsWithCallBack", function(){
       $scope.getUserQueryResultsWithCallBack();
@@ -973,6 +1230,41 @@ app.controller('datasetController', [
     $rootScope.$on("callgetRepresentativeTrends", function(){
       $scope.getRepresentativeTrendsWithoutCallback();
     });
+
+    $( function() {
+      $( "#slider-range-max" ).slider({
+        range: "max",
+        min: 0,
+        max: 1,
+        step:0.05,
+        value: 0.5,
+        slide: function( event, ui ) {
+          $( "#amount" ).val( ui.value );
+        //  console.log(ui.value);
+        }
+      } );
+      $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+      $( "#slider-range-max"  ).slider({
+        change: function( event, ui ) {
+            var smoothingcoefficient=$( "#slider-range-max" ).slider( "value" )
+            log.info("smoothingcoefficient",smoothingcoefficient)
+            if(getSmoothingType() != "none"){
+              $scope.getUserQueryResults();
+              $scope.getRepresentativeTrendsWithoutCallback();
+            }
+        }
+    })
+
+    });
+
+    // this init is just for tutorial purpose
+    var init = function () {
+       $scope.onDatasetChange('initialize');
+    };
+      //  init();
+    // and fire it after definition
+
+
 }]);
 
 app.service('ChartSettings', function () {

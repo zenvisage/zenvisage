@@ -51,6 +51,9 @@ public class DynamicClass {
 		List<String> updateList = new ArrayList<String>();
 		List<String> sqlList = new ArrayList<String>();
 		GeneratePermutations(classes, updateList, sqlList, 0, "", "");
+		
+		System.out.println("updatelist: "+updateList);
+		System.out.println("sql list: "+sqlList);
 		int i = 0;
 		for(; i < updateList.size()-1; i++){
 			ret.append(" When "+ sqlList.get(i) + " THEN '" + updateList.get(i) +  "'\n");
@@ -60,6 +63,22 @@ public class DynamicClass {
 		return ret.toString();
 	}
 
+	public String retrieveSQL_aggregation(ArrayList<String> Attributes){
+		StringBuilder ret = new StringBuilder("INSERT INTO " + " dynamic_class_aggregations_temp " + " (table_name,tag,ranges,attributes) ");
+		List<String> updateList_tags = new ArrayList<String>();
+		List<String> updateList_ranges = new ArrayList<String>();
+		List<String> sqlList = new ArrayList<String>();
+		GeneratePermutations_aggregation(classes, updateList_tags, updateList_ranges, sqlList, 0, "", "", "");
+		System.out.println(updateList_tags);
+		int i = 0;
+		ret.append(" VALUES \n");
+		for(; i < updateList_tags.size()-1; i++){
+			ret.append("('"+this.dataset+"','"+updateList_tags.get(i)+"','"+updateList_ranges.get(i)+"','"+Attributes.toString()+"'),\n");
+		}
+		ret.append("('"+this.dataset+"','"+updateList_tags.get(updateList_tags.size()-1)+"','"+updateList_ranges.get(updateList_tags.size()-1)+"','"+Attributes.toString()+"');\n");
+		return ret.toString();
+	}
+	
 	public void GeneratePermutations(ClassElement[] classes, List<String> updateList, List<String> sqlList, int depth, String current, String currentSQL)
 	{
 	    if(depth == classes.length)
@@ -80,6 +99,37 @@ public class DynamicClass {
 	    			GeneratePermutations(classes, updateList, sqlList, depth + 1, current + i + ".", currentSQL + addon);
 	    		}else{
 	    			GeneratePermutations(classes, updateList, sqlList, depth + 1, current + i + ".", currentSQL + " AND " + addon);
+	    		}
+	    		
+	    	}
+	    }
+	}
+	
+	
+	
+	// Same function as GeneratePermutation but do not generate tags that contain -1 values. Also generate ranges. 
+	
+	public void GeneratePermutations_aggregation(ClassElement[] classes, List<String> updateList_tags, List<String>updateList_ranges ,List<String> sqlList, int depth, String current_tags, String current_ranges, String currentSQL)
+	{
+	    if(depth == classes.length)
+	    {
+		   updateList_tags.add(current_tags.substring(0, current_tags.length()-1));
+	       updateList_ranges.add(current_ranges.substring(0, current_ranges.length()-1));
+	       sqlList.add(currentSQL);
+	       return;
+	     }
+
+	    for(int i = classes[depth].values.length-1; i >= -1 ; i--)
+	    {
+	    	if( i == -1)
+	    		return;
+	    	else {
+	    		String addon = classes[depth].name + " >= " + classes[depth].values[i][0]
+	    				+ " AND " + classes[depth].name + " < " + classes[depth].values[i][1];
+	    		if(currentSQL.equals("")){
+	    			GeneratePermutations_aggregation(classes, updateList_tags, updateList_ranges, sqlList, depth + 1, current_tags + i + ".", current_ranges + "["+Float.toString(classes[depth].values[i][0]) + " " + Float.toString(classes[depth].values[i][1])+ "]" + ",", currentSQL + addon);
+	    		}else{
+	    			GeneratePermutations_aggregation(classes, updateList_tags, updateList_ranges, sqlList, depth + 1, current_tags + i + ".", current_ranges + "["+Float.toString(classes[depth].values[i][0]) + " " + Float.toString(classes[depth].values[i][1])+ "]" + ",", currentSQL + " AND " + addon);
 	    		}
 	    		
 	    	}

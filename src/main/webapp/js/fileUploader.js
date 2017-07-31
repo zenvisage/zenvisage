@@ -23,4 +23,13 @@ $('#uploaderForm').on('submit', function(e) {
             alert(errorThrown);
         }
     });
+    log.info("dataset upload: ",$("#datasetNameInput").val())
+});
+
+$("#pattern-upload").on('submit', function(e) {
+    $('#pattern-upload').modal('toggle');
+});
+
+$("#class-creation").on('submit', function(e) {
+    $('#class-creation').modal('toggle');
 });

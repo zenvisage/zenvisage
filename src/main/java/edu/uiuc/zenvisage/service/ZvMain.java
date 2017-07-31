@@ -4,13 +4,17 @@
 package edu.uiuc.zenvisage.service;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -30,6 +35,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.codehaus.jackson.JsonNode;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -106,7 +112,17 @@ public class ZvMain {
 		sqlQueryExecutor = new SQLQueryExecutor();
 		System.out.println("ZVMAIN LOADED");
 	}
-
+	
+	public int getDatasetLength(String zAttr, String datasetname) throws SQLException{
+		String query = "SELECT COUNT(DISTINCT("+zAttr+")) FROM "+datasetname+';';
+		System.out.println("query:"+query);
+		ResultSet ret = sqlQueryExecutor.query(query);
+		int size = 0;
+		while (ret.next()){
+			size = ret.getInt("count");
+		}
+		return size;
+	}
 //	public void loadData() throws IOException, InterruptedException{
 //
 //		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
@@ -361,12 +377,19 @@ public class ZvMain {
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
 	    sqlQueryExecutor.persistDynamicClassPowerSetMethod(dc);
 	    sqlQueryExecutor.persistDynamicClassDetails(dc);
+	    sqlQueryExecutor.createDynamicClassAggregation(dc);
 	}
 	
 	public String runRetrieveClasses(String query) throws IOException, SQLException{
 		DynamicClass dc = sqlQueryExecutor.retrieveDynamicClassDetails(query);
 		String retrieved = new ObjectMapper().writeValueAsString(dc);
 		System.out.println("Retrieved Dynamic Classes Configuration Query:"+retrieved);
+		return retrieved;
+	}
+	
+	public ArrayList<String> getTablelist() throws IOException, SQLException{
+		ArrayList<String> retrieved = sqlQueryExecutor.gettablelist();
+		System.out.println("Retrieved table list in db:"+retrieved);
 		return retrieved;
 	}
 	/* Will be obsolete when the new separated query method is utilized */
@@ -432,14 +455,65 @@ public class ZvMain {
 //		 ObjectMapper mapper = new ObjectMapper();
 //		 return mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 //	}
+	public Result runErrorQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+		 System.out.println("runErrorQuery executing!");
+		 ZvQuery args_error = new ObjectMapper().readValue(query,ZvQuery.class);
+		 args_error.setYaxisAsError(); 
 
+		 Query q_error = new Query("query").setGrouby(args_error.groupBy+","+args_error.xAxis).setAggregationFunc(args_error.aggrFunc).setAggregationVaribale(args_error.getAggrVar());
+		 if (method.equals("SimilaritySearch"))
+			 setFilter(q_error, args_error);
+		 System.out.println("args_error:"+args_error.toString());
+		 System.out.println("Before SQL");
+		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q_error.getZQLRow(), this.databaseName);
+		 System.out.println("After SQL");
+		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+		 
+		 System.out.println("After To HashMap");
+		 output = cleanUpDataWithAllZeros(output);
+		 
+		 
+		 //
+		output= SmoothingUtil.applySmoothing(output,args_error);
+		 
+		 // setup result format
+		 Result finalOutput = new Result();
+		 finalOutput.method = method;
+		 
 
-	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		 ChartOutputUtil chartOutput = new ChartOutputUtil(finalOutput, args_error, HashBiMap.create());
+		 chartOutput.chartOutput(output, args_error, finalOutput);
+		 
+		 return finalOutput;
+						 // jaewoo implementation for error bars 
+//		 DataReformation dataReformatter = new DataReformation(normalization);
+//		 double[][] normalizedgroups;
+//			
+//
+//			 normalizedgroups = dataReformatter.reformatData(output);
+//			 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args_error);
+//			 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args_error.dataX, args_error.dataY, args_error.xRange, normalizedgroups[0].length);
+//			 interpolatedQuery= SmoothingUtil.applySmoothing(interpolatedQuery,args_error);
+//				Analysis analysis_error = new Similarity(chartOutput,distance,normalization,paa,args_error,dataReformatter, interpolatedQuery);
+//				((Similarity) analysis_error).setDescending(false);
+//				//analysis_error.compute(output, normalizedgroups, args_error);
+//				return analysis_error.getChartOutput().finalOutput;
+		 
+		
+	}
+	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
-//		System.out.println(query);
-
+		 System.out.println("runDragnDropInterfaceQuery");
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-
+		 System.out.println("args.downloadAll:");
+		 System.out.println(args.downloadAll);
+		 if (args.downloadAll){
+			 int size = getDatasetLength(args.groupBy,args.databasename);
+			 System.out.println("size:"+Integer.toString(size));
+			 args.setOutlierCount(size);
+			 query = new ObjectMapper().writeValueAsString(args);
+		 }
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
@@ -567,13 +641,100 @@ public class ZvMain {
 		 System.out.println("After Interpolation and normalization");
 
 		 analysis.compute(output, normalizedgroups, args);
+		 
 		 System.out.println("After Distance calulations");
+		 return analysis.getChartOutput().finalOutput;
+	}
 
+	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		 System.out.println("runDragnDropInterfaceQuerySeparated:");
+		 Result result = runDragnDropInterfaceQuery(query,method);
 		 ObjectMapper mapper = new ObjectMapper();
 		 System.out.println("After Interpolation and normalization");
 		 String res = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
 		 System.out.println("After mapping to output string");
 		 return res;
+	}
+	
+	public synchronized String runDragnDropInterfaceQuerySeparated_error(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Result result = runErrorQuery(query,method);
+		 ObjectMapper mapper = new ObjectMapper();
+		 String res = mapper.writeValueAsString(result);
+		 return res;
+	}
+	
+	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+		// Save Results Query to a csv file
+		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 System.out.println("args.downloadAll:");
+		 System.out.println(args.downloadAll);
+		 if (args.downloadAll){
+			 int size = getDatasetLength(args.groupBy,args.databasename);
+			 System.out.println("size:"+Integer.toString(size));
+			 args.setOutlierCount(size);
+			 query = new ObjectMapper().writeValueAsString(args);
+//			 System.out.println("query:"+query);
+		 }
+		 System.out.println("saveDragnDropInterfaceQuerySeparated:");
+		 System.out.println("method:"+method);
+		 Result result = runDragnDropInterfaceQuery(query,method);
+		 System.out.println("Result:"+result);
+		 
+		 System.out.println("After Interpolation and normalization");
+		 
+		 ArrayList<Chart> outputCharts = result.outputCharts;
+		 boolean downloadX = args.deriveDownloadX();
+		 boolean includeQuery = args.getIncludeQuery();
+		 
+		 System.out.print("downloadThresh:");
+		 System.out.println(args.downloadThresh);
+
+		 String dataX = String.join(",", Arrays.toString(args.getDataX()));
+		 String dataY = String.join(",", Arrays.toString(args.getDataY()));
+		 
+		 FileWriter fx = null;
+		 BufferedWriter bx = null;
+		 Chart sampleChartSchema = outputCharts.get(0);
+		 String prefix = "";
+
+		 if (method.equals("Outlier")) {
+			 prefix = "outlier_";
+		 }
+		 
+		 if (args.deriveDownloadX()){
+			 fx = new FileWriter(prefix+sampleChartSchema.xType+".csv");
+			 bx = new BufferedWriter(fx);
+		 }
+		 FileWriter fy = new FileWriter(prefix+sampleChartSchema.yType+".csv");
+		 BufferedWriter by = new BufferedWriter(fy);
+
+		 // Writing query
+		 if (method.equals("SimilaritySearch") && includeQuery) {
+			 by.write("query ,"+"1.0,"+ dataY.substring(1, dataY.length() - 1)+"\n");
+			 if (downloadX){
+				 bx.write("query ,"+ dataX.substring(1, dataX.length() - 1)+"\n");
+			 }
+		 }
+		 
+		 // Writing individual visualizations
+		 for (int i = 0; i < outputCharts.size(); i++){
+			 Chart viz = outputCharts.get(i);
+			 if (args.downloadThresh!=0.0){ // If nonzero downloadThresh set, then use it as a cutoff
+				 if (viz.normalizedDistance>=args.downloadThresh){
+					 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+					 if (downloadX){
+						 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+					 }	 
+				 }
+			 }else{
+				 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+				 if (downloadX){
+					 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+				 }	 
+			 }
+		 }
+		 if (downloadX){bx.close();}
+		 by.close();
 	}
 
 
@@ -664,6 +825,10 @@ public class ZvMain {
 	 * @param arg
 	 */
 	public void setFilter(Query q, ZvQuery arg) {
+	
+		if (!arg.filter.equals(""))
+			q.setCompositeFilter(arg.filter);
+		
 		if (arg.predicateValue.equals("")) return;
 		Query.Filter filter = new Query.FilterPredicate(arg.predicateColumn,Query.FilterOperator.fromString(arg.predicateOperator),arg.predicateValue);
 		q.setFilter(filter);

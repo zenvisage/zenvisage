@@ -23,6 +23,7 @@ function constructOutlierTrendQuery()
 
 function Query( searchMethod ) {
   this.method = searchMethod; // fix to dynamically fetch
+  this.databasename = getSelectedDataset();
   this.xAxis = getSelectedXAxis();
   this.yAxis = getSelectedYAxis();
   this.groupBy = getSelectedCategory();
@@ -33,6 +34,8 @@ function Query( searchMethod ) {
   this.dataY = []; // fix to dynamically fetch
   this.yMax = null; // fix to dynamically fetch. is this field necessary?
   this.yMin = null; // fix to dynamically fetch. is this field necessary?
+  this.error = getSelectedErrorAxis(); // error column use for errorbars
+  //  this.error = 'listingpricepersqft'; // error column use for errorbars
   var points = []
 
   for(var i = 0; i < sketchpadData.length; i++){
@@ -47,18 +50,52 @@ function Query( searchMethod ) {
   this.distanceNormalized = false; // fix to dynamically fetch
   this.outputNormalized = false; // fix to dynamically fetch
   this.clustering = "KMeans"; // fix to dynamically fetch
-  this.kMeansClusterSize = getClusterSize();
+  this.kmeansClusterSize = getClusterSize();
   this.distance_metric = getDistanceMethod(); // fix to dynamically fetch
-  this.predicateOperator = "="; // fix to dynamically fetch
-  this.predicateColumn = getSelectedCategory();
-  this.predicateValue = ""; // fix to dynamically fetch
+  this.predicateOperator = "";
+  this.predicateColumn = "";
+  this.predicateValue = "";
+  this.filter = getFilter();
   this.xRange = getXRange();
   //this.segmentCount = getNumSegments();
   this.considerRange = getConsiderRange();
-  this.smoothingType = getSmoothingType();// fix to dynamically fetch
-  this.smoothingcoefficient = getSmoothingCoefficient();// fix to dynamically fetch
+  this.smoothingType = getSmoothingType();
+  this.smoothingcoefficient = getSmoothingCoefficient();
+  this.download=false;
+  this.includeQuery=false;
+  this.yOnly=false;
+  this.downloadAll=false;
+  this.downloadThresh=getDownloadThresh();
+  this.minDisplayThresh=getMinDisplayThresh();
 }
-
+function getDownloadThresh(){
+  return $("#min-thresh-download").val();
+}
+function getFilter(){
+  return $("#filter.form-control").val();
+}
+// function getParsePredicate(){
+//   var constraint = $("#filter.form-control").val();
+//   var predicateOperator = "=";
+//   var predicateColumn = getSelectedCategory();
+//   var predicateValue = ""
+//   if (constraint.includes(">")){
+//     predicateOperator=">";
+//   }
+//   else if (constraint.includes("<")){
+//     predicateOperator="<";
+//   }
+//   else if (constraint.includes("=")){
+//     predicateOperator="=";
+//   }
+//   else{
+//     //not a constraint statement
+//     return [predicateOperator,predicateColumn,predicateValue]
+//   }
+//   predicateColumn= constraint.split(">")[0]
+//   predicateValue= constraint.split(">")[1]
+//   return [predicateOperator,predicateColumn,predicateValue]
+// }
 function SketchPoints(xAxisName, yAxisName, points){
   var xAxisData = globalDatasetInfo.xAxisColumns;
   var yAxisData = globalDatasetInfo.yAxisColumns;
@@ -87,6 +124,22 @@ function getSelectedYAxis()
 function getSelectedCategory()
 {
   return angular.element($("#sidebar")).scope().selectedCategory;
+}
+
+function getSelectedErrorAxis()
+{
+  var selectedError = angular.element($("#sidebar")).scope().selectedErrorAxis;
+  if(selectedError == "none"){
+    return null;
+  }
+  else{
+    return selectedError;
+  }
+}
+
+function resetSelectedErrorAxis()
+{
+  angular.element($("#sidebar")).scope().selectedErrorAxis = "none"; 
 }
 
 function getSmoothingCoefficient()
@@ -118,6 +171,15 @@ function getNumResults()
 {
   return angular.element($("#table-div")).scope().numResults;
 }
+function getMinDisplayThresh()
+{
+  // console.log("getMinDisplayThresh:");
+  // console.log($("#min-display-thresh").val());
+  // return $("#min-display-thresh").val();
+  console.log("getMinDisplayThresh:");
+  console.log(angular.element($("#table-div")).scope().minDisplayThresh);
+  return angular.element($("#table-div")).scope().minDisplayThresh;
+}
 
 function getClusterSize()
 {
@@ -139,6 +201,11 @@ function getflipY()
   return angular.element($("#table-div")).scope().flipY;
 }
 
+function usingPattern()
+{
+  return angular.element($("#table-div")).scope().flipY;
+}
+
 function getShowOriginalSketch()
 {
   return angular.element($("#table-div")).scope().showOriginalSketch;
@@ -152,4 +219,34 @@ function getNumSegments()
 function getSelectedDataset()
 {
   return $("#dataset-form-control option:selected").val();
+}
+
+function mergejoin(outputcharts_orig,outputcharts_error)
+{
+ console.log("original: ",outputcharts_orig);
+ console.log("error: ",outputcharts_error);
+  var errochartsmap = {};
+  outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
+
+  // now do the "join":
+  outputcharts_orig.forEach(function(outputcharts_orig) {
+      outputcharts_orig["error"] = errochartsmap[outputcharts_orig.title];
+  });
+console.log("final: ",outputcharts_orig);
+  return outputcharts_orig;
+}
+
+function mergejoin_representative(outputcharts_orig,outputcharts_error)
+{
+ console.log("original: ",outputcharts_orig);
+ console.log("error: ",outputcharts_error);
+  var errochartsmap = {};
+  outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
+
+  // now do the "join":
+  outputcharts_orig.forEach(function(outputcharts_orig) {
+      outputcharts_orig["error"] = errochartsmap[outputcharts_orig.xType];
+  });
+console.log("final: ",outputcharts_orig);
+  return outputcharts_orig;
 }

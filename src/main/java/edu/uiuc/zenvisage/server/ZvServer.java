@@ -9,13 +9,18 @@ import java.util.List;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 public class ZvServer {
 
 	private Server server;
-	private static int port = 8080;	
+	private static int port;	
+	
+	static{
+		port = Readconfig.getPort();
+	}
 	
 	public void setPort(int port) {
 		this.port = port;
