@@ -416,9 +416,22 @@ function setPoint(event, g, context) {
 }
 
 function patternLoad(){
-  data = JSON.parse($("#pattern-upload-textarea")[0].value);
+  var delimiter=" "
+  if ($("#x-pattern").val().indexOf(",")>-1){
+    delimiter=","
+  }
+  var xvals = $("#x-pattern").val().split(delimiter);
+  var yvals = $("#y-pattern").val().split(delimiter);
+  if (xvals.length != yvals.length){
+    alert("Error: The lengths of x and y values must match!");
+  }
+  data =[];
+  for(var i = 0; i< xvals.length; i++){
+     data.push({"xval":xvals[i],"yval":yvals[i]})
+  }
+  // data = JSON.parse($("#pattern-upload-textarea")[0].value);
   usingPattern = true;
-  log.info("patternLoad : ",$("#pattern-upload-textarea")[0].value)
+  log.info("patternLoad : ",xvals,yvals)
   createSketchpad( data );
   refreshZoomEventHandler();
 }

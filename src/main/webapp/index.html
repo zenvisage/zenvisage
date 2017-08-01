@@ -50,7 +50,7 @@
                 <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
               </div>
               <div class="modal-body">
-                Dataset name<input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
                 <div class="row">
                   <div class="col-md-5">
                     <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
@@ -78,11 +78,11 @@
                 <h4 class="modal-title">Upload Query Data Pattern</h4>
             </div>
             <div class="modal-body" id="pattern-upload-body">
-                JSON Example:
-                <br>
-                <small>[{"xval":2450552,"yval":13.847},{"xval":2450567,"yval":13.637},{"xval":2450569,"yval":13.717},{"xval":2450597,"yval":14.825},{"xval":2450607,"yval":15.262}]</small>
+                Please submit the x and y values of the query pattern using comma or space-delimited lists.
               <form id="pattern-upload-form" onsubmit="return patternLoad();">
-                <textarea rows="10" cols="55" id="pattern-upload-textarea"></textarea>
+                <br> x values: <input type="text" id="x-pattern" placeholder="e.g. 27,42,65,53" style="width: 80%;">
+                <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
+                <br>
                 <div class="modal-footer">
                   <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
                 </div>
