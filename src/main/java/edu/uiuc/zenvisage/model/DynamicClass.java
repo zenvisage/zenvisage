@@ -63,8 +63,8 @@ public class DynamicClass {
 		return ret.toString();
 	}
 
-	public String retrieveSQL_aggregation(){
-		StringBuilder ret = new StringBuilder("INSERT INTO " + " dynamic_class_aggregations_temp " + " (table_name,tag,ranges) ");
+	public String retrieveSQL_aggregation(ArrayList<String> Attributes){
+		StringBuilder ret = new StringBuilder("INSERT INTO " + " dynamic_class_aggregations_temp " + " (table_name,tag,ranges,attributes) ");
 		List<String> updateList_tags = new ArrayList<String>();
 		List<String> updateList_ranges = new ArrayList<String>();
 		List<String> sqlList = new ArrayList<String>();
@@ -73,11 +73,10 @@ public class DynamicClass {
 		int i = 0;
 		ret.append(" VALUES \n");
 		for(; i < updateList_tags.size()-1; i++){
-			ret.append("('"+this.dataset+"','"+updateList_tags.get(i)+"','"+updateList_ranges.get(i)+"'),\n");
+			ret.append("('"+this.dataset+"','"+updateList_tags.get(i)+"','"+updateList_ranges.get(i)+"','"+Attributes.toString()+"'),\n");
 		}
-		ret.append("('"+this.dataset+"','"+updateList_tags.get(updateList_tags.size()-1)+"','"+updateList_ranges.get(updateList_tags.size()-1)+"');\n");
+		ret.append("('"+this.dataset+"','"+updateList_tags.get(updateList_tags.size()-1)+"','"+updateList_ranges.get(updateList_tags.size()-1)+"','"+Attributes.toString()+"');\n");
 		return ret.toString();
-	
 	}
 	
 	public void GeneratePermutations(ClassElement[] classes, List<String> updateList, List<String> sqlList, int depth, String current, String currentSQL)

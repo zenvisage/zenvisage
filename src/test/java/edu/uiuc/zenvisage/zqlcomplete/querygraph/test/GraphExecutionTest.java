@@ -123,7 +123,7 @@ public class GraphExecutionTest {
 			logger.info("testing Scatter query");
 			String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
 			logger.info("Output");
-			logger.info(outputGraphExecutor);
+			//logger.info(outputGraphExecutor);
 
 			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {
@@ -142,7 +142,7 @@ public class GraphExecutionTest {
 			logger.info("testing Scatter query");
 			String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
 			logger.info("Output");
-			logger.info(outputGraphExecutor);
+			//logger.info(outputGraphExecutor);
 
 			assertFalse(outputGraphExecutor.equals(nullOutput));
 		} catch (IOException | InterruptedException e) {

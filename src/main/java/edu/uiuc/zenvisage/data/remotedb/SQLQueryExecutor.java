@@ -72,7 +72,7 @@ public class SQLQueryExecutor {
 	public ResultSet query(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      ResultSet ret = stmt.executeQuery(sQLQuery);
-	      stmt.close();
+	      //stmt.close();
 	      return ret;
 	}
 	
@@ -471,20 +471,25 @@ public class SQLQueryExecutor {
 		 */
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
-		String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
+		String sql = "SELECT tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
+		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		DynamicClass dc = new DynamicClass();
 		
 		dc.dataset = tableName;
 		List<String[]> l = new ArrayList<String[]>();
+		float[][] testArray = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f}};
+		
 		while(rs.next()){
-			l.add(new String[]{rs.getString(1),rs.getString(2)});
+			System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+			l.add(new String[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)});
 		}
 		dc.classes = new ClassElement[l.size()];
 		for(int i = 0; i < l.size(); i++){
 			String[] cur = l.get(i);
-			dc.classes[i] = new ClassElement(cur[0], ClassElement.fromStringToFloatArray(cur[1]));
+			dc.classes[i] = new ClassElement(dc.dataset,testArray, cur[0], cur[1], cur[2], Integer.parseInt(cur[3]));
 		}
 		return dc;
 	}
@@ -523,6 +528,15 @@ public class SQLQueryExecutor {
 
 	public void createDynamicClassAggregation(DynamicClass dc) throws SQLException{
 		SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
+
+		String sql_attribute = "SELECT attribute FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + dc.dataset + "'";
+		Statement st_attribute = c.createStatement();
+		ResultSet rs = st_attribute.executeQuery(sql_attribute);
+		ArrayList<String> attributeList = new ArrayList<String>();
+		while(rs.next()){
+			attributeList.add(rs.getString(1));
+		}
+		System.out.println(attributeList);
 		
 		// create temporary table to store initial permutations 
 		
@@ -530,21 +544,23 @@ public class SQLQueryExecutor {
 				createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
 	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
-	                " Ranges            TEXT     NOT NULL) " );
+	                " Ranges            TEXT     NOT NULL, "+
+	                " Attributes           TEXT     NOT NULL) " );
 	            
 		}
 		else{
 			sqlQueryExecutor.dropTable("dynamic_class_aggregations_temp");
 			createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
-	                " (Table_Name           TEXT    NOT NULL, " +
+	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
-	                " Ranges            TEXT     NOT NULL) " );
+	                " Ranges            TEXT     NOT NULL, "+
+	                " Attributes           TEXT     NOT NULL) " );
 			
 		}
 		
 		// generate the sql to insert all permutations. Eg. 0.0.0 to 1.1.2
 		Statement st_ranges= c.createStatement();
-		String sql_ranges = dc.retrieveSQL_aggregation();
+		String sql_ranges = dc.retrieveSQL_aggregation(attributeList);
 		System.out.println("sql: "+sql_ranges);
 		st_ranges.execute(sql_ranges);
 		st_ranges.close();
@@ -554,6 +570,7 @@ public class SQLQueryExecutor {
 		createTable("CREATE TABLE dynamic_class_aggregations  " +
                 " (Table_Name           TEXT    NOT NULL, " +
                 " Tag            TEXT     NOT NULL, " +
+                " Attributes            TEXT     NOT NULL, " +
                 " Ranges            TEXT     NOT NULL, " +
                 " Count           INT     NOT NULL) " );
             
@@ -563,6 +580,7 @@ public class SQLQueryExecutor {
 		createTable("CREATE TABLE dynamic_class_aggregations  " +
                 " (Table_Name           TEXT    NOT NULL, " +
                 " Tag            TEXT     NOT NULL, " +
+                " Attributes            TEXT     NOT NULL, " +
                 " Ranges            TEXT     NOT NULL, " +
                 " Count           INT     NOT NULL) " );
 		
@@ -572,10 +590,10 @@ public class SQLQueryExecutor {
 	
 		Statement st= c.createStatement();
 		
-		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,ranges,count)"
-				+ "SELECT d.table_name,d.ranges, d.tag, COUNT(r.dynamic_class)\n"
+		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)"
+				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.dynamic_class)\n"
 				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.dynamic_class = d.tag\n"
-				+ "GROUP BY d.table_name, d.tag,d.ranges;");
+				+ "GROUP BY d.table_name, d.tag, d.attributes,d.ranges;");
 		
 		st.execute(sql);
 		//System.out.print(t);

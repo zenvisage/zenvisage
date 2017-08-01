@@ -45,14 +45,14 @@ public class KMeans extends Clustering {
 		// TODO Auto-generated method stub
 		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 //		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
-		KMeansPlusPlusClusterer<DoublePoint> kmeans1 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize * 3, normalizedgroups.length), 15);
+		KMeansPlusPlusClusterer<DoublePoint> kmeans1 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize * 3, normalizedgroups.length), 15);
 		List<DoublePoint> dataset1 = new ArrayList<DoublePoint>();
 		for(int i = 0; i < normalizedgroups.length; i++) {
 			dataset1.add(new DoublePoint(normalizedgroups[i]));
 		}		
 		List<CentroidCluster<DoublePoint>> clusters1 = kmeans1.cluster(dataset1);
 		
-		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize, clusters1.size()), 15);
+		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize, clusters1.size()), 15);
 		List<DoublePoint> dataset2 = new ArrayList<DoublePoint>();
 		for (int i = 0; i < clusters1.size(); i++) {	    
 	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(i)).getCenter();    
@@ -81,57 +81,20 @@ public class KMeans extends Clustering {
 		for (int i = 0; i < clusters2.size(); i++) {
 			clustersFinal.add(new CentroidCluster<DoublePoint>(null));
 		}
-		List<List<Double>> clusteredTrends = new ArrayList();
-		List<Double> clusterDist = new ArrayList();
+		
 		for (int i = 0; i < clusters1.size(); i++) {
 			double minDistance = Double.MAX_VALUE;
 			int minDistanceIndex = 0;
 			for (int j = 0; j < clusters2.size(); j++) {
 				double d = distance.calculateDistance(clusters1.get(i).getCenter().getPoint(), clusters2.get(j).getCenter().getPoint());
-				clusterDist.add(d);
 				if (d < minDistance) {
 					minDistance = d;
 					minDistanceIndex = j;
 				}
 			}
 			List <DoublePoint> c = clusters1.get(i).getPoints();
-			System.out.println("Looping through time series in cluster1:");
-			for (int z=0 ; z< c.size();z++){
-//				System.out.print(c.get(z).getPoint());
-//				System.out.print(c.get(z).getPoint().length);
-//				System.out.print(c.get(z).getPoint().toString());
-				System.out.print("[");
-				for (int zi =0 ; zi < c.get(z).getPoint().length;zi++){
-					System.out.print(c.get(z).getPoint()[zi]);
-					System.out.print(',');
-				}
-				System.out.println("]");
-//				System.out.println("toString:");
-//				System.out.println(c.get(z).getPoint().toString());
-			}
-				
-//			System.out.println("clusters1.get(i).getPoints():   ");
-//			System.out.println(clusters1.get(i).getPoints());
-//			System.out.println((double[]) clusters1.get(i));
-			
 			clusters2RealSizes[minDistanceIndex] += clusters1.get(i).getPoints().size();
 		}
-		System.out.println("clusterDist:");
-		System.out.println(clusterDist);
-//		System.out.println(Collections.sort(clusterDist));
-		Collections.sort(clusterDist);
-		List<Double> topk = new ArrayList<Double>(clusterDist.subList(0,clusters2RealSizes[0]));
-		//Argsort and insert topk time sereies for each cluster into clusterTrends
-//		clusteredTrends[]
-		System.out.println("topk:");
-		System.out.println(topk);
-		System.out.println("clusters2RealSizes:");
-		System.out.println(clusters2RealSizes);
-		for (int r = 0; r<clusters2RealSizes.length;r++){
-			System.out.println(clusters2RealSizes[r]);
-		}
-		System.out.println("clusters2:");
-		System.out.println(clusters2);
 		return new DummyCluster(clusters2, clusters2RealSizes);
 	}
 	
@@ -145,7 +108,7 @@ public class KMeans extends Clustering {
 		// TODO Auto-generated method stub
 		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 //		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
-		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kMeansClusterSize * 5, normalizedgroups.length), 15);
+		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize * 5, normalizedgroups.length), 15);
 		List<DoublePoint> dataset = new ArrayList<DoublePoint>();
 		for(int i = 0; i < normalizedgroups.length; i++) {
 			dataset.add(new DoublePoint(normalizedgroups[i]));
@@ -153,7 +116,7 @@ public class KMeans extends Clustering {
 		List<CentroidCluster<DoublePoint>> clusters = kmeans.cluster(dataset);
 		
 		//second-step clustering
-		int reducedClusterNumber = clusters.size() - Math.min(this.args.kMeansClusterSize, clusters.size());
+		int reducedClusterNumber = clusters.size() - Math.min(this.args.kmeansClusterSize, clusters.size());
 		for (int i = 0; i < reducedClusterNumber; ++i) {
 			int jmin = -1;
 			int lmin = -1;
@@ -226,6 +189,7 @@ public class KMeans extends Clustering {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
+	// This function is not called during clustering, instead service.Representative.compute is called
 	public List<RepresentativeTrend> computeRepresentativeTrends(List clusters,ArrayList<String> mappings,double[][] normalizedGroups) {
 		// TODO Auto-generated method stub
 		System.out.println("computeRepresentativeTrends");
@@ -240,17 +204,12 @@ public class KMeans extends Clustering {
 	  	  	double mindist = distance.calculateDistance(p, normalizedGroups[0]);
 	  	  	for (int l = 1; l < normalizedGroups.length; l++) {
 	  	  		double d = distance.calculateDistance(p, normalizedGroups[l]);
-		  	  	System.out.println("normalizedGroups[l]:");
-				System.out.println(normalizedGroups[l]);
 	  	  		if (d < mindist ) {
 	  	  			min = l;
 	  	  		 	mindist = d;
 	  	  		 	
 	  	  		}
 	  	  	}
-	  	  	System.out.println("mappings:");
-	  	    System.out.println(mappings);
-	  	    
 	  	  	repTrend.setP(normalizedGroups[min]);
 	  	  	repTrend.setKey(mappings.get(min));
 	  	  	repTrend.setSimilarTrends( ((CentroidCluster<DoublePoint>) clusters.get(k)).getPoints().size());

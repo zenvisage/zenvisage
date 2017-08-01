@@ -94,13 +94,18 @@ public class DatabaseAutoLoader {
 		dataset4.add(file.getAbsolutePath());
 
 
-		//		List<String> dataset3 = new ArrayList<String>(); //flight
-//		List<String> dataset4 = new ArrayList<String>(); //cmu
+		List<String> dataset5 = new ArrayList<String>(); //cmu
+		dataset5.add("real_estate_tutorial");
+		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate_tutorial.csv")).getFile());
+		dataset5.add(file.getAbsolutePath());
+		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
+		dataset5.add(file.getAbsolutePath());
 
 		ZvMain.uploadDatasettoDB(dataset1,false);
 		ZvMain.uploadDatasettoDB(dataset2,false);
 		ZvMain.uploadDatasettoDB(dataset3,false);
 		ZvMain.uploadDatasettoDB(dataset4,false);
+		ZvMain.uploadDatasettoDB(dataset5,false);
 	}
 
 	public void run() throws SQLException, IOException, InterruptedException{

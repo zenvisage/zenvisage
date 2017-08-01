@@ -4,6 +4,7 @@ public class ZvQuery {
 	public String method;
 	public String xAxis;
 	public String yAxis;
+	public String databasename;
 	public String groupBy;
 	public String aggrFunc;
 	public String aggrVar;
@@ -12,6 +13,7 @@ public class ZvQuery {
 	public float[] dataY;
 	public double yMax;
 	public double yMin;
+	public String error;
 	public Sketch[] sketchPoints;
 	public double minX;
 	public double maxX;
@@ -25,14 +27,22 @@ public class ZvQuery {
 	public String filter;
 	public float[] xRange;
 	public boolean considerRange;
-	public int kMeansClusterSize;
+	public int kmeansClusterSize;
 	public String smoothingType="";
 	public double smoothingcoefficient=0.0;
 	public boolean download=false;
-	public String includeQuery="";
-	public String yOnly="";
-
+	public boolean includeQuery=false;
+	public boolean yOnly=false;
+	public boolean downloadAll=false;
+	public double downloadThresh= 0.0;
+	public double minDisplayThresh=0.0;
 	
+	public double getMinDisplayThresh() {
+		return minDisplayThresh;
+	}
+	public void setMinDisplayThresh(double minDisplayThresh) {
+		this.minDisplayThresh = minDisplayThresh;
+	}
 	public String getDistance_metric() {
 		return distance_metric;
 	}
@@ -59,6 +69,11 @@ public class ZvQuery {
 	
 	public void setDistanceNormalized(boolean distanceNormalized) {
 		this.distanceNormalized = distanceNormalized;
+	}
+	
+	public void setYaxisAsError() {
+		this.yAxis = this.error;
+		this.aggrVar = this.error;
 	}
 	// constructor for args
 	public ZvQuery (String method, String Yaxis, String Xaxis, String groupBy, String aggrFunc, String aggrVar, int outlierCount, boolean outputNormalized) {
@@ -132,8 +147,8 @@ public class ZvQuery {
 	public void setAggrVar(String aggrVar) {
 		this.aggrVar = aggrVar;
 	}
-	public int getOutlierCount() {
-		return outlierCount;
+	public String getOutlierCount() {
+		return Integer.toString(outlierCount);
 	}
 	public void setOutlierCount(int outlierCount) {
 		this.outlierCount = outlierCount;
@@ -150,11 +165,11 @@ public class ZvQuery {
 	public void setDataY(float[] dataY) {
 		this.dataY = dataY;
 	}
-	public int getKMeansClusterSize() {
-		return this.kMeansClusterSize;
+	public int getkmeansClusterSize() {
+		return kmeansClusterSize;
 	}
-	public void setKMeansClusterSize(int k) {
-		this.kMeansClusterSize = k;
+	public void setkmeansClusterSize(int k) {
+		this.kmeansClusterSize = k;
 	}
 	public String getSmoothingType() {
 		return smoothingType;
@@ -179,29 +194,27 @@ public class ZvQuery {
 	public boolean getDownload() {
 		return download;
 	}
+	public boolean getDownloadAll() {
+		return downloadAll;
+	}
 	public boolean getIncludeQuery() {
-		 boolean includeQ = false;
-
-		 if (includeQuery.equals("checked")){
-			 System.out.println("includeQuery");
-			 includeQ = true;
-		 }
-		 
-		return includeQ;
-		
+		return includeQuery;
 	}
-	public String getyOnly() {
+	public boolean getyOnly() {
 		return yOnly;
-	}
-	
-	public boolean getDownloadX(){
+	}	
+	public boolean deriveDownloadX(){
 		boolean downloadX = true;
-		if (yOnly.equals("checked")){
+		if (yOnly){
 			 System.out.println("download Y only");
 			 downloadX = false;
 		}
 		return downloadX;
 	}
-	
-	
+	public double getDownloadThresh(){
+		return downloadThresh;
+	}
+	public String getdatabasename(){
+		return databasename;
+	}
 }

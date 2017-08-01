@@ -36,7 +36,7 @@ public class ScatterProcessNode extends ProcessNode {
 			this.state = State.BLOCKED;
 			return;
 		}
-		
+
 		this.state = State.RUNNING;
 		//
 		Result output;
@@ -44,6 +44,7 @@ public class ScatterProcessNode extends ProcessNode {
 			logger.info("TScatterFilter");
 			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 			List<Polygon> rectangles = vcNode.getVc().getSketch().getPolygons();
+			long startTime = System.currentTimeMillis();
 			if (!rectangles.isEmpty()) {
 				removeNonRectanglePoints(vcNode.getVcList(), rectangles);
 				output = scatterRepExecution();
@@ -58,6 +59,8 @@ public class ScatterProcessNode extends ProcessNode {
 					e.printStackTrace();
 				}*/
 			}
+			long endTime = System.currentTimeMillis();
+			logger.info("Filtering points took " + (endTime - startTime) + "ms");
 		}
 		if(process.getMethod().equals("Rep")) {
 			output = scatterRepExecution();

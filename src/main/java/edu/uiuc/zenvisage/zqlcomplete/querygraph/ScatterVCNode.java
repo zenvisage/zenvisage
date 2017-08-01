@@ -78,11 +78,16 @@ public class ScatterVCNode extends VisualComponentNode {
 		// execute scatter
 		
 		// data fetcher
-		logger.info("fetching scatter data");
+		long startTime = System.currentTimeMillis();
 		this.vcList = getScatterData();
+		long endTime = System.currentTimeMillis();
+		logger.info("Fetching Scatter Data took " + (endTime - startTime) + "ms");
 		Result output = new Result();
 
+		startTime = System.currentTimeMillis();
 		ScatterProcessNode.computeScatterRep(this.vcList, this.getVc(), output);
+		endTime = System.currentTimeMillis();
+		logger.info("Computing Scatter Rep took " + (endTime - startTime) + "ms");
 		logger.info("scatter data: first chart size: " + output.getOutputCharts().get(0).count);
 		/*
 		try {

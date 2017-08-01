@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -34,11 +38,11 @@ public class ZvBasicAPI {
 
 	@Autowired
 	private ZvMain zvMain;
-
+	public String logFilename="";
     public ZvBasicAPI(){
 
 	}
-
+    
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
@@ -106,25 +110,24 @@ public class ZvBasicAPI {
 	    while (scanner.hasNextLine()) {
 	        stringBuilder.append(scanner.nextLine());
 	    }
-
 	    String body = stringBuilder.toString();
-	    System.out.println("Representative:"+body);
+	   // System.out.println("Representative:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 	
-	@RequestMapping(value = "/downloadRepresentative", method = RequestMethod.POST)
-	@ResponseBody
-	public void downloadRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		StringBuilder stringBuilder = new StringBuilder();
-	    Scanner scanner = new Scanner(request.getInputStream());
-	    while (scanner.hasNextLine()) {
-	        stringBuilder.append(scanner.nextLine());
-	    }
-
-	    String body = stringBuilder.toString();
-//	    System.out.println("Representative:"+body);
-		zvMain.saveDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
-	}
+//	@RequestMapping(value = "/downloadRepresentative", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String downloadRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+//		StringBuilder stringBuilder = new StringBuilder();
+//	    Scanner scanner = new Scanner(request.getInputStream());
+//	    while (scanner.hasNextLine()) {
+//	        stringBuilder.append(scanner.nextLine());
+//	    }
+//
+//	    String body = stringBuilder.toString();
+////	    System.out.println("Representative:"+body);
+//		zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
+//	}
 
 	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody
@@ -168,6 +171,20 @@ public class ZvBasicAPI {
 	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 	
+	@RequestMapping(value = "/postSimilarity_error", method = RequestMethod.POST)
+	@ResponseBody
+	public String postSimilarity_error(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
+
+	    String body = stringBuilder.toString();
+
+		return zvMain.runDragnDropInterfaceQuerySeparated_error(body, "SimilaritySearch");
+	}
+	
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
@@ -186,7 +203,15 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/logger", method = RequestMethod.POST)
 	@ResponseBody
 	public void logger(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
-		File file = new File("zv.log");
+		System.out.print("logFilename:");
+		System.out.println(logFilename);
+		if (logFilename.equals("")){
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+			logFilename = "../"+sdf.format(timestamp)+".log";
+		}
+		File file = new File(logFilename);
+		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		String log = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+request.getParameter("message")+'\n';
         System.out.println(log);
@@ -254,5 +279,22 @@ public class ZvBasicAPI {
 	public String test(@RequestParam(value="query") String arg) {
 		return "Test successful:" + arg;
 	}
+	
+//	@RequestMapping(value = "/verifyPassword", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String verifyPassword(@RequestParam(value="query") String arg) throws IOException {
+//		System.out.println("arg:");
+//		System.out.println(arg);
+//		// Creates a FileReader Object
+//		System.out.println("verifyPassword");
+//	    FileReader fr = new FileReader("../secret.txt"); 
+//	    char [] a = new char[50];
+//	    fr.read(a);   // reads the content to the array
+//	    for(char c : a)
+//	       System.out.print(c);   // prints the characters one by one
+//	    fr.close();
+//		return "Test successful:" + arg;
+//	}
+	
 
 }

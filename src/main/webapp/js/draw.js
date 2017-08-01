@@ -108,7 +108,7 @@ console.log('createSketchpad')
   var context = svg.append("g")
       .attr("class", "context")
       .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
+//zoom here
       var zoomclip = svg.append("rect")
         .attr("width", zoomwidth)
         .attr("height", zoomheight)
@@ -140,6 +140,7 @@ console.log('createSketchpad')
       .attr("class", "line")
       .attr("d", valueline);
 
+//zoom here
       function zoomed() {
       var t = d3.event.transform;
       y.domain(t.rescaleY(y2).domain());
@@ -334,6 +335,7 @@ console.log('createSketchpad')
 
 function plotSketchpadNew( data )//, xType, yType, zType)
 {
+    document.getElementById("loadingEclipse").style.display = "inline";
   $("#draw-div").children().remove();
   sketchpad = createSketchpad( data )
 
@@ -414,9 +416,22 @@ function setPoint(event, g, context) {
 }
 
 function patternLoad(){
-  data = JSON.parse($("#pattern-upload-textarea")[0].value);
+  var delimiter=" "
+  if ($("#x-pattern").val().indexOf(",")>-1){
+    delimiter=","
+  }
+  var xvals = $("#x-pattern").val().split(delimiter);
+  var yvals = $("#y-pattern").val().split(delimiter);
+  if (xvals.length != yvals.length){
+    alert("Error: The lengths of x and y values must match!");
+  }
+  data =[];
+  for(var i = 0; i< xvals.length; i++){
+     data.push({"xval":xvals[i],"yval":yvals[i]})
+  }
+  // data = JSON.parse($("#pattern-upload-textarea")[0].value);
   usingPattern = true;
-  log.info("patternLoad : ",$("#pattern-upload-textarea")[0].value)
+  log.info("patternLoad : ",xvals,yvals)
   createSketchpad( data );
   refreshZoomEventHandler();
 }
