@@ -25,5 +25,6 @@ hs_err_pid*
 /bin/
 
 /.metadata/
-src/main/resources/uploaded_data/*
+src/main/resources/uploaded_data/*.csv
+src/main/resources/uploaded_data/*.txt
 *.log
