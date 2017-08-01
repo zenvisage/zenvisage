@@ -267,12 +267,12 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".1"));
+        .call(d3.axisLeft(y).ticks(4, ".2"));
     }else{
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".1s"));
+        .call(d3.axisLeft(y).ticks(4, "s"));
     }
     // Add the line by appending an svg:path element with the data line we created above
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -659,12 +659,12 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".1"));
+        .call(d3.axisLeft(y).ticks(4, ".2"));
     }else{
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".1s"));
+        .call(d3.axisLeft(y).ticks(4, "s"));
     }
 
 
@@ -948,12 +948,12 @@ function displayOutlierResultsHelper( outlierResults )
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".1"));
+        .call(d3.axisLeft(y).ticks(4, ".2"));
     }else{
       graph.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".1s"));
+        .call(d3.axisLeft(y).ticks(4, "s"));
     }
 
 
