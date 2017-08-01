@@ -420,9 +420,9 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     appendTo: 'body',
     start : function(){
       try{
-        if (typeof($(this)[0].querySelector('#ztitle').innerHTML)=='string'){
-          var textObj = $(this)[0].querySelector('#ztitle')
-          log.info(textObj.getAttribute('type')+" dragging ", textObj.getAttribute('label'))
+        if (typeof($(this)[0].parentElement.querySelector("#ztitle").getAttribute("label"))=='string'){
+          var textObj = $(this)[0].parentElement.querySelector("#ztitle")
+          log.info("dragging",textObj.getAttribute('type'), textObj.getAttribute('label'))
         }
       }catch(err){;}
     },
@@ -1037,14 +1037,14 @@ function displayOutlierResultsHelper( outlierResults )
     d3.select("#undraggable-outlier-result-"+count.toString()).append("g");
 
     d3.select("#undraggable-outlier-result-"+count.toString()).append("text")
-    .append("text")
+      .append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
                            (trans + m[0] + 30) + ")")
       .style("text-anchor", "middle")
-      .attr("id",'ztitle')
-      .attr("type",'outlierResult')
-      .attr('label',xlabel)
+      .attr("id","ztitle")
+      .attr("type","outlierResult")
+      .attr("label",title)
       .text(title);
       //.text(xlabel + " (" + clusterCount + ")");
   }
@@ -1067,9 +1067,9 @@ function displayOutlierResultsHelper( outlierResults )
     opacity: 0.5,
     start : function(){
       try{
-        if (typeof($(this)[0].querySelector('#ztitle').innerHTML)=='string'){
-          var textObj = $(this)[0].querySelector('#ztitle')
-          log.info(textObj.getAttribute('type')+" dragging ", textObj.getAttribute('label'))
+        if (typeof($(this)[0].parentElement.querySelector("#ztitle").getAttribute("label"))=='string'){
+          var textObj = $(this)[0].parentElement.querySelector("#ztitle")
+          log.info("dragging",textObj.getAttribute('type'), textObj.getAttribute('label'))
         }
       }catch(err){;}
     },

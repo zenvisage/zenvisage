@@ -173,11 +173,6 @@ function getNumResults()
 }
 function getMinDisplayThresh()
 {
-  // console.log("getMinDisplayThresh:");
-  // console.log($("#min-display-thresh").val());
-  // return $("#min-display-thresh").val();
-  console.log("getMinDisplayThresh:");
-  console.log(angular.element($("#table-div")).scope().minDisplayThresh);
   return angular.element($("#table-div")).scope().minDisplayThresh;
 }
 
