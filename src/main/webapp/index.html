@@ -184,16 +184,27 @@
               <h4 class="modal-title">Created classes</h4>
             </div>
             <div class="modal-body" id="class-info-body">
+            <div class="row">
+              <div class="col-md-2 text-left">
+                <b>Class</b>
+              </div>
+              <div class="col-md-8 text-left">
+                <b>Ranges {{classes[0].attributes}}</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Count</b>
+              </div>
+            </div>
+            <hr>
               <div ng-repeat="class in classes" >
                 <div class="row">
                   <div class="col-md-2 text-left">
                     {{class.tag}}
                   </div>
-                  <div class="col-md-2 text-left">
-                    {{class.attributes}}
-                  </div>
-                  <div class="col-md-6 text-left">
-                    {{class.ranges}}
+                  <div class="col-md-8 text-left">
+                    <div ng-repeat="range in class.formattedRanges">
+                      {{range}}
+                    </div>
                   </div>
                   <div class="col-md-2 text-left">
                     {{class.count}}

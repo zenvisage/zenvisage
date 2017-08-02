@@ -69,7 +69,11 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
         function (response) {
           console.log("success: ", response);
           globalDatasetInfo["classes"] = response.data
-          $scope.classes = response.data["classes"]
+          var formattedRanges = formatRanges(response.data["classes"])
+          for (var i = 0; i < response.data["classes"].length; i++){
+            response.data["classes"][i].formattedRanges = formattedRanges[i]
+            $scope.classes = response.data["classes"]
+          }
         },
         function (response) {
           console.log("failed: ", response);
@@ -965,7 +969,11 @@ app.controller('datasetController', [
           function (response) {
             console.log("success: ", response);
             globalDatasetInfo["classes"] = response.data
-            $scope.classes = response.data["classes"]
+            var formattedRanges = formatRanges(response.data["classes"])
+            for (var i = 0; i < response.data["classes"].length; i++){
+              response.data["classes"][i].formattedRanges = formattedRanges[i]
+              $scope.classes = response.data["classes"]
+            }
           },
           function (response) {
             console.log("failed: ", response);

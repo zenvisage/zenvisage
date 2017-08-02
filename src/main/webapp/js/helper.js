@@ -8,7 +8,20 @@ var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
 var globCount = 0;
 
-
+function formatRanges( classData ){
+  var formattedRanges = []
+  for (var i = 0; i < classData.length; i++){
+    var formattedRange = []
+    var attributes = classData[i].attributes.replace('[', '').replace(']', '').split(",");
+    var ranges = classData[i].ranges.split(",")
+    for (var j = 0; j < attributes.length; j++){
+      var vals = ranges[j].replace('[', '').replace(']', '').split(" ")
+      formattedRange.push(vals[0].trim() + " < " + attributes[j].trim() + " <= " + vals[1].trim())
+    }
+    formattedRanges.push(formattedRange)
+  }
+  return formattedRanges
+}
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
