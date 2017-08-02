@@ -83,10 +83,10 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var arrayLength = xData.length;
 
     if(errorData != null){
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+      for (var i = 0; i < arrayLength; i++ ) {
+        data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+      }
     }
-  }
     else{
       for (var i = 0; i < arrayLength; i++ ) {
         data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
@@ -380,7 +380,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         .attr("id", "custom-tooltip" + count.toString())
         .style("display", "none");
       tooltip.append("rect")
-        .attr("width", 110)
+        .attr("width", 150)
         .attr("height", 18*zlabel.split(".").length)
         .attr("fill", "black")
         .style("opacity", 0.65);
@@ -388,13 +388,11 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         //   .style("left", (d3.event.pageX) + "px")
         //   .style("top", (d3.event.pageY - 28) + "px");
 
-
+        //class.formattedRanges
       // var tooltipText = ""
       for (i = 0; i < zlabel.split(".").length; i++) {
-        var name = globalDatasetInfo["classes"]["classes"][i]["name"]
-        var value = globalDatasetInfo["classes"]["classes"][i]["values"][zlabel.split(".")[i]]
-        tooltipText = name + ": " +"    "+ "["+value+"]"
-        // tooltipText += name + ": " + "["+value+"]"
+        var value = globalDatasetInfo["classes"]["classes"][count].formattedRanges[i]
+        tooltipText = value
         tooltip.append("text")
         .each(function (d) {
            d3.select(this).append("tspan")
