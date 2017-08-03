@@ -303,6 +303,13 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
 
 // check for emput x, y and z and then check for syntax correctness
 function checkInput(input) {
+  for (var property in input) {
+      if (input.hasOwnProperty(property)) {
+
+        input[property] = input[property].trim();
+          // do stuff
+      }
+  }
     var essentialColumns = input.name && input.x && input.y;
     if (essentialColumns === undefined) {
         console.error("X or Y or Z Column cannot be empty.");
