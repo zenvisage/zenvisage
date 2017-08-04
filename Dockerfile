@@ -29,8 +29,7 @@ RUN mkdir /home/postgres
 # Add zenvisage (can also pull from master directly), zenvisage folder needs to be on docker building folder
 #ADD zenvisage/ /home/postgres/zenvisage/ 
 WORKDIR /home/postgres
-RUN git clone https://github.com/zenvisage/zenvisage.git
-RUN git checkout v2.0
+RUN git clone https://github.com/zenvisage/zenvisage.git &&  (cd zenvisage/ && git checkout v2.0)
 WORKDIR /home/postgres/zenvisage
 RUN chown -R postgres:postgres /home/postgres
 USER postgres
