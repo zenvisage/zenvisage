@@ -30,6 +30,7 @@ RUN mkdir /home/postgres
 #ADD zenvisage/ /home/postgres/zenvisage/ 
 WORKDIR /home/postgres
 RUN git clone https://github.com/zenvisage/zenvisage.git
+RUN git checkout v2.0
 WORKDIR /home/postgres/zenvisage
 RUN chown -R postgres:postgres /home/postgres
 USER postgres
@@ -46,6 +47,6 @@ RUN echo "psql -c \"DROP schema public cascade; CREATE schema public;\" " >> sta
 RUN echo "psql -c \"CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);\" " >> startup.sh
 RUN echo "psql -c \"CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT);\" " >> startup.sh
 RUN echo "psql -c \"CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);\" " >> startup.sh
-RUN echo "sh run.sh " >> startup.sh
+RUN echo "sh LMemRun.sh " >> startup.sh
 # Run the startup script when creating container
 CMD ["sh","/home/postgres/zenvisage/startup.sh"]
