@@ -3,12 +3,13 @@
  */
 package edu.uiuc.zenvisage.service.distance;
 
+import org.apache.commons.math3.ml.distance.DistanceMeasure;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 /**
  * @author tarique
  *
  */
-public class Euclidean implements Distance {
+public class Euclidean implements Distance, DistanceMeasure {
 	private EuclideanDistance ed;
 
 	public Euclidean() {
@@ -37,6 +38,12 @@ public class Euclidean implements Distance {
 		} else {
 			return ed.compute(src, tar);
 		}
+	}
+	
+	@Override
+	public double compute(double[] a, double[] b) {
+		// TODO Auto-generated method stub
+		return calculateDistance(a,b);
 	}
 
 }

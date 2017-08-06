@@ -16,6 +16,7 @@ import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.service.distance.Euclidean;
 
 /**
  * @author tarique
@@ -45,14 +46,14 @@ public class KMeans extends Clustering {
 		// TODO Auto-generated method stub
 		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 //		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
-		KMeansPlusPlusClusterer<DoublePoint> kmeans1 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize * 3, normalizedgroups.length), 15);
+		KMeansPlusPlusClusterer<DoublePoint> kmeans1 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize * 3, normalizedgroups.length), 15, new Euclidean(),new KmeansRandomGenerator());
 		List<DoublePoint> dataset1 = new ArrayList<DoublePoint>();
 		for(int i = 0; i < normalizedgroups.length; i++) {
 			dataset1.add(new DoublePoint(normalizedgroups[i]));
 		}		
 		List<CentroidCluster<DoublePoint>> clusters1 = kmeans1.cluster(dataset1);
 		
-		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize, clusters1.size()), 15);
+		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize, clusters1.size()), 15,new Euclidean(),new KmeansRandomGenerator());
 		List<DoublePoint> dataset2 = new ArrayList<DoublePoint>();
 		for (int i = 0; i < clusters1.size(); i++) {	    
 	    	DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters1.get(i)).getCenter();    
