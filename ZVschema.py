@@ -15,10 +15,9 @@ data =pd.read_csv(fname)
 print "All Columns: ",[c for c in data.columns]
 
 #MODIFY THIS ACCORDING TO YOUR DATASET
-#x_attr = ['MJD-57000','MJD']
-#y_attr = ['FLUX_GSMOOTH_SIG0_5', 'FLUX_GSMOOTH_SIG0_6', 'FLUX_GSMOOTH_SIG0_7',\
-          'MAG_GSMOOTH_SIG0_5', 'MAG_GSMOOTH_SIG0_6', 'MAG_GSMOOTH_SIG0_7','ERR','FLUX','MAG']
-#z_attr = ['objid', 'RA', 'DEC','FLAGS_G', 'FLAGS_R', 'FLAGS_I', 'FLAGS_Y', 'FLAGS_Z', 'N_observations','DERIVED_CLASS_STAR', 'objid_cycle', 'cycle','N_observations_cycle']
+#x_attr = ['month','dayofyear','year']
+#y_attr = ['temperature']
+#z_attr = ['location']
 x_attr = []
 y_attr = []
 z_attr = []

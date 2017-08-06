@@ -69,7 +69,11 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
         function (response) {
           console.log("success: ", response);
           globalDatasetInfo["classes"] = response.data
-          $scope.classes = response.data["classes"]
+          var formattedRanges = formatRanges(response.data["classes"])
+          for (var i = 0; i < response.data["classes"].length; i++){
+            response.data["classes"][i].formattedRanges = formattedRanges[i]
+            $scope.classes = response.data["classes"]
+          }
         },
         function (response) {
           console.log("failed: ", response);
@@ -94,6 +98,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
 
   $scope.removeRow = function ( index ) {
     $("#table-row-" + index).remove();
+    console.log('remove regular row ',index,' added!');
   };
 
   $scope.addRow = function () {
@@ -101,6 +106,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     var rowCount = table.rows.length;
     var rowNumber = (rowCount+1).toString();
     //$("#zql-table").append
+   console.log('insert regular row ',rowNumber,' added!');
     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
     $compile($el)($scope);
@@ -125,6 +131,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     var rowCount = table.rows.length;
     var rowNumber = (rowCount+1).toString();
     //$("#zql-table").append
+              console.log('insert process row ',rowNumber,' added!');
     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
     $compile($el)($scope);
@@ -136,6 +143,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     var rowCount = table.rows.length;
     var rowNumber = (rowCount+1).toString();
     //$("#zql-table").append
+  //        console.log('insert row ',i,' added!');
     $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler processRow\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td colspan=\"5\"><input class=\"form-control zql-table process\" type=\"text\" size=\"20\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
     //<td><input class=\"form-control zql-table process\" type=\"text\" size=\"36\" value=\" \"></td>
     $compile($el)($scope);
@@ -148,12 +156,13 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
 
     for (i = rowCount; i > 0; i--) {
       // $("#table-row-" + i).remove();
+    //  console.log('row ',i-1,' removed!');
       table.deleteRow(i-1)
     }
 
     for (i = 1; i <= args.n; i++) {
       var rowNumber = (i).toString();
-
+//      console.log('row ',i,' added!');
         $el = $("<tr id=\"table-row-" + rowNumber + "\"" + "class=\"tabler\"><td><a ng-click=\"removeRow(" + rowNumber + ")\"><span class=\"glyphicon glyphicon glyphicon-minus-sign\"></span></a></td><td><input class=\"form-control zql-table name\" type=\"text\" size=\"1\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"11\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"6\" value=\" \"></td><td></td></tr>").appendTo("#zql-table");
 
       $compile($el)($scope);
@@ -299,6 +308,13 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
 
 // check for emput x, y and z and then check for syntax correctness
 function checkInput(input) {
+  for (var property in input) {
+      if (input.hasOwnProperty(property)) {
+
+        input[property] = input[property].trim();
+          // do stuff
+      }
+  }
     var essentialColumns = input.name && input.x && input.y;
     if (essentialColumns === undefined) {
         console.error("X or Y or Z Column cannot be empty.");
@@ -601,6 +617,12 @@ app.controller('options-controller', [
 
 
       // $($( ".tabler" )[2]).find(".process").val("")
+      removeZqlRow(6);  // hacky, remove extra rows
+      removeZqlRow(5);
+      removeZqlRow(4);
+      removeZqlRow(3);
+      removeZqlRow(7);
+
 
   }
 
@@ -629,6 +651,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
       // $($( ".tabler" )[3]).find(".process").val("")
+      removeZqlRow(6);
+      removeZqlRow(5);
+      removeZqlRow(4);
     }
 
     $scope.populateWeatherQuery3 = function() {
@@ -649,6 +674,11 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".z-val").val("v1")
       $($( ".tabler" )[2]).find(".constraints").val("")
       $($( ".tabler" )[2]).find(".process").val("")
+      removeZqlRow(6);  // hacky, remove extra rows
+      removeZqlRow(5);
+      removeZqlRow(4);
+      removeZqlRow(3);
+
     }
 
     // $scope.populateQuery1 = function() {
@@ -712,6 +742,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("'state'.{'CA','NY'}")
       $($( ".tabler" )[3]).find(".constraints").val("")
       $($( ".tabler" )[3]).find(".process").val("")
+      removeZqlRow(6);
+      removeZqlRow(5);
+      removeZqlRow(4);
     }
 
     $scope.populateQuery4 = function() {
@@ -739,6 +772,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
       $($( ".tabler" )[3]).find(".process").val("")
+      removeZqlRow(6);
+      removeZqlRow(5);
+      removeZqlRow(4);
     }
 
     $scope.populateQuery5 = function() {
@@ -767,6 +803,9 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v1")
       $($( ".tabler" )[3]).find(".constraints").val("")
       $($( ".tabler" )[3]).find(".process").val("")
+      removeZqlRow(6);
+      removeZqlRow(5);
+      removeZqlRow(4);
     }
 
     $scope.drawFunction = function() {
@@ -965,7 +1004,11 @@ app.controller('datasetController', [
           function (response) {
             console.log("success: ", response);
             globalDatasetInfo["classes"] = response.data
-            $scope.classes = response.data["classes"]
+            var formattedRanges = formatRanges(response.data["classes"])
+            for (var i = 0; i < response.data["classes"].length; i++){
+              response.data["classes"][i].formattedRanges = formattedRanges[i]
+              $scope.classes = response.data["classes"]
+            }
           },
           function (response) {
             console.log("failed: ", response);

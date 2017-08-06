@@ -8,7 +8,20 @@ var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
 var globCount = 0;
 
-
+function formatRanges( classData ){
+  var formattedRanges = []
+  for (var i = 0; i < classData.length; i++){
+    var formattedRange = []
+    var attributes = classData[i].attributes.replace('[', '').replace(']', '').split(",");
+    var ranges = classData[i].ranges.split(",")
+    for (var j = 0; j < attributes.length; j++){
+      var vals = ranges[j].replace('[', '').replace(']', '').split(" ")
+      formattedRange.push(vals[0].trim() + " < " + attributes[j].trim() + " <= " + vals[1].trim())
+    }
+    formattedRanges.push(formattedRange)
+  }
+  return formattedRanges
+}
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
@@ -70,10 +83,10 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var arrayLength = xData.length;
 
     if(errorData != null){
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+      for (var i = 0; i < arrayLength; i++ ) {
+        data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+      }
     }
-  }
     else{
       for (var i = 0; i < arrayLength; i++ ) {
         data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
@@ -367,7 +380,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         .attr("id", "custom-tooltip" + count.toString())
         .style("display", "none");
       tooltip.append("rect")
-        .attr("width", 110)
+        .attr("width", 150)
         .attr("height", 18*zlabel.split(".").length)
         .attr("fill", "black")
         .style("opacity", 0.65);
@@ -375,13 +388,11 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         //   .style("left", (d3.event.pageX) + "px")
         //   .style("top", (d3.event.pageY - 28) + "px");
 
-
+        //class.formattedRanges
       // var tooltipText = ""
       for (i = 0; i < zlabel.split(".").length; i++) {
-        var name = globalDatasetInfo["classes"]["classes"][i]["name"]
-        var value = globalDatasetInfo["classes"]["classes"][i]["values"][zlabel.split(".")[i]]
-        tooltipText = name + ": " +"    "+ "["+value+"]"
-        // tooltipText += name + ": " + "["+value+"]"
+        var value = globalDatasetInfo["classes"]["classes"][count].formattedRanges[i]
+        tooltipText = value
         tooltip.append("text")
         .each(function (d) {
            d3.select(this).append("tspan")

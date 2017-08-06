@@ -25,7 +25,7 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
 * Apache Maven 3.0.5;  many ways to install this, including `brew install maven` on Mac OSX.
 
 ### Installation Instructions
-The installation of Zenvisage is straightforward, assuming Postgres, Java, and Maven are installed. If you want to install using a Docker container, the instructions are [here](https://github.com/zenvisage/zenvisage/wiki/Docker-Installation-Instruction).
+The installation of Zenvisage is straightforward, assuming Postgres, Java, and Maven are installed. If you want to install using a Docker container, the instructions are [here][Docker-instructions].
 
 * Clone the zenvisage repository. (Alternatively, you can download the source as a zip.)
 
@@ -141,4 +141,5 @@ MIT
    [zenvisage-cidr]: http://data-people.cs.illinois.edu/papers/zenvisage-cidr.pdf
    [postgressite]: https://www.postgresql.org/
    [postgres-installation]: https://chartio.com/resources/tutorials/how-to-start-postgresql-server-on-mac-os-x/
+   [Docker-instructions]: https://github.com/zenvisage/zenvisage/wiki/Docker-Installation-Instruction-for-Mac
    <sup>1</sup>The smart-fuse optimization algorithms are not part of this release. Instead, we employ a simpler optimization scheme that works well for all but the most complex queries. 

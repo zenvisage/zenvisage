@@ -184,16 +184,27 @@
               <h4 class="modal-title">Created classes</h4>
             </div>
             <div class="modal-body" id="class-info-body">
+            <div class="row">
+              <div class="col-md-2 text-left">
+                <b>Class</b>
+              </div>
+              <div class="col-md-8 text-left">
+                <b>Ranges {{classes[0].attributes}}</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Count</b>
+              </div>
+            </div>
+            <hr>
               <div ng-repeat="class in classes" >
                 <div class="row">
                   <div class="col-md-2 text-left">
                     {{class.tag}}
                   </div>
-                  <div class="col-md-2 text-left">
-                    {{class.attributes}}
-                  </div>
-                  <div class="col-md-6 text-left">
-                    {{class.ranges}}
+                  <div class="col-md-8 text-left">
+                    <div ng-repeat="range in class.formattedRanges">
+                      {{range}}
+                    </div>
                   </div>
                   <div class="col-md-2 text-left">
                     {{class.count}}
@@ -322,8 +333,8 @@
                     <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
                     <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
-                     <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
-                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
+                     <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button> -->
                     <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
                     <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
                     <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>
@@ -458,7 +469,7 @@
                 </div> -->
               </div>
               </div>
-              <div class="col-md-3" style="width: 180px;">
+              <div class="col-md-3" style="width: 175px;">
 
               <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
                 <div><b>K-means Cluster Size</b></div>
@@ -486,7 +497,7 @@
               </div>
 
 
-              <div class="col-md-3" style="width: 190px;">
+              <div class="col-md-3" style="width: 180px;">
                 <div data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
                   <div class="info-text">
                   <div><b>Data Smoothing</b></div>
