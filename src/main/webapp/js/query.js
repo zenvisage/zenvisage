@@ -139,7 +139,7 @@ function getSelectedErrorAxis()
 
 function resetSelectedErrorAxis()
 {
-  angular.element($("#sidebar")).scope().selectedErrorAxis = "none"; 
+  angular.element($("#sidebar")).scope().selectedErrorAxis = "none";
 }
 
 function getSmoothingCoefficient()
@@ -244,4 +244,9 @@ function mergejoin_representative(outputcharts_orig,outputcharts_error)
   });
 console.log("final: ",outputcharts_orig);
   return outputcharts_orig;
+}
+
+function removeZqlRow(rowNumber)
+{
+  return angular.element($("#zql-table")).scope().removeRow(rowNumber);
 }
