@@ -181,6 +181,13 @@ console.log('createSketchpad')
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x).ticks(8, "s"));
     }
+
+    else if(getSelectedXAxis()==="year"){
+        focus.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+        } // for formatting all year x axis ticks except hardcoded real estate dataset
   else{
     console.log("big1");
     focus.append("g")
@@ -200,6 +207,13 @@ console.log('createSketchpad')
     .attr("transform", "translate(0," + height2 + ")")
     .call(d3.axisBottom(x).ticks(8, "s"));
   }
+
+  else if(getSelectedXAxis()==="year"){
+      context.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height2 + ")")
+        .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+      } // for formatting all year x axis ticks except hardcoded real estate dataset
 
   else{
   context.append("g")
@@ -222,6 +236,9 @@ console.log('createSketchpad')
       console.log("small2");
     focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, "s"));
     }
+    else if(getSelectedXAxis()==="year"){
+        focus.select(".axis--x").call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d"))); // for formatting all year x axis ticks except hardcoded real estate dataset
+      }
     else{
       console.log("big2");
       focus.select(".axis--x").call(d3.axisBottom(x).ticks(6, "s"));

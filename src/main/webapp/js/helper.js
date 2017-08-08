@@ -165,6 +165,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
     var trans = height-20
 
+
     if (getSelectedDataset()==="real_estate")
     {
       if(getSelectedXAxis()==="month")
@@ -242,6 +243,13 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
               return mapper[ d.toString() ]
             }));
       }
+      else if(getSelectedXAxis()==="year"){
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+          }  // for formatting all year x axis ticks except hardcoded real estate dataset
+
       else{
         graph.append("g")
         .attr("class", "axis axis--x")
@@ -250,6 +258,8 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
       }
     }
+
+
     if  (!isNaN(similarityDistance)){
 
       // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
@@ -559,6 +569,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
 
     var trans = height-20
 
+
     if (getSelectedDataset()==="real_estate")
     {
       if(getSelectedXAxis()==="month")
@@ -636,6 +647,14 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
               return mapper[ d.toString() ]
             }));
       }
+
+      else if(getSelectedXAxis()==="year"){
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+          } // for formatting all year x axis ticks except hardcoded real estate dataset
+
       else{
         graph.append("g")
         .attr("class", "axis axis--x")
@@ -644,6 +663,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
 
       }
     }
+
 
     d3.select("#undraggable-representative-result-"+count.toString()).append("g")
 
@@ -852,8 +872,9 @@ function displayOutlierResultsHelper( outlierResults )
     var trans = height-20
     // create xAxis
 
+
     if (getSelectedDataset()==="real_estate")
-    {
+    { console.log('yes!');
       if(getSelectedXAxis()==="month")
       {
         graph.append("g")
@@ -929,6 +950,13 @@ function displayOutlierResultsHelper( outlierResults )
               return mapper[ d.toString() ]
             }));
       }
+      else if(getSelectedXAxis()==="year"){
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+          } // for formatting all year x axis ticks except hardcoded real estate dataset
+
       else{
         graph.append("g")
         .attr("class", "axis axis--x")
