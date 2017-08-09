@@ -506,6 +506,8 @@ public class ZvMain {
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
+		 System.out.println(args.databasename);
+		 this.databaseName=args.databasename;
 		 System.out.println("args.downloadAll:");
 		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
@@ -666,6 +668,8 @@ public class ZvMain {
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 System.out.println(args.databasename);
+		 this.databaseName=args.databasename;
 		 System.out.println("args.downloadAll:");
 		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
@@ -825,7 +829,7 @@ public class ZvMain {
 	 * @param arg
 	 */
 	public void setFilter(Query q, ZvQuery arg) {
-	
+		
 		if (!arg.filter.equals(""))
 			q.setCompositeFilter(arg.filter);
 		
