@@ -16,7 +16,7 @@ public class DatabaseAutoLoader {
 	private static String metatable;
 	private static String metafilelocation;
 	private ZvServer zvServer;
-	
+	Boolean reload = true;
 	static{
 		metatable=Readconfig.getMetatable();
 		metafilelocation=Readconfig.getMetafilelocation();
@@ -26,7 +26,7 @@ public class DatabaseAutoLoader {
 		this.zvServer = zvServer;
 	}
 	public boolean createMetaTables() throws SQLException{
-		Boolean reload = false;
+		
 		SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 
 		//clean everything
