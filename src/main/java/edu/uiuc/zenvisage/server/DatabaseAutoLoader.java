@@ -100,12 +100,12 @@ public class DatabaseAutoLoader {
 		dataset5.add(file.getAbsolutePath());
 		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
 		dataset5.add(file.getAbsolutePath());
-
-		ZvMain.uploadDatasettoDB(dataset1,false);
-		ZvMain.uploadDatasettoDB(dataset2,false);
-		ZvMain.uploadDatasettoDB(dataset3,false);
-		ZvMain.uploadDatasettoDB(dataset4,false);
-		ZvMain.uploadDatasettoDB(dataset5,false);
+		ZvMain zvMain=new ZvMain();
+		zvMain.uploadDatasettoDB(dataset1,false);
+		zvMain.uploadDatasettoDB(dataset2,false);
+		zvMain.uploadDatasettoDB(dataset3,false);
+		zvMain.uploadDatasettoDB(dataset4,false);
+		zvMain.uploadDatasettoDB(dataset5,false);
 	}
 
 	public void run() throws SQLException, IOException, InterruptedException{

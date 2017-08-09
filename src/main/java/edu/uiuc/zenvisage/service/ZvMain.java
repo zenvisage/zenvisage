@@ -105,7 +105,7 @@ public class ZvMain {
 	public String databaseName;
 	public String buffer = null;
 	
-	private static SQLQueryExecutor sqlQueryExecutor;
+	private  SQLQueryExecutor sqlQueryExecutor;
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
 	public ZvMain() throws IOException, InterruptedException, SQLException{
@@ -155,7 +155,7 @@ public class ZvMain {
 	}
 
 		
-   public static void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+   public  void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
