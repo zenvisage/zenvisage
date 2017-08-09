@@ -519,7 +519,7 @@ public class ZvMain {
 			 query = new ObjectMapper().writeValueAsString(args);
 		 }
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
-		 if (method.equals("SimilaritySearch"))
+	//	 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
 
 //		 ExecutorResult executorResult = executor.getData(q);
