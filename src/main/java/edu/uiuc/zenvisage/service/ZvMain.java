@@ -105,7 +105,7 @@ public class ZvMain {
 	public String databaseName;
 	public String buffer = null;
 	
-	private static SQLQueryExecutor sqlQueryExecutor;
+	private  SQLQueryExecutor sqlQueryExecutor;
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
 	public ZvMain() throws IOException, InterruptedException, SQLException{
@@ -155,7 +155,7 @@ public class ZvMain {
 	}
 
 		
-   public static void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+   public  void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
@@ -355,6 +355,7 @@ public class ZvMain {
 		String result = "";
 		
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
+		 this.databaseName=args.databasename;
 	    ZQLParser parser = new ZQLParser();
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
 	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
@@ -459,7 +460,7 @@ public class ZvMain {
 		 System.out.println("runErrorQuery executing!");
 		 ZvQuery args_error = new ObjectMapper().readValue(query,ZvQuery.class);
 		 args_error.setYaxisAsError(); 
-
+		 this.databaseName=args_error.databasename;
 		 Query q_error = new Query("query").setGrouby(args_error.groupBy+","+args_error.xAxis).setAggregationFunc(args_error.aggrFunc).setAggregationVaribale(args_error.getAggrVar());
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q_error, args_error);
@@ -506,6 +507,9 @@ public class ZvMain {
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
+		 this.databaseName=args.databasename;
+		 System.out.println(args.databasename);
+		 this.databaseName=args.databasename;
 		 System.out.println("args.downloadAll:");
 		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
@@ -515,7 +519,7 @@ public class ZvMain {
 			 query = new ObjectMapper().writeValueAsString(args);
 		 }
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
-		 if (method.equals("SimilaritySearch"))
+	//	 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
 
 //		 ExecutorResult executorResult = executor.getData(q);
@@ -666,6 +670,8 @@ public class ZvMain {
 	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 System.out.println(args.databasename);
+		 this.databaseName=args.databasename;
 		 System.out.println("args.downloadAll:");
 		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
@@ -825,7 +831,7 @@ public class ZvMain {
 	 * @param arg
 	 */
 	public void setFilter(Query q, ZvQuery arg) {
-	
+		
 		if (!arg.filter.equals(""))
 			q.setCompositeFilter(arg.filter);
 		
