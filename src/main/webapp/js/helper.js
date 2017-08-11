@@ -22,6 +22,22 @@ function formatRanges( classData ){
   }
   return formattedRanges
 }
+
+
+// function formatRangeForTooltip( classData ){
+
+//     var attributes = classData[i].attributes.replace('[', '').replace(']', '').split(",");
+//     var ranges = classData[i].ranges.split(",")
+//     for (var j = 0; j < attributes.length; j++){
+//       var vals = ranges[j].replace('[', '').replace(']', '').split(" ")
+//       formattedRange.push(vals[0].trim() + " < " + attributes[j].trim() + " <= " + vals[1].trim())
+//     }
+//     formattedRanges.push(formattedRange)
+//   }
+//   return formattedRanges
+// }
+
+
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
@@ -385,38 +401,50 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
     if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
     {
+
       var tooltip = graph.append("g")
         .attr("class", "custom-tooltip")
         .attr("id", "custom-tooltip" + count.toString())
         .style("display", "none");
+
+      var tooltipLength = 0;
+      var tooltipTexts = [];
+      for (var i = 0; i < zlabel.split(".").length; i++) {
+        var tooltipText = ""
+        for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
+        {
+          if (globalDatasetInfo["classes"]["classes"][j].tag === zlabel)
+          {
+            var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i]
+            tooltipTexts.push(tooltipText)
+            if (tooltipText.length > tooltipLength)
+            {
+              tooltipLength = tooltipText.length
+            }
+          }
+        }
+      }
+
       tooltip.append("rect")
-        .attr("width", 150)
+        .attr("width", tooltipLength * 7)
         .attr("height", 18*zlabel.split(".").length)
         .attr("fill", "black")
         .style("opacity", 0.65);
-        // svg.html(tooltipText)
-        //   .style("left", (d3.event.pageX) + "px")
-        //   .style("top", (d3.event.pageY - 28) + "px");
 
-        //class.formattedRanges
-      // var tooltipText = ""
-      for (i = 0; i < zlabel.split(".").length; i++) {
-        var value = globalDatasetInfo["classes"]["classes"][count].formattedRanges[i]
-        tooltipText = value
+      for (var i = 0; i < tooltipTexts.length; i++) {
         tooltip.append("text")
-        .each(function (d) {
-           d3.select(this).append("tspan")
-               .text(tooltipText)
-               .attr("dy", i ? (1.3*i).toString() + "em" : 0)
-               .attr("x", 3)
-               .attr("y", 15)
-               .attr("fill", "white")
-               .attr("text-anchor", "left")
-               .attr("class", "tspan" + i)
-               .attr("font-size", "13px");
-        });
+          .each(function (d) {
+             d3.select(this).append("tspan")
+                 .text(tooltipTexts[i])
+                 .attr("dy", i ? (1.3*i).toString() + "em" : 0)
+                 .attr("x", 3)
+                 .attr("y", 15)
+                 .attr("fill", "white")
+                 .attr("text-anchor", "left")
+                 .attr("class", "tspan" + i)
+                 .attr("font-size", "13px");
+          });
       }
-
 
       graph.on("mouseover", function() { $($(this).find(".custom-tooltip")[0]).show(); })
       .on("mouseout", function() { $($(this).find(".custom-tooltip")[0]).hide(); })
