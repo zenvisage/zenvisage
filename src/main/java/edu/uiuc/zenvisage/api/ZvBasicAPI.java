@@ -116,7 +116,7 @@ public class ZvBasicAPI {
 	        stringBuilder.append(scanner.nextLine());
 	    }
 	    String body = stringBuilder.toString();
-	   // System.out.println("Representative:"+body);
+	    	System.out.println("Representative:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 	
@@ -150,7 +150,7 @@ public class ZvBasicAPI {
 	}
 	@RequestMapping(value = "/downloadSimilarity", method = RequestMethod.POST)
 	@ResponseBody
-	public void downloadSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+	public String downloadSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    zvMain = new ZvMain();
@@ -160,12 +160,16 @@ public class ZvBasicAPI {
 	        System.out.println(line);
 	    }
 	    String body = stringBuilder.toString();
-	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
+	    //String resp = "{\"xval\":\""+zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch")+"\"}";
+	    //System.out.println("resp: "+resp);
+	    //JSONObject jsonObj = new JSONObject("{\"phonetype\":\"N95\",\"cat\":\"WP\"}");
+	    String resp = zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
+	    return resp;
 	}
 	
 	@RequestMapping(value = "/downloadOutlier", method = RequestMethod.POST)
 	@ResponseBody
-	public void downloadOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+	public String downloadOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		System.out.println("downloadOutlier");
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
@@ -176,7 +180,7 @@ public class ZvBasicAPI {
 	        System.out.println(line);
 	    }
 	    String body = stringBuilder.toString();
-	    zvMain.saveDragnDropInterfaceQuerySeparated(body, "Outlier");
+	    return zvMain.saveDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 	
 	@RequestMapping(value = "/postSimilarity_error", method = RequestMethod.POST)
@@ -204,8 +208,6 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-
-
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 

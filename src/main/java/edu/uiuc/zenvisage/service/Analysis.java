@@ -1,6 +1,7 @@
 
 package edu.uiuc.zenvisage.service;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import edu.uiuc.zenvisage.service.utility.*;
@@ -25,6 +26,7 @@ public abstract class Analysis {
 	public Distance distance;
 	public Normalization normalization;
 	public ZvQuery args;
+	public String downloadData;
 
 	/**
 	 * @param executor
@@ -38,6 +40,7 @@ public abstract class Analysis {
 		this.distance = distance;
 		this.normalization = normalization;
 		this.args = args;
+		this.downloadData="";
 	}
 
 	/**
@@ -88,5 +91,10 @@ public abstract class Analysis {
 	 */
 	public void setNormalization(Normalization normalization) {
 		this.normalization = normalization;
+	}
+
+	public void download(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups,
+			ZvQuery args) throws JsonProcessingException, IOException {
+		// TODO Auto-generated method stub
 	}
 }

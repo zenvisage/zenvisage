@@ -50,6 +50,7 @@ public class Representative extends Analysis {
 		super(chartOutput, distance, normalization, args);
 		// TODO Auto-generated constructor stub
 		this.cluster = cluster;
+		this.downloadData="";
 	}
 	
 	/**
@@ -93,17 +94,77 @@ public class Representative extends Analysis {
 		//List<RepresentativeTrend> representativeTrends = cluster.computeRepresentativeTrends(clusters,mappings,normalizedgroups);
 		//removeDuplicate(representativeTrends);
 		//double[][] centers = cluster.getCenters(clusters);
-		BufferedWriter bx = null;
-		BufferedWriter by = null;
-		if (args.getDownload()){
-//			 System.out.println("downloading RepresentativeTrends!");
-			 FileWriter fy = new FileWriter("representative_"+args.yAxis+".csv");
-			 by = new BufferedWriter(fy);
-		 }
 		List<RepresentativeTrend> representativeTrends = new ArrayList<RepresentativeTrend>();
 		List<List<Double>> clusteredTrends = new ArrayList();
 	    for (int k = 0; k < clusters.size(); k++) {	    
 //	    		System.out.println("Cluster #"+ Integer.toString(k));
+	    		RepresentativeTrend repTrend = new RepresentativeTrend();
+	    		DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();
+	    		List<Double> clustTrend = new ArrayList();
+			List<Double> clusterDist = new ArrayList();
+	  	  	double[] p = point.getPoint();
+	  	  	int min = 0;
+	  	  	double mindist = distance.calculateDistance(p, normalizedgroups[0]);
+	  	  	for (int l = 1; l < normalizedgroups.length; l++) {
+	  	  		double d = distance.calculateDistance(p, normalizedgroups[l]);
+	  	  		clusterDist.add(d);
+	  	  		if (d < mindist ) {
+	  	  			min = l;
+	  	  		 	mindist = d;
+	  	  		}
+	  	  	}
+	  	  	repTrend.setP(normalizedgroups[min]);
+	  	  	repTrend.setKey(mappings.get(min));
+	  	  	repTrend.setSimilarTrends(dc.getRealSizes()[k]);
+	  	    representativeTrends.add(repTrend);
+	    }
+	    Collections.sort(representativeTrends, new Comparator<RepresentativeTrend>() {
+
+	        public int compare(RepresentativeTrend o1, RepresentativeTrend o2) {
+	            if(o1.getSimilarTrends() < o2.getSimilarTrends())
+	            	return 1;
+	            else if (o1.getSimilarTrends() > o2.getSimilarTrends())
+	            	return -1;
+	            else
+	            	return 0;
+	        }
+	    });	
+	    
+		chartOutput.chartOutput(representativeTrends,output,chartOutput.args,chartOutput.finalOutput);
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void download(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException {
+		// TODO Auto-generated method stub
+		ArrayList<String> mappings = new ArrayList<String>();
+		for(String key : output.keySet()) {
+			 mappings.add(key);
+		}
+//		double eps = cluster.calculateEpsDistance(normalizedgroups, 2);
+		double eps = 0;  //unused in calculateClusters
+		@SuppressWarnings({ "rawtypes"})
+		DummyCluster dc = cluster.calculateClusters(eps, 0, normalizedgroups);
+		List clusters = dc.getClusters();		
+		//List<RepresentativeTrend> representativeTrends = cluster.computeRepresentativeTrends(clusters,mappings,normalizedgroups);
+		//removeDuplicate(representativeTrends);
+		//double[][] centers = cluster.getCenters(clusters);
+//		BufferedWriter bx = null;
+//		BufferedWriter by = null;
+		String JsonString="{";
+		String yJsonString="";
+		String yvalString="";
+		
+//		if (args.getDownload()){
+//			 System.out.println("downloading RepresentativeTrends!");
+//			 FileWriter fy = new FileWriter("representative_"+args.yAxis+".csv");
+//			 by = new BufferedWriter(fy);
+			
+		yJsonString+='\"'+"representative_"+args.yAxis+".csv\":[";
+
+		List<RepresentativeTrend> representativeTrends = new ArrayList<RepresentativeTrend>();
+		List<List<Double>> clusteredTrends = new ArrayList();
+	    for (int k = 0; k < clusters.size(); k++) {	    
+	    		//System.out.println("Cluster #"+ Integer.toString(k));
 	    		RepresentativeTrend repTrend = new RepresentativeTrend();
 	    		DoublePoint point = (DoublePoint) ((CentroidCluster<DoublePoint>) clusters.get(k)).getCenter();
 	    		List<Double> clustTrend = new ArrayList();
@@ -135,11 +196,11 @@ public class Representative extends Analysis {
 						data_str+=Double.toString(normalizedgroups[minK_idx[i]][n]) +",";
 					}
 					// Cluster # , z title, data (y1,y2...,yn,...)
-					by.write(Integer.toString(k)+','+mappings.get(minK_idx[i])+','+ data_str.subSequence(0, data_str.length()-1)+"\n");
+					//by.write(Integer.toString(k)+','+mappings.get(minK_idx[i])+','+ data_str.subSequence(0, data_str.length()-1)+"\n");
+					yvalString+="\""+Integer.toString(k)+','+mappings.get(minK_idx[i])+','+ data_str.subSequence(0, data_str.length()-1)+"\",";
 				}
 			}
 	    }
-	    if (args.getDownload()){by.close();}
 	    Collections.sort(representativeTrends, new Comparator<RepresentativeTrend>() {
 
 	        public int compare(RepresentativeTrend o1, RepresentativeTrend o2) {
@@ -153,6 +214,11 @@ public class Representative extends Analysis {
 	    });	
 	    
 		chartOutput.chartOutput(representativeTrends,output,chartOutput.args,chartOutput.finalOutput);
+		yJsonString+=yvalString.substring(0, yvalString.length() - 1)+"]";
+		JsonString+=yJsonString+'}';
+		System.out.println("JsonString:"+JsonString);
+		//downloadData = "{\"value.csv\": [\"13,0.008,0.859,0.882389,0.9018803238868713,0.9177624583244324,0.9301325082778931,0.9441732168197632,0.93790,0.85\"],\"timestep.csv\": [\"13,0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0\"]}";
+		downloadData = JsonString;
 	}
 	/*
 	private void removeDuplicate(List<RepresentativeTrend> representativeTrends) {

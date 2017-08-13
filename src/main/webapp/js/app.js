@@ -1043,11 +1043,20 @@ app.controller('datasetController', [
         q.kmeansClusterSize = $("#num-outlier-download").val();
         log.info("outlier result download",q.kmeansClusterSize,q.yOnly);
       }
-
+      console.log("before http post")
       $http.post(address, data).
       success(function(response) {
+        // console.log("Response:",response);
+        for (var key in response) {
+          if (response.hasOwnProperty(key)) {
+            //console.log(key + " -> " + response[key]);
+            //var file = new File(["Hello, world!"], "hello world.txt", {type: "text/plain;charset=utf-8"});
+            var file = new File([response[key].join("\n")], key, {type: "text/plain;charset=utf-8"});
+            saveAs(file);
+          }
+        }
         console.log("download : success");
-        alert("Sucessfully saved to zenvisage/target")
+        // alert("Sucessfully saved to zenvisage/target")
       }).
       error(function(response) {
         console.log("download : fail");
