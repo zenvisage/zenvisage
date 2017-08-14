@@ -503,15 +503,12 @@ public class ZvMain {
 		 
 		
 	}
-	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+	public Analysis buildAnalysisDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+	//public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
 		 this.databaseName=args.databasename;
-		 System.out.println(args.databasename);
-		 this.databaseName=args.databasename;
-		 System.out.println("args.downloadAll:");
-		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
@@ -643,21 +640,51 @@ public class ZvMain {
 			 ((Similarity) analysis).setDescending(true);
 		 }
 		 System.out.println("After Interpolation and normalization");
-
-		 analysis.compute(output, normalizedgroups, args);
-		 
+		 if (args.getDownload() && method.equals("RepresentativeTrends")){
+			 analysis.download(output, normalizedgroups, args);
+		 }else{
+			 analysis.compute(output, normalizedgroups, args);
+		 }
 		 System.out.println("After Distance calulations");
+		 return analysis; 
+	}
+	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Analysis analysis = buildAnalysisDragnDropInterfaceQuery(query,method);
 		 return analysis.getChartOutput().finalOutput;
 	}
+	
+	public String saveRepresentativeDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+		 Analysis analysis = buildAnalysisDragnDropInterfaceQuery(query,method);
+		 return analysis.downloadData;
+	}
+		
+		
+//		if (args.getDownload() && method.equals("RepresentativeTrends")){
+//		 String downloadData = analysis.download(output, normalizedgroups, args);
+//		 System.out.println("After Distance calulations");
+//		 return downloadData;
+//	 }else{
+//		 
+//	 }
+
 
 	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		 System.out.println("runDragnDropInterfaceQuerySeparated:");
-		 Result result = runDragnDropInterfaceQuery(query,method);
-		 ObjectMapper mapper = new ObjectMapper();
-		 System.out.println("After Interpolation and normalization");
-		 String res = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
-		 System.out.println("After mapping to output string");
-		 return res;
+		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
+		 if (args.getDownload() && method.equals("RepresentativeTrends")){
+			 String res = saveRepresentativeDragnDropInterfaceQuery(query, method);
+			 ObjectMapper mapper = new ObjectMapper();
+			 System.out.println("After mapping to output string");
+			 return res;
+		 }
+		 else{
+			 Result result = runDragnDropInterfaceQuery(query,method);
+			 ObjectMapper mapper = new ObjectMapper();
+			 System.out.println("After Interpolation and normalization");
+			 String res = mapper.writeValueAsString(analysis.getChartOutput().finalOutput);
+			 System.out.println("After mapping to output string");
+			 return res;
+		 }
 	}
 	
 	public synchronized String runDragnDropInterfaceQuerySeparated_error(String query, String method) throws InterruptedException, IOException, SQLException{
@@ -667,13 +694,11 @@ public class ZvMain {
 		 return res;
 	}
 	
-	public synchronized void saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+	public synchronized String saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 System.out.println(args.databasename);
 		 this.databaseName=args.databasename;
-		 System.out.println("args.downloadAll:");
-		 System.out.println(args.downloadAll);
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
@@ -692,33 +717,40 @@ public class ZvMain {
 		 boolean downloadX = args.deriveDownloadX();
 		 boolean includeQuery = args.getIncludeQuery();
 		 
-		 System.out.print("downloadThresh:");
-		 System.out.println(args.downloadThresh);
-
 		 String dataX = String.join(",", Arrays.toString(args.getDataX()));
 		 String dataY = String.join(",", Arrays.toString(args.getDataY()));
 		 
-		 FileWriter fx = null;
-		 BufferedWriter bx = null;
+//		 FileWriter fx = null;
+//		 BufferedWriter bx = null;
 		 Chart sampleChartSchema = outputCharts.get(0);
 		 String prefix = "";
-
+		 String JsonString="{";
+		 String xJsonString="";
+		 String yJsonString="";
+		 String xvalString="";
+		 String yvalString="";
 		 if (method.equals("Outlier")) {
 			 prefix = "outlier_";
 		 }
 		 
-		 if (args.deriveDownloadX()){
-			 fx = new FileWriter(prefix+sampleChartSchema.xType+".csv");
-			 bx = new BufferedWriter(fx);
+		 if (downloadX){
+			 xJsonString+='\"'+prefix+sampleChartSchema.xType+".csv\":[";
 		 }
-		 FileWriter fy = new FileWriter(prefix+sampleChartSchema.yType+".csv");
-		 BufferedWriter by = new BufferedWriter(fy);
+		 yJsonString+='\"'+prefix+sampleChartSchema.yType+".csv\":[";
+//		 if (args.deriveDownloadX()){
+//			 fx = new FileWriter(prefix+sampleChartSchema.xType+".csv");
+//			 bx = new BufferedWriter(fx);
+//		 }
+//		 FileWriter fy = new FileWriter(prefix+sampleChartSchema.yType+".csv");
+//		 BufferedWriter by = new BufferedWriter(fy);
 
 		 // Writing query
 		 if (method.equals("SimilaritySearch") && includeQuery) {
-			 by.write("query ,"+"1.0,"+ dataY.substring(1, dataY.length() - 1)+"\n");
+			 //by.write("query ,"+"1.0,"+ dataY.substring(1, dataY.length() - 1)+"\n");
+			 yvalString+="\""+"query ,"+"1.0,"+ dataY.substring(1, dataY.length() - 1)+"\",";
 			 if (downloadX){
-				 bx.write("query ,"+ dataX.substring(1, dataX.length() - 1)+"\n");
+				 //bx.write("query ,"+ dataX.substring(1, dataX.length() - 1)+"\n");
+				 xvalString+="\""+"query ,"+ dataX.substring(1, dataX.length() - 1)+"\",";
 			 }
 		 }
 		 
@@ -727,20 +759,35 @@ public class ZvMain {
 			 Chart viz = outputCharts.get(i);
 			 if (args.downloadThresh!=0.0){ // If nonzero downloadThresh set, then use it as a cutoff
 				 if (viz.normalizedDistance>=args.downloadThresh){
-					 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+					 //by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+					 yvalString+="\""+viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\",";
 					 if (downloadX){
-						 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
-					 }	 
+						 //bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+						 xvalString+="\""+viz.title+','+ String.join(",", viz.xData)+"\",";
+					 }
 				 }
 			 }else{
-				 by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+				 //by.write(viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\n");
+				 yvalString+="\""+viz.title+','+viz.normalizedDistance+','+ String.join(",", viz.yData)+"\",";
 				 if (downloadX){
-					 bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+					 //bx.write(viz.title+','+ String.join(",", viz.xData)+"\n");
+					 xvalString+="\""+viz.title+','+ String.join(",", viz.xData)+"\",";
 				 }	 
 			 }
 		 }
-		 if (downloadX){bx.close();}
-		 by.close();
+		 
+		 yJsonString+=yvalString.substring(0, yvalString.length() - 1)+"]";
+		 JsonString+=yJsonString;
+		 if (downloadX){
+			 xJsonString+=xvalString.substring(0, xvalString.length() - 1)+"]";
+			 JsonString+=","+xJsonString;
+		 }
+		 JsonString+="}";
+		 System.out.println("JsonString:"+JsonString);
+		 return JsonString;
+//		 if (downloadX){bx.close();}
+//		 by.close();
+//		 return "bob";
 	}
 
 
