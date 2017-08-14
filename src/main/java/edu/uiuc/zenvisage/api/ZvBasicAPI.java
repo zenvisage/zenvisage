@@ -286,7 +286,7 @@ public class ZvBasicAPI {
 		}
 		{
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");	
 		   log  = sdf.format(timestamp)+",null,"+type+','+message+'\n';
 			
 		}
