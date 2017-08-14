@@ -324,7 +324,7 @@ public class ZvBasicAPI {
 		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
 		zvMain = new ZvMain();
 		String outputGraphExecutor = zvMain.runQueryGraph(arg);
-		
+		 logQueries("ZQL",null,arg);
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}
@@ -334,14 +334,16 @@ public class ZvBasicAPI {
 	public String executeScatter(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
 		zvMain = new ZvMain();
 		String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
-
+		 logQueries("ZQL-Scatter",null,arg);
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
-	public String test(@RequestParam(value="query") String arg) {
+	public String test(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
+		 logQueries("test",null,arg);
+			// TODO change to graph executor
 		return "Test successful:" + arg;
 	}
 	
