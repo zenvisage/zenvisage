@@ -264,7 +264,16 @@ public class ZvBasicAPI {
 		File file = new File(querieslogFilename);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-		String log = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+type+','+message+'\n';
+		String log="";
+		if(request!=null)
+         log  = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+type+','+message+'\n';
+		else
+		{
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			SimpleDateFormat sdf = new SimpleDateFormat("queries_yyyy_MM_dd_HH_mm_ss");	
+		   log  = sdf.format(timestamp)+",null,"+type+','+message+'\n';
+			
+		}
         System.out.println(log);
         writer.write(log);
         writer.close();
@@ -315,7 +324,7 @@ public class ZvBasicAPI {
 		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
 		zvMain = new ZvMain();
 		String outputGraphExecutor = zvMain.runQueryGraph(arg);
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}
