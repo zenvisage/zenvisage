@@ -239,7 +239,7 @@ public class ZvBasicAPI {
 		zvMain = new ZvMain();
 		if (logFilename.equals("")){
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");
 			logFilename = "../"+sdf.format(timestamp)+".log";
 		}
 		File file = new File(logFilename);
@@ -259,18 +259,18 @@ public class ZvBasicAPI {
 		if (querieslogFilename.equals("")){
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-			logFilename = "../"+sdf.format(timestamp)+".log";
+			querieslogFilename = "../"+sdf.format(timestamp)+".log";
 		}
-		File file = new File(querieslogFilename);
+		File file = new File("queries-"+querieslogFilename);
 		
-		BufferedWriter writer = new BufferedWriter(new FileWriter("queries-"+file, true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		String log="";
 		if(request!=null)
          log  = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+type+','+message+'\n';
 		else
 		{
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("queries_yyyy_MM_dd_HH_mm_ss");	
+			SimpleDateFormat sdf = new SimpleDateFormat("queries_yyyy_MM_dd_HH");	
 		   log  = sdf.format(timestamp)+",null,"+type+','+message+'\n';
 			
 		}
