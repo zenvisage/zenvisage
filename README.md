@@ -127,7 +127,10 @@ Schema file is a .txt file which specifies the way data are processed on backend
           year:int,indexed,T,F,F,F,F,0,O
           temperature:float,indexed,F,T,F,F,F,0,O
 
+License
+----
 
+MIT
 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
