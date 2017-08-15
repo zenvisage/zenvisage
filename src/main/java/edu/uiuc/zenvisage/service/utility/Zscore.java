@@ -20,11 +20,15 @@ public class Zscore implements Normalization {
 		// TODO Auto-generated method stub
 		double mean = StatUtils.mean(normalizedValues);
 		double std = FastMath.sqrt(StatUtils.variance(normalizedValues));
+//		System.out.println("mean:"+ Double.toString(mean));
+//		System.out.println("std:"+ Double.toString(std));
 		for(int i = 0; i < normalizedValues.length; i++) {
+//			System.out.println("before :"+ normalizedValues[i]);
 			if (std == 0)
 				normalizedValues[i] = 0;
 			else 
 				normalizedValues[i] = (normalizedValues[i] - mean) / std;
+//			System.out.println("after :"+ normalizedValues[i]);
 		}
 	}
 

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.util.FastMath;
+
 import edu.uiuc.zenvisage.model.BaselineQuery;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.OutlierTrend;
@@ -77,14 +81,17 @@ public class ChartOutputUtil {
 			outputLength = output.length;
 		//}
 
-		Double range = 0.0;
-		if(orderedDistances != null && orderedDistances.size()!= 0){
-//			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
-			range = orderedDistances.get(orderedDistances.size()-1);
-		}
-
+//		Double range = 0.0;
+//		if(orderedDistances != null && orderedDistances.size()!= 0){
+////			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+//			range = orderedDistances.get(orderedDistances.size()-1);
+//		}
+		double maxDist = orderedDistances.get(Math.min(outputLength, args.outlierCount));
+		System.out.println("orderedDistances.size():"+Double.toString(orderedDistances.size()));
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
-			double normDist =normalize(orderedDistances, range, i);
+			System.out.println("orderedDistances:"+Double.toString(orderedDistances.get(i)));
+//			double normDist =normalize(orderedDistances, range, i);
+			double normDist =normalize(orderedDistances,maxDist, i);
 			boolean displayThisViz = false;
 			if (args.minDisplayThresh!=0.0){
 				 if (normDist>=args.minDisplayThresh){
@@ -125,12 +132,85 @@ public class ChartOutputUtil {
 	}
 
 	/*z= (xi-min(x)) /(max(x)-min(x))*/
-	public double normalize(List<Double> orderedDistances, double range, int i){
-		if (range == 0)
-			return 1.0;
-		else
-			return (range - orderedDistances.get(i)) / range;
+//	public double normalize(List<Double> orderedDistances, double range, int i){
+//		if (range == 0)
+//			return 1.0;
+//		else
+//			return (range - orderedDistances.get(i)) / range;
+//	}
+//	public double normalize(List<Double> orderedDistances, int i){
+////		double sum=0;
+//		double max= Double.NEGATIVE_INFINITY;
+//		double[] distArr=new double[orderedDistances.size()];
+//		for (int j = 0; j<orderedDistances.size(); j++){
+//			double val = orderedDistances.get(j);
+////			sum+=val;
+//			distArr[j]=val;
+////			if (val>max){
+////				max=val;
+////			}
+////			System.out.println("val:"+Double.toString(val));
+////			System.out.println("imax:"+Double.toString(max));
+//		}
+//		double mean = StatUtils.mean(distArr);
+//		double std = FastMath.sqrt(StatUtils.variance(distArr));
+//
+//		System.out.println("min:"+orderedDistances.get(0));
+//		System.out.println("max:"+orderedDistances.get(orderedDistances.size()-1));
+//		System.out.println("mean:"+Double.toString(mean));
+//		System.out.println("std:"+Double.toString(std));
+//		double fakeMin = mean-3*std;
+//		double fakeMax = mean+3*std;
+//		System.out.println("fakeMin:"+Double.toString(fakeMin));
+//		System.out.println("fakeMax:"+Double.toString(fakeMax));
+//		System.out.println("orderedDistances.size():"+orderedDistances.size());
+//		double[] cleanedDistArr=new double[orderedDistances.size()];
+//		for (int j = 0; j<orderedDistances.size(); j++){
+//			double val = orderedDistances.get(j);
+//			if (val<=fakeMax){
+//				cleanedDistArr[j]=val;
+//			}
+////			System.out.println("val:"+Double.toString(val));
+////			System.out.println("imax:"+Double.toString(max));
+//		}
+//		System.out.println("cleanedDistArr.length:"+cleanedDistArr.length);
+//		mean = StatUtils.mean(cleanedDistArr);
+//		std = FastMath.sqrt(StatUtils.variance(cleanedDistArr));
+//		System.out.println("mean:"+Double.toString(mean));
+//		System.out.println("std:"+Double.toString(std));
+//		
+//		System.out.println("result:"+Double.toString((fakeMax-orderedDistances.get(i))/(fakeMax)));
+////		return  (orderedDistances.get(i)-fakeMin)/(max-fakeMin);
+//		if (orderedDistances.get(i)<= orderedDistances.get(0)){
+//			return 1.0;
+//		}
+//		return (fakeMax-orderedDistances.get(i))/(fakeMax);
+//		
+////		if (range == 0)
+////			return 1.0;
+////		else
+////			return (range - orderedDistances.get(i)) / range;
+//	}
+	public double normalize(List<Double> orderedDistances, double maxDist, int i){
+//		double max = 0.0;
+////		orderedDistances.size()*0.1
+//		if(orderedDistances != null){
+//			if (orderedDistances.size()>5){
+//				//		range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
+//				max = orderedDistances.get(orderedDistances.size()-5);
+//
+//			}else if (orderedDistances.size()!=0){
+//				max = orderedDistances.get(orderedDistances.size()-1);
+//			}
+//		}
+//		if (range == 0)
+//			return 1.0;
+//		else
+//		System.out.println("max:"+Double.toString(max));
+		
+		return (maxDist- orderedDistances.get(i)) /maxDist;
 	}
+	
 
 	public void chartOutput(List<RepresentativeTrend> representativeTrends,LinkedHashMap<String,LinkedHashMap<Float,Float>> orig, ZvQuery args, Result finalOutput) throws JsonProcessingException{
 
