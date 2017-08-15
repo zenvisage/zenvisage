@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.uiuc.zenvisage.model.DynamicClass;
+import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 @Controller
@@ -39,6 +41,7 @@ public class ZvBasicAPI {
 	@Autowired
 	private ZvMain zvMain;
 	public String logFilename="";
+	public String querieslogFilename="";
     public ZvBasicAPI(){
 
 	}
@@ -46,6 +49,7 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
+		logQueries("fileUpload",request,"");
 		zvMain = new ZvMain();
 		zvMain.fileUpload(request, response);
 	}
@@ -53,7 +57,8 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody
 	public String createClasses(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
-	    StringBuilder stringBuilder = new StringBuilder();
+		String type="Create Classes";
+		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    zvMain = new ZvMain();
 	    while (scanner.hasNextLine()) {
@@ -71,13 +76,14 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
 	@ResponseBody
 	public String getClassInfo(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
-	    StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    zvMain = new ZvMain();
 	    while (scanner.hasNextLine()) {
 	    	stringBuilder.append(scanner.nextLine());
 	    }
 	    String body = stringBuilder.toString();
+	    logQueries("getClassInfo",request,body);
 	    return zvMain.runRetrieveClasses(body);
 	}
 	
@@ -85,6 +91,7 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public ArrayList<String> gettablelist() throws JsonGenerationException, JsonMappingException, IOException, InterruptedException, SQLException {
 //		System.out.println(arg);
+
 		zvMain = new ZvMain();
 		return zvMain.getTablelist();
 	}
@@ -109,6 +116,7 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/postRepresentative", method = RequestMethod.POST)
 	@ResponseBody
 	public String postRepresentative(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+	//	logQueries("postRepresentative",request);
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    zvMain = new ZvMain();
@@ -116,7 +124,9 @@ public class ZvBasicAPI {
 	        stringBuilder.append(scanner.nextLine());
 	    }
 	    String body = stringBuilder.toString();
-	    	System.out.println("Representative:"+body);
+	    String bodyforlogging=removeSketchPoints(body);
+	    logQueries("postRepresentative",request,bodyforlogging);
+	    System.out.println("Representative:"+body);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "RepresentativeTrends");
 	}
 	
@@ -137,6 +147,8 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/postOutlier", method = RequestMethod.POST)
 	@ResponseBody
 	public String postOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		String type="postOutlier";
+	//	logQueries(type,request);
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    zvMain = new ZvMain();
@@ -145,12 +157,15 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-
+	    String bodyforlogging=removeSketchPoints(body);
+	    logQueries(type,request,bodyforlogging);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 	@RequestMapping(value = "/downloadSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String downloadSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		String type="downloadSimilarity";
+//		logQueries(type,request);
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    zvMain = new ZvMain();
@@ -163,6 +178,8 @@ public class ZvBasicAPI {
 	    //String resp = "{\"xval\":\""+zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch")+"\"}";
 	    //System.out.println("resp: "+resp);
 	    //JSONObject jsonObj = new JSONObject("{\"phonetype\":\"N95\",\"cat\":\"WP\"}");
+	    String bodyforlogging=removeSketchPoints(body);
+	    logQueries(type,request,bodyforlogging);
 	    String resp = zvMain.saveDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	    return resp;
 	}
@@ -170,6 +187,7 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/downloadOutlier", method = RequestMethod.POST)
 	@ResponseBody
 	public String downloadOutlier(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		String type="downloadOutlier";
 		System.out.println("downloadOutlier");
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
@@ -180,12 +198,15 @@ public class ZvBasicAPI {
 	        System.out.println(line);
 	    }
 	    String body = stringBuilder.toString();
+	    String bodyforlogging=removeSketchPoints(body);
+	    logQueries(type,request,bodyforlogging);
 	    return zvMain.saveDragnDropInterfaceQuerySeparated(body, "Outlier");
 	}
 	
 	@RequestMapping(value = "/postSimilarity_error", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity_error(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		String type="postSimilarity_error";
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
 	    while (scanner.hasNextLine()) {
@@ -193,13 +214,16 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
-
+	    String bodyforlogging=removeSketchPoints(body);
+	    logQueries(type,request,bodyforlogging);
 		return zvMain.runDragnDropInterfaceQuerySeparated_error(body, "SimilaritySearch");
 	}
 	
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		String type="postSimilarity";
+	
 		zvMain = new ZvMain();
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = new Scanner(request.getInputStream());
@@ -208,6 +232,8 @@ public class ZvBasicAPI {
 	    }
 
 	    String body = stringBuilder.toString();
+	    String bodyforlogging=removeSketchPoints(body);
+	    logQueries(type,request,bodyforlogging);
 		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 
@@ -219,7 +245,7 @@ public class ZvBasicAPI {
 		zvMain = new ZvMain();
 		if (logFilename.equals("")){
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");
 			logFilename = "../"+sdf.format(timestamp)+".log";
 		}
 		File file = new File(logFilename);
@@ -231,6 +257,49 @@ public class ZvBasicAPI {
         writer.close();
 	}
 	 
+	
+	public void logQueries(String type,HttpServletRequest request,String message) {
+		try{
+		System.out.print("QuerieslogFilename:");
+		System.out.println(querieslogFilename);
+		zvMain = new ZvMain();
+		if (querieslogFilename.equals("")){
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");
+			querieslogFilename = "../"+"Queries-"+sdf.format(timestamp)+".log";
+		}
+		File file = new File(querieslogFilename);
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+		String log="";
+		if(request!=null)
+		{
+		
+			if(request.getParameter("timestamp")==null)
+			{
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");	
+			   log  = sdf.format(timestamp)+","+request.getRemoteAddr()+","+type+','+message+'\n';
+			}
+			else
+			   log  = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+type+','+message+'\n';
+		}
+		
+		else {
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");	
+		   log  = sdf.format(timestamp)+",null,"+type+','+message+'\n';
+			
+		}
+        System.out.println(log);
+        writer.write(log);
+        writer.close();
+		}catch(Exception e){
+			System.out.println("Error while logging: "+e.toString());
+		}
+	}
+	 
+	
 	
 	@RequestMapping(value = "/getDissimilarity", method = RequestMethod.GET)
 	@ResponseBody
@@ -248,6 +317,15 @@ public class ZvBasicAPI {
 		return zvMain.getInterfaceFomData(arg);
 	}
 
+	public String removeSketchPoints(String body) throws JsonParseException, JsonMappingException, IOException{
+		    ZvQuery args = new ObjectMapper().readValue(body, ZvQuery.class);
+		    args.dataX=null;
+		    args.dataY=null;
+		    args.sketchPoints=null;
+		    String bodyforlogging=new ObjectMapper().writeValueAsString(args);
+		    return bodyforlogging;
+	}
+	
 //	@RequestMapping(value = "/getBaselineData", method = RequestMethod.GET)
 //	@ResponseBody
 //	public String getBaselineData(@RequestParam(value="query")String arg) throws JsonParseException, JsonMappingException, IOException, InterruptedException {
@@ -275,7 +353,7 @@ public class ZvBasicAPI {
 		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
 		zvMain = new ZvMain();
 		String outputGraphExecutor = zvMain.runQueryGraph(arg);
-
+		 logQueries("ZQL",null,arg);
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}
@@ -285,14 +363,16 @@ public class ZvBasicAPI {
 	public String executeScatter(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
 		zvMain = new ZvMain();
 		String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
-
+		 logQueries("ZQL-Scatter",null,arg);
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
-	public String test(@RequestParam(value="query") String arg) {
+	public String test(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
+		 logQueries("test",null,arg);
+			// TODO change to graph executor
 		return "Test successful:" + arg;
 	}
 	
