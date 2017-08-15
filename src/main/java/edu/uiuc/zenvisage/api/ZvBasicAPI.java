@@ -274,19 +274,20 @@ public class ZvBasicAPI {
 		String log="";
 		if(request!=null)
 		{
-			
+		
 			if(request.getParameter("timestamp")==null)
 			{
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");	
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");	
 			   log  = sdf.format(timestamp)+","+request.getRemoteAddr()+","+type+','+message+'\n';
 			}
 			else
 			   log  = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+type+','+message+'\n';
 		}
-		{
+		
+		else {
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");	
 		   log  = sdf.format(timestamp)+",null,"+type+','+message+'\n';
 			
 		}
