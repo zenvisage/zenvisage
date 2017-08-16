@@ -21,11 +21,11 @@ public class LinearNormalization implements Normalization {
 				min = input[i];
 			}
 		}
-		
+//		System.out.println("max:"+ Double.toString(max));
+//		System.out.println("min:"+ Double.toString(min));
 		if (max == min || (max-min<1)) {
 			return;
 		}
-		
 		for (int i = 0; i < input.length; i++) {
 			input[i] = (input[i] - min) / (max - min) * 100;
 		}

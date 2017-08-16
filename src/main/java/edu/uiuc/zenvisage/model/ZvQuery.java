@@ -18,7 +18,7 @@ public class ZvQuery {
 	public double minX;
 	public double maxX;
 	public boolean outputNormalized = false;
-	public boolean distanceNormalized=false;
+	public String distanceNormalized="linear";
 	public String clustering="DBSCAN";
 	public String distance_metric="Euclidean";
 	public String predicateColumn;
@@ -63,11 +63,11 @@ public class ZvQuery {
 		this.outputNormalized = outputNormalized;
 	}
 	
-	public boolean isDistanceNormalized() {
+	public String getDistanceNormalized() {
 		return distanceNormalized;
 	}
 	
-	public void setDistanceNormalized(boolean distanceNormalized) {
+	public void setDistanceNormalized(String distanceNormalized) {
 		this.distanceNormalized = distanceNormalized;
 	}
 	

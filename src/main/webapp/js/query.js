@@ -47,7 +47,7 @@ function Query( searchMethod ) {
   }
 
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
-  this.distanceNormalized = false; // fix to dynamically fetch
+  this.distanceNormalized = "linear"; // fix to dynamically fetch
   this.outputNormalized = false; // fix to dynamically fetch
   this.clustering = "KMeans"; // fix to dynamically fetch
   this.kmeansClusterSize = getClusterSize();
