@@ -568,14 +568,20 @@ public class ZvMain {
 			 distance = new DTWDistance();
 		 }
 		 // generate the corresponding data normalization metric
-		 if (args.distanceNormalized) {
+		 //args.distanceNormalized="original";
+		 System.out.println("args.distanceNormalized:"+args.distanceNormalized);
+		 if (args.distanceNormalized.equals("linear")) {
 //			 normalization = new LinearNormalization();
 			 normalization = new LinearNormalization();
 //			 normalization = new Original();
 		 }
-		 else {
-//			 normalization = new Zscore();
-			 normalization = new LinearNormalization();
+		 else if (args.distanceNormalized.equals("zscore")) {
+			 normalization = new Zscore();
+			 //normalization = new LinearNormalization();
+		 }
+		 else if (args.distanceNormalized.equals("original")) {
+			 normalization = new Original();
+			 //normalization = new LinearNormalization();
 		 }
 		 // generate the corresponding output normalization
 

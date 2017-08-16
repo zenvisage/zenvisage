@@ -615,13 +615,14 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
 
+          $scope.insertRow()
 
       // $($( ".tabler" )[2]).find(".process").val("")
-      removeZqlRow(6);  // hacky, remove extra rows
-      removeZqlRow(5);
-      removeZqlRow(4);
-      removeZqlRow(3);
-      removeZqlRow(7);
+  //      removeZqlRow(6);  // hacky, remove extra rows
+        removeZqlRow(5);
+ //      removeZqlRow(4);
+ //     removeZqlRow(3);
+       removeZqlRow(7);
 
 
   }
@@ -651,9 +652,11 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
       // $($( ".tabler" )[3]).find(".process").val("")
+      
+      $scope.insertRow()
       removeZqlRow(6);
       removeZqlRow(5);
-      removeZqlRow(4);
+ //     removeZqlRow(4);
     }
 
     $scope.populateWeatherQuery3 = function() {
@@ -674,10 +677,11 @@ app.controller('options-controller', [
       $($( ".tabler" )[2]).find(".z-val").val("v1")
       $($( ".tabler" )[2]).find(".constraints").val("")
       $($( ".tabler" )[2]).find(".process").val("")
+      $scope.insertRow()
       removeZqlRow(6);  // hacky, remove extra rows
       removeZqlRow(5);
       removeZqlRow(4);
-      removeZqlRow(3);
+  //  removeZqlRow(3);
 
     }
 
@@ -744,7 +748,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".process").val("")
       removeZqlRow(6);
       removeZqlRow(5);
-      removeZqlRow(4);
+ //     removeZqlRow(4);
     }
 
     $scope.populateQuery4 = function() {
@@ -774,7 +778,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".process").val("")
       removeZqlRow(6);
       removeZqlRow(5);
-      removeZqlRow(4);
+//      removeZqlRow(4);
     }
 
     $scope.populateQuery5 = function() {
@@ -794,7 +798,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[1]).find(".constraints").val("")
 
       $scope.insertProcessRow()
-      $($( ".tabler" )[2]).find(".process").val("v1<-argmin_{z1}[k=7]DEuclidean(f1,f2)")
+      $($( ".tabler" )[2]).find(".process").val("v1<-argmin_{z1}[k=1]DEuclidean(f1,f2)")
 
       $scope.insertRow()
       $($( ".tabler" )[3]).find(".name").val("*f3")
@@ -805,7 +809,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".process").val("")
       removeZqlRow(6);
       removeZqlRow(5);
-      removeZqlRow(4);
+  //    removeZqlRow(4);
     }
 
     $scope.drawFunction = function() {
