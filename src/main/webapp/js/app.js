@@ -1,7 +1,6 @@
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
 
-
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.AxisInfo = [];
@@ -810,7 +809,7 @@ app.controller('options-controller', [
       removeZqlRow(6);
       removeZqlRow(5);
   //    removeZqlRow(4);
-
+    } 
     $scope.populateQuery7 = function() {
       //Increasing example
       $scope.removeAndInsertRows( 1 );
