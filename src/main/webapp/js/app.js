@@ -1,7 +1,6 @@
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
 
-
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.AxisInfo = [];
@@ -810,6 +809,30 @@ app.controller('options-controller', [
       removeZqlRow(6);
       removeZqlRow(5);
   //    removeZqlRow(4);
+    } 
+    $scope.populateQuery7 = function() {
+      //Increasing example
+      $scope.removeAndInsertRows( 1 );
+      $($( ".tabler" )[0]).find(".name").val("f1")
+      $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
+      $($( ".tabler" )[0]).find(".y-val").val("y1<-{'soldprice'}")
+      $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
+      $($( ".tabler" )[0]).find(".constraints").val("")
+      $($( ".tabler" )[0]).find(".process").val("")
+      
+      $scope.insertProcessRow()
+      $($( ".tabler" )[1]).find(".process").val("v1<-argmax_{z1}[k=5]Tincreasing(f1)")
+
+      $scope.insertRow()
+      $($( ".tabler" )[2]).find(".name").val("*f2")
+      $($( ".tabler" )[2]).find(".x-val").val("x1")
+      $($( ".tabler" )[2]).find(".y-val").val("y1")
+      $($( ".tabler" )[2]).find(".z-val").val("v1")
+      $($( ".tabler" )[2]).find(".constraints").val("")
+
+      removeZqlRow(6);
+      removeZqlRow(5);
+      removeZqlRow(4);
     }
 
     $scope.drawFunction = function() {
