@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.data.remotedb;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -9,8 +10,11 @@ public class VisualComponentList {
 	private String ztype;
 	private String xType;
     private String ytype;
-	private ArrayList<VisualComponent> visualComponentList;
-
+    private boolean noagg;
+	public ArrayList<VisualComponent> visualComponentList;
+    public HashMap<String,VisualComponent> ZToVisualComponents = new HashMap<>();
+	
+	
 	public VisualComponentList(){}
 	
 	public ArrayList<VisualComponent> getVisualComponentList() {
@@ -44,6 +48,7 @@ public class VisualComponentList {
 		}
 		return output;
 	}
+	
 	
 	public String toString(){
 		StringBuilder ret = new StringBuilder();

@@ -301,7 +301,14 @@ public class SQLQueryExecutor {
 		for(int i = 0; i < yAttributes.size(); i++) {
 			for(List<VisualComponent> vcList: vcMap.values()) {
 					this.visualComponentList.addVisualComponent(vcList.get(i));
+			
+					
 			}		
+		}
+		
+		//TODO: FIXME Assumes there is always one Y atttribute in the query
+		for(String key: vcMap.keySet()) {
+			this.visualComponentList.ZToVisualComponents.put(key, vcMap.get(key).get(0));
 		}
 		rs.close();
 		st.close();

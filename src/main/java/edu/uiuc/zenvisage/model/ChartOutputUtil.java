@@ -8,6 +8,10 @@ import java.util.List;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
+import edu.uiuc.zenvisage.data.remotedb.Points;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.model.BaselineQuery;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.OutlierTrend;
@@ -131,6 +135,28 @@ public class ChartOutputUtil {
 		return;
 	}
 
+	
+	public void convertToRawViz(VisualComponentList v){	
+		for(Chart chart:finalOutput.outputCharts){
+			String ztype=chart.zType;
+			chart.xData=new ArrayList<>();
+			chart.yData=new ArrayList<>();
+			VisualComponent vc =v.ZToVisualComponents.get(ztype);
+			Points points =vc.getPoints();
+			int i=0;
+			for(WrapperType x:points.getXList()){
+				chart.xData.add(Double.toString(x.getNumberValue()));
+				chart.yData.add(Double.toString(points.getYList().get(i).getNumberValue()));
+				i++;
+			}
+		}
+	
+	}
+	
+	
+	
+	
+	
 	/*z= (xi-min(x)) /(max(x)-min(x))*/
 //	public double normalize(List<Double> orderedDistances, double range, int i){
 //		if (range == 0)

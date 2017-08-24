@@ -515,9 +515,27 @@ public class ZvMain {
 			 args.setOutlierCount(size);
 			 query = new ObjectMapper().writeValueAsString(args);
 		 }
+		 
+		 VisualComponentList rawVisualComponentList=null;
+		 boolean noAgg=false;
+		 if(args.aggrFunc.equals("")){
+			 noAgg=true;
+			 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
+				//	 if (method.equals("SimilaritySearch"))
+						 setFilter(q, args);
+						 
+			 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
+			 System.out.println("After SQL for no agg");
+			 rawVisualComponentList =  sqlQueryExecutor.getVisualComponentList();		
+			 args.setAggrFunc("avg");
+		 }
+		 	 
+		 
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 	//	 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
+			 
+		 
 
 //		 ExecutorResult executorResult = executor.getData(q);
 //		 if (executorResult == null) return "";
@@ -532,6 +550,7 @@ public class ZvMain {
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
 		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
 		 System.out.println("After SQL");
+		 
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 System.out.println("After To HashMap");
 		 output = cleanUpDataWithAllZeros(output);
@@ -651,9 +670,19 @@ public class ZvMain {
 		 }else{
 			 analysis.compute(output, normalizedgroups, args);
 		 }
+		 
+		 if(noAgg)
+		 convertToRawViz(analysis,rawVisualComponentList);
+		 
 		 System.out.println("After Distance calulations");
 		 return analysis; 
 	}
+	
+	public void convertToRawViz(Analysis analysis,VisualComponentList rawVisualComponentList){
+		
+	}
+	
+	
 	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		 Analysis analysis = buildAnalysisDragnDropInterfaceQuery(query,method);
 		 return analysis.getChartOutput().finalOutput;
