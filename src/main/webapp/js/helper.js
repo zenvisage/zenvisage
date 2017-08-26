@@ -1146,7 +1146,8 @@ function displayOutlierResultsHelper( outlierResults )
         'border-style': "solid",
         'border-width': 1
       });
-    }
+    },
+    appendTo: 'body'
   });
 }
 
