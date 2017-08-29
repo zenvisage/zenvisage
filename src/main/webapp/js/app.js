@@ -450,7 +450,8 @@ app.controller('options-controller', [
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("minThresh display changed",$scope.minDisplayThresh)
         console.log("minThresh display changed",$scope.minDisplayThresh)
-        $scope.callGetUserQueryResultsWithCallBack();
+      //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+        $scope.callGetUserQueryResults();
       }
     });
     $scope.$watch('clusterSize', function( newValue, oldValue ) {
@@ -466,7 +467,8 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showScatterplot",$scope.showScatterplot)
-        $scope.callGetUserQueryResultsWithCallBack();
+        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResults();
       }
     });
 
@@ -475,7 +477,8 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("considerRange",$scope.considerRange)
-        $scope.callGetUserQueryResultsWithCallBack();
+        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResults();
       }
     });
 
@@ -484,7 +487,8 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showOriginalSketch",$scope.showOriginalSketch)
-        $scope.callGetUserQueryResultsWithCallBack();
+        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResults();
       }
     });
 
@@ -500,7 +504,8 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("aggregation",$scope.aggregation)
-        $scope.callGetUserQueryResultsWithCallBack();
+        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResults();
       }
     });
 
@@ -509,7 +514,8 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("flipY",$scope.flipY)
-        $scope.callGetUserQueryResultsWithCallBack();
+        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResults();
       }
     });
     // $scope.$watchGroup(['filter'], function( newValue, oldValue ) {
@@ -651,7 +657,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
       // $($( ".tabler" )[3]).find(".process").val("")
-      
+
       $scope.insertRow()
       removeZqlRow(6);
       removeZqlRow(5);
@@ -809,7 +815,7 @@ app.controller('options-controller', [
       removeZqlRow(6);
       removeZqlRow(5);
   //    removeZqlRow(4);
-    } 
+    }
     $scope.populateQuery7 = function() {
       //Increasing example
       $scope.removeAndInsertRows( 1 );
@@ -819,7 +825,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
       $($( ".tabler" )[0]).find(".process").val("")
-      
+
       $scope.insertProcessRow()
       $($( ".tabler" )[1]).find(".process").val("v1<-argmax_{z1}[k=5]Tincreasing(f1)")
 
@@ -1004,7 +1010,7 @@ app.controller('datasetController', [
             if (response_error.length == 0){console.log("empty response")}
             console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
             plotResults.displayUserQueryResults(response.outputCharts,true);
-            $scope.getRepresentativeTrendsWithoutCallback();
+         //$scope.getRepresentativeTrendsWithoutCallback(); dont recompute representative
           }).
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
@@ -1015,7 +1021,8 @@ app.controller('datasetController', [
 
         else{
         plotResults.displayUserQueryResults(response.outputCharts,true);
-        $scope.getRepresentativeTrendsWithoutCallback();}
+        //$scope.getRepresentativeTrendsWithoutCallback(); dont recompute representative
+      }
 
       }).
       error(function(response) {
