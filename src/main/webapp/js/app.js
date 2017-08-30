@@ -416,6 +416,7 @@ app.controller('options-controller', [
     $scope.clusterSize = 3;
     $scope.considerRange = true;
     $scope.showOriginalSketch = true;
+    $scope.outputNormalized = true;
     $scope.equation =  '';
     $scope.zqltable = false;
     $scope.chartSettings = ChartSettings;
@@ -492,6 +493,15 @@ app.controller('options-controller', [
       }
     });
 
+    $scope.$watchGroup( ['outputNormalized' ], function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("outputNormalized",$scope.outputNormalized)
+        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResults();
+      }
+    });
     // $scope.$watch('representative', function( newValue, oldValue ) {
     //   if (newValue !== oldValue)
     //   {

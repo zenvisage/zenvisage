@@ -92,10 +92,18 @@ public class ChartOutputUtil {
 //		}
 		double maxDist = orderedDistances.get(Math.min(outputLength-1, args.outlierCount));
 		//System.out.println("orderedDistances.size():"+Double.toString(orderedDistances.size()));
+		double normDist;
+		System.out.println("args.isOutputNormalized():"+args.isOutputNormalized());
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
 			System.out.println("orderedDistances:"+Double.toString(orderedDistances.get(i)));
 //			double normDist =normalize(orderedDistances, range, i);
-			double normDist =normalize(orderedDistances,maxDist, i);
+			if (args.isOutputNormalized()) {
+				normDist =normalize(orderedDistances,maxDist, i);
+			}else {
+				System.out.println("not normalized dist");
+				normDist =orderedDistances.get(i);
+			}
+			
 			boolean displayThisViz = false;
 			if (args.minDisplayThresh!=0.0){
 				 if (normDist>=args.minDisplayThresh){

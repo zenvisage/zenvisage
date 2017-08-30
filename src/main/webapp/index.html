@@ -541,10 +541,13 @@
                       </form>
                       <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" ><input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
                       </form>
-                      <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">
+                      <form data-intro = "If unchecked, then the output scores will not be normalized." data-step ="21">
+                        <input ng-model="outputNormalized"  id="outputNormalized" type="checkbox" name="outputNormalized"><label for="outputNormalized">Normalized Score</label><br>
+                      </form>
+                      <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="22">
                         <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                       </form>
-                      <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="22">
+                      <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="23">
                         <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
                       </form>
                     </div>
