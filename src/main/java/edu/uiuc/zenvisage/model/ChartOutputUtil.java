@@ -89,7 +89,7 @@ public class ChartOutputUtil {
 		double maxDist = orderedDistances.get(Math.min(outputLength-1, args.outlierCount));
 		System.out.println("orderedDistances.size():"+Double.toString(orderedDistances.size()));
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
-			System.out.println("orderedDistances:"+Double.toString(orderedDistances.get(i)));
+			// System.out.println("orderedDistances:"+Double.toString(orderedDistances.get(i)));
 //			double normDist =normalize(orderedDistances, range, i);
 			double normDist =normalize(orderedDistances,maxDist, i);
 			boolean displayThisViz = false;
