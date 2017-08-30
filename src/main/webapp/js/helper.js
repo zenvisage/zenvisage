@@ -79,7 +79,11 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var xRange = userQueryResults[count]["xRange"];
     //var similarityDistance = userQueryResults[count]["distance"];
     var similarityDistance = userQueryResults[count]["normalizedDistance"];
-
+    if (count <userQueryResults.length-1){
+      var deltaSimilarityDistance = Math.abs(userQueryResults[count+1]["normalizedDistance"]-similarityDistance);
+    }else{
+      var deltaSimilarityDistance = 0;
+    }
     var xmin = Math.min.apply(Math, xData);
     var xmax = Math.max.apply(Math, xData);
     var ymin = Math.min.apply(Math, yData);
@@ -274,8 +278,21 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
       }
     }
-
-
+    
+    if (deltaSimilarityDistance!=0){
+      fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")  
+    }else{
+      fmtSimScore=d3.format(".3");
+    }
+    
+    // if ((Math.log10(deltaSimilarityDistance)<=0)&(Math.log10(deltaSimilarityDistance)>=-2)){
+    //     fmtSimScore=d3.format(".2");
+    // }else{
+    //     fmtSimScore=d3.format("s");
+    // }
+    // if (Math.log10(similarityDistance)==0){
+    //   fmtSimScore=d3.format(".3");
+    // }
     if  (!isNaN(similarityDistance)){
 
       // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
@@ -290,7 +307,8 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         .attr("id",'ztitle')
         .attr("type",'queryResult')
         .attr('label',zlabel)
-        .text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
+        // .text(zAttribute + ": " + zlabel + " (" + similarityDistance + ")" );
+        .text(zAttribute + ": " + zlabel + " (" + fmtSimScore(similarityDistance) + ")" );
         //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
     }
     graph.append("text")
