@@ -541,13 +541,10 @@
                       </form>
                       <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" ><input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
                       </form>
-                      <form data-intro = "If unchecked, then the output scores will not be normalized." data-step ="21">
-                        <input ng-model="outputNormalized"  id="outputNormalized" type="checkbox" name="outputNormalized"><label for="outputNormalized">Normalized Score</label><br>
-                      </form>
-                      <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="22">
+                      <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">
                         <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                       </form>
-                      <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="23">
+                      <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="22">
                         <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
                       </form>
                     </div>
@@ -597,7 +594,7 @@
             <div>
               <table id="results-table"></table>
             </div>
-            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 50%; z-index: 10; width: 15%; height: 15%; ">
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 20%; height: 20%; ">
           </div>
           <div id="middle-right" class="col-md-6">
             <div>
