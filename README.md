@@ -74,6 +74,15 @@ For making the above change, you could run the following commands:
 
 * Launch `http://localhost:8080/` (preferably in Chrome, if has error mostly because of uncleared cache, use incognito mode probably fix). 
 
+### Configuration
+
+In file  ```src/main/resources/config.properties```.
+
+        username=postgres
+        password=zenvisage
+        port=8080
+        metatable=zenvisage_metatable
+
 ### Dataset Upload Requirements
 
 #### Dataset file
