@@ -52,6 +52,12 @@ public class DatabaseAutoLoader {
 			sqlQueryExecutor.createTable(createDynamicClassesSQL);
 			reload = true;
 		}
+		
+		if(!sqlQueryExecutor.isTableExists("dynamic_class_aggregations")){
+			String createDynamicClassesSQL ="CREATE TABLE dynamic_class_aggregations (Table_Name TEXT NOT NULL, Tag TEXT NOT NULL, Attributes TEXT NOT NULL, Ranges TEXT NOT NULL, Count INT NOT NULL);";
+			sqlQueryExecutor.createTable(createDynamicClassesSQL);
+			reload = true;
+		}
 		return reload;
 
 	}
