@@ -40,7 +40,6 @@ hr {
  font-size: 12px;
 }
 
-
 .radio input[type=radio]{
   margin-left: 0px; !important
 }
@@ -200,6 +199,7 @@ svg#treesvg {
   padding-top: 7px;
   padding-left: 5px;
 }
+
 .modal-body{
   margin-left: 20px;
 }
