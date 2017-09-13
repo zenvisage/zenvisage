@@ -70,6 +70,35 @@
         </div>
       </form>
 
+      <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Set attributes</h4>
+            </div>
+            <div class="modal-body">
+                Please submit which attributes belong to which axis
+              <form id="define-attributes-form">
+                <br>
+                X axis:
+                <br>  <span class = "x-attributes"></span> <br>
+                <br>
+                Y axis:
+                <br>  <span class = "y-attributes"></span> <br>
+                <br>
+                Z axis:
+                <br>  <span class = "z-attributes"></span> <br>
+                <br>
+                <div class="modal-footer">
+                  <input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Set Attributes">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -720,6 +749,7 @@
     <script src="js/zqlparser.js"></script>
     <script src="js/zqlgraph.js"></script>
     <script src="js/lib/FileSaver.js"></script>
+    <script src="js/lib/papaparse.min.js"></script>
     <script type="text/javascript" src="js/lib/rgbcolor.js"></script>
     <script type="text/javascript" src="js/lib/StackBlur.js"></script>
     <script type="text/javascript" src="js/lib/canvg.js"></script>
