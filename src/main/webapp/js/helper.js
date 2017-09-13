@@ -278,13 +278,13 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
       }
     }
-    
+
     if (deltaSimilarityDistance!=0){
-      fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")  
+      fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")
     }else{
       fmtSimScore=d3.format(".3");
     }
-    
+
     // if ((Math.log10(deltaSimilarityDistance)<=0)&(Math.log10(deltaSimilarityDistance)>=-2)){
     //     fmtSimScore=d3.format(".2");
     // }else{
@@ -1378,3 +1378,23 @@ canvas.style.display="none";
 
 
 });
+
+function parseCSV(data) {
+ Papa.parse(data.get("csv"), {
+ preview: 1,
+ complete: function(results){
+   var text_x, text_y, text_z = "";
+   console.log("this is results!",results["data"][0]);
+   for (i = 0; i < results["data"][0].length; i++) {
+   text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+   text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+   text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+ }
+
+   $('.x-attributes').html(text_x);
+   $('.y-attributes').html(text_y);
+   $('.z-attributes').html(text_z);
+   $('#define-attributes').modal('toggle');
+ }
+});
+}

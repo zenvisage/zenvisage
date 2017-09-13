@@ -48,7 +48,7 @@ function Query( searchMethod ) {
 
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
   this.distanceNormalized = "linear"; // fix to dynamically fetch
-  this.outputNormalized = getOutputNormalized(); 
+  this.outputNormalized = getOutputNormalized();
   this.clustering = "KMeans"; // fix to dynamically fetch
   this.kmeansClusterSize = getClusterSize();
   this.distance_metric = getDistanceMethod(); // fix to dynamically fetch
@@ -208,6 +208,11 @@ function getShowOriginalSketch()
 function getOutputNormalized()
 {
   return angular.element($("#table-div")).scope().outputNormalized;
+}
+
+function getCsvHeaders()
+{
+  return angular.element($("#define-attributes")).scope().csvHeaders;
 }
 
 function getNumSegments()
