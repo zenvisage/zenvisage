@@ -25,7 +25,9 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.model.ZvQuery;
+import edu.uiuc.zenvisage.model.AxisVariables;
 import edu.uiuc.zenvisage.service.ZvMain;
 
 @Controller
@@ -356,6 +359,17 @@ public class ZvBasicAPI {
 		 logQueries("ZQL",null,arg);
 		// TODO change to graph executor
 		return outputGraphExecutor;
+	}
+	
+	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<AxisVariables> executeSelectXYZ(@RequestBody AxisVariables axisVariables) throws IOException, InterruptedException, SQLException {
+        if( axisVariables != null) {
+          System.out.println(axisVariables.toString());
+        } else {
+          System.out.println("axisVariables are null");
+        }
+		return null;
 	}
 
 	@RequestMapping(value = "/executeScatter", method = RequestMethod.GET)
