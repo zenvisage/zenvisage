@@ -9,6 +9,12 @@ $('#uploaderForm').on('submit', function(e) {
       document.getElementById("submitButton").style.display = "block";
       return;
     }
+    else if (formData.get("csv").size > 100000000) {
+      alert("Do not upload files over 100MB");
+      document.getElementById("loadingEclipse_upload").style.display = "none";
+      document.getElementById("submitButton").style.display = "block";
+      return;
+    }
     $.ajax({
         url : $(this).attr('action'),
         type: $(this).attr('method'),
