@@ -229,7 +229,9 @@ console.log('createSketchpad')
 
   function brushed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+    if (d3.event.sourceEvent === null) return; // ignore when not brushed
     var s = d3.event.selection || x2.range();
+    console.log("source! ", d3.event.sourceEvent);
     x.domain(s.map(x2.invert, x2));
     focus.select(".line").attr("d", valueline);
     if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){

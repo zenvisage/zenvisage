@@ -491,6 +491,10 @@
                 <div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">
                 <div class="info-text">
                 <b>Similarity</b>
+                <div class="qtooltip">
+                  <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                  <span class="qtooltiptext">Similarity explaination</span>
+                </div>
                 <div class="radio">
                   <form>
                     <input ng-model="similarity" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
@@ -504,6 +508,10 @@
               <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">
                 <div class="info-text">
                 <div ><b>Aggregation Method</b></div>
+                <div class="qtooltip">
+                  <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                  <span class="qtooltiptext">Aggregation method explaination</span>
+                </div>
                 <div class="radio">
                   <form>
                     <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
@@ -528,13 +536,22 @@
 
               <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
                 <div><b>K-means Cluster Size</b></div>
+                <div class="qtooltip">
+                  <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                  <span class="qtooltiptext">K-means explaination</span>
+                </div>
                 <p></p>
                 <div>
                   <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
                 </div>
               </div>
                 <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
-                  <div><b>Number of Results</b></div>
+                  <div><b>Number of Results</b>
+                    <div class="qtooltip">
+                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                      <span class="qtooltiptext">Num Results explaination</span>
+                    </div>
+                  </div>
                   <p></p>
                   <div>
                     <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
@@ -542,7 +559,13 @@
                 </div>
 
                 <div id="min-thresh-tutorial" class="info-text" data-intro = "Here you can specify the minimum simmilarity score for the visualizations to be displayed in the Results panel." data-step="15" data-position = "left">
-                  <div><b>Min Similarity Cutoff</b></div>
+                  <div><b>Min Similarity Cutoff</b>
+                    <div class="qtooltip">
+                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                      <span class="qtooltiptext">Min Similarity Cutoff explaination</span>
+                    </div>
+                  </div>
+
                   <p></p>
                   <div>
                     <input ng-model="minDisplayThresh" class="form-control" type="text" id="min-display-thresh"   value="0.0">
@@ -555,7 +578,13 @@
               <div class="col-md-3" style="width: 180px;">
                 <div data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
                   <div class="info-text">
-                  <div><b>Data Smoothing</b></div>
+                  <div><b>Data Smoothing</b>
+                    <div class="qtooltip">
+                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                      <span class="qtooltiptext">Data smoothing explaination</span>
+                    </div>
+                  </div>
+
                     <p></p>
                     <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
                       <option value="none">None</option>
@@ -575,7 +604,12 @@
 
                 </div>
                 <div class="info-text" data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="17">
-                    <div><b>Filter Constraint</b></div>
+                    <div><b>Filter Constraint</b>
+                      <div class="qtooltip">
+                        <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                        <span class="qtooltiptext">Filter Constraint explaination</span>
+                      </div>
+                    </div>
                     <p></p>
                       <div class="input-group" style="width: 110%">
                         <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
@@ -588,6 +622,10 @@
 
               <div class="col-md-3" style="width: 185px;">
                 <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptext">Options explaination</span>
+                  </div>
                     <div class="checkbox">
                       <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-position = "left" data-step ="19" >
                         <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
@@ -604,7 +642,12 @@
                   </div>
 
                   <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
-                    <div ><b>Input equation</b></div>
+                    <div ><b>Input equation</b>
+                      <div class="qtooltip">
+                        <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                        <span class="qtooltiptext">Options explaination</span>
+                      </div>
+                    </div>
                     <p></p>
                     <div class="input-group">
                       <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
