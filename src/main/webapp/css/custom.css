@@ -27,14 +27,15 @@ hr {
 }
 
 .undraggable-user-query-results, .undraggable-representative-results, .undraggable-outlier-results{
- width: 275px;
+ width: 235px;
  height: 105px;
  text-align: center;
  font-size: 12px;
+ margin-right: 5px;
 }
 
 .undraggable-representative-results, .undraggable-outlier-results{
- width: 250px;
+ width: 235px;
  height: 105px;
  text-align: center;
  font-size: 12px;
@@ -45,7 +46,7 @@ hr {
 }
 
 #results-table{
-width: 100%;
+width: 90%;
 }
 #table-div {
   height: 242px !important;
@@ -298,7 +299,7 @@ svg#treesvg {
 
 .qtooltip .qtooltiptext {
     visibility: hidden;
-    width: 250px;
+    width: 200px;
     background-color: black;
     color: #fff;
     text-align: left;
@@ -306,9 +307,10 @@ svg#treesvg {
     padding: 5px 5px 5px 5px;
     /* Position the tooltip */
     position: absolute;
-    z-index: 1;
-    top: -5px;
-    left: 105%;
+    z-index: 10;
+    top: 100%;
+    left: 50%;
+    margin-left: -80px;
 }
 
 .qtooltip .qtooltiptext::after {

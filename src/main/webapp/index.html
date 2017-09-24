@@ -486,7 +486,7 @@
                 </tfoot>
               </table>
             </div>
-            <div ng-show="!zqltable" class="row" >
+            <div ng-show="!zqltable" class="row" style="overflow-x:hidden;" >
               <div class="col-md-3" style="width: 170px;">
                 <div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">
                 <div class="info-text">
@@ -506,12 +506,14 @@
               </div>
               </div>
               <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">
-                <div class="info-text">
-                <div ><b>Aggregation Method</b></div>
-                <div class="qtooltip">
-                  <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                  <span class="qtooltiptext">Aggregation method explaination</span>
+                <div class="info-text" style="margin-bottom: 0px;">
+                <div ><b>Aggregate</b>
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptext">Aggregation method explaination</span>
+                  </div>
                 </div>
+
                 <div class="radio">
                   <form>
                     <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
@@ -535,10 +537,11 @@
               <div class="col-md-3" style="width: 175px;">
 
               <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
-                <div><b>K-means Cluster Size</b></div>
-                <div class="qtooltip">
-                  <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                  <span class="qtooltiptext">K-means explaination</span>
+                <div><b>Cluster Size</b>
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptext">K-means explaination</span>
+                  </div>
                 </div>
                 <p></p>
                 <div>
@@ -559,7 +562,7 @@
                 </div>
 
                 <div id="min-thresh-tutorial" class="info-text" data-intro = "Here you can specify the minimum simmilarity score for the visualizations to be displayed in the Results panel." data-step="15" data-position = "left">
-                  <div><b>Min Similarity Cutoff</b>
+                  <div><b>Similarity Cutoff</b>
                     <div class="qtooltip">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
                       <span class="qtooltiptext">Min Similarity Cutoff explaination</span>
@@ -642,7 +645,7 @@
                   </div>
 
                   <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
-                    <div ><b>Input equation</b>
+                    <div ><b>Input Equation</b>
                       <div class="qtooltip">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
                         <span class="qtooltiptext">Options explaination</span>
@@ -690,7 +693,7 @@
             <div>
               <table id="results-table"></table>
             </div>
-            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 20%; height: 20%; ">
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
           </div>
           <div id="middle-right" class="col-md-6">
             <div>
@@ -716,7 +719,7 @@
                 </tr>
               </table>
             </div>
-            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse2' style="display: none; position: relative; top: 8px; left: 35%; z-index: 10; width: 15%; height: 15%; ">
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse2' style="display: none; position: relative; top: 8px; left: 35%; z-index: 10; width:  100px; height:  100px; ">
           </div>
         </div>
       </div>

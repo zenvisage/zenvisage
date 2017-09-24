@@ -117,7 +117,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
     //top right bottom left
     var m = [0, 0, 20, 20]; // margins
-    var width = 275//200// - m[1] - m[3]; // width
+    var width = 250//200// - m[1] - m[3]; // width
     var height = 105//85// - m[0] - m[2]; // height
 
     // X scale will fit all values from data[] within pixels 0-w
