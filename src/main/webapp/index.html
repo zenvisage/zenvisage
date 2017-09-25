@@ -339,12 +339,12 @@
             </div>
           </div> -->
           <h5><b>X-axis</b></h5>
-          <select class="form-control" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="selectedXAxis">
+          <select class="form-control" ng-change="onDataAttributeChange()" id="xAxisSelection" value={{xAxisItem}} ng-model="selectedXAxis">
             <option ng-repeat="xAxisItem in xAxisItems">{{xAxisItem}}</option>
           </select>
 
           <h5><b>Y-axis</b></h5>
-          <select class="form-control" ng-change="onDataAttributeChange()" value={{yAxisItem}} ng-model="selectedYAxis">
+          <select class="form-control" ng-change="onDataAttributeChange()" id="yAxisSelection" value={{yAxisItem}} ng-model="selectedYAxis">
             <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
           </select>
 

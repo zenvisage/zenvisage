@@ -1227,13 +1227,14 @@ app.controller('datasetController', [
             var q = constructDatasetChangeQuery(getSelectedDataset());
           }
 
-
       var params = {
         "query": q,
       };
       var config = {
         params: params,
       };
+      
+      var datasetname = $('#dataset-form-control').val();
 
       $http.get('/zv/getformdata', config).
         success(function(response) {
@@ -1248,15 +1249,33 @@ app.controller('datasetController', [
           angular.forEach(response.zAxisColumns, function(value, key) {
            $scope.categories.push(key);
           });
-          $scope.selectedCategory = $scope.categories[0];
           angular.forEach(response.xAxisColumns, function(value, key) {
            $scope.xAxisItems.push(key);
           });
-          $scope.selectedXAxis = $scope.xAxisItems[0];
           angular.forEach(response.yAxisColumns, function(value, key) {
            $scope.yAxisItems.push(key);
           });
-          $scope.selectedYAxis = $scope.yAxisItems[0];
+          // hard coding default x, y axis for preloaded dataset
+          if (datasetname == "breast_cancer_cells"){
+            $scope.selectedCategory = "gene";
+            $scope.selectedXAxis = "timepoint";
+            $scope.selectedYAxis = "expression";
+          }else if(datasetname == "cmu"){
+            $scope.selectedCategory = "class";
+            $scope.selectedXAxis = "o2";
+            $scope.selectedYAxis = "ea";
+          }else if(datasetname == "des"){
+            $scope.selectedCategory = "objid_cycle_band";
+            $scope.selectedXAxis = "mjd57000";
+            $scope.selectedYAxis = "psf_flux";
+            $scope.selectedErrorAxis = "psf_flux_err"
+          }
+          else{
+            $scope.selectedCategory = $scope.categories[0];
+            $scope.selectedXAxis = $scope.xAxisItems[0];
+            $scope.selectedYAxis = $scope.yAxisItems[0];
+          }
+          
           log.info("initialized data attribute",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
           //send in first item info
 
@@ -1267,6 +1286,8 @@ app.controller('datasetController', [
           //     )).done(function(){
           //       getRepresentativeTrends( getOutlierTrends );
           //     });
+
+
           initializeSketchpadOnDataAttributeChange(
                 response.xAxisColumns[$scope.xAxisItems[0]],
                 response.yAxisColumns[$scope.yAxisItems[0]],
