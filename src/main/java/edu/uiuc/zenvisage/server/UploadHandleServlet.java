@@ -45,8 +45,9 @@ public class UploadHandleServlet extends HttpServlet {
                	} else{
             		String filename = item.getName();
             		if(filename==null) continue;
-            		File newFile = new File("../src/main/resources/uploaded_data/"+filename);
+            		//File newFile = new File("../src/main/resources/uploaded_data/"+filename);
 //            		System.out.println(newFile.getCanonicalPath()); 
+            		File newFile = new File(filename);
             		item.write(newFile);
                     message = "success";
                     this.names.add(newFile.getAbsolutePath().toString());
