@@ -1386,9 +1386,28 @@ function parseCSV(data) {
    var text_x, text_y, text_z = "";
    console.log("this is results!",results["data"][0]);
    for (i = 0; i < results["data"][0].length; i++) {
-   text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-   text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-   text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+  //  text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+  //  text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+  //  text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
+
+   text_x += results["data"][0][i] + ":<select class='x-types'>"
+  +"<option value='none'  selected='selected'>None</option>"
+  +"<option value='" + results["data"][0][i] + " string'>string</option>"
+  +"<option value='" + results["data"][0][i] + " int'>int</option>"
+  +"<option value='" + results["data"][0][i] + " float'>float</option>"
+  +"</select>";
+   text_y += results["data"][0][i] + ":<select class='y-types'>"
+  +"<option value='none'  selected='selected'>None</option>"
+  +"<option value='" + results["data"][0][i] + " string'>string</option>"
+  +"<option value='" + results["data"][0][i] + " int'>int</option>"
+  +"<option value='" + results["data"][0][i] + " float'>float</option>"
+  +"</select>";
+   text_z += results["data"][0][i] + ":<select class='z-types'>"
+  +"<option value='none'  selected='selected'>None</option>"
+  +"<option value='" + results["data"][0][i] + " string'>string</option>"
+  +"<option value='" + results["data"][0][i] + " int'>int</option>"
+  +"<option value='" + results["data"][0][i] + " float'>float</option>"
+  +"</select>";
  }
 
    $('.x-attributes').html(text_x);

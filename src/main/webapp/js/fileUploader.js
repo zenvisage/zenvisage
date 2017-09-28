@@ -47,42 +47,50 @@ $("#define-attributes").on('submit', function(e) {
   var xList = [];
   var yList = [];
   var zList = [];
-  $("input[name='x-attributes']:checked").each(function(){
-	  xList.push($(this).val());
-      console.log("x checked: ", $(this).val());
+
+  $(".x-types").each(function(){
+    if($(this).val() != "none"){
+      xList.push($(this).val());
+        console.log("x selected: ", $(this).val());
+    }
+
   });
 
-  $("input[name='y-attributes']:checked").each(function(){
-	  yList.push($(this).val());
-      console.log("y checked: ", $(this).val());
+  $(".y-types").each(function(){
+    if($(this).val() != "none"){
+	     yList.push($(this).val());
+        console.log("y selected: ", $(this).val());
+      }
   });
 
-  $("input[name='z-attributes']:checked").each(function(){
-	  zList.push($(this).val());
-      console.log("z checked: ", $(this).val());
+  $(".z-types").each(function(){
+    if($(this).val() != "none"){
+	     zList.push($(this).val());
+        console.log("z selected: ", $(this).val());
+      }
   });
 
   $('#define-attributes').modal('toggle');
-  
-  
+
+
   var xyzQuery = {x:xList.toString(), y:yList.toString(), z:zList.toString()};
   console.log(xyzQuery);
   var myObject = JSON.stringify(xyzQuery);
-  
-  $.ajax({    
+
+  $.ajax({
       type: 'POST',
       url: '/zv/selectXYZ',
       data: myObject,
       contentType: 'application/json; charset=utf-8',
 	  success: function (data) {
-	         
+
       },
       error: function (jXHR, textStatus, errorThrown) {
-         
+
       }
   });
-  
-  
+
+
 });
 
 $("#pattern-upload").on('submit', function(e) {
