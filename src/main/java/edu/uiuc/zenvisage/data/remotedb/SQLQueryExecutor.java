@@ -36,7 +36,7 @@ public class SQLQueryExecutor {
 	 * Settings specific to local PSQL database, need to change this!!!!
 	 */
 	private String database = "postgres";
-	private String host = "jdbc:postgresql://localhost:5432/"+database;
+	private String host = "jdbc:postgresql://localhost:" + Readconfig.getPostgresport() + "/"+database;
 	private String username;
 	private String password;
 	Connection c = null;
@@ -111,6 +111,7 @@ public class SQLQueryExecutor {
 		}
         return tablelist;
 	}
+	
 
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();

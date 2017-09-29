@@ -43,6 +43,10 @@ public class Readconfig {
 	static public String getPassword(){
 		return props.getProperty("password");
 	}
+	
+	static public String getPostgresport() {
+		return props.getProperty("postgresport");
+	}
 
 	
 }
