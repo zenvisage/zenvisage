@@ -44,8 +44,8 @@ public class Readconfig {
 		return props.getProperty("password");
 	}
 	
-	static public String getPostgresport() {
-		return props.getProperty("postgresport");
+	static public int getPostgresport() {
+		return Integer.valueOf(props.getProperty("postgresport"));
 	}
 
 	
