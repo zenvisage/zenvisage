@@ -45,7 +45,9 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           $('#class-creation-close-button')[0].click();
         },
         function (response) {
-          console.log("failed: ", response);
+          console.log("failed to create classes", response);
+          $("#errorModalBody").html(response);
+          $("#errorModal").modal();
         }
     );
     log.info("Dynamic Class created",JSON.stringify(classList))
@@ -75,7 +77,9 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
           }
         },
         function (response) {
-          console.log("failed: ", response);
+          console.log("failed to get class info: ", response);
+          $("#errorModalBody").html(response);
+          $("#errorModal").modal();
         }
     );
   }
@@ -256,8 +260,10 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
             plotResults.displayUserQueryResults(response.data.outputCharts, false);
         },
         function (response) {
-            console.log("failed: ", escape(response));
+            console.log("failed ZQL Query", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
+            $("#errorModalBody").html(response);
+            $("#errorModal").modal();
         }
     );
   };
@@ -297,8 +303,10 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
             plotResults.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
-            console.log("failed: ", escape(response));
+            console.log("failed Node ZQL Query: ", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
+            $("#errorModalBody").html(response);
+            $("#errorModal").modal();
         }
     );
   }
@@ -565,6 +573,8 @@ app.controller('options-controller', [
       error(function(response) {
         console.log("getUserQueryResults: fail");
         document.getElementById("loadingEclipse").style.display = "none";
+        $("#errorModalBody").html(response);
+        $("#errorModal").modal();
       });
 
     }
@@ -924,7 +934,9 @@ app.controller('datasetController', [
             $scope.tablelist = datasetInfo.getTablelist()
           },
           function (response) {
-            console.log("failed: ", response);
+            console.log("failed to get table list: ", response);
+            $("#errorModalBody").html(response);
+            $("#errorModal").modal();
           }
       );
     };
@@ -987,6 +999,8 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse").style.display = "none";
+            $("#errorModalBody").html(response);
+            $("#errorModal").modal();
           });
 
         }
@@ -995,7 +1009,11 @@ app.controller('datasetController', [
 
         }).
         error(function(response) {
-        console.log("getUserQueryResults: fail");
+          console.log("getUserQueryResults: fail");
+          document.getElementById("loadingEclipse").style.display = "none";
+          document.getElementById("loadingEclipse2").style.display = "none";
+          $("#errorModalBody").html(response);
+          $("#errorModal").modal();
         });
     }
 
@@ -1025,6 +1043,9 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse").style.display = "none";
+            document.getElementById("loadingEclipse2").style.display = "none";
+            $("#errorModalBody").html(response_error);
+            $("#errorModal").modal();
           });
 
         }
@@ -1037,6 +1058,10 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
+        document.getElementById("loadingEclipse").style.display = "none";
+        document.getElementById("loadingEclipse2").style.display = "none";
+        $("#errorModalBody").html(response);
+        $("#errorModal").modal();
       });
 
 
@@ -1104,7 +1129,9 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("download : fail");
-          });
+        $("#errorModalBody").html(response);
+        $("#errorModal").modal();
+      });
     }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
@@ -1138,6 +1165,8 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getRepresentativeTrends: fail");
             document.getElementById("loadingEclipse2").style.display = "none";
+            $("#errorModalBody").html(response_error);
+            $("#errorModal").modal();
           });
 
         }
@@ -1147,6 +1176,8 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
         document.getElementById("loadingEclipse2").style.display = "none";
+        $("#errorModalBody").html(response);
+        $("#errorModal").modal();
       });
     }
     function getyOnlyCheck(){
@@ -1194,6 +1225,9 @@ app.controller('datasetController', [
           }).
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
+            document.getElementById("loadingEclipse2").style.display = "none";
+            $("#errorModalBody").html(response_error);
+            $("#errorModal").modal();
           });
 
         }
@@ -1201,6 +1235,9 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("getOutlierTrends: fail");
+        document.getElementById("loadingEclipse2").style.display = "none";
+        $("#errorModalBody").html(response);
+        $("#errorModal").modal();
       });
     }
 
@@ -1233,7 +1270,7 @@ app.controller('datasetController', [
       var config = {
         params: params,
       };
-      
+
       var datasetname = $('#dataset-form-control').val();
 
       $http.get('/zv/getformdata', config).
@@ -1275,7 +1312,7 @@ app.controller('datasetController', [
             $scope.selectedXAxis = $scope.xAxisItems[0];
             $scope.selectedYAxis = $scope.yAxisItems[0];
           }
-          
+
           log.info("initialized data attribute",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
           //send in first item info
 
