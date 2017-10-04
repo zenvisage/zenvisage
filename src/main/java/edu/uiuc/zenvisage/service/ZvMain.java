@@ -108,7 +108,7 @@ public class ZvMain {
 	private  SQLQueryExecutor sqlQueryExecutor;
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
-	public ZvMain() throws IOException, InterruptedException, SQLException{
+	public ZvMain() {
 		sqlQueryExecutor = new SQLQueryExecutor();
 		System.out.println("ZVMAIN LOADED");
 	}
