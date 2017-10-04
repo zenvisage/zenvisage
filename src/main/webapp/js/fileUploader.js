@@ -49,27 +49,29 @@ $("#define-attributes").on('submit', function(e) {
   var zList = [];
 
   $(".x-types").each(function(){
-    if($(this).val() != "none"){
-      xList.push($(this).val());
-        console.log("x selected: ", $(this).val());
-    }
+      xList.push($(this).val() + " " + $(this).children("option").filter(":selected").text());
 
   });
 
   $(".y-types").each(function(){
-    if($(this).val() != "none"){
-	     yList.push($(this).val());
-        console.log("y selected: ", $(this).val());
-      }
+	     yList.push($(this).val() + " " + $(this).children("option").filter(":selected").text());
+
   });
 
   $(".z-types").each(function(){
-    if($(this).val() != "none"){
-	     zList.push($(this).val());
-        console.log("z selected: ", $(this).val());
-      }
-  });
+	     zList.push($(this).val() + " " + $(this).children("option").filter(":selected").text());
 
+  });
+  console.log("x selected: ", xList);
+  console.log("y selected: ", yList);
+  console.log("z selected: ", zList);
+  var filteredLists = filterUncheckAttributes(xList,yList,zList)
+  xList = filteredLists.x
+  yList = filteredLists.y
+  zList = filteredLists.z
+        console.log("x selected: ", xList);
+        console.log("y selected: ", yList);
+        console.log("z selected: ", zList);
   $('#define-attributes').modal('toggle');
 
 
@@ -100,3 +102,56 @@ $("#pattern-upload").on('submit', function(e) {
 $("#class-creation").on('submit', function(e) {
     $('#class-creation').modal('toggle');
 });
+
+function filterUncheckAttributes(x,y,z){
+
+  $("input:checkbox[name=x-checkbox]:not(:checked)").each(function(){
+    if(x.includes($(this).val() + " " + "float")){
+      var indexFloat = x.indexOf($(this).val() + " " + "float");
+      x.splice(indexFloat, 1);
+    }
+    if(x.includes($(this).val() + " " + "int")){
+      var indexFloat = x.indexOf($(this).val() + " " + "int");
+      x.splice(indexFloat, 1);
+    }
+    if(x.includes($(this).val() + " " + "string")){
+      var indexFloat = x.indexOf($(this).val() + " " + "string");
+      x.splice(indexFloat, 1);
+    }
+        //  console.log("testx",x);
+    })
+  $("input:checkbox[name=y-checkbox]:not(:checked)").each(function(){
+    if(y.includes($(this).val() + " " + "float")){
+      var indexFloat = y.indexOf($(this).val() + " " + "float");
+      y.splice(indexFloat, 1);
+    }
+    if(y.includes($(this).val() + " " + "int")){
+      var indexFloat = y.indexOf($(this).val() + " " + "int");
+      y.splice(indexFloat, 1);
+    }
+    if(y.includes($(this).val() + " " + "string")){
+      var indexFloat = y.indexOf($(this).val() + " " + "string");
+      y.splice(indexFloat, 1);
+    }
+  })
+  $("input:checkbox[name=z-checkbox]:not(:checked)").each(function(){
+    if(z.includes($(this).val() + " " + "float")){
+      var indexFloat = z.indexOf($(this).val() + " " + "float");
+      z.splice(indexFloat, 1);
+    }
+    if(z.includes($(this).val() + " " + "int")){
+      var indexFloat = z.indexOf($(this).val() + " " + "int");
+      z.splice(indexFloat, 1);
+    }
+    if(z.includes($(this).val() + " " + "string")){
+      var indexFloat = z.indexOf($(this).val() + " " + "string");
+      z.splice(indexFloat, 1);
+    }
+  })
+
+    return {
+        x: x,
+        y: y,
+        z: z
+    };
+};

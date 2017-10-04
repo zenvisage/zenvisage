@@ -721,7 +721,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       .attr("type",'representativeResult')
       .attr('label',xlabel)
       .style("text-anchor", "middle")
-      .text(xlabel + " (" + clusterCount + ")");
+      .text(xlabel + " (" + clusterCount + " more like this)");
 
     graph.append("text")
       .attr("transform",
@@ -1381,33 +1381,33 @@ canvas.style.display="none";
 
 function parseCSV(data) {
  Papa.parse(data.get("csv"), {
- preview: 1,
+ preview: 2,
  complete: function(results){
    var text_x, text_y, text_z = "";
-   console.log("this is results!",results["data"][0]);
+  console.log("this is fist line!",results["data"][1]);
    for (i = 0; i < results["data"][0].length; i++) {
   //  text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-
-   text_x += results["data"][0][i] + ":<select class='x-types'>"
-  +"<option value='none'  selected='selected'>None</option>"
+  type = getType(results["data"][1][i])
+   text_x += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='x-types'>"
+  +"<option value=" + results["data"][0][i] + "  selected='selected'>"+type+"</option>"
   +"<option value='" + results["data"][0][i] + " string'>string</option>"
   +"<option value='" + results["data"][0][i] + " int'>int</option>"
   +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select>";
-   text_y += results["data"][0][i] + ":<select class='y-types'>"
-  +"<option value='none'  selected='selected'>None</option>"
+  +"</select> </td> </tr>";
+   text_y += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'>" +results["data"][0][i] + ":  <select class='y-types'>"
+  +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
   +"<option value='" + results["data"][0][i] + " string'>string</option>"
   +"<option value='" + results["data"][0][i] + " int'>int</option>"
   +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select>";
-   text_z += results["data"][0][i] + ":<select class='z-types'>"
-  +"<option value='none'  selected='selected'>None</option>"
+  +"</select> </td></tr>";
+   text_z += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='z-types'>"
+  +"<option value=" + results["data"][0][i] + "  selected='selected'>"+type+"</option>"
   +"<option value='" + results["data"][0][i] + " string'>string</option>"
   +"<option value='" + results["data"][0][i] + " int'>int</option>"
   +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select>";
+  +"</select> </td></tr>";
  }
 
    $('.x-attributes').html(text_x);
@@ -1416,4 +1416,26 @@ function parseCSV(data) {
    $('#define-attributes').modal('toggle');
  }
 });
+
+function getType(str){
+    if (typeof str !== 'string') str = str.toString();
+    var nan = isNaN(Number(str));
+    var isfloat = /^\d*(\.|,)\d*$/;
+    var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
+    var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
+    var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
+    var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
+    var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
+    if (!nan){
+        if (parseFloat(str) === parseInt(str)) return "int";
+        else return "float";
+    }
+    else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
+    // else if (date.test(str)) return "date";
+    else {
+        // if (email.test(str)) return "e-mail";
+        // else if (phone.test(str)) return "phone";
+        return "string";
+    }
+}
 }

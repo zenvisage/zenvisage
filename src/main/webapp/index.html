@@ -41,7 +41,7 @@
  -->
     <div id="everything">
 
-      <div id="errorModal" class="modal fade bd-example-modal-sm">
+      <div id="errorModal" class="modal fade">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -56,7 +56,38 @@
         </div>
       </div>
 
-      <div id="popup" class="modal fade bd-example-modal-sm">
+
+      <!-- Modal -->
+      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
+        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+              </div>
+              <div class="modal-body">
+                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                <div class="row">
+                  <div class="col-md-5" style="left: 33%">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
+                  </div>
+                </div>
+              </div>
+                <div class="modal-footer">
+                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+      <div id="popup" class="modal fade" >
         <!-- Modal content -->
         <div class="modal-dialog" role="document">
           <div class="modal-content" style="font-size:80;">
@@ -79,66 +110,44 @@
           </div>
         </div>
     </div>
-      <!-- Modal -->
-      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
-        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document" >
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
-              </div>
-              <div class="modal-body">
-                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
-                <div class="row">
-                  <div class="col-md-5">
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
-                  </div>
-                  <div class="col-md-5 col-md-offset-1">
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema">
-                  </div>
-                </div>
-              </div>
-                <div class="modal-footer">
-                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
-                <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">
-                </div>
 
-            </div>
+    <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style = " width: 700px">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Set attributes</h4>
           </div>
-        </div>
-      </form>
-
-      <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Set attributes</h4>
+          <div class="modal-body" >
+              Please submit which attributes belong to which axis
+            <div class = "row">
+            <form id="define-attributes-form">
+              <br>
+              <div style="margin-left:2%;float: left">
+              X axis:
+              <br>
+              <br>  <table class = "x-attributes" ></table>
             </div>
-            <div class="modal-body">
-                Please submit which attributes belong to which axis
-              <form id="define-attributes-form">
-                <br>
-                X axis:
-                <br>  <span class = "x-attributes"></span> <br>
-                <br>
-                Y axis:
-                <br>  <span class = "y-attributes"></span> <br>
-                <br>
-                Z axis:
-                <br>  <span class = "z-attributes"></span> <br>
-                <br>
-                <div class="modal-footer">
-                  <input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Set Attributes">
-                </div>
-              </form>
+            <div style="margin-left:5%;float: left">
+              Y axis:
+              <br>
+              <br>  <table class = "y-attributes" style="display:inline-block"></table>
             </div>
+            <div style="margin-left:5%;float: left">
+              Z axis:
+              <br>
+              <br>  <table class = "z-attributes" style="display:inline-block"></table>
+            </div>
+              <br>
+          </div>
+          <div class="modal-footer">
+            <input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Set Attributes" style="margin-right: 40%;">
+          </div>
+          </form>
           </div>
         </div>
       </div>
+    </div>
 
       <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
