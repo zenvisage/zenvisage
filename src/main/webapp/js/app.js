@@ -459,7 +459,7 @@ app.controller('options-controller', [
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("minThresh display changed",$scope.minDisplayThresh)
         console.log("minThresh display changed",$scope.minDisplayThresh)
-      //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+        $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
         $scope.callGetUserQueryResults();
       }
     });
@@ -476,7 +476,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showScatterplot",$scope.showScatterplot)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -486,7 +486,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("considerRange",$scope.considerRange)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -496,7 +496,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showOriginalSketch",$scope.showOriginalSketch)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -506,7 +506,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("outputNormalized",$scope.outputNormalized)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -522,7 +522,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("aggregation",$scope.aggregation)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -532,7 +532,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("flipY",$scope.flipY)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
