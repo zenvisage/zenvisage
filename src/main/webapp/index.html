@@ -12,9 +12,7 @@
     <link href="css/introjs.css" rel="stylesheet">
     <!-- <script type="text/javascript" src="secret.json"></script> -->
     </head>
-  <body class="intro_after_dataload" style="overflow:hidden" data-gr-c-s-loaded="true" scroll="no">
-
-
+  <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
 
   <!-- <div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
@@ -310,7 +308,7 @@
           </h4>
 <hr>
           <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. An existing dataset can also be selected from the dropdown.' data-step="2">
-            <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5><b>Dataset</b><button type="button"  class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
             <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()" ng-model="selectedDataset" id="dataset-form-control">
@@ -318,7 +316,7 @@
             </select>
           </div>
           <div class = 'side-info-text' data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
-            <h5 style = 'width:130px'><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5 style = 'width:130px'><b>Pattern</b><button type="button" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
 
           <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
@@ -409,13 +407,13 @@
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
                 <div ng-show="zqltable">
                   <div class="btn-group">
-					<a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Weather</a>
+          <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Weather</a>
                     <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
                     <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
                      <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button> -->
-					<a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Real Estate</a>
+          <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Real Estate</a>
                     <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
                     <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
                     <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>

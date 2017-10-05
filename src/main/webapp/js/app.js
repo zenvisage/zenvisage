@@ -1,6 +1,6 @@
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
-
+var allAxisColumns;
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.AxisInfo = [];
@@ -11,7 +11,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
 
   $scope.loadAxisInfo = function loadAxisInfo() {
     $scope.AxisInfo = [];
-    for (var key in globalDatasetInfo["yAxisColumns"]) {
+    allAxisColumns = $.extend(true,globalDatasetInfo["xAxisColumns"],globalDatasetInfo["yAxisColumns"],globalDatasetInfo["zAxisColumns"]);
+    for (var key in allAxisColumns) {
       $scope.AxisInfo.push(key);
     }
   };
@@ -25,8 +26,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       if (val && key)
       {
         var keyval = {};
-        var min = globalDatasetInfo["yAxisColumns"][key]["min"]
-        var max = globalDatasetInfo["yAxisColumns"][key]["max"]
+        var min = allAxisColumns[key]["min"]
+        var max = allAxisColumns[key]["max"]
         var replacedMin = val.replace("min", min);
         var replacedMinMax = replacedMin.replace("max", max);
         keyval["name"] = key
@@ -86,7 +87,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
 
   $scope.populateClassInfo = function() {
     $scope.AxisInfo = [];
-    for (var key in globalDatasetInfo["yAxisColumns"]) {
+    for (var key in allAxisColumns) {
       $scope.AxisInfo.push(key);
     }
   };
