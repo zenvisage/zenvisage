@@ -67,6 +67,7 @@
                 <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
               </div>
               <div class="modal-body">
+                <a href="https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets"> Instructions on how to format and upload your own datasets. </a> <br><br/>
                 Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
                 <div class="row">
                   <div class="col-md-5" style="left: 33%">
@@ -303,7 +304,9 @@
         <div id="sidebar" class="interface" ng-controller="datasetController"  >
           <h4>
             <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"><img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
-            <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button>
+            <a href="https://github.com/zenvisage/zenvisage/wiki/Functionalities-and-Options"><i class="glyphicon glyphicon-info-sign" style="font-size: 20px;"></i></a>
+            <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 20px; "></i></a>
+            <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
             <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
           </h4>
 <hr>
@@ -403,6 +406,8 @@
 
               <div class="btn-toolbar">
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+
+                <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
                 <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
                 <div ng-show="zqltable">
@@ -520,11 +525,8 @@
                 <div class="qtooltip">
                   <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
                   <span class="qtooltiptext">
-                    1.Euclidean: Matches visualizations by scoring how close points are between two time series based on their stright line distance.
-                    <br>2.DTW: Measures similarity between two temporal sequences which may vary in speed.
-                    <br>3.MVIP: Matches visually important points, which depict the coarse trends, of two time series and uses the mismatch score as the distance.
-                    <br>4.Segmentation: Summarizes a trend into major line segments and calculates
-the similarity based on the matching of the segments.
+                    Euclidean distance compares the straight-line distance between two visualizations whereas the other algorithm tries to take into account shapes or temporal lags by transforming the visualization before calculating the distance, as shown here.
+                    <br><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Dynamic_time_warping.png"  style="text-align:center; width:225px">
                   </span>
                 </div>
                 <div class="radio">
@@ -542,7 +544,7 @@ the similarity based on the matching of the segments.
                 <div ><b>Aggregate</b>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">Aggregation method explaination</span>
+                    <span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>
                   </div>
                 </div>
 
@@ -572,7 +574,7 @@ the similarity based on the matching of the segments.
                 <div><b>Cluster Size</b>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">K-means algorithm partitions the data to identify represenatitive trends of the whole dataset.</span>
+                    <span class="qtooltiptext">KMeans clustering is used for identifying represenatitive trends of the whole dataset. This option specifies the number of clusters to be displayed in the representative trends.</span>
                   </div>
                 </div>
                 <p></p>
@@ -593,7 +595,7 @@ the similarity based on the matching of the segments.
                   <div><b>Similarity Cutoff</b>
                     <div class="qtooltip">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">Min Similarity Cutoff explaination</span>
+                      <span class="qtooltiptext">Specifies the minimum similarity score for a visualization to be displayed in the query results panel.</span>
                     </div>
                   </div>
 
@@ -612,7 +614,7 @@ the similarity based on the matching of the segments.
                   <div><b>Data Smoothing</b>
                     <div class="qtooltipright">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptextright">Smoothing trys to capture important points in the data while leaving out noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
+                      <span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
                     </div>
                   </div>
 
@@ -655,10 +657,10 @@ the similarity based on the matching of the segments.
                 <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>
                   <div class="qtooltipright">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptextright">1.Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, x range will not affect pattern search.
-                    <br>2.Show original sketch:
-                    <br>3.Show scatter plot:
-                    <br>4.Reverse Y axis:Y axis of all visualizations are flipped. 
+                    <span class="qtooltiptextright">1. Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, the location of the pattern along the x-axis will not affect pattern search.
+                    <br>2. Show original sketch: Shows the original query pattern as a pale green line on top of the visualization results, checked by default.
+                    <br>3. Show scatter plot: Showing the raw data points as a scatterplot.
+                    <br>4. Reverse Y axis: Flipping the y-axis of all visualizations. 
                     </span>
                   </div>
                     <div class="checkbox">
