@@ -519,7 +519,13 @@
                 <b>Similarity</b>
                 <div class="qtooltip">
                   <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                  <span class="qtooltiptext">Similarity explaination</span>
+                  <span class="qtooltiptext">
+                    1.Euclidean: Matches visualizations by scoring how close points are between two time series based on their stright line distance.
+                    <br>2.DTW: Measures similarity between two temporal sequences which may vary in speed.
+                    <br>3.MVIP: Matches visually important points, which depict the coarse trends, of two time series and uses the mismatch score as the distance.
+                    <br>4.Segmentation: Summarizes a trend into major line segments and calculates
+the similarity based on the matching of the segments.
+                  </span>
                 </div>
                 <div class="radio">
                   <form>
@@ -566,7 +572,7 @@
                 <div><b>Cluster Size</b>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">K-means explaination</span>
+                    <span class="qtooltiptext">K-means algorithm partitions the data to identify represenatitive trends of the whole dataset.</span>
                   </div>
                 </div>
                 <p></p>
@@ -576,10 +582,6 @@
               </div>
                 <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
                   <div><b>Number of Results</b>
-                    <div class="qtooltip">
-                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">Num Results explaination</span>
-                    </div>
                   </div>
                   <p></p>
                   <div>
@@ -608,9 +610,9 @@
                 <div data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
                   <div class="info-text">
                   <div><b>Data Smoothing</b>
-                    <div class="qtooltip">
+                    <div class="qtooltipright">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">Data smoothing explaination</span>
+                      <span class="qtooltiptextright">Smoothing trys to capture important points in the data while leaving out noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
                     </div>
                   </div>
 
@@ -634,9 +636,9 @@
                 </div>
                 <div class="info-text" data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="17">
                     <div><b>Filter Constraint</b>
-                      <div class="qtooltip">
+                      <div class="qtooltipright">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                        <span class="qtooltiptext">Filter Constraint explaination</span>
+                        <span class="qtooltiptextright">Specify a filter that can be applied globally to a dataset to narrow the search. Multiple conditions can be accepted using AND, OR.</span>
                       </div>
                     </div>
                     <p></p>
@@ -651,9 +653,13 @@
 
               <div class="col-md-3" style="width: 185px;">
                 <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>
-                  <div class="qtooltip">
+                  <div class="qtooltipright">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">Options explaination</span>
+                    <span class="qtooltiptextright">1.Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, x range will not affect pattern search.
+                    <br>2.Show original sketch:
+                    <br>3.Show scatter plot:
+                    <br>4.Reverse Y axis:Y axis of all visualizations are flipped. 
+                    </span>
                   </div>
                     <div class="checkbox">
                       <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-position = "left" data-step ="19" >
@@ -672,9 +678,9 @@
 
                   <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
                     <div ><b>Input Equation</b>
-                      <div class="qtooltip">
+                      <div class="qtooltipright">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                        <span class="qtooltiptext">Options explaination</span>
+                        <span class="qtooltiptextright">Relationships in the form of mathematical equations can be used to query for patterns.</span>
                       </div>
                     </div>
                     <p></p>

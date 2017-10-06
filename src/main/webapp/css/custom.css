@@ -299,7 +299,7 @@ svg#treesvg {
 
 .qtooltip .qtooltiptext {
     visibility: hidden;
-    width: 200px;
+    width: 500px;
     background-color: black;
     color: #fff;
     text-align: left;
@@ -324,6 +324,39 @@ svg#treesvg {
     border-color: black transparent transparent transparent;
 }
 .qtooltip:hover .qtooltiptext {
+    visibility: visible;
+}
+.qtooltipright {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+.qtooltipright .qtooltiptextright{
+    visibility: hidden;
+    width: 400px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    right: 50%;
+    margin-left: -80px;
+}
+.qtooltipright .qtooltiptextright::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    margin-left: -10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.qtooltipright:hover .qtooltiptextright {
     visibility: visible;
 }
 .btn-circle {
