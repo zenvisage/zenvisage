@@ -49,22 +49,24 @@ $("#define-attributes").on('submit', function(e) {
   var zList = [];
 
   $(".x-types").each(function(){
-      xList.push($(this).val() + " " + $(this).children("option").filter(":selected").text());
+      var selectedXOption = $(this).children("option").filter(":selected").text()
+      console.log("test: ", selectedXOption);
+      xList.push($(this).val() + " " + selectedXOption);
 
   });
 
   $(".y-types").each(function(){
-	     yList.push($(this).val() + " " + $(this).children("option").filter(":selected").text());
+       var selectedYOption = $(this).children("option").filter(":selected").text()
+	     yList.push($(this).val() + " " + selectedYOption);
 
   });
 
   $(".z-types").each(function(){
-	     zList.push($(this).val() + " " + $(this).children("option").filter(":selected").text());
+       var selectedZOption = $(this).children("option").filter(":selected").text()
+	     zList.push($(this).val() + " " + selectedZOption);
 
   });
-  console.log("x selected: ", xList);
-  console.log("y selected: ", yList);
-  console.log("z selected: ", zList);
+
   var filteredLists = filterUncheckAttributes(xList,yList,zList)
   xList = filteredLists.x
   yList = filteredLists.y

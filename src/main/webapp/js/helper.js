@@ -81,7 +81,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
     }
     else{
-      
+
       var newCount=count-skipped;
       var xRange = userQueryResults[count]["xRange"];
       //var similarityDistance = userQueryResults[count]["distance"];
@@ -165,7 +165,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       graph.append("defs").append("clipPath")
           .attr("id", "clip-" + newCount.toString())
           .append("rect")
-          .attr("width", 180)
+          .attr("width", 220)
           .attr("height", 65)
           .attr("transform", "translate(20,20)");
 
@@ -1385,9 +1385,59 @@ canvas.style.display="none";
 
 });
 
+function checkAll(source,type) {
+  if(type == "x"){
+      checkboxes = document.getElementsByName('x-checkbox');
+  }
+  if(type == "y"){
+      checkboxes = document.getElementsByName('y-checkbox');
+  }
+  if(type == "z"){
+      checkboxes = document.getElementsByName('z-checkbox');
+  }
+
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+
+function autoSelect(source,type) {
+  var i = 0;
+  if(type == "x"){
+      checkboxes = document.getElementsByName('x-checkbox');
+      $(".x-types").each(function(i){
+        var selectedOption = $(this).children("option").filter(":selected").text()
+          if( selectedOption == "int" || selectedOption == "float" ){
+                  checkboxes[i].checked = source.checked;
+          }
+          i++;
+      });
+  }
+  if(type == "y"){
+      checkboxes = document.getElementsByName('y-checkbox');
+      $(".y-types").each(function(){
+        var selectedOption = $(this).children("option").filter(":selected").text()
+          if( selectedOption == "int" || selectedOption == "float" ){
+                  checkboxes[i].checked = source.checked;
+          }
+          i++;
+      });
+  }
+  if(type == "z"){
+      checkboxes = document.getElementsByName('z-checkbox');
+      $(".z-types").each(function(){
+        var selectedOption = $(this).children("option").filter(":selected").text()
+          if( selectedOption == "string"){
+                  checkboxes[i].checked = source.checked;
+          }
+          i++;
+      });
+  }
+}
+
 function parseCSV(data) {
  Papa.parse(data.get("csv"), {
- preview: 2,
+ preview: 5,
  complete: function(results){
    var text_x, text_y, text_z = "";
   console.log("this is fist line!",results["data"][1]);
@@ -1395,25 +1445,25 @@ function parseCSV(data) {
   //  text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-  type = getType(results["data"][1][i])
+  type = getType(results["data"][1][i],results["data"][2][i],results["data"][3][i],results["data"][4][i])
    text_x += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='x-types'>"
-  +"<option value=" + results["data"][0][i] + "  selected='selected'>"+type+"</option>"
-  +"<option value='" + results["data"][0][i] + " string'>string</option>"
-  +"<option value='" + results["data"][0][i] + " int'>int</option>"
-  +"<option value='" + results["data"][0][i] + " float'>float</option>"
+  +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+  +"<option value=" + results["data"][0][i] + " string'>string</option>"
+  +"<option value=" + results["data"][0][i] + " int'>int</option>"
+  +"<option value=" + results["data"][0][i] + " float'>float</option>"
   +"</select> </td> </tr>";
    text_y += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'>" +results["data"][0][i] + ":  <select class='y-types'>"
-  +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
-  +"<option value='" + results["data"][0][i] + " string'>string</option>"
-  +"<option value='" + results["data"][0][i] + " int'>int</option>"
-  +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select> </td></tr>";
+   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+   +"<option value=" + results["data"][0][i] + " string'>string</option>"
+   +"<option value=" + results["data"][0][i] + " int'>int</option>"
+   +"<option value=" + results["data"][0][i] + " float'>float</option>"
+   +"</select> </td></tr>";
    text_z += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='z-types'>"
-  +"<option value=" + results["data"][0][i] + "  selected='selected'>"+type+"</option>"
-  +"<option value='" + results["data"][0][i] + " string'>string</option>"
-  +"<option value='" + results["data"][0][i] + " int'>int</option>"
-  +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select> </td></tr>";
+   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+   +"<option value=" + results["data"][0][i] + " string'>string</option>"
+   +"<option value=" + results["data"][0][i] + " int'>int</option>"
+   +"<option value=" + results["data"][0][i] + " float'>float</option>"
+   +"</select> </td></tr>";
  }
 
    $('.x-attributes').html(text_x);
@@ -1423,21 +1473,25 @@ function parseCSV(data) {
  }
 });
 
-function getType(str){
-    if (typeof str !== 'string') str = str.toString();
-    var nan = isNaN(Number(str));
-    var isfloat = /^\d*(\.|,)\d*$/;
-    var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
-    var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
-    var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
-    var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
-    var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
+function getType(str1,str2,str3,str4){
+    var results = [];
+    str1 = str1.toString();
+    str2 = str2.toString();
+    str3 = str3.toString();
+    str4 = str4.toString();
+    var nan = isNaN(Number(str1));
+    // var isfloat = /^\d*(\.|,)\d*$/;
+    // var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
+    // var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
+    // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
+    // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
+    // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
     if (!nan){
-        if (parseFloat(str) === parseInt(str)) return "int";
+        if (parseFloat(str1) === parseInt(str1) && parseFloat(str2) === parseInt(str2) && parseFloat(str3) === parseInt(str3) && parseFloat(str4) === parseInt(str4)) return "int";
         else return "float";
     }
-    else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
-    // else if (date.test(str)) return "date";
+      // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
+      // // else if (date.test(str)) return "date";
     else {
         // if (email.test(str)) return "e-mail";
         // else if (phone.test(str)) return "phone";

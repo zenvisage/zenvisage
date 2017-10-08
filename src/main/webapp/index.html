@@ -125,16 +125,25 @@
               <div style="margin-left:2%;float: left">
               X axis:
               <br>
+              <br>
+              <input type="checkbox" onClick="checkAll(this,'x')" /> Select All<br/>
+              <input type="checkbox" onClick="autoSelect(this,'x')" /> Auto Select<br/>
               <br>  <table class = "x-attributes" ></table>
             </div>
             <div style="margin-left:5%;float: left">
               Y axis:
               <br>
+              <br>
+              <input type="checkbox" onClick="checkAll(this,'y')" /> Select All<br/>
+              <input type="checkbox" onClick="autoSelect(this,'y')" /> Auto Select<br/>
               <br>  <table class = "y-attributes" style="display:inline-block"></table>
             </div>
             <div style="margin-left:5%;float: left">
               Z axis:
               <br>
+              <br>
+              <input type="checkbox" onClick="checkAll(this,'z')" /> Select All<br/>
+              <input type="checkbox" onClick="autoSelect(this,'z')" /> Auto Select<br/>
               <br>  <table class = "z-attributes" style="display:inline-block"></table>
             </div>
               <br>
@@ -873,7 +882,6 @@
 
     $('#popup').modal('toggle');
     if(localStorage.getItem("DontShow")) {
-    console.log('hi');
     $('#popup').modal('hide');
     }
     $('#popup').on('submit', function(e) {
