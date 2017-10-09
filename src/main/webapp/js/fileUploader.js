@@ -1,3 +1,4 @@
+var datasetNameInput;
 $('#uploaderForm').on('submit', function(e) {
     document.getElementById("loadingEclipse_upload").style.display = "block";
     document.getElementById("submitButton").style.display = "none";
@@ -15,6 +16,7 @@ $('#uploaderForm').on('submit', function(e) {
       document.getElementById("submitButton").style.display = "block";
       return;
     }
+    datasetNameInput = $("#datasetNameInput").val();
     $.ajax({
         url : $(this).attr('action'),
         type: $(this).attr('method'),
@@ -44,10 +46,11 @@ $('#uploaderForm').on('submit', function(e) {
 // }
 
 $("#define-attributes").on('submit', function(e) {
+  var datasetName = datasetNameInput;
   var xList = [];
   var yList = [];
   var zList = [];
-
+ 
   $(".x-types").each(function(){
       var selectedXOption = $(this).children("option").filter(":selected").text()
       console.log("test: ", selectedXOption);
@@ -64,7 +67,6 @@ $("#define-attributes").on('submit', function(e) {
   $(".z-types").each(function(){
        var selectedZOption = $(this).children("option").filter(":selected").text()
 	     zList.push($(this).val() + " " + selectedZOption);
-
   });
 
   var filteredLists = filterUncheckAttributes(xList,yList,zList)
@@ -77,7 +79,7 @@ $("#define-attributes").on('submit', function(e) {
   $('#define-attributes').modal('toggle');
 
 
-  var xyzQuery = {x:xList.toString(), y:yList.toString(), z:zList.toString()};
+  var xyzQuery = {datasetName:datasetNameInput, x:xList.toString(), y:yList.toString(), z:zList.toString()};
   console.log(xyzQuery);
   var myObject = JSON.stringify(xyzQuery);
 

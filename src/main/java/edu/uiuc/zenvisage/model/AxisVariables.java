@@ -1,7 +1,7 @@
 package edu.uiuc.zenvisage.model;
 
 public class AxisVariables {
-	
+  private String datasetName;
   private String x;
   private String y;
   private String z;
@@ -24,8 +24,13 @@ public class AxisVariables {
   public void setZ(String z) {
 	this.z = z;
   }
-  public String toString(){
-	  return "x:"+x+";y:"+y+";z:"+z;
+  public String getDatasetName() {
+    return datasetName;
   }
-  
+  public void setDatasetName(String datasetName) {
+    this.datasetName = datasetName;
+  }
+  public String toString(){
+    return "datasetName:"+datasetName+";x:"+x+";y:"+y+";z:"+z;
+  }
 }
