@@ -192,7 +192,54 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			new Database(names.get(0), names.get(2), names.get(1), true);
+			//new Database(names.get(0), names.get(2), names.get(1), true);
+			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
+
+
+//			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
+		}
+		
+	}
+   
+   
+   public  void uploadDatasettoDB2(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+		
+		if (names.size() == 2) {
+
+			/*create csv table*/
+			if(!sqlQueryExecutor.isTableExists(names.get(0))){
+				
+				/*insert zenvisage_metafilelocation*/
+//				String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
+//						"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"');";
+//				if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
+//					System.out.println("Metafilelocation Data successfully inserted into Postgres");
+//				} else {
+//					System.out.println("Metafilelocation already exists!");
+//				}
+				
+				/*insert zenvisage_metatable*/
+				
+//				if(sqlQueryExecutor.insert(schemeToMetatable.schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
+//					System.out.println("MetaType Data successfully inserted into Postgres");
+//				} else {
+//					System.out.println("MetaType already exists!");
+//				}
+				
+				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
+				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
+				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " table from "+names.get(1));
+				System.out.println("Successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
+				
+			} else if(overwrite) {//
+				sqlQueryExecutor.dropTable(names.get(0));
+				sqlQueryExecutor.createTable(schemeToMetatable.schemeFileToCreatTableSQL(names.get(2), names.get(0)));
+				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
+				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
+			}
+
+			//new Database(names.get(0), names.get(2), names.get(1), true);
 			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
@@ -901,10 +948,26 @@ public class ZvMain {
 		
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
-		System.out.println(buffer);
+		System.out.println("BUFFER:" +buffer);
 //		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
 		return buffer;
-}
+    }
+	
+	public String getInterfaceFomData2(String query) throws IOException, InterruptedException, SQLException{
+		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
+		this.databaseName = fq.getDatabasename();
+		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
+		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
+				//System.out.println(locations[0]+"\n"+locations[1]);
+		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
+		//executor = new Executor(inMemoryDatabase);
+		
+
+		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		System.out.println("BUFFER:" +buffer);
+//		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		return buffer;
+    }
 
 
 
