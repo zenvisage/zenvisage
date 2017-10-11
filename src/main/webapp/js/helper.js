@@ -539,7 +539,8 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
-  var arrLength = getClusterSize()
+  // var arrLength = getClusterSize()
+  var arrLength = representativePatternResults.length;
 
 
   for(var count = 0; count < arrLength; count++) //need to fix count
@@ -846,6 +847,7 @@ function displayOutlierResultsHelper( outlierResults )
   var resultsDiv = $("#outlier-table");
   var varFinalArray = [];
   var arrLength = getClusterSize();
+
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
@@ -1499,3 +1501,55 @@ function getType(str1,str2,str3,str4){
     }
 }
 }
+function filterUncheckAttributes(x,y,z){
+
+  $("input:checkbox[name=x-checkbox]:not(:checked)").each(function(){
+    if(x.includes($(this).val() + " " + "float")){
+      var indexFloat = x.indexOf($(this).val() + " " + "float");
+      x.splice(indexFloat, 1);
+    }
+    if(x.includes($(this).val() + " " + "int")){
+      var indexFloat = x.indexOf($(this).val() + " " + "int");
+      x.splice(indexFloat, 1);
+    }
+    if(x.includes($(this).val() + " " + "string")){
+      var indexFloat = x.indexOf($(this).val() + " " + "string");
+      x.splice(indexFloat, 1);
+    }
+        //  console.log("testx",x);
+    })
+  $("input:checkbox[name=y-checkbox]:not(:checked)").each(function(){
+    if(y.includes($(this).val() + " " + "float")){
+      var indexFloat = y.indexOf($(this).val() + " " + "float");
+      y.splice(indexFloat, 1);
+    }
+    if(y.includes($(this).val() + " " + "int")){
+      var indexFloat = y.indexOf($(this).val() + " " + "int");
+      y.splice(indexFloat, 1);
+    }
+    if(y.includes($(this).val() + " " + "string")){
+      var indexFloat = y.indexOf($(this).val() + " " + "string");
+      y.splice(indexFloat, 1);
+    }
+  })
+  $("input:checkbox[name=z-checkbox]:not(:checked)").each(function(){
+    if(z.includes($(this).val() + " " + "float")){
+      var indexFloat = z.indexOf($(this).val() + " " + "float");
+      z.splice(indexFloat, 1);
+    }
+    if(z.includes($(this).val() + " " + "int")){
+      var indexFloat = z.indexOf($(this).val() + " " + "int");
+      z.splice(indexFloat, 1);
+    }
+    if(z.includes($(this).val() + " " + "string")){
+      var indexFloat = z.indexOf($(this).val() + " " + "string");
+      z.splice(indexFloat, 1);
+    }
+  })
+
+    return {
+        x: x,
+        y: y,
+        z: z
+    };
+};

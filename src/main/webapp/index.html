@@ -122,7 +122,7 @@
 
     <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
       <div class="modal-dialog" role="document">
-        <div class="modal-content" style = " width: 700px">
+        <div class="modal-content" style = "left: -5%; width: 700px">
           <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title">Set attributes</h4>
@@ -364,6 +364,7 @@
 
           <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory">
             <option ng-repeat="category in categories">{{category}}</option>
+            <option>dynamic_class</option>
           </select>
 
           <!-- <div>

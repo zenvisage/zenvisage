@@ -1249,10 +1249,11 @@ app.controller('datasetController', [
         else{plotResults.displayOutlierResults( response.outputCharts )};
       }).
       error(function(response) {
-        console.log("getOutlierTrends: fail");
-        document.getElementById("loadingEclipse2").style.display = "none";
-        $("#errorModalText").html(response);
-        $("#errorModal").modal();
+        console.log("Don't worry, this outlier fail is normal. Ignoring failed outlier trends because sometimes because there are no outliers if representative takes that one up.")
+        // console.log("getOutlierTrends: fail");
+        // document.getElementById("loadingEclipse2").style.display = "none";
+        // $("#errorModalText").html(response);
+        // $("#errorModal").modal();
       });
     }
 
@@ -1422,7 +1423,8 @@ app.controller('datasetController', [
             log.info("smoothingcoefficient",smoothingcoefficient)
             if(getSmoothingType() != "none"){
               $scope.getUserQueryResults();
-              $scope.getRepresentativeTrendsWithoutCallback();
+              // $scope.getRepresentativeTrendsWithoutCallback();
+              $scope.callgetRepresentativeTrends();
             }
         }
     })
