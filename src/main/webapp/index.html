@@ -46,9 +46,19 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
+              <h4 class="modal-title">Zenvisage Error</h4>
             </div>
             <div id="errorModalBody" class="modal-body">
-              <p>Modal body text goes here.</p>
+              <p>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#errorModalCollapse" aria-expanded="false" aria-controls="collapseExample">
+                  Click to show error message
+                </button>
+              </p>
+              <div class="collapse" id="errorModalCollapse">
+                <div class="card card-block" id="errorModalText">
+                  Unknown Error <!-- Backend error is filled in here -->
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -669,7 +679,7 @@
                     <span class="qtooltiptextright">1. Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, the location of the pattern along the x-axis will not affect pattern search.
                     <br>2. Show original sketch: Shows the original query pattern as a pale green line on top of the visualization results, checked by default.
                     <br>3. Show scatter plot: Showing the raw data points as a scatterplot.
-                    <br>4. Reverse Y axis: Flipping the y-axis of all visualizations. 
+                    <br>4. Reverse Y axis: Flipping the y-axis of all visualizations.
                     </span>
                   </div>
                     <div class="checkbox">

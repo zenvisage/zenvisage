@@ -47,7 +47,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         },
         function (response) {
           console.log("failed to create classes", response);
-          $("#errorModalBody").html(response);
+          $("#errorModalText").html(response);
           $("#errorModal").modal();
         }
     );
@@ -79,7 +79,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
         },
         function (response) {
           console.log("failed to get class info: ", response);
-          $("#errorModalBody").html(response);
+          $("#errorModalText").html(response);
           $("#errorModal").modal();
         }
     );
@@ -263,7 +263,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
         function (response) {
             console.log("failed ZQL Query", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
-            $("#errorModalBody").html(response);
+            $("#errorModalText").html(response);
             $("#errorModal").modal();
         }
     );
@@ -306,7 +306,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
         function (response) {
             console.log("failed Node ZQL Query: ", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
-            $("#errorModalBody").html(response);
+            $("#errorModalText").html(response);
             $("#errorModal").modal();
         }
     );
@@ -574,7 +574,7 @@ app.controller('options-controller', [
       error(function(response) {
         console.log("getUserQueryResults: fail");
         document.getElementById("loadingEclipse").style.display = "none";
-        $("#errorModalBody").html(response);
+        $("#errorModalText").html(response);
         $("#errorModal").modal();
       });
 
@@ -936,7 +936,7 @@ app.controller('datasetController', [
           },
           function (response) {
             console.log("failed to get table list: ", response);
-            $("#errorModalBody").html(response);
+            $("#errorModalText").html(response);
             $("#errorModal").modal();
           }
       );
@@ -1000,7 +1000,7 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse").style.display = "none";
-            $("#errorModalBody").html(response);
+            $("#errorModalText").html(response);
             $("#errorModal").modal();
           });
 
@@ -1013,7 +1013,7 @@ app.controller('datasetController', [
           console.log("getUserQueryResults: fail");
           document.getElementById("loadingEclipse").style.display = "none";
           document.getElementById("loadingEclipse2").style.display = "none";
-          $("#errorModalBody").html(response);
+          $("#errorModalText").html(response);
           $("#errorModal").modal();
         });
     }
@@ -1045,7 +1045,7 @@ app.controller('datasetController', [
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse").style.display = "none";
             document.getElementById("loadingEclipse2").style.display = "none";
-            $("#errorModalBody").html(response_error);
+            $("#errorModalText").html(response_error);
             $("#errorModal").modal();
           });
 
@@ -1061,7 +1061,7 @@ app.controller('datasetController', [
         console.log("getUserQueryResults: fail");
         document.getElementById("loadingEclipse").style.display = "none";
         document.getElementById("loadingEclipse2").style.display = "none";
-        $("#errorModalBody").html(response);
+        $("#errorModalText").html(response);
         $("#errorModal").modal();
       });
 
@@ -1130,7 +1130,7 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("download : fail");
-        $("#errorModalBody").html(response);
+        $("#errorModalText").html(response);
         $("#errorModal").modal();
       });
     }
@@ -1166,7 +1166,7 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getRepresentativeTrends: fail");
             document.getElementById("loadingEclipse2").style.display = "none";
-            $("#errorModalBody").html(response_error);
+            $("#errorModalText").html(response_error);
             $("#errorModal").modal();
           });
 
@@ -1177,7 +1177,7 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
         document.getElementById("loadingEclipse2").style.display = "none";
-        $("#errorModalBody").html(response);
+        $("#errorModalText").html(response);
         $("#errorModal").modal();
       });
     }
@@ -1227,7 +1227,7 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse2").style.display = "none";
-            $("#errorModalBody").html(response_error);
+            $("#errorModalText").html(response_error);
             $("#errorModal").modal();
           });
 
@@ -1237,7 +1237,7 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("getOutlierTrends: fail");
         document.getElementById("loadingEclipse2").style.display = "none";
-        $("#errorModalBody").html(response);
+        $("#errorModalText").html(response);
         $("#errorModal").modal();
       });
     }
