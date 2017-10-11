@@ -95,7 +95,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
 }]);
 
 
-app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
+app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResults', '$compile', function ($scope, $rootScope, $http, plotResults, $compile) {
   $scope.input = {};
   $scope.queries = {};
   $scope.queries['zqlRows'] = [];
@@ -258,7 +258,14 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
-            plotResults.displayUserQueryResults(response.data.outputCharts, false);
+            var userQueryResults = response.data.outputCharts;
+            if (userQueryResults.length != 0) {
+                var xAxis = replaceAll(userQueryResults[0]["xType"], "'", "");
+                var yAxis = replaceAll(userQueryResults[0]["yType"], "'", "");
+                var zAttribute = replaceAll(userQueryResults[0]["zType"], "'", "");
+                $rootScope.$broadcast('updateAxes', xAxis, yAxis, zAttribute);
+            }
+            plotResults.displayUserQueryResults(userQueryResults, false);
         },
         function (response) {
             console.log("failed ZQL Query", escape(response));
@@ -301,6 +308,13 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
+            var userQueryResults = response.data.outputCharts;
+            if (userQueryResults.length != 0) {
+                var xAxis = replaceAll(userQueryResults[0]["xType"], "'", "");
+                var yAxis = replaceAll(userQueryResults[0]["yType"], "'", "");
+                var zAttribute = replaceAll(userQueryResults[0]["zType"], "'", "");
+                $rootScope.$broadcast('updateAxes', xAxis, yAxis, zAttribute);
+            }
             plotResults.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
@@ -1421,8 +1435,11 @@ app.controller('datasetController', [
     };
       //  init();
     // and fire it after definition
-
-
+    $scope.$on("updateAxes", function(event, xAxis, yAxis, category) {
+        $scope.selectedXAxis = xAxis;
+        $scope.selectedYAxis = yAxis;
+        $scope.selectedCategory = category;
+    });
 }]);
 
 app.service('ChartSettings', function () {
