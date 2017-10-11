@@ -539,7 +539,8 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
-  var arrLength = getClusterSize()
+  // var arrLength = getClusterSize()
+  var arrLength = representativePatternResults.length;
 
 
   for(var count = 0; count < arrLength; count++) //need to fix count
@@ -846,6 +847,7 @@ function displayOutlierResultsHelper( outlierResults )
   var resultsDiv = $("#outlier-table");
   var varFinalArray = [];
   var arrLength = getClusterSize();
+
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
