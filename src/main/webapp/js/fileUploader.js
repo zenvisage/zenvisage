@@ -67,6 +67,7 @@ $("#define-attributes").on('submit', function(e) {
   $(".z-types").each(function(){
        var selectedZOption = $(this).children("option").filter(":selected").text()
 	     zList.push($(this).val() + " " + selectedZOption);
+
   });
 
   var filteredLists = filterUncheckAttributes(xList,yList,zList)
@@ -89,7 +90,7 @@ $("#define-attributes").on('submit', function(e) {
       data: myObject,
       contentType: 'application/json; charset=utf-8',
 	  success: function (data) {
-
+      alert("Upload successful");
       },
       error: function (jXHR, textStatus, errorThrown) {
 
@@ -106,56 +107,3 @@ $("#pattern-upload").on('submit', function(e) {
 $("#class-creation").on('submit', function(e) {
     $('#class-creation').modal('toggle');
 });
-
-function filterUncheckAttributes(x,y,z){
-
-  $("input:checkbox[name=x-checkbox]:not(:checked)").each(function(){
-    if(x.includes($(this).val() + " " + "float")){
-      var indexFloat = x.indexOf($(this).val() + " " + "float");
-      x.splice(indexFloat, 1);
-    }
-    if(x.includes($(this).val() + " " + "int")){
-      var indexFloat = x.indexOf($(this).val() + " " + "int");
-      x.splice(indexFloat, 1);
-    }
-    if(x.includes($(this).val() + " " + "string")){
-      var indexFloat = x.indexOf($(this).val() + " " + "string");
-      x.splice(indexFloat, 1);
-    }
-        //  console.log("testx",x);
-    })
-  $("input:checkbox[name=y-checkbox]:not(:checked)").each(function(){
-    if(y.includes($(this).val() + " " + "float")){
-      var indexFloat = y.indexOf($(this).val() + " " + "float");
-      y.splice(indexFloat, 1);
-    }
-    if(y.includes($(this).val() + " " + "int")){
-      var indexFloat = y.indexOf($(this).val() + " " + "int");
-      y.splice(indexFloat, 1);
-    }
-    if(y.includes($(this).val() + " " + "string")){
-      var indexFloat = y.indexOf($(this).val() + " " + "string");
-      y.splice(indexFloat, 1);
-    }
-  })
-  $("input:checkbox[name=z-checkbox]:not(:checked)").each(function(){
-    if(z.includes($(this).val() + " " + "float")){
-      var indexFloat = z.indexOf($(this).val() + " " + "float");
-      z.splice(indexFloat, 1);
-    }
-    if(z.includes($(this).val() + " " + "int")){
-      var indexFloat = z.indexOf($(this).val() + " " + "int");
-      z.splice(indexFloat, 1);
-    }
-    if(z.includes($(this).val() + " " + "string")){
-      var indexFloat = z.indexOf($(this).val() + " " + "string");
-      z.splice(indexFloat, 1);
-    }
-  })
-
-    return {
-        x: x,
-        y: y,
-        z: z
-    };
-};
