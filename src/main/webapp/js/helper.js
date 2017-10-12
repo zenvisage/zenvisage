@@ -1446,19 +1446,19 @@ function parseCSV(data) {
   //  text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   type = getType(results["data"][1][i],results["data"][2][i],results["data"][3][i],results["data"][4][i])
-   text_x += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='x-types'>"
+   text_x += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='x-types' style = 'float:right;'>"
   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
   +"<option value=" + results["data"][0][i] + " string'>string</option>"
   +"<option value=" + results["data"][0][i] + " int'>int</option>"
   +"<option value=" + results["data"][0][i] + " float'>float</option>"
   +"</select> </td> </tr>";
-   text_y += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'>" +results["data"][0][i] + ":  <select class='y-types'>"
+   text_y += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'>" +results["data"][0][i] + ":  <select class='y-types' style = 'float:right;'>"
    +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
    +"<option value=" + results["data"][0][i] + " string'>string</option>"
    +"<option value=" + results["data"][0][i] + " int'>int</option>"
    +"<option value=" + results["data"][0][i] + " float'>float</option>"
    +"</select> </td></tr>";
-   text_z += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='z-types'>"
+   text_z += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='z-types' style = 'float:right;'>"
    +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
    +"<option value=" + results["data"][0][i] + " string'>string</option>"
    +"<option value=" + results["data"][0][i] + " int'>int</option>"

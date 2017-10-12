@@ -179,7 +179,7 @@
                 <h4 class="modal-title">Upload Query Data Pattern</h4>
             </div>
             <div class="modal-body" id="pattern-upload-body">
-                Please submit the x and y values of the query pattern using comma or space-delimited lists.
+                Please select the permissible axes and type for each attribute.
               <form id="pattern-upload-form" onsubmit="return patternLoad();">
                 <br> x values: <input type="text" id="x-pattern" placeholder="e.g. 27,42,65,53" style="width: 80%;">
                 <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
@@ -368,7 +368,6 @@
 
           <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory">
             <option ng-repeat="category in categories">{{category}}</option>
-            <option>dynamic_class</option>
           </select>
 
           <!-- <div>
@@ -903,7 +902,6 @@
         localStorage.setItem("DontShow", "true");
         $('#popup').modal('toggle');
     });
-
 
 
       // var tree = tree();
