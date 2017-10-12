@@ -260,10 +260,11 @@ public class ChartOutputUtil {
 			// chartOutput.setRank(i+1);
 			// chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
 
-			chartOutput.setxType(repTrend.getKey());
+			chartOutput.setxType(args.xAxis);
 			chartOutput.setyType(args.yAxis);
 			chartOutput.setzType(args.groupBy);
 			chartOutput.setRank(i+1);
+			chartOutput.setTitle(repTrend.getKey());
 			
 			// fill in chart data
 			LinkedHashMap<Float,Float> points = orig.get(repTrend.getKey());
@@ -274,7 +275,7 @@ public class ChartOutputUtil {
 				chartOutput.yData.add(Float.toString(points.get(k)));
 				c++;
 			}
-			chartOutput.count = repTrend.getSimilarTrends();
+			chartOutput.setCount(repTrend.getSimilarTrends());
 			finalOutput.outputCharts.add(chartOutput);
 		}
 

@@ -73,10 +73,10 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var errorData = userQueryResults[count]["error"];
     var xlabel = replaceAll(userQueryResults[count]["xType"], "'", "");
     var ylabel = replaceAll(userQueryResults[count]["yType"], "'", "");
-    var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", "");
-    var zlabel = replaceAll(userQueryResults[count]["title"], "'", "");
+    var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", ""); // city
+    var zValue = replaceAll(userQueryResults[count]["title"], "'", ""); // the actual city value, like NY
 
-    if (zAttribute=="dynamic_class" && zlabel[0]=="-"){
+    if (zAttribute=="dynamic_class" && zValue[0]=="-"){
       skipped+=1;
 
     }
@@ -120,7 +120,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         }
       }
       var data2 = sketchpadData;
-      userQueryDygraphsNew["result-" + newCount.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
+      userQueryDygraphsNew["result-" + newCount.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zAttribute}
 
       //top right bottom left
       var m = [0, 0, 20, 20]; // margins
@@ -302,7 +302,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       // }
       if  (!isNaN(similarityDistance)){
 
-        // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
+        // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zValue + " (" + similarityDistance.toFixed(2) + ")" );
         d3.select("#undraggable-result-"+newCount.toString()).append("g")
 
         d3.select("#undraggable-result-"+newCount.toString()).append("text")
@@ -313,9 +313,9 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .attr("count", newCount.toString())
           .attr("id",'ztitle')
           .attr("type",'queryResult')
-          .attr('label',zlabel)
-          // .text(zAttribute + ": " + zlabel + " (" + similarityDistance + ")" );
-          .text(zAttribute + ": " + zlabel + " (" + fmtSimScore(similarityDistance) + ")" );
+          .attr('label',zValue)
+          // .text(zAttribute + ": " + zValue + " (" + similarityDistance + ")" );
+          .text(zAttribute + ": " + zValue + " (" + fmtSimScore(similarityDistance) + ")" );
           //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
       }
       graph.append("text")
@@ -434,11 +434,11 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
         var tooltipLength = 0;
         var tooltipTexts = [];
-        for (var i = 0; i < zlabel.split(".").length; i++) {
+        for (var i = 0; i < zValue.split(".").length; i++) {
           var tooltipText = ""
           for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
           {
-            if (globalDatasetInfo["classes"]["classes"][j].tag === zlabel)
+            if (globalDatasetInfo["classes"]["classes"][j].tag === zValue)
             {
               var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i]
               tooltipTexts.push(tooltipText)
@@ -452,7 +452,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
         tooltip.append("rect")
           .attr("width", tooltipLength * 7)
-          .attr("height", 18*zlabel.split(".").length)
+          .attr("height", 18*zValue.split(".").length)
           .attr("fill", "black")
           .style("opacity", 0.65);
 
@@ -558,6 +558,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
+    var title = varFinalArray[count]["title"];
 
     var clusterCount = varFinalArray[count]["count"];
 
@@ -726,9 +727,9 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
                            (trans + m[0] + 30) + ")")
       .attr("id",'ztitle')
       .attr("type",'representativeResult')
-      .attr('label',xlabel)
+      .attr('label',title)
       .style("text-anchor", "middle")
-      .text(xlabel + " (" + clusterCount + " more like this)");
+      .text(title + " (" + clusterCount + " more like this)");
 
     graph.append("text")
       .attr("transform",
@@ -1180,27 +1181,30 @@ function displayOutlierResultsHelper( outlierResults )
 function uploadToSketchpadNew( draggableId, graphType )
 {
   var draggedGraph;
-  //var xType, yType, zType;
+  var xType, yType, category;
   switch( graphType ) {
     case "representativeQuery":
       draggedGraph = representativeDygraphsNew[draggableId]["data"];
-      // xType = representativeDygraphsNew[draggableId]["xType"];
-      // yType = representativeDygraphsNew[draggableId]["yType"];
-      // zType = representativeDygraphsNew[draggableId]["zType"];
+      xType = representativeDygraphsNew[draggableId]["xType"];
+      yType = representativeDygraphsNew[draggableId]["yType"];
+      category = representativeDygraphsNew[draggableId]["zType"];
       break;
     case "outlierQuery":
       draggedGraph = outlierDygraphsNew[draggableId]["data"];
-      // xType = outlierDygraphsNew[draggableId]["xType"];
-      // yType = outlierDygraphsNew[draggableId]["yType"];
-      // zType = outlierDygraphsNew[draggableId]["zType"];
+      xType = outlierDygraphsNew[draggableId]["xType"];
+      yType = outlierDygraphsNew[draggableId]["yType"];
+      category = outlierDygraphsNew[draggableId]["zType"];
       break;
     default: //userQuery
       draggedGraph = userQueryDygraphsNew[draggableId]["data"];
-      // xType = userQueryDygraphsNew[draggableId]["xType"];
-      // yType = userQueryDygraphsNew[draggableId]["yType"];
-      // zType = userQueryDygraphsNew[draggableId]["zType"];
-
+      xType = userQueryDygraphsNew[draggableId]["xType"];
+      yType = userQueryDygraphsNew[draggableId]["yType"];
+      category = userQueryDygraphsNew[draggableId]["zType"];
   }
+
+  angular.element($("#sidebar")).scope().selectedCategory = category;
+  angular.element($("#sidebar")).scope().selectedXAxis = xType;
+  angular.element($("#sidebar")).scope().selectedYAxis = yType;
   plotSketchpadNew( draggedGraph )//, xType, yType, zType);
 }
 

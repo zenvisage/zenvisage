@@ -908,10 +908,6 @@ app.controller('options-controller', [
 
       angular.element('#class-creation').triggerHandler('click');
 
-      var zType = angular.element($("#sidebar")).scope().selectedCategory;
-      var xType = angular.element($("#sidebar")).scope().selectedXAxis;
-      var yType = angular.element($("#sidebar")).scope().selectedYAxis;
-
       plotSketchpadNew( plotData )
       //angular.element($("#sidebar")).scope().getUserQueryResults();
     }
