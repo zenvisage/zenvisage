@@ -539,8 +539,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
   clearRepresentativeTable();
   var resultsDiv = $("#representative-table");
   var varFinalArray = []
-  // var arrLength = getClusterSize()
-  var arrLength = representativePatternResults.length;
+  var arrLength = getClusterSize()
 
 
   for(var count = 0; count < arrLength; count++) //need to fix count
@@ -847,7 +846,6 @@ function displayOutlierResultsHelper( outlierResults )
   var resultsDiv = $("#outlier-table");
   var varFinalArray = [];
   var arrLength = getClusterSize();
-
   for(var count = 0; count < arrLength; count++) //need to fix count
   {
     var newRow = resultsDiv.append("<tr id=\"outlier-row-" + count.toString() + "\"></tr>")
@@ -1472,6 +1470,9 @@ function parseCSV(data) {
    $('.y-attributes').html(text_y);
    $('.z-attributes').html(text_z);
    $('#define-attributes').modal('toggle');
+   $('#x-autoselect').trigger('click');
+   $('#y-autoselect').trigger('click');
+   $('#z-autoselect').trigger('click');
  }
 });
 
