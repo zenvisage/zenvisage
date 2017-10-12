@@ -1,9 +1,10 @@
+var formData;
 var datasetNameInput;
 $('#uploaderForm').on('submit', function(e) {
     document.getElementById("loadingEclipse_upload").style.display = "block";
     document.getElementById("submitButton").style.display = "none";
     e.preventDefault();
-    var formData = new FormData(this);
+    formData = new FormData(this);
     if (formData.get("csv").name == "" ) {
       alert("Please select corresponding files!");
       document.getElementById("loadingEclipse_upload").style.display = "none";
@@ -16,27 +17,9 @@ $('#uploaderForm').on('submit', function(e) {
       document.getElementById("submitButton").style.display = "block";
       return;
     }
+    parseCSV(formData);
     datasetNameInput = $("#datasetNameInput").val();
-    $.ajax({
-        url : $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            parseCSV(formData);
-            $('#dataset-form-control').append($("<option></option>")
-                          .attr("value", formData.get("datasetName"))
-                          .text( formData.get("datasetName")));
-            document.getElementById("loadingEclipse_upload").style.display = "none";
-            document.getElementById("submitButton").style.display = "block";
-        },
-        error: function (jXHR, textStatus, errorThrown) {
-            alert(errorThrown);
-            document.getElementById("loadingEclipse_upload").style.display = "none";
-            document.getElementById("submitButton").style.display = "block";
-        }
-    });
+    console.log('test:',$(this).attr('action'),$(this).attr('method'));
     log.info("dataset upload: ",$("#datasetNameInput").val())
 });
 
@@ -46,14 +29,12 @@ $('#uploaderForm').on('submit', function(e) {
 // }
 
 $("#define-attributes").on('submit', function(e) {
-  var datasetName = datasetNameInput;
   var xList = [];
   var yList = [];
   var zList = [];
- 
+
   $(".x-types").each(function(){
       var selectedXOption = $(this).children("option").filter(":selected").text()
-      console.log("test: ", selectedXOption);
       xList.push($(this).val() + " " + selectedXOption);
 
   });
@@ -78,6 +59,7 @@ $("#define-attributes").on('submit', function(e) {
         console.log("y selected: ", yList);
         console.log("z selected: ", zList);
   $('#define-attributes').modal('toggle');
+  $('#uploaderModal').modal('toggle');
 
 
   var xyzQuery = {datasetName:datasetNameInput, x:xList.toString(), y:yList.toString(), z:zList.toString()};
@@ -89,7 +71,26 @@ $("#define-attributes").on('submit', function(e) {
       url: '/zv/selectXYZ',
       data: myObject,
       contentType: 'application/json; charset=utf-8',
-	  success: function (data) {
+	  success: function (data) { console.log('called1');
+      $.ajax({
+          url : '/zv/fileUpload',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {console.log('called2');
+              $('#dataset-form-control').append($("<option></option>")
+                            .attr("value", formData.get("datasetName"))
+                            .text( formData.get("datasetName")));
+              document.getElementById("loadingEclipse_upload").style.display = "none";
+              document.getElementById("submitButton").style.display = "block";
+          },
+          error: function (jXHR, textStatus, errorThrown) {
+              alert(errorThrown);
+              document.getElementById("loadingEclipse_upload").style.display = "none";
+              document.getElementById("submitButton").style.display = "block";
+          }
+      });
       alert("Upload successful");
       },
       error: function (jXHR, textStatus, errorThrown) {

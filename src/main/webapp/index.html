@@ -127,42 +127,46 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title">Set attributes</h4>
           </div>
+          <form id="define-attributes-form">
           <div class="modal-body" >
               Please submit which attributes belong to which axis
+              <br>
+              <br>
+              <span><input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 45%;"></span>
             <div class = "row">
-            <form id="define-attributes-form">
+
               <br>
               <div style="margin-left:2%;float: left">
               X axis:
               <br>
               <br>
-              <input type="checkbox" onClick="checkAll(this,'x')" /> Select All<br/>
-              <input type="checkbox" onClick="autoSelect(this,'x')" /> Auto Select<br/>
+              <input type="checkbox" onClick="checkAll(this,'x')" > Select All<br/>
+              <input id = "x-autoselect" type="checkbox" onClick="autoSelect(this,'x')"> Auto Select<br/>
               <br>  <table class = "x-attributes" ></table>
             </div>
             <div style="margin-left:5%;float: left">
               Y axis:
               <br>
               <br>
-              <input type="checkbox" onClick="checkAll(this,'y')" /> Select All<br/>
-              <input type="checkbox" onClick="autoSelect(this,'y')" /> Auto Select<br/>
+              <input type="checkbox" onClick="checkAll(this,'y')" > Select All<br/>
+              <input id = "y-autoselect" type="checkbox" onClick="autoSelect(this,'y')"> Auto Select<br/>
               <br>  <table class = "y-attributes" style="display:inline-block"></table>
             </div>
             <div style="margin-left:5%;float: left">
               Z axis:
               <br>
               <br>
-              <input type="checkbox" onClick="checkAll(this,'z')" /> Select All<br/>
-              <input type="checkbox" onClick="autoSelect(this,'z')" /> Auto Select<br/>
+              <input type="checkbox" onClick="checkAll(this,'z')" > Select All<br/>
+              <input id = "z-autoselect" type="checkbox" onClick="autoSelect(this,'z')"> Auto Select<br/>
               <br>  <table class = "z-attributes" style="display:inline-block"></table>
             </div>
               <br>
           </div>
           <div class="modal-footer">
-            <input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Set Attributes" style="margin-right: 40%;">
+
+          </div>
           </div>
           </form>
-          </div>
         </div>
       </div>
     </div>
@@ -175,7 +179,7 @@
                 <h4 class="modal-title">Upload Query Data Pattern</h4>
             </div>
             <div class="modal-body" id="pattern-upload-body">
-                Please submit the x and y values of the query pattern using comma or space-delimited lists.
+                Please select the permissible axes and type for each attribute.
               <form id="pattern-upload-form" onsubmit="return patternLoad();">
                 <br> x values: <input type="text" id="x-pattern" placeholder="e.g. 27,42,65,53" style="width: 80%;">
                 <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
@@ -364,7 +368,6 @@
 
           <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory">
             <option ng-repeat="category in categories">{{category}}</option>
-            <option>dynamic_class</option>
           </select>
 
           <!-- <div>
@@ -899,7 +902,6 @@
         localStorage.setItem("DontShow", "true");
         $('#popup').modal('toggle');
     });
-
 
 
       // var tree = tree();
