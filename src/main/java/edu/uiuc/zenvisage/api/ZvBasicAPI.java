@@ -510,8 +510,10 @@ public class ZvBasicAPI {
 	
 	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<AxisVariables> executeSelectXYZ(@RequestBody AxisVariables axisVariables) {
-        if( axisVariables != null) {
+	public ResponseEntity<AxisVariables> executeSelectXYZ(@RequestBody AxisVariables axisVariables) throws SQLException, IOException {
+		zvMain = new ZvMain();
+		if( axisVariables != null) {
+	      zvMain.insertZenvisageMetatable(axisVariables);
           System.out.println(axisVariables.toString());
         } else {
           System.out.println("axisVariables are null");

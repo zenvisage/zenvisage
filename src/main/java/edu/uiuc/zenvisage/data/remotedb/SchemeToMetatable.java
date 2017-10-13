@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uiuc.zenvisage.model.AxisVariables;
+
 public class SchemeToMetatable {
 	
 	public String createTableSQL;
@@ -99,37 +101,54 @@ public class SchemeToMetatable {
 		return sql.toString();
 	}
 	
-	
-	public String schemeFileToMetaSQLStream2(String filePath, String tablename) throws IOException{
-//		System.out.println(filePath);
-//		System.out.println(tablename);
-//		InputStream is = getClass().getResourceAsStream(filePath);
-		tablename = tablename.toLowerCase();
+	/*Base on schema input from front-end, create database and insert variables into metadatatable
+	 *First return is the metadatatable
+	 *Second return is the setup of the new database
+	 */
+	public String[] schemeFileToMetaSQLStream2(AxisVariables axisVariables) throws IOException{
+
+		String tablename = axisVariables.getDatasetName().toLowerCase();
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
 		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
 		
-	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
-		String sCurrentLine;
-		while ((sCurrentLine = br.readLine()) != null) {
-//			System.out.println(sCurrentLine);
-			String split1[] = sCurrentLine.split(":");
-			String split2[] = split1[1].split(",");
-			sql.append("('" + tablename + "', '" + split1[0].toLowerCase().replaceAll("-", "") + "', '" + split2[0] + "'), ");
-			createTableSQLBuilder.append(split1[0].toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(split2[0]) + ", ");
-			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
+		
+		String[][] xList = axisVariables.getXList();
+		String[][] yList = axisVariables.getYList();
+		String[][] zList = axisVariables.getZList();
+		for(int i = 0; i < xList.length; i++) {
+			String attribute = xList[i][0];
+			String type = xList[i][0];
+			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
+			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
+			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+		}
+		
+		for(int i = 0; i < yList.length; i++) {
+			String attribute = yList[i][0];
+			String type = yList[i][0];
+			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
+			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
+			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+		}
+		
+		for(int i = 0; i < zList.length; i++) {
+			String attribute = zList[i][0];
+			String type = zList[i][0];
+			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
+			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
+			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
 		
 		//Adding dynamic_class column
 		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
 				
-		br.close();
 		sql.replace(sql.length()-2, sql.length(), ";");
 		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");
-		this.createTableSQL = createTableSQLBuilder.toString();
+		 
 		System.out.println("this.createTableSQL:"+this.createTableSQL);
-//		System.out.println(createTableSQL);
-		return sql.toString();
+
+		return new String[]{sql.toString(),createTableSQLBuilder.toString()};
 	}
 	
 	public String typeToPostgresType(String type){

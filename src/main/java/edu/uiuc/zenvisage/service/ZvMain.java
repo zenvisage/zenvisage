@@ -123,39 +123,29 @@ public class ZvMain {
 		}
 		return size;
 	}
-//	public void loadData() throws IOException, InterruptedException{
-//
-//		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-//		inMemoryDatabases.put("cmu", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
-//		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
-//
-//		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
-//		inMemoryDatabases.put("sales", inMemoryDatabase);
-//
-//		System.out.println("Done loading data");
-//	}
-
-//	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
-//    	Database database = new Database(name,schemafile,datafile);
-//    	return database;
-//
-//    }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-		uploadDatasettoDB(names,true);
+		uploadDatasettoDB2(names,true);
 	}
-
+	
+	public void insertZenvisageMetatable(AxisVariables axisVariables) throws SQLException, IOException{
+		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream2(axisVariables);
 		
-   public  void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+		if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  axisVariables.getDatasetName())){
+			System.out.println("MetaType Data successfully inserted into Postgres");
+		} else {
+			System.out.println("MetaType already exists!");
+		}
+		sqlQueryExecutor.createTable(ret[1]);
+	}
+		
+	/*
+	 * This is for auto uploader.
+	 */
+    public void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
@@ -169,7 +159,7 @@ public class ZvMain {
 				if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
 					System.out.println("Metafilelocation Data successfully inserted into Postgres");
 				} else {
-					System.out.println("Metafilelocation already exists!");
+					System.out.println("Metafilelocation aluploadDatasettoDBready exists!");
 				}
 				
 				/*insert zenvisage_metatable*/
@@ -202,54 +192,20 @@ public class ZvMain {
 	}
    
    
-   public  void uploadDatasettoDB2(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+   public void uploadDatasettoDB2(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
-		
 		if (names.size() == 2) {
-
-			/*create csv table*/
-			if(!sqlQueryExecutor.isTableExists(names.get(0))){
-				
-				/*insert zenvisage_metafilelocation*/
-//				String locationTupleSQL = "INSERT INTO zenvisage_metafilelocation (database, metafilelocation, csvfilelocation) VALUES "+
-//						"('" + names.get(0) +"', '"+ names.get(2)+"', '"+ names.get(1)+"');";
-//				if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
-//					System.out.println("Metafilelocation Data successfully inserted into Postgres");
-//				} else {
-//					System.out.println("Metafilelocation already exists!");
-//				}
-				
-				/*insert zenvisage_metatable*/
-				
-//				if(sqlQueryExecutor.insert(schemeToMetatable.schemeFileToMetaSQLStream(names.get(2), names.get(0)), "zenvisage_metatable", "tablename",  names.get(0))){
-//					System.out.println("MetaType Data successfully inserted into Postgres");
-//				} else {
-//					System.out.println("MetaType already exists!");
-//				}
-				
-				sqlQueryExecutor.createTable(schemeToMetatable.createTableSQL);
-				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
-				System.out.println(names.get(0) + " not exists! Created " + names.get(0) + " table from "+names.get(1));
-				System.out.println("Successful upload! "+ names.get(0) +" "+names.get(2) + " "+  names.get(1));
-				
-			} else if(overwrite) {//
-				sqlQueryExecutor.dropTable(names.get(0));
-				sqlQueryExecutor.createTable(schemeToMetatable.schemeFileToCreatTableSQL(names.get(2), names.get(0)));
-				sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
-				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
+			/*create csv table*/	
+			if(overwrite){
+				while(sqlQueryExecutor.isTableExists(names.get(0))){
+					sqlQueryExecutor.dropTable(names.get(0));
+					sqlQueryExecutor.createTable(schemeToMetatable.schemeFileToCreatTableSQL(names.get(2), names.get(0)));
+					sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
+					System.out.println("Successfully uploaded: " + names.get(0));
+				}
 			}
-
-			//new Database(names.get(0), names.get(2), names.get(1), true);
-			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
-
-
-//			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
-		
 	}
-	
-	
-	
 	
 //   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 //		  System.out.println(zqlQuery);
@@ -336,6 +292,7 @@ public class ZvMain {
 	    }
 		return finalOutput;	   
    }
+   
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
 		Result finalOutput = new Result();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
