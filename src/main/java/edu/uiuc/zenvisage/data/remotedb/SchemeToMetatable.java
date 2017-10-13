@@ -118,7 +118,7 @@ public class SchemeToMetatable {
 		String[][] zList = axisVariables.getZList();
 		for(int i = 0; i < xList.length; i++) {
 			String attribute = xList[i][0];
-			String type = xList[i][0];
+			String type = xList[i][1];
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
@@ -126,7 +126,7 @@ public class SchemeToMetatable {
 		
 		for(int i = 0; i < yList.length; i++) {
 			String attribute = yList[i][0];
-			String type = yList[i][0];
+			String type = yList[i][1];
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
@@ -134,7 +134,7 @@ public class SchemeToMetatable {
 		
 		for(int i = 0; i < zList.length; i++) {
 			String attribute = zList[i][0];
-			String type = zList[i][0];
+			String type = zList[i][1];
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));

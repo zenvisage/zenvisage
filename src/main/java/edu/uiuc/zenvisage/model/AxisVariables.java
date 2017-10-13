@@ -43,6 +43,7 @@ public class AxisVariables {
   }
   
   public String[][] getXList(){
+	System.out.println(x);
 	return processList(this.x);
   }
   
@@ -55,7 +56,7 @@ public class AxisVariables {
   }
   
   public String[][] processList(String raw){
-    String[] raw0 = raw.split(":")[1].split(",");
+    String[] raw0 = raw.split(",");
     int len = raw0.length;
     String[][] retList = new String[len][2];
     for(int i = 0; i < len; i++){
