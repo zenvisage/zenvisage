@@ -110,6 +110,8 @@ public class SchemeToMetatable {
 		String tablename = axisVariables.getDatasetName().toLowerCase();
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
 		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
+		StringBuilder tableAttributes = new StringBuilder();
+		tableAttributes.append(tablename + "(");
 		
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
 		
@@ -121,7 +123,8 @@ public class SchemeToMetatable {
 			String type = xList[i][1];
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
-			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+			tableAttributes.append(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+			tableAttributes.append(",");
 		}
 		
 		for(int i = 0; i < yList.length; i++) {
@@ -129,7 +132,8 @@ public class SchemeToMetatable {
 			String type = yList[i][1];
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
-			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+			tableAttributes.append(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+			tableAttributes.append(",");
 		}
 		
 		for(int i = 0; i < zList.length; i++) {
@@ -137,8 +141,12 @@ public class SchemeToMetatable {
 			String type = zList[i][1];
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" + type + "'), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
-			this.columns.add(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+			tableAttributes.append(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
+			tableAttributes.append(",");
 		}
+		
+		tableAttributes.deleteCharAt(tableAttributes.length()-1);
+		tableAttributes.append(")");
 		
 		//Adding dynamic_class column
 		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
@@ -148,7 +156,7 @@ public class SchemeToMetatable {
 		 
 		System.out.println("this.createTableSQL:"+this.createTableSQL);
 
-		return new String[]{sql.toString(),createTableSQLBuilder.toString()};
+		return new String[]{sql.toString(),createTableSQLBuilder.toString(),tableAttributes.toString()};
 	}
 	
 	public String typeToPostgresType(String type){

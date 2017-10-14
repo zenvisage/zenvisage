@@ -197,12 +197,12 @@ public class ZvMain {
 		if (names.size() == 2) {
 			/*create csv table*/	
 			if(overwrite){
-				while(sqlQueryExecutor.isTableExists(names.get(0))){
-					sqlQueryExecutor.dropTable(names.get(0));
-					sqlQueryExecutor.createTable(schemeToMetatable.schemeFileToCreatTableSQL(names.get(2), names.get(0)));
-					sqlQueryExecutor.insertTable(names.get(0), names.get(1), schemeToMetatable.columns);
-					System.out.println("Successfully uploaded: " + names.get(0));
+				while(!sqlQueryExecutor.isTableExists(names.get(0))){
+					 Thread.sleep(1000); 
 				}
+				sqlQueryExecutor.insertTable2(names.get(0), names.get(1));
+				System.out.println("Successfully uploaded csv: " + names.get(0));
+			
 			}
 		}
 	}
