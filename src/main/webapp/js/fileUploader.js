@@ -1,26 +1,21 @@
 var formData;
 var datasetNameInput;
 $('#uploaderForm').on('submit', function(e) {
-    document.getElementById("loadingEclipse_upload").style.display = "block";
-    document.getElementById("submitButton").style.display = "none";
     e.preventDefault();
     formData = new FormData(this);
     if (formData.get("csv").name == "" ) {
       alert("Please select corresponding files!");
-      document.getElementById("loadingEclipse_upload").style.display = "none";
-      document.getElementById("submitButton").style.display = "block";
       return;
     }
     else if (formData.get("csv").size > 100000000) {
       alert("Do not upload files over 100MB");
-      document.getElementById("loadingEclipse_upload").style.display = "none";
-      document.getElementById("submitButton").style.display = "block";
       return;
     }
     parseCSV(formData);
     datasetNameInput = $("#datasetNameInput").val();
     console.log('test:',$(this).attr('action'),$(this).attr('method'));
     log.info("dataset upload: ",$("#datasetNameInput").val())
+    $('#uploaderModal').modal('toggle');
 });
 
 // function getCheckedAttributes(){
@@ -50,7 +45,7 @@ $("#define-attributes").on('submit', function(e) {
         console.log("y selected: ", yList);
         console.log("z selected: ", zList);
   $('#define-attributes').modal('toggle');
-  $('#uploaderModal').modal('toggle');
+
 
 
   var xyzQuery = {datasetName:datasetNameInput, x:xList.toString(), y:yList.toString(), z:zList.toString()};
@@ -85,6 +80,9 @@ $("#define-attributes").on('submit', function(e) {
       alert("Upload successful");
       },
       error: function (jXHR, textStatus, errorThrown) {
+        alert(errorThrown);
+        document.getElementById("loadingEclipse_upload").style.display = "none";
+        document.getElementById("submitButton").style.display = "block";
 
       }
   });

@@ -23,9 +23,9 @@
             <img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
           </div>
           <div class="modal-body">
-              
+
               <form id="logInForm" action="" method="post">
-              
+
                 <div class="form-group">
                   <label>Username:</label><input type="text" id="username" class="form-control input-lg" name="uname">
                 </div>
@@ -33,13 +33,13 @@
                   <label>Password:</label><input type="password" id="password" class="form-control input-lg" name="pass">
                 </div>
                 <div class="form-group">
-                
+
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="signIn" value="Sign In"> Sign In </button>
-                  
+
                 </div>
 
               </form>
-              
+
               <button class="btn btn-primary btn-lg btn-block" id="login_cancel">Cancel</button>
 
            </div>
@@ -134,7 +134,7 @@
 
     <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
       <div class="modal-dialog" role="document">
-        <div class="modal-content" style = "left: -5%; width: 700px">
+        <div class="modal-content" style = "left: 10%; width: 500px">
           <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title">Set attributes</h4>
@@ -148,18 +148,22 @@
             <div class = "row">
 
               <br>
-              <div style="margin-left:25%;float: left">
+              <div style="margin-left:15%;float: left;text-align: center;">
               Attribute Names
+              <br>
               <br>
               <br>  <table class = "x-attributes" ></table>
             </div>
-            <div style="margin-left:5%;float: left">
+            <div style="margin-left:5%;float: left; text-align: center;">
               Select Attributes
               <br>
-              <br>  <table class = "y-attributes" style="display:inline-block"></table>
+              <br>
+              X &nbsp;&nbsp; Y &nbsp;&nbsp; Z
+              <br>  <table class = "y-attributes" style="display:inline-block; "></table>
             </div>
             <div style="margin-left:5%;float: left">
               Data Type
+              <br>
               <br>
               <br>  <table class = "z-attributes" style="display:inline-block"></table>
             </div>

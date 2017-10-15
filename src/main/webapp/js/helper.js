@@ -1444,15 +1444,15 @@ function parseCSV(data) {
  preview: 5,
  complete: function(results){
    var textAttributeName = "<tr> <td> Select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
-   var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-right: 3px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 3px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 3px;'>"+"</td></tr>"
-   +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-right: 3px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 3px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 3px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
+   var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
+   +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
    var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
   console.log("this is fist line!",results["data"][1]);
    for (i = 0; i < results["data"][0].length; i++) {
   type = getType(results["data"][1][i],results["data"][2][i],results["data"][3][i],results["data"][4][i])
-   textAttributeName += "<tr> <td>"  + results["data"][0][i] +
-   "</td> </tr>";
-   textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>"
+   textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + results["data"][0][i] +
+   "</div></td> </tr>";
+   textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
    +"</select> </td></tr>";
    textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
    +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
