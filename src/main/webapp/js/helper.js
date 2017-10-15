@@ -65,7 +65,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     }
     $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
   }
-
+  var skipped=0;
   for (var count = 0; count < userQueryResults.length; count++)
   {
     var xData = userQueryResults[count]["xData"];
@@ -73,319 +73,308 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var errorData = userQueryResults[count]["error"];
     var xlabel = replaceAll(userQueryResults[count]["xType"], "'", "");
     var ylabel = replaceAll(userQueryResults[count]["yType"], "'", "");
-    var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", "");
-    var zlabel = replaceAll(userQueryResults[count]["title"], "'", "");
+    var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", ""); // city
+    var zValue = replaceAll(userQueryResults[count]["title"], "'", ""); // the actual city value, like NY
 
-    var xRange = userQueryResults[count]["xRange"];
-    //var similarityDistance = userQueryResults[count]["distance"];
-    var similarityDistance = userQueryResults[count]["normalizedDistance"];
-    if (count <userQueryResults.length-1){
-      var deltaSimilarityDistance = Math.abs(userQueryResults[count+1]["normalizedDistance"]-similarityDistance);
-    }else{
-      var deltaSimilarityDistance = 0;
-    }
-    var xmin = Math.min.apply(Math, xData);
-    var xmax = Math.max.apply(Math, xData);
-    var ymin = Math.min.apply(Math, yData);
-    var ymax = Math.max.apply(Math, yData);
+    if (zAttribute=="dynamic_class" && zValue[0]=="-"){
+      skipped+=1;
 
-    if (xRange == null)
-    {
-      xRange = [xmin,xmax]
-    }
-
-    var considerRange = userQueryResults[count]["considerRange"];
-    //var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
-
-    var valueRange = [ymin, ymax];
-
-    var data = [];
-    var arrayLength = xData.length;
-
-    if(errorData != null){
-      for (var i = 0; i < arrayLength; i++ ) {
-        data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
-      }
     }
     else{
-      for (var i = 0; i < arrayLength; i++ ) {
-        data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
+
+      var newCount=count-skipped;
+      var xRange = userQueryResults[count]["xRange"];
+      //var similarityDistance = userQueryResults[count]["distance"];
+      var similarityDistance = userQueryResults[count]["normalizedDistance"];
+      if (count <userQueryResults.length-1){
+        var deltaSimilarityDistance = Math.abs(userQueryResults[count+1]["normalizedDistance"]-similarityDistance);
+      }else{
+        var deltaSimilarityDistance = 0;
       }
-    }
-    var data2 = sketchpadData;
-    userQueryDygraphsNew["result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
+      var xmin = Math.min.apply(Math, xData);
+      var xmax = Math.max.apply(Math, xData);
+      var ymin = Math.min.apply(Math, yData);
+      var ymax = Math.max.apply(Math, yData);
 
-    //top right bottom left
-    var m = [0, 0, 20, 20]; // margins
-    var width = 250//200// - m[1] - m[3]; // width
-    var height = 105//85// - m[0] - m[2]; // height
-
-    // X scale will fit all values from data[] within pixels 0-w
-    var x = d3.scaleLinear().range([20, width-20]);
-
-    if(getflipY()){
-        var y = d3.scaleLinear().range([20, height-20]);
-    }
-    else{
-        var y = d3.scaleLinear().range([height-20, 20]);
-    }
-
-    x.domain([xmin, xmax]);
-    y.domain([ymin, ymax]);
-    // x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
-    // y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
-
-    var valueline = d3.line()
-    .x(function(d) {
-      return x(d.xval);
-    })
-    .y(function(d) {
-      return y(d.yval);
-    });
-
-    // Add an SVG element with the desired dimensions and margin.
-    var graph = d3.select("#result-" + count.toString())
-          .append("svg")
-          .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
-          .attr("width", width)// + m[1] + m[3])
-          .attr("height", height)// + m[0] + m[2])
-          .attr("id","resultsvg-" + count.toString())
-          .attr("xmlns","http://www.w3.org/2000/svg")
-          .attr("version","1.1")
-          //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-
-
-    graph.append("defs").append("clipPath")
-        .attr("id", "clip-" + count.toString())
-        .append("rect")
-        .attr("width", 180)
-        .attr("height", 65)
-        .attr("transform", "translate(20,20)");
-
-
-    //xmin xmax ymin ymax
-    var newRanges = getEvaluatingRange( xmin, xmax, xRange )
-    //return [first_left, first_right, second_left, second_right]
-
-    graph.append("rect")
-        //.attr("width", Math.abs( (xRange[0]-xmin)/(xmax-xmin)*(width-40) ) )
-        .attr("width", Math.abs( (newRanges[1] - newRanges[0])/(xmax-xmin)*(width-40) ) )
-        .attr("height", height-40)
-        .attr("transform", "translate(20,20)")
-        .attr("fill", "grey");
-
-    // if negative, newLoc no longer works
-    var newLoc = Math.abs((newRanges[2]-xmin)/(xmax-xmin)*(width-40))+20
-    graph.append("rect")
-        //.attr("width", Math.abs( (xmax-xRange[1])/(xmax-xmin)*(width-40) ) )
-        .attr("width", Math.abs( (newRanges[3] - newRanges[2])/(xmax-xmin)*(width-40) ) )
-        .attr("height", height-40)
-        .attr("transform", "translate(" + newLoc.toString() + ",20)")
-        .attr("fill", "grey");
-
-    var trans = height-20
-
-
-    if (getSelectedDataset()==="real_estate")
-    {
-      if(getSelectedXAxis()==="month")
+      if (xRange == null)
       {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(4).tickFormat(function (d) {
-              var mapper = {
-                "50": "02/2008",
-                "100": "04/2012",
-              }
-              return mapper[ d.toString() ]
-            }));
+        xRange = [xmin,xmax]
       }
-      if(getSelectedXAxis()==="quarter")
+
+      var considerRange = userQueryResults[count]["considerRange"];
+      //var data = combineTwoArrays(xData, yData, sketchpad.rawData_);
+
+      var valueRange = [ymin, ymax];
+
+      var data = [];
+      var arrayLength = xData.length;
+
+      if(errorData != null){
+        for (var i = 0; i < arrayLength; i++ ) {
+          data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+        }
+      }
+      else{
+        for (var i = 0; i < arrayLength; i++ ) {
+          data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
+        }
+      }
+      var data2 = sketchpadData;
+      userQueryDygraphsNew["result-" + newCount.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zAttribute}
+
+      //top right bottom left
+      var m = [0, 0, 20, 20]; // margins
+      var width = 250//200// - m[1] - m[3]; // width
+      var height = 105//85// - m[0] - m[2]; // height
+
+      // X scale will fit all values from data[] within pixels 0-w
+      var x = d3.scaleLinear().range([20, width-20]);
+
+      if(getflipY()){
+          var y = d3.scaleLinear().range([20, height-20]);
+      }
+      else{
+          var y = d3.scaleLinear().range([height-20, 20]);
+      }
+
+      x.domain([xmin, xmax]);
+      y.domain([ymin, ymax]);
+      // x.domain([0, d3.max(data, function(d) {return Math.max(d.xval); })]);
+      // y.domain([0, d3.max(data, function(d) {return Math.max(d.yval); })]);
+
+      var valueline = d3.line()
+      .x(function(d) {
+        return x(d.xval);
+      })
+      .y(function(d) {
+        return y(d.yval);
+      });
+
+      // Add an SVG element with the desired dimensions and margin.
+      var graph = d3.select("#result-" + newCount.toString())
+            .append("svg")
+            .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
+            .attr("width", width)// + m[1] + m[3])
+            .attr("height", height)// + m[0] + m[2])
+            .attr("id","resultsvg-" + newCount.toString())
+            .attr("xmlns","http://www.w3.org/2000/svg")
+            .attr("version","1.1")
+            //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+
+      graph.append("defs").append("clipPath")
+          .attr("id", "clip-" + newCount.toString())
+          .append("rect")
+          .attr("width", 220)
+          .attr("height", 65)
+          .attr("transform", "translate(20,20)");
+
+
+      //xmin xmax ymin ymax
+      var newRanges = getEvaluatingRange( xmin, xmax, xRange )
+      //return [first_left, first_right, second_left, second_right]
+
+      graph.append("rect")
+          //.attr("width", Math.abs( (xRange[0]-xmin)/(xmax-xmin)*(width-40) ) )
+          .attr("width", Math.abs( (newRanges[1] - newRanges[0])/(xmax-xmin)*(width-40) ) )
+          .attr("height", height-40)
+          .attr("transform", "translate(20,20)")
+          .attr("fill", "grey");
+
+      // if negative, newLoc no longer works
+      var newLoc = Math.abs((newRanges[2]-xmin)/(xmax-xmin)*(width-40))+20
+      graph.append("rect")
+          //.attr("width", Math.abs( (xmax-xRange[1])/(xmax-xmin)*(width-40) ) )
+          .attr("width", Math.abs( (newRanges[3] - newRanges[2])/(xmax-xmin)*(width-40) ) )
+          .attr("height", height-40)
+          .attr("transform", "translate(" + newLoc.toString() + ",20)")
+          .attr("fill", "grey");
+
+      var trans = height-20
+
+
+      if (getSelectedDataset()==="real_estate")
       {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "10": "Q2/2006",
-                "20": "Q4/2008",
-                "30": "Q2/2011",
-                "40": "Q4/2013",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      if(getSelectedXAxis()==="year")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "1": "2004",
-                "2": "2005",
-                "3": "2006",
-                "4": "2007",
-                "5": "2008",
-                "6": "2009",
-                "7": "2010",
-                "8": "2011",
-                "9": "2012",
-                "10": "2013",
-                "11": "2014",
-                "12": "2015",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-    }
-    else{
-      if(getSelectedXAxis()==="timestep")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "0": '0hr',
-                "1": '6hr',
-                "2": '12hr',
-                "3": '18hr',
-                "4": '24hr',
-                "5": '36hr',
-                "6": '48hr',
-                "7": '4d',
-                "8": '7d',
-                "9": '9d',
-                "10":'14d'
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else if(getSelectedXAxis()==="year"){
+        if(getSelectedXAxis()==="month")
+        {
           graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-          }  // for formatting all year x axis ticks except hardcoded real estate dataset
-
-      else{
-        graph.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(5, "s"));
-
+            .call( d3.axisBottom(x).ticks(4).tickFormat(function (d) {
+                var mapper = {
+                  "50": "02/2008",
+                  "100": "04/2012",
+                }
+                return mapper[ d.toString() ]
+              }));
+        }
+        if(getSelectedXAxis()==="quarter")
+        {
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+                var mapper = {
+                  "10": "Q2/2006",
+                  "20": "Q4/2008",
+                  "30": "Q2/2011",
+                  "40": "Q4/2013",
+                }
+                return mapper[ d.toString() ]
+              }));
+        }
+        if(getSelectedXAxis()==="year")
+        {
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+                var mapper = {
+                  "1": "2004",
+                  "2": "2005",
+                  "3": "2006",
+                  "4": "2007",
+                  "5": "2008",
+                  "6": "2009",
+                  "7": "2010",
+                  "8": "2011",
+                  "9": "2012",
+                  "10": "2013",
+                  "11": "2014",
+                  "12": "2015",
+                }
+                return mapper[ d.toString() ]
+              }));
+        }
       }
-    }
+      else{
+        if(getSelectedXAxis()==="timestep")
+        {
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+                var mapper = {
+                  "0": '0hr',
+                  "1": '6hr',
+                  "2": '12hr',
+                  "3": '18hr',
+                  "4": '24hr',
+                  "5": '36hr',
+                  "6": '48hr',
+                  "7": '4d',
+                  "8": '7d',
+                  "9": '9d',
+                  "10":'14d'
+                }
+                return mapper[ d.toString() ]
+              }));
+        }
+        else if(getSelectedXAxis()==="year"){
+            graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+            }  // for formatting all year x axis ticks except hardcoded real estate dataset
 
-    if (deltaSimilarityDistance!=0){
-      fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")
-    }else{
-      fmtSimScore=d3.format(".3");
-    }
+        else{
+          graph.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + trans + ")")
+          .call(d3.axisBottom(x).ticks(5, "s"));
 
-    // if ((Math.log10(deltaSimilarityDistance)<=0)&(Math.log10(deltaSimilarityDistance)>=-2)){
-    //     fmtSimScore=d3.format(".2");
-    // }else{
-    //     fmtSimScore=d3.format("s");
-    // }
-    // if (Math.log10(similarityDistance)==0){
-    //   fmtSimScore=d3.format(".3");
-    // }
-    if  (!isNaN(similarityDistance)){
+        }
+      }
 
-      // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zlabel + " (" + similarityDistance.toFixed(2) + ")" );
-      d3.select("#undraggable-result-"+count.toString()).append("g")
+      if (deltaSimilarityDistance!=0){
+        fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")
+      }else{
+        fmtSimScore=d3.format(".3");
+      }
 
-      d3.select("#undraggable-result-"+count.toString()).append("text")
+      // if ((Math.log10(deltaSimilarityDistance)<=0)&(Math.log10(deltaSimilarityDistance)>=-2)){
+      //     fmtSimScore=d3.format(".2");
+      // }else{
+      //     fmtSimScore=d3.format("s");
+      // }
+      // if (Math.log10(similarityDistance)==0){
+      //   fmtSimScore=d3.format(".3");
+      // }
+      if  (!isNaN(similarityDistance)){
+
+        // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zValue + " (" + similarityDistance.toFixed(2) + ")" );
+        d3.select("#undraggable-result-"+newCount.toString()).append("g")
+
+        d3.select("#undraggable-result-"+newCount.toString()).append("text")
+          .attr("transform",
+                "translate(" + (width/2) + " ," +
+               (trans + m[0] + 30) + ")")
+          .style("text-anchor", "middle")
+          .attr("count", newCount.toString())
+          .attr("id",'ztitle')
+          .attr("type",'queryResult')
+          .attr('label',zValue)
+          // .text(zAttribute + ": " + zValue + " (" + similarityDistance + ")" );
+          .text(zAttribute + ": " + zValue + " (" + fmtSimScore(similarityDistance) + ")" );
+          //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
+      }
+      graph.append("text")
         .attr("transform",
               "translate(" + (width/2) + " ," +
-             (trans + m[0] + 30) + ")")
+             15 + ")")
+        .attr("font-size", 9)
         .style("text-anchor", "middle")
-        .attr("count", count.toString())
-        .attr("id",'ztitle')
-        .attr("type",'queryResult')
-        .attr('label',zlabel)
-        // .text(zAttribute + ": " + zlabel + " (" + similarityDistance + ")" );
-        .text(zAttribute + ": " + zlabel + " (" + fmtSimScore(similarityDistance) + ")" );
-        //<text data-placement="right" title="This is a<br />test...<br />or not">Hover over me</text>
-    }
-    graph.append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-           15 + ")")
-      .attr("font-size", 9)
-      .style("text-anchor", "middle")
-      .text(ylabel + " by " + xlabel);
+        .text(ylabel + " by " + xlabel);
 
-    // Add the Y Axis
-    if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
-      graph.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2"));
-    }else{
-      graph.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, "s"));
-    }
-    // Add the line by appending an svg:path element with the data line we created above
-    // do this AFTER the axes above so that the line is above the tick-lines
+      // Add the Y Axis
+      if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
+        graph.append("g")
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(20,0)")
+          .call(d3.axisLeft(y).ticks(4, ".2"));
+      }else{
+        graph.append("g")
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(20,0)")
+          .call(d3.axisLeft(y).ticks(4, "s"));
+      }
+      // Add the line by appending an svg:path element with the data line we created above
+      // do this AFTER the axes above so that the line is above the tick-lines
 
-    if (getScatterplotOption())
-    {
-      graph.selectAll("dot")
+      if (getScatterplotOption())
+      {
+        graph.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 1)
+            .attr("cx", function(d) { return x(d.xval); })
+            .attr("cy", function(d) { return y(d.yval); })
+            .style("fill", "black");
+      }
+      else
+      {
+        graph.append("path").attr("d", valueline(data))
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .attr("fill", "none");
+      if(errorData != null){
+        graph.selectAll("dot")
           .data(data)
-          .enter().append("circle")
+          .enter().append("line")
           .attr("r", 1)
-          .attr("cx", function(d) { return x(d.xval); })
-          .attr("cy", function(d) { return y(d.yval); })
-          .style("fill", "black");
-    }
-    else
-    {
-      graph.append("path").attr("d", valueline(data))
-          .attr("stroke", "black")
-          .attr("stroke-width", 1)
-          .attr("fill", "none");
-    if(errorData != null){
-      graph.selectAll("dot")
-        .data(data)
-        .enter().append("line")
-        .attr("r", 1)
-        .attr("x1", function(d) {
-          return x(d.xval);
-        })
-        .attr("y1", function(d) {
-          return y(d.yval + (d.errorval / 2));
-        })
-        .attr("x2", function(d) {
-          return x(d.xval);
-        })
-        .attr("y2", function(d) {
-          return y(d.yval - (d.errorval / 2));
-        })
-        .style("stroke", "blue");
-
-      graph.selectAll("dot")
-        .data(data)
-        .enter().append("line")
-        .attr("r", 1)
-        .attr("x1", function(d) {
-          return x(d.xval)-2;
-        })
-        .attr("y1", function(d) {
-          return y(d.yval + (d.errorval / 2));
-        })
-        .attr("x2", function(d) {
-          return x(d.xval)+2;
-        })
-        .attr("y2", function(d) {
-          return y(d.yval + (d.errorval / 2));
-        })
-        .style("stroke", "blue");
+          .attr("x1", function(d) {
+            return x(d.xval);
+          })
+          .attr("y1", function(d) {
+            return y(d.yval + (d.errorval / 2));
+          })
+          .attr("x2", function(d) {
+            return x(d.xval);
+          })
+          .attr("y2", function(d) {
+            return y(d.yval - (d.errorval / 2));
+          })
+          .style("stroke", "blue");
 
         graph.selectAll("dot")
           .data(data)
@@ -395,87 +384,104 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
             return x(d.xval)-2;
           })
           .attr("y1", function(d) {
-            return y(d.yval - (d.errorval / 2));
+            return y(d.yval + (d.errorval / 2));
           })
           .attr("x2", function(d) {
             return x(d.xval)+2;
           })
           .attr("y2", function(d) {
-            return y(d.yval - (d.errorval / 2));
+            return y(d.yval + (d.errorval / 2));
           })
           .style("stroke", "blue");
 
-            }
-    }
+          graph.selectAll("dot")
+            .data(data)
+            .enter().append("line")
+            .attr("r", 1)
+            .attr("x1", function(d) {
+              return x(d.xval)-2;
+            })
+            .attr("y1", function(d) {
+              return y(d.yval - (d.errorval / 2));
+            })
+            .attr("x2", function(d) {
+              return x(d.xval)+2;
+            })
+            .attr("y2", function(d) {
+              return y(d.yval - (d.errorval / 2));
+            })
+            .style("stroke", "blue");
 
-    if (data2 != null && data2 != undefined && includeSketch && getShowOriginalSketch())
-    {
-      graph.append("g").attr("clip-path", "url(#clip-" + count.toString() + ")")
-                        .append("path").attr("d", valueline(data2))
-                        .attr("stroke", "teal")
-                        .attr("stroke-width", 1)
-                        .attr("fill", "none");
-    }
+              }
+      }
 
-    if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
-    {
+      if (data2 != null && data2 != undefined && includeSketch && getShowOriginalSketch())
+      {
+        graph.append("g").attr("clip-path", "url(#clip-" + newCount.toString() + ")")
+                          .append("path").attr("d", valueline(data2))
+                          .attr("stroke", "teal")
+                          .attr("stroke-width", 1)
+                          .attr("fill", "none");
+      }
 
-      var tooltip = graph.append("g")
-        .attr("class", "custom-tooltip")
-        .attr("id", "custom-tooltip" + count.toString())
-        .style("display", "none");
+      if (getSelectedCategory() == "dynamic_class" && globalDatasetInfo["classes"])
+      {
 
-      var tooltipLength = 0;
-      var tooltipTexts = [];
-      for (var i = 0; i < zlabel.split(".").length; i++) {
-        var tooltipText = ""
-        for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
-        {
-          if (globalDatasetInfo["classes"]["classes"][j].tag === zlabel)
+        var tooltip = graph.append("g")
+          .attr("class", "custom-tooltip")
+          .attr("id", "custom-tooltip" + newCount.toString())
+          .style("display", "none");
+
+        var tooltipLength = 0;
+        var tooltipTexts = [];
+        for (var i = 0; i < zValue.split(".").length; i++) {
+          var tooltipText = ""
+          for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
           {
-            var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i]
-            tooltipTexts.push(tooltipText)
-            if (tooltipText.length > tooltipLength)
+            if (globalDatasetInfo["classes"]["classes"][j].tag === zValue)
             {
-              tooltipLength = tooltipText.length
+              var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i]
+              tooltipTexts.push(tooltipText)
+              if (tooltipText.length > tooltipLength)
+              {
+                tooltipLength = tooltipText.length
+              }
             }
           }
         }
+
+        tooltip.append("rect")
+          .attr("width", tooltipLength * 7)
+          .attr("height", 18*zValue.split(".").length)
+          .attr("fill", "black")
+          .style("opacity", 0.65);
+
+        for (var i = 0; i < tooltipTexts.length; i++) {
+          tooltip.append("text")
+            .each(function (d) {
+               d3.select(this).append("tspan")
+                   .text(tooltipTexts[i])
+                   .attr("dy", i ? (1.3*i).toString() + "em" : 0)
+                   .attr("x", 3)
+                   .attr("y", 15)
+                   .attr("fill", "white")
+                   .attr("text-anchor", "left")
+                   .attr("class", "tspan" + i)
+                   .attr("font-size", "13px");
+            });
+        }
+
+        graph.on("mouseover", function() { $($(this).find(".custom-tooltip")[0]).show(); })
+        .on("mouseout", function() { $($(this).find(".custom-tooltip")[0]).hide(); })
+        .on("mousemove", function(d) {
+          var xPosition = d3.mouse(this)[0] - 100;
+          var yPosition = d3.mouse(this)[1] - 47;
+          $($(this).find(".custom-tooltip")[0]).attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+          var ttt = $($($(this).find(".custom-tooltip")[0]).children()[1]).attr("text")
+          $($($(this).find(".custom-tooltip")[0]).children()[1]).text(ttt);
+        });
       }
-
-      tooltip.append("rect")
-        .attr("width", tooltipLength * 7)
-        .attr("height", 18*zlabel.split(".").length)
-        .attr("fill", "black")
-        .style("opacity", 0.65);
-
-      for (var i = 0; i < tooltipTexts.length; i++) {
-        tooltip.append("text")
-          .each(function (d) {
-             d3.select(this).append("tspan")
-                 .text(tooltipTexts[i])
-                 .attr("dy", i ? (1.3*i).toString() + "em" : 0)
-                 .attr("x", 3)
-                 .attr("y", 15)
-                 .attr("fill", "white")
-                 .attr("text-anchor", "left")
-                 .attr("class", "tspan" + i)
-                 .attr("font-size", "13px");
-          });
-      }
-
-      graph.on("mouseover", function() { $($(this).find(".custom-tooltip")[0]).show(); })
-      .on("mouseout", function() { $($(this).find(".custom-tooltip")[0]).hide(); })
-      .on("mousemove", function(d) {
-        var xPosition = d3.mouse(this)[0] - 100;
-        var yPosition = d3.mouse(this)[1] - 47;
-        $($(this).find(".custom-tooltip")[0]).attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-        var ttt = $($($(this).find(".custom-tooltip")[0]).children()[1]).attr("text")
-        $($($(this).find(".custom-tooltip")[0]).children()[1]).text(ttt);
-      });
     }
-
-
   }
   d3.select('#resultsvg-0')
   .attr("data-intro","Similarity search results are shown for the submitted user defined pattern. The query pattern is overlaid in green for comparison.")
@@ -551,6 +557,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
+    var title = varFinalArray[count]["title"];
 
     var clusterCount = varFinalArray[count]["count"];
 
@@ -719,9 +726,9 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
                            (trans + m[0] + 30) + ")")
       .attr("id",'ztitle')
       .attr("type",'representativeResult')
-      .attr('label',xlabel)
+      .attr('label',title)
       .style("text-anchor", "middle")
-      .text(xlabel + " (" + clusterCount + ")");
+      .text(title + " (" + clusterCount + " more like this)");
 
     graph.append("text")
       .attr("transform",
@@ -1172,27 +1179,30 @@ function displayOutlierResultsHelper( outlierResults )
 function uploadToSketchpadNew( draggableId, graphType )
 {
   var draggedGraph;
-  //var xType, yType, zType;
+  var xType, yType, category;
   switch( graphType ) {
     case "representativeQuery":
       draggedGraph = representativeDygraphsNew[draggableId]["data"];
-      // xType = representativeDygraphsNew[draggableId]["xType"];
-      // yType = representativeDygraphsNew[draggableId]["yType"];
-      // zType = representativeDygraphsNew[draggableId]["zType"];
+      xType = representativeDygraphsNew[draggableId]["xType"];
+      yType = representativeDygraphsNew[draggableId]["yType"];
+      category = representativeDygraphsNew[draggableId]["zType"];
       break;
     case "outlierQuery":
       draggedGraph = outlierDygraphsNew[draggableId]["data"];
-      // xType = outlierDygraphsNew[draggableId]["xType"];
-      // yType = outlierDygraphsNew[draggableId]["yType"];
-      // zType = outlierDygraphsNew[draggableId]["zType"];
+      xType = outlierDygraphsNew[draggableId]["xType"];
+      yType = outlierDygraphsNew[draggableId]["yType"];
+      category = outlierDygraphsNew[draggableId]["zType"];
       break;
     default: //userQuery
       draggedGraph = userQueryDygraphsNew[draggableId]["data"];
-      // xType = userQueryDygraphsNew[draggableId]["xType"];
-      // yType = userQueryDygraphsNew[draggableId]["yType"];
-      // zType = userQueryDygraphsNew[draggableId]["zType"];
-
+      xType = userQueryDygraphsNew[draggableId]["xType"];
+      yType = userQueryDygraphsNew[draggableId]["yType"];
+      category = userQueryDygraphsNew[draggableId]["zType"];
   }
+
+  angular.element($("#sidebar")).scope().selectedCategory = category;
+  angular.element($("#sidebar")).scope().selectedXAxis = xType;
+  angular.element($("#sidebar")).scope().selectedYAxis = yType;
   plotSketchpadNew( draggedGraph )//, xType, yType, zType);
 }
 
@@ -1379,41 +1389,172 @@ canvas.style.display="none";
 
 });
 
+function checkAll(source,type) {
+  if(type == "x"){
+      checkboxes = document.getElementsByName('x-checkbox');
+  }
+  if(type == "y"){
+      checkboxes = document.getElementsByName('y-checkbox');
+  }
+  if(type == "z"){
+      checkboxes = document.getElementsByName('z-checkbox');
+  }
+
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+
+function autoSelect(source,type) {
+  var i = 0;
+  if(type == "x"){
+      checkboxes = document.getElementsByName('x-checkbox');
+      $(".x-types").each(function(i){
+        var selectedOption = $(this).children("option").filter(":selected").text()
+          if( selectedOption == "int" || selectedOption == "float" ){
+                  checkboxes[i].checked = source.checked;
+          }
+          i++;
+      });
+  }
+  if(type == "y"){
+      checkboxes = document.getElementsByName('y-checkbox');
+      $(".y-types").each(function(){
+        var selectedOption = $(this).children("option").filter(":selected").text()
+          if( selectedOption == "int" || selectedOption == "float" ){
+                  checkboxes[i].checked = source.checked;
+          }
+          i++;
+      });
+  }
+  if(type == "z"){
+      checkboxes = document.getElementsByName('z-checkbox');
+      $(".z-types").each(function(){
+        var selectedOption = $(this).children("option").filter(":selected").text()
+          if( selectedOption == "string"){
+                  checkboxes[i].checked = source.checked;
+          }
+          i++;
+      });
+  }
+}
+
 function parseCSV(data) {
  Papa.parse(data.get("csv"), {
- preview: 1,
+ preview: 5,
  complete: function(results){
    var text_x, text_y, text_z = "";
-   console.log("this is results!",results["data"][0]);
+  console.log("this is fist line!",results["data"][1]);
    for (i = 0; i < results["data"][0].length; i++) {
   //  text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   //  text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-
-   text_x += results["data"][0][i] + ":<select class='x-types'>"
-  +"<option value='none'  selected='selected'>None</option>"
-  +"<option value='" + results["data"][0][i] + " string'>string</option>"
-  +"<option value='" + results["data"][0][i] + " int'>int</option>"
-  +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select>";
-   text_y += results["data"][0][i] + ":<select class='y-types'>"
-  +"<option value='none'  selected='selected'>None</option>"
-  +"<option value='" + results["data"][0][i] + " string'>string</option>"
-  +"<option value='" + results["data"][0][i] + " int'>int</option>"
-  +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select>";
-   text_z += results["data"][0][i] + ":<select class='z-types'>"
-  +"<option value='none'  selected='selected'>None</option>"
-  +"<option value='" + results["data"][0][i] + " string'>string</option>"
-  +"<option value='" + results["data"][0][i] + " int'>int</option>"
-  +"<option value='" + results["data"][0][i] + " float'>float</option>"
-  +"</select>";
+  type = getType(results["data"][1][i],results["data"][2][i],results["data"][3][i],results["data"][4][i])
+   text_x += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='x-types' style = 'float:right;'>"
+  +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+  +"<option value=" + results["data"][0][i] + " string'>string</option>"
+  +"<option value=" + results["data"][0][i] + " int'>int</option>"
+  +"<option value=" + results["data"][0][i] + " float'>float</option>"
+  +"</select> </td> </tr>";
+   text_y += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'>" +results["data"][0][i] + ":  <select class='y-types' style = 'float:right;'>"
+   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+   +"<option value=" + results["data"][0][i] + " string'>string</option>"
+   +"<option value=" + results["data"][0][i] + " int'>int</option>"
+   +"<option value=" + results["data"][0][i] + " float'>float</option>"
+   +"</select> </td></tr>";
+   text_z += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='z-types' style = 'float:right;'>"
+   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+   +"<option value=" + results["data"][0][i] + " string'>string</option>"
+   +"<option value=" + results["data"][0][i] + " int'>int</option>"
+   +"<option value=" + results["data"][0][i] + " float'>float</option>"
+   +"</select> </td></tr>";
  }
 
    $('.x-attributes').html(text_x);
    $('.y-attributes').html(text_y);
    $('.z-attributes').html(text_z);
    $('#define-attributes').modal('toggle');
+   $('#x-autoselect').trigger('click');
+   $('#y-autoselect').trigger('click');
+   $('#z-autoselect').trigger('click');
  }
 });
+
+function getType(str1,str2,str3,str4){
+    var results = [];
+    str1 = str1.toString();
+    str2 = str2.toString();
+    str3 = str3.toString();
+    str4 = str4.toString();
+    var nan = isNaN(Number(str1));
+    // var isfloat = /^\d*(\.|,)\d*$/;
+    // var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
+    // var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
+    // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
+    // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
+    // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
+    if (!nan){
+        if (parseFloat(str1) === parseInt(str1) && parseFloat(str2) === parseInt(str2) && parseFloat(str3) === parseInt(str3) && parseFloat(str4) === parseInt(str4)) return "int";
+        else return "float";
+    }
+      // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
+      // // else if (date.test(str)) return "date";
+    else {
+        // if (email.test(str)) return "e-mail";
+        // else if (phone.test(str)) return "phone";
+        return "string";
+    }
 }
+}
+function filterUncheckAttributes(x,y,z){
+
+  $("input:checkbox[name=x-checkbox]:not(:checked)").each(function(){
+    if(x.includes($(this).val() + " " + "float")){
+      var indexFloat = x.indexOf($(this).val() + " " + "float");
+      x.splice(indexFloat, 1);
+    }
+    if(x.includes($(this).val() + " " + "int")){
+      var indexFloat = x.indexOf($(this).val() + " " + "int");
+      x.splice(indexFloat, 1);
+    }
+    if(x.includes($(this).val() + " " + "string")){
+      var indexFloat = x.indexOf($(this).val() + " " + "string");
+      x.splice(indexFloat, 1);
+    }
+        //  console.log("testx",x);
+    })
+  $("input:checkbox[name=y-checkbox]:not(:checked)").each(function(){
+    if(y.includes($(this).val() + " " + "float")){
+      var indexFloat = y.indexOf($(this).val() + " " + "float");
+      y.splice(indexFloat, 1);
+    }
+    if(y.includes($(this).val() + " " + "int")){
+      var indexFloat = y.indexOf($(this).val() + " " + "int");
+      y.splice(indexFloat, 1);
+    }
+    if(y.includes($(this).val() + " " + "string")){
+      var indexFloat = y.indexOf($(this).val() + " " + "string");
+      y.splice(indexFloat, 1);
+    }
+  })
+  $("input:checkbox[name=z-checkbox]:not(:checked)").each(function(){
+    if(z.includes($(this).val() + " " + "float")){
+      var indexFloat = z.indexOf($(this).val() + " " + "float");
+      z.splice(indexFloat, 1);
+    }
+    if(z.includes($(this).val() + " " + "int")){
+      var indexFloat = z.indexOf($(this).val() + " " + "int");
+      z.splice(indexFloat, 1);
+    }
+    if(z.includes($(this).val() + " " + "string")){
+      var indexFloat = z.indexOf($(this).val() + " " + "string");
+      z.splice(indexFloat, 1);
+    }
+  })
+
+    return {
+        x: x,
+        y: y,
+        z: z
+    };
+};

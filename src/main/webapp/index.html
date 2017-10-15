@@ -12,9 +12,7 @@
     <link href="css/introjs.css" rel="stylesheet">
     <!-- <script type="text/javascript" src="secret.json"></script> -->
     </head>
-  <body class="intro_after_dataload" style="overflow:hidden" data-gr-c-s-loaded="true" scroll="no">
-
-    
+  <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
 
 <div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
@@ -52,7 +50,64 @@
 
     <div id="everything">
 
-      <div id="popup" class="modal fade bd-example-modal-sm">
+      <div id="errorModal" class="modal fade">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">Zenvisage Error</h4>
+            </div>
+            <div id="errorModalBody" class="modal-body">
+              <p>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#errorModalCollapse" aria-expanded="false" aria-controls="collapseExample">
+                  Click to show error message
+                </button>
+              </p>
+              <div class="collapse" id="errorModalCollapse">
+                <div class="card card-block" id="errorModalText">
+                  Unknown Error <!-- Backend error is filled in here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal -->
+      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
+        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+              </div>
+              <div class="modal-body">
+                <a href="https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets"> Instructions on how to format and upload your own datasets. </a> <br><br/>
+                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                <div class="row">
+                  <div class="col-md-5" style="left: 33%">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
+                  </div>
+                </div>
+              </div>
+                <div class="modal-footer">
+                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+      <div id="popup" class="modal fade" >
         <!-- Modal content -->
         <div class="modal-dialog" role="document">
           <div class="modal-content" style="font-size:80;">
@@ -75,66 +130,57 @@
           </div>
         </div>
     </div>
-      <!-- Modal -->
-      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
-        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document" >
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
-              </div>
-              <div class="modal-body">
-                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
-                <div class="row">
-                  <div class="col-md-5">
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
-                  </div>
-                  <div class="col-md-5 col-md-offset-1">
-                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose schema file" name="schema">
-                  </div>
-                </div>
-              </div>
-                <div class="modal-footer">
-                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
-                <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">
-                </div>
 
-            </div>
+    <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style = "left: -5%; width: 700px">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Set attributes</h4>
           </div>
-        </div>
-      </form>
+          <form id="define-attributes-form">
+          <div class="modal-body" >
+              Please submit which attributes belong to which axis
+              <br>
+              <br>
+              <span><input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 45%;"></span>
+            <div class = "row">
 
-      <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Set attributes</h4>
+              <br>
+              <div style="margin-left:2%;float: left">
+              X axis:
+              <br>
+              <br>
+              <input type="checkbox" onClick="checkAll(this,'x')" > Select All<br/>
+              <input id = "x-autoselect" type="checkbox" onClick="autoSelect(this,'x')"> Auto Select<br/>
+              <br>  <table class = "x-attributes" ></table>
             </div>
-            <div class="modal-body">
-                Please submit which attributes belong to which axis
-              <form id="define-attributes-form">
-                <br>
-                X axis:
-                <br>  <span class = "x-attributes"></span> <br>
-                <br>
-                Y axis:
-                <br>  <span class = "y-attributes"></span> <br>
-                <br>
-                Z axis:
-                <br>  <span class = "z-attributes"></span> <br>
-                <br>
-                <div class="modal-footer">
-                  <input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Set Attributes">
-                </div>
-              </form>
+            <div style="margin-left:5%;float: left">
+              Y axis:
+              <br>
+              <br>
+              <input type="checkbox" onClick="checkAll(this,'y')" > Select All<br/>
+              <input id = "y-autoselect" type="checkbox" onClick="autoSelect(this,'y')"> Auto Select<br/>
+              <br>  <table class = "y-attributes" style="display:inline-block"></table>
             </div>
+            <div style="margin-left:5%;float: left">
+              Z axis:
+              <br>
+              <br>
+              <input type="checkbox" onClick="checkAll(this,'z')" > Select All<br/>
+              <input id = "z-autoselect" type="checkbox" onClick="autoSelect(this,'z')"> Auto Select<br/>
+              <br>  <table class = "z-attributes" style="display:inline-block"></table>
+            </div>
+              <br>
           </div>
+          <div class="modal-footer">
+
+          </div>
+          </div>
+          </form>
         </div>
       </div>
+    </div>
 
       <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -144,7 +190,7 @@
                 <h4 class="modal-title">Upload Query Data Pattern</h4>
             </div>
             <div class="modal-body" id="pattern-upload-body">
-                Please submit the x and y values of the query pattern using comma or space-delimited lists.
+                Please select the permissible axes and type for each attribute.
               <form id="pattern-upload-form" onsubmit="return patternLoad();">
                 <br> x values: <input type="text" id="x-pattern" placeholder="e.g. 27,42,65,53" style="width: 80%;">
                 <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
@@ -292,12 +338,14 @@
         <div id="sidebar" class="interface" ng-controller="datasetController"  >
           <h4>
             <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"><img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
-            <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button>
+            <a href="https://github.com/zenvisage/zenvisage/wiki/Functionalities-and-Options"><i class="glyphicon glyphicon-info-sign" style="font-size: 20px;"></i></a>
+            <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 20px; "></i></a>
+            <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
             <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
           </h4>
 <hr>
           <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. An existing dataset can also be selected from the dropdown.' data-step="2">
-            <h5><b>Dataset</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5><b>Dataset</b><button type="button"  class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
             <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()" ng-model="selectedDataset" id="dataset-form-control">
@@ -305,7 +353,7 @@
             </select>
           </div>
           <div class = 'side-info-text' data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
-            <h5 style = 'width:130px'><b>Pattern</b><button type="button" ng-click="callLoadAxisInfoChildMethod()" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <h5 style = 'width:130px'><b>Pattern</b><button type="button" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
           </div>
 
           <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
@@ -392,6 +440,8 @@
 
               <div class="btn-toolbar">
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+
+                <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
                 <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
                 <div ng-show="zqltable">
@@ -508,7 +558,10 @@
                 <b>Similarity</b>
                 <div class="qtooltip">
                   <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                  <span class="qtooltiptext">Similarity explaination</span>
+                  <span class="qtooltiptext">
+                    Euclidean distance compares the straight-line distance between two visualizations whereas the other algorithm tries to take into account shapes or temporal lags by transforming the visualization before calculating the distance, as shown here.
+                    <br><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Dynamic_time_warping.png"  style="text-align:center; width:225px">
+                  </span>
                 </div>
                 <div class="radio">
                   <form>
@@ -525,7 +578,7 @@
                 <div ><b>Aggregate</b>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">Aggregation method explaination</span>
+                    <span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>
                   </div>
                 </div>
 
@@ -555,7 +608,7 @@
                 <div><b>Cluster Size</b>
                   <div class="qtooltip">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">K-means explaination</span>
+                    <span class="qtooltiptext">KMeans clustering is used for identifying represenatitive trends of the whole dataset. This option specifies the number of clusters to be displayed in the representative trends.</span>
                   </div>
                 </div>
                 <p></p>
@@ -565,10 +618,6 @@
               </div>
                 <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
                   <div><b>Number of Results</b>
-                    <div class="qtooltip">
-                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">Num Results explaination</span>
-                    </div>
                   </div>
                   <p></p>
                   <div>
@@ -580,7 +629,7 @@
                   <div><b>Similarity Cutoff</b>
                     <div class="qtooltip">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">Min Similarity Cutoff explaination</span>
+                      <span class="qtooltiptext">Specifies the minimum similarity score for a visualization to be displayed in the query results panel.</span>
                     </div>
                   </div>
 
@@ -597,9 +646,9 @@
                 <div data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
                   <div class="info-text">
                   <div><b>Data Smoothing</b>
-                    <div class="qtooltip">
+                    <div class="qtooltipright">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">Data smoothing explaination</span>
+                      <span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
                     </div>
                   </div>
 
@@ -623,9 +672,9 @@
                 </div>
                 <div class="info-text" data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="17">
                     <div><b>Filter Constraint</b>
-                      <div class="qtooltip">
+                      <div class="qtooltipright">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                        <span class="qtooltiptext">Filter Constraint explaination</span>
+                        <span class="qtooltiptextright">Specify a filter that can be applied globally to a dataset to narrow the search. Multiple conditions can be accepted using AND, OR.</span>
                       </div>
                     </div>
                     <p></p>
@@ -640,9 +689,13 @@
 
               <div class="col-md-3" style="width: 185px;">
                 <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>
-                  <div class="qtooltip">
+                  <div class="qtooltipright">
                     <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptext">Options explaination</span>
+                    <span class="qtooltiptextright">1. Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, the location of the pattern along the x-axis will not affect pattern search.
+                    <br>2. Show original sketch: Shows the original query pattern as a pale green line on top of the visualization results, checked by default.
+                    <br>3. Show scatter plot: Showing the raw data points as a scatterplot.
+                    <br>4. Reverse Y axis: Flipping the y-axis of all visualizations.
+                    </span>
                   </div>
                     <div class="checkbox">
                       <form data-intro = "If unchecked, then the simmilarity search ignores matches on the x axis and measure only shape-based (y axis) simmilarity." data-position = "left" data-step ="19" >
@@ -661,9 +714,9 @@
 
                   <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
                     <div ><b>Input Equation</b>
-                      <div class="qtooltip">
+                      <div class="qtooltipright">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                        <span class="qtooltiptext">Options explaination</span>
+                        <span class="qtooltiptextright">Relationships in the form of mathematical equations can be used to query for patterns.</span>
                       </div>
                     </div>
                     <p></p>
@@ -854,14 +907,12 @@
 
     $('#popup').modal('toggle');
     if(localStorage.getItem("DontShow")) {
-    console.log('hi');
     $('#popup').modal('hide');
     }
     $('#popup').on('submit', function(e) {
         localStorage.setItem("DontShow", "true");
         $('#popup').modal('toggle');
     });
-
 
 
       // var tree = tree();

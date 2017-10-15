@@ -453,6 +453,7 @@ function patternLoad(){
   log.info("patternLoad : ",xvals,yvals)
   createSketchpad( data );
   refreshZoomEventHandler();
+  finishDraw();
 }
 
 function Point(x, y){

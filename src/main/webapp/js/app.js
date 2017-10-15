@@ -1,6 +1,6 @@
 var app = angular.module('zenvisage', []);
 var globalDatasetInfo;
-
+var allAxisColumns;
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.AxisInfo = [];
@@ -11,7 +11,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
 
   $scope.loadAxisInfo = function loadAxisInfo() {
     $scope.AxisInfo = [];
-    for (var key in globalDatasetInfo["yAxisColumns"]) {
+    allAxisColumns = $.extend(true,globalDatasetInfo["xAxisColumns"],globalDatasetInfo["yAxisColumns"],globalDatasetInfo["zAxisColumns"]);
+    for (var key in allAxisColumns) {
       $scope.AxisInfo.push(key);
     }
   };
@@ -25,8 +26,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       if (val && key)
       {
         var keyval = {};
-        var min = globalDatasetInfo["yAxisColumns"][key]["min"]
-        var max = globalDatasetInfo["yAxisColumns"][key]["max"]
+        var min = allAxisColumns[key]["min"]
+        var max = allAxisColumns[key]["max"]
         var replacedMin = val.replace("min", min);
         var replacedMinMax = replacedMin.replace("max", max);
         keyval["name"] = key
@@ -45,7 +46,9 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           $('#class-creation-close-button')[0].click();
         },
         function (response) {
-          console.log("failed: ", response);
+          console.log("failed to create classes", response);
+          $("#errorModalText").html(response);
+          $("#errorModal").modal();
         }
     );
     log.info("Dynamic Class created",JSON.stringify(classList))
@@ -75,14 +78,16 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
           }
         },
         function (response) {
-          console.log("failed: ", response);
+          console.log("failed to get class info: ", response);
+          $("#errorModalText").html(response);
+          $("#errorModal").modal();
         }
     );
   }
 
   $scope.populateClassInfo = function() {
     $scope.AxisInfo = [];
-    for (var key in globalDatasetInfo["yAxisColumns"]) {
+    for (var key in allAxisColumns) {
       $scope.AxisInfo.push(key);
     }
   };
@@ -90,7 +95,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
 }]);
 
 
-app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
+app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResults', '$compile', function ($scope, $rootScope, $http, plotResults, $compile) {
   $scope.input = {};
   $scope.queries = {};
   $scope.queries['zqlRows'] = [];
@@ -253,11 +258,20 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
-            plotResults.displayUserQueryResults(response.data.outputCharts, false);
+            var userQueryResults = response.data.outputCharts;
+            if (userQueryResults.length != 0) {
+                var xAxis = replaceAll(userQueryResults[0]["xType"], "'", "");
+                var yAxis = replaceAll(userQueryResults[0]["yType"], "'", "");
+                var zAttribute = replaceAll(userQueryResults[0]["zType"], "'", "");
+                $rootScope.$broadcast('updateAxes', xAxis, yAxis, zAttribute);
+            }
+            plotResults.displayUserQueryResults(userQueryResults, false);
         },
         function (response) {
-            console.log("failed: ", escape(response));
+            console.log("failed ZQL Query", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
+            $("#errorModalText").html(response);
+            $("#errorModal").modal();
         }
     );
   };
@@ -294,11 +308,20 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
+            var userQueryResults = response.data.outputCharts;
+            if (userQueryResults.length != 0) {
+                var xAxis = replaceAll(userQueryResults[0]["xType"], "'", "");
+                var yAxis = replaceAll(userQueryResults[0]["yType"], "'", "");
+                var zAttribute = replaceAll(userQueryResults[0]["zType"], "'", "");
+                $rootScope.$broadcast('updateAxes', xAxis, yAxis, zAttribute);
+            }
             plotResults.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
-            console.log("failed: ", escape(response));
+            console.log("failed Node ZQL Query: ", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
+            $("#errorModalText").html(response);
+            $("#errorModal").modal();
         }
     );
   }
@@ -451,7 +474,7 @@ app.controller('options-controller', [
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("minThresh display changed",$scope.minDisplayThresh)
         console.log("minThresh display changed",$scope.minDisplayThresh)
-      //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+        $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
         $scope.callGetUserQueryResults();
       }
     });
@@ -468,7 +491,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showScatterplot",$scope.showScatterplot)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -478,7 +501,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("considerRange",$scope.considerRange)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -488,7 +511,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("showOriginalSketch",$scope.showOriginalSketch)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -498,7 +521,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("outputNormalized",$scope.outputNormalized)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -514,7 +537,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("aggregation",$scope.aggregation)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -524,7 +547,7 @@ app.controller('options-controller', [
       {
         document.getElementById("loadingEclipse").style.display = "inline";
         log.info("flipY",$scope.flipY)
-        //  $scope.callGetUserQueryResultsWithCallBack(); dont call representative trends
+          $scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
           $scope.callGetUserQueryResults();
       }
     });
@@ -565,6 +588,8 @@ app.controller('options-controller', [
       error(function(response) {
         console.log("getUserQueryResults: fail");
         document.getElementById("loadingEclipse").style.display = "none";
+        $("#errorModalText").html(response);
+        $("#errorModal").modal();
       });
 
     }
@@ -883,10 +908,6 @@ app.controller('options-controller', [
 
       angular.element('#class-creation').triggerHandler('click');
 
-      var zType = angular.element($("#sidebar")).scope().selectedCategory;
-      var xType = angular.element($("#sidebar")).scope().selectedXAxis;
-      var yType = angular.element($("#sidebar")).scope().selectedYAxis;
-
       plotSketchpadNew( plotData )
       //angular.element($("#sidebar")).scope().getUserQueryResults();
     }
@@ -924,7 +945,9 @@ app.controller('datasetController', [
             $scope.tablelist = datasetInfo.getTablelist()
           },
           function (response) {
-            console.log("failed: ", response);
+            console.log("failed to get table list: ", response);
+            $("#errorModalText").html(response);
+            $("#errorModal").modal();
           }
       );
     };
@@ -991,6 +1014,8 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse").style.display = "none";
+            $("#errorModalText").html(response);
+            $("#errorModal").modal();
           });
 
         }
@@ -999,7 +1024,11 @@ app.controller('datasetController', [
 
         }).
         error(function(response) {
-        console.log("getUserQueryResults: fail");
+          console.log("getUserQueryResults: fail");
+          document.getElementById("loadingEclipse").style.display = "none";
+          document.getElementById("loadingEclipse2").style.display = "none";
+          $("#errorModalText").html(response);
+          $("#errorModal").modal();
         });
     }
 
@@ -1029,6 +1058,9 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
             document.getElementById("loadingEclipse").style.display = "none";
+            document.getElementById("loadingEclipse2").style.display = "none";
+            $("#errorModalText").html(response_error);
+            $("#errorModal").modal();
           });
 
         }
@@ -1041,6 +1073,10 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
+        document.getElementById("loadingEclipse").style.display = "none";
+        document.getElementById("loadingEclipse2").style.display = "none";
+        $("#errorModalText").html(response);
+        $("#errorModal").modal();
       });
 
 
@@ -1108,7 +1144,9 @@ app.controller('datasetController', [
       }).
       error(function(response) {
         console.log("download : fail");
-          });
+        $("#errorModalText").html(response);
+        $("#errorModal").modal();
+      });
     }
     $scope.getRepresentativeTrendsWithoutCallback = function getRepresentativeTrendsWithoutCallback()
     {
@@ -1142,6 +1180,8 @@ app.controller('datasetController', [
           error(function(response_error) {
             console.log("getRepresentativeTrends: fail");
             document.getElementById("loadingEclipse2").style.display = "none";
+            $("#errorModalText").html(response_error);
+            $("#errorModal").modal();
           });
 
         }
@@ -1151,6 +1191,8 @@ app.controller('datasetController', [
       error(function(response) {
         console.log("getRepresentativeTrends: fail");
         document.getElementById("loadingEclipse2").style.display = "none";
+        $("#errorModalText").html(response);
+        $("#errorModal").modal();
       });
     }
     function getyOnlyCheck(){
@@ -1198,13 +1240,20 @@ app.controller('datasetController', [
           }).
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
+            document.getElementById("loadingEclipse2").style.display = "none";
+            $("#errorModalText").html(response_error);
+            $("#errorModal").modal();
           });
 
         }
         else{plotResults.displayOutlierResults( response.outputCharts )};
       }).
       error(function(response) {
-        console.log("getOutlierTrends: fail");
+        console.log("Don't worry, this outlier fail is normal. Ignoring failed outlier trends because sometimes because there are no outliers if representative takes that one up.")
+        // console.log("getOutlierTrends: fail");
+        // document.getElementById("loadingEclipse2").style.display = "none";
+        // $("#errorModalText").html(response);
+        // $("#errorModal").modal();
       });
     }
 
@@ -1237,7 +1286,7 @@ app.controller('datasetController', [
       var config = {
         params: params,
       };
-      
+
       var datasetname = $('#dataset-form-control').val();
 
       $http.get('/zv/getformdata', config).
@@ -1279,7 +1328,7 @@ app.controller('datasetController', [
             $scope.selectedXAxis = $scope.xAxisItems[0];
             $scope.selectedYAxis = $scope.yAxisItems[0];
           }
-          
+
           log.info("initialized data attribute",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
           //send in first item info
 
@@ -1374,7 +1423,8 @@ app.controller('datasetController', [
             log.info("smoothingcoefficient",smoothingcoefficient)
             if(getSmoothingType() != "none"){
               $scope.getUserQueryResults();
-              $scope.getRepresentativeTrendsWithoutCallback();
+              // $scope.getRepresentativeTrendsWithoutCallback();
+              $scope.callgetRepresentativeTrends();
             }
         }
     })
@@ -1387,8 +1437,11 @@ app.controller('datasetController', [
     };
       //  init();
     // and fire it after definition
-
-
+    $scope.$on("updateAxes", function(event, xAxis, yAxis, category) {
+        $scope.selectedXAxis = xAxis;
+        $scope.selectedYAxis = yAxis;
+        $scope.selectedCategory = category;
+    });
 }]);
 
 app.service('ChartSettings', function () {

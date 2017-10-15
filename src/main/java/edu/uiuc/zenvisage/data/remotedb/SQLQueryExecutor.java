@@ -464,9 +464,49 @@ public class SQLQueryExecutor {
 		}
 		sql.deleteCharAt(sql.length()-1);
 		sql.append(") FROM '"+ fileName +"' DELIMITER ',' CSV HEADER;");
+		System.out.println("sql used to upload csv file:"+sql.toString());
 	    Statement stmt = c.createStatement();
 	    stmt.executeUpdate(sql.toString());
 	    stmt.close();
+	}
+	
+	public void insertTable2(String tablename, String fileName) throws SQLException{
+//		StringBuilder sql = new StringBuilder("COPY ");
+		String tableAttributes = getTableAttributes(tablename);
+//		sql.append(tableAttributes);	
+//		sql.append(" FROM '"+ fileName +"' DELIMITER ',' CSV HEADER;");
+//		System.out.println("sql used to upload csv file:"+sql.toString());
+//	    Statement stmt = c.createStatement();
+//	    stmt.executeUpdate(sql.toString());
+//	    stmt.close();
+		StringBuilder sql = new StringBuilder();
+	    sql.append("CREATE TEMP TABLE tmp COPY tmp FROM '"+ fileName + "'; ");
+	    System.out.println(sql.toString());
+	    Statement stmt = c.createStatement();
+	    stmt.executeUpdate(sql.toString());
+	    
+
+	   sql = new StringBuilder("INSERT INTO " + tablename + 
+			   "SELECT "+ tableAttributes.substring(tablename.length()+1,tableAttributes.length()-1) +" FROM tmp;");
+	   System.out.println(sql.toString());
+	   stmt.executeUpdate(sql.toString());
+	   sql = new StringBuilder("DELETE FROM tmp;");
+	   System.out.println(sql.toString());
+	   stmt.executeUpdate(sql.toString());
+	 
+	}
+	
+	public String getTableAttributes(String tablename) throws SQLException{
+		StringBuilder sql = new StringBuilder("select column_name from information_schema.columns where table_name = '"+ tablename+"'");
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql.toString());
+		StringBuilder ret = new StringBuilder(tablename+"(");
+		while(rs.next()){
+			ret.append(rs.getString(1)+",");
+		}
+		ret = new StringBuilder(ret.substring(0, ret.length()-("dynamic_class".length()+2)));
+		ret.append(")");
+		return ret.toString();
 	}
 	
 	public void updateMinMax(String tableName, String attribute, float min, float max) throws SQLException{

@@ -110,7 +110,7 @@ public class ZvMain {
 	private  SQLQueryExecutor sqlQueryExecutor;
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
-	public ZvMain() throws IOException, InterruptedException, SQLException{
+	public ZvMain() {
 		sqlQueryExecutor = new SQLQueryExecutor();
 		System.out.println("ZVMAIN LOADED");
 	}
@@ -125,39 +125,29 @@ public class ZvMain {
 		}
 		return size;
 	}
-//	public void loadData() throws IOException, InterruptedException{
-//
-//		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-//		inMemoryDatabases.put("cmu", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
-//		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
-//
-//		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
-//		inMemoryDatabases.put("sales", inMemoryDatabase);
-//
-//		System.out.println("Done loading data");
-//	}
-
-//	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
-//    	Database database = new Database(name,schemafile,datafile);
-//    	return database;
-//
-//    }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-		uploadDatasettoDB(names,true);
+		uploadDatasettoDB2(names,true);
 	}
-
+	
+	public void insertZenvisageMetatable(AxisVariables axisVariables) throws SQLException, IOException{
+		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream2(axisVariables);
 		
-   public  void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+		if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  axisVariables.getDatasetName())){
+			System.out.println("MetaType Data successfully inserted into Postgres");
+		} else {
+			System.out.println("MetaType already exists!");
+		}
+		sqlQueryExecutor.createTable(ret[1]);
+	}
+		
+	/*
+	 * This is for auto uploader.
+	 */
+    public void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
@@ -171,7 +161,7 @@ public class ZvMain {
 				if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
 					System.out.println("Metafilelocation Data successfully inserted into Postgres");
 				} else {
-					System.out.println("Metafilelocation already exists!");
+					System.out.println("Metafilelocation aluploadDatasettoDBready exists!");
 				}
 				
 				/*insert zenvisage_metatable*/
@@ -194,7 +184,7 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			new Database(names.get(0), names.get(2), names.get(1), true);
+			//new Database(names.get(0), names.get(2), names.get(1), true);
 			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
@@ -202,9 +192,22 @@ public class ZvMain {
 		}
 		
 	}
-	
-	
-	
+   
+   
+   public void uploadDatasettoDB2(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+		if (names.size() == 2) {
+			/*create csv table*/	
+			if(overwrite){
+				while(!sqlQueryExecutor.isTableExists(names.get(0))){
+					 Thread.sleep(1000); 
+				}
+				sqlQueryExecutor.insertTable2(names.get(0), names.get(1));
+				System.out.println("Successfully uploaded csv: " + names.get(0));
+			
+			}
+		}
+	}
 	
 //   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 //		  System.out.println(zqlQuery);
@@ -291,6 +294,7 @@ public class ZvMain {
 	    }
 		return finalOutput;	   
    }
+   
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
 		Result finalOutput = new Result();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
@@ -915,10 +919,26 @@ public class ZvMain {
 		
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
-		System.out.println(buffer);
+		System.out.println("BUFFER:" +buffer);
 //		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
 		return buffer;
-}
+    }
+	
+	public String getInterfaceFomData2(String query) throws IOException, InterruptedException, SQLException{
+		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
+		this.databaseName = fq.getDatabasename();
+		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
+		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
+				//System.out.println(locations[0]+"\n"+locations[1]);
+		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
+		//executor = new Executor(inMemoryDatabase);
+		
+
+		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		System.out.println("BUFFER:" +buffer);
+//		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		return buffer;
+    }
 
 
 

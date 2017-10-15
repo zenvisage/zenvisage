@@ -72,7 +72,7 @@ public class ClassCreationTest {
 			System.out.println("TotalTime:"+totalTime/1000);
 			
 			//assertFalse(outputGraphExecutor.equals(nullOutput));
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
