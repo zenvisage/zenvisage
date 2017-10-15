@@ -15,16 +15,16 @@
   <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
 
-<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- <div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
      <div id="loginDialog" class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" align="center">
             <img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
           </div>
           <div class="modal-body">
-              
+
               <form id="logInForm" action="/zv/login" method="post">
-              
+
                 <div class="form-group">
                   <label>Username:</label><input type="text" id="username" class="form-control input-lg" name="uname">
                 </div>
@@ -32,20 +32,20 @@
                   <label>Password:</label><input type="password" id="password" class="form-control input-lg" name="pass">
                 </div>
                 <div class="form-group">
-                
+
                 <input type="submit" class="btn btn-primary btn-lg btn-block" id="signIn" value="Sign In">
-                  
+
                 </div>
 
               </form>
-              
+
               <button class="btn btn-primary btn-lg btn-block" id="login_cancel">Cancel</button>
 
            </div>
           <div class="modal-footer"></div>
         </div>
      </div>
-  </div>
+  </div> -->
 
 
     <div id="everything">
@@ -147,28 +147,19 @@
             <div class = "row">
 
               <br>
-              <div style="margin-left:2%;float: left">
-              X axis:
+              <div style="margin-left:25%;float: left">
+              Attribute Names
               <br>
-              <br>
-              <input type="checkbox" onClick="checkAll(this,'x')" > Select All<br/>
-              <input id = "x-autoselect" type="checkbox" onClick="autoSelect(this,'x')"> Auto Select<br/>
               <br>  <table class = "x-attributes" ></table>
             </div>
             <div style="margin-left:5%;float: left">
-              Y axis:
+              Select Attributes
               <br>
-              <br>
-              <input type="checkbox" onClick="checkAll(this,'y')" > Select All<br/>
-              <input id = "y-autoselect" type="checkbox" onClick="autoSelect(this,'y')"> Auto Select<br/>
               <br>  <table class = "y-attributes" style="display:inline-block"></table>
             </div>
             <div style="margin-left:5%;float: left">
-              Z axis:
+              Data Type
               <br>
-              <br>
-              <input type="checkbox" onClick="checkAll(this,'z')" > Select All<br/>
-              <input id = "z-autoselect" type="checkbox" onClick="autoSelect(this,'z')"> Auto Select<br/>
               <br>  <table class = "z-attributes" style="display:inline-block"></table>
             </div>
               <br>

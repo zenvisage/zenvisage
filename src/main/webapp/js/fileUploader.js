@@ -33,22 +33,13 @@ $("#define-attributes").on('submit', function(e) {
   var yList = [];
   var zList = [];
 
-  $(".x-types").each(function(){
+  $(".types").each(function(){
       var selectedXOption = $(this).children("option").filter(":selected").text()
       xList.push($(this).val() + " " + selectedXOption);
-
-  });
-
-  $(".y-types").each(function(){
-       var selectedYOption = $(this).children("option").filter(":selected").text()
-	     yList.push($(this).val() + " " + selectedYOption);
-
-  });
-
-  $(".z-types").each(function(){
-       var selectedZOption = $(this).children("option").filter(":selected").text()
-	     zList.push($(this).val() + " " + selectedZOption);
-
+      var selectedYOption = $(this).children("option").filter(":selected").text()
+      yList.push($(this).val() + " " + selectedYOption);
+      var selectedZOption = $(this).children("option").filter(":selected").text()
+      zList.push($(this).val() + " " + selectedZOption);
   });
 
   var filteredLists = filterUncheckAttributes(xList,yList,zList)

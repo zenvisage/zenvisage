@@ -1409,7 +1409,7 @@ function autoSelect(source,type) {
   var i = 0;
   if(type == "x"){
       checkboxes = document.getElementsByName('x-checkbox');
-      $(".x-types").each(function(i){
+      $(".types").each(function(i){
         var selectedOption = $(this).children("option").filter(":selected").text()
           if( selectedOption == "int" || selectedOption == "float" ){
                   checkboxes[i].checked = source.checked;
@@ -1419,7 +1419,7 @@ function autoSelect(source,type) {
   }
   if(type == "y"){
       checkboxes = document.getElementsByName('y-checkbox');
-      $(".y-types").each(function(){
+      $(".types").each(function(){
         var selectedOption = $(this).children("option").filter(":selected").text()
           if( selectedOption == "int" || selectedOption == "float" ){
                   checkboxes[i].checked = source.checked;
@@ -1429,7 +1429,7 @@ function autoSelect(source,type) {
   }
   if(type == "z"){
       checkboxes = document.getElementsByName('z-checkbox');
-      $(".z-types").each(function(){
+      $(".types").each(function(){
         var selectedOption = $(this).children("option").filter(":selected").text()
           if( selectedOption == "string"){
                   checkboxes[i].checked = source.checked;
@@ -1443,26 +1443,18 @@ function parseCSV(data) {
  Papa.parse(data.get("csv"), {
  preview: 5,
  complete: function(results){
-   var text_x, text_y, text_z = "";
+   var textAttributeName = "<tr> <td> Select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
+   var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-right: 3px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 3px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 3px;'>"+"</td></tr>"
+   +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-right: 3px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 3px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 3px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
+   var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
   console.log("this is fist line!",results["data"][1]);
    for (i = 0; i < results["data"][0].length; i++) {
-  //  text_x += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-  //  text_y += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
-  //  text_z += results["data"][0][i] + ":<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-attributes' style = 'margin-left: 3px; margin-right: 10px;'>";
   type = getType(results["data"][1][i],results["data"][2][i],results["data"][3][i],results["data"][4][i])
-   text_x += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='x-types' style = 'float:right;'>"
-  +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
-  +"<option value=" + results["data"][0][i] + " string'>string</option>"
-  +"<option value=" + results["data"][0][i] + " int'>int</option>"
-  +"<option value=" + results["data"][0][i] + " float'>float</option>"
-  +"</select> </td> </tr>";
-   text_y += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'>" +results["data"][0][i] + ":  <select class='y-types' style = 'float:right;'>"
-   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
-   +"<option value=" + results["data"][0][i] + " string'>string</option>"
-   +"<option value=" + results["data"][0][i] + " int'>int</option>"
-   +"<option value=" + results["data"][0][i] + " float'>float</option>"
+   textAttributeName += "<tr> <td>"  + results["data"][0][i] +
+   "</td> </tr>";
+   textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-right: 3px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 3px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>"
    +"</select> </td></tr>";
-   text_z += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 3px;'>" + results["data"][0][i] + ":  <select class='z-types' style = 'float:right;'>"
+   textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
    +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
    +"<option value=" + results["data"][0][i] + " string'>string</option>"
    +"<option value=" + results["data"][0][i] + " int'>int</option>"
@@ -1470,9 +1462,9 @@ function parseCSV(data) {
    +"</select> </td></tr>";
  }
 
-   $('.x-attributes').html(text_x);
-   $('.y-attributes').html(text_y);
-   $('.z-attributes').html(text_z);
+   $('.x-attributes').html(textAttributeName);
+   $('.y-attributes').html(textAttributeSelection);
+   $('.z-attributes').html(textDataType);
    $('#define-attributes').modal('toggle');
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');
