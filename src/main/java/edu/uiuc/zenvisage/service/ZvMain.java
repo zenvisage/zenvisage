@@ -67,6 +67,8 @@ import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.LinearNormalization;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
 import edu.uiuc.zenvisage.server.DatabaseAutoLoader;
 import edu.uiuc.zenvisage.server.UploadHandleServlet;
@@ -393,6 +395,18 @@ public class ZvMain {
 		System.out.println("Retrieved table list in db:"+retrieved);
 		return retrieved;
 	}
+	
+	public ArrayList<String> getTablelist(String username) throws IOException, SQLException{
+		ArrayList<String> retrieved = sqlQueryExecutor.gettablelist(username);
+		System.out.println("Retrieved table list in db:"+retrieved);
+		return retrieved;
+	}
+	
+    public boolean checkUser(String username, String password) throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+        boolean retrieved = sqlQueryExecutor.checkuser(username, password);
+        System.out.println("Login status:" + retrieved);
+        return retrieved;
+    }
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database

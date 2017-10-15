@@ -17,28 +17,39 @@
     
     <!-- this div contains everything in the body -->
 
-  <!-- <div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
      <div id="loginDialog" class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" align="center">
             <img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
           </div>
           <div class="modal-body">
-              <div class="form-group">
-                <label>Username:</label><input type="text" id="username" class="form-control input-lg">
-              </div>
-              <div class="form-group">
-                <label>Password:</label><input type="password" id="password" class="form-control input-lg">
-              </div>
-              <div class="form-group">
-                <button class="btn btn-primary btn-lg btn-block" id="signIn">Sign In</button>
-              </div>
+              
+              <form id="logInForm" action="/zv/login" method="post">
+              
+                <div class="form-group">
+                  <label>Username:</label><input type="text" id="username" class="form-control input-lg" name="uname">
+                </div>
+                <div class="form-group">
+                  <label>Password:</label><input type="password" id="password" class="form-control input-lg" name="pass">
+                </div>
+                <div class="form-group">
+                
+                <input type="submit" class="btn btn-primary btn-lg btn-block" id="signIn" value="Sign In">
+                  
+                </div>
+
+              </form>
+              
+              <button class="btn btn-primary btn-lg btn-block" id="login_cancel">Cancel</button>
+
            </div>
           <div class="modal-footer"></div>
         </div>
      </div>
   </div>
- -->
+
+
     <div id="everything">
 
       <div id="popup" class="modal fade bd-example-modal-sm">
@@ -385,13 +396,13 @@
                 <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
                 <div ng-show="zqltable">
                   <div class="btn-group">
-					<a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Weather</a>
+          <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Weather</a>
                     <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
                     <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
                      <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
                     <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button> -->
-					<a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Real Estate</a>
+          <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Real Estate</a>
                     <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
                     <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
                     <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>

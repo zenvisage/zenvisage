@@ -37,6 +37,8 @@ import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.model.AxisVariables;
 import edu.uiuc.zenvisage.service.ZvMain;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
 
 @Controller
 public class ZvBasicAPI {
@@ -48,6 +50,19 @@ public class ZvBasicAPI {
     public ZvBasicAPI(){
 
 	}
+    
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+	@ResponseBody
+    	public ArrayList<String> doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+    		String uname = request.getParameter("uname");
+    		String pass = request.getParameter("pass");
+    		zvMain = new ZvMain();
+    		if(zvMain.checkUser(uname, pass)) {
+    			return zvMain.getTablelist(uname);
+    		}else {
+    			return null;
+    		}
+    	}
     
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody

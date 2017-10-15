@@ -23,6 +23,10 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.model.ClassElement;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
+
 import java.util.Arrays;
 
 /**
@@ -102,7 +106,7 @@ public class SQLQueryExecutor {
 	
 	public ArrayList<String> gettablelist() throws SQLException {
 		Statement stmt = c.createStatement();
-		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation'";
+		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation' AND table_name != 'users' AND table_name != 'users_tables'";		
 		ResultSet rs = stmt.executeQuery(sql);
 		ArrayList<String> tablelist = new ArrayList<String>();
 		while ( rs.next() ) {
@@ -111,6 +115,39 @@ public class SQLQueryExecutor {
 		}
         return tablelist;
 	}
+	
+	
+	public ArrayList<String> gettablelist(String username) throws SQLException {
+		Statement stmt = c.createStatement();
+		String sql = "SELECT tables FROM users_tables WHERE users = 'public' OR users ='"+username+"'";
+		ResultSet rs = stmt.executeQuery(sql);
+		ArrayList<String> tablelist = new ArrayList<String>();
+		while ( rs.next() ) {
+            String tablename = rs.getString("tables");
+            tablelist.add(tablename);
+		}
+        return tablelist;
+	}
+	
+	
+    public boolean checkuser(String username, String password) throws SQLException, CannotPerformOperationException, InvalidHashException {
+        Statement stmt = c.createStatement();
+        String sql = "SELECT id, password FROM users WHERE id='" + username + "'";
+//        System.out.println(sql);
+        ResultSet rs = stmt.executeQuery(sql);
+        if(rs.next()) {
+	        if(PasswordStorage.verifyPassword(password, rs.getString("password"))) {	
+	                stmt.close();
+	                System.out.println("Login Succeed");
+	                return true;
+	        	}
+        }
+        stmt.close();
+        System.out.println("Login Failed");
+        return false;
+    }
+    
+    
 	
 
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{

@@ -929,6 +929,10 @@ app.controller('datasetController', [
       );
     };
 
+    $scope.updatetablelist = function updatetablelist(args){
+      // datasetInfo.storetablelist(args);
+      $scope.tablelist = args;
+    }
 
     $scope.chartSettings = ChartSettings;
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
