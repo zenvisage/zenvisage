@@ -417,9 +417,11 @@ app.factory('plotResults', function() {
     return plottingService;
 });
 
-app.controller('options-controller', [
-  '$scope', '$rootScope', '$http','datasetInfo',  'ChartSettings', '$compile',
-  function($scope, $rootScope, $http,datasetInfo, ChartSettings, $compile){
+// populates and controls the dataset attributes on the left-bar
+// does not dynamically adjust to change in dataset yet
+app.controller('datasetController', [
+    '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
+    function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
     $scope.similarity = 'Euclidean';
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
@@ -901,27 +903,21 @@ app.controller('options-controller', [
     }
 
     $scope.callGetUserQueryResults = function() {
-
-      $rootScope.$broadcast("callGetUserQueryResults", {});
+      //$rootScope.$broadcast("callGetUserQueryResults", {});
+      $scope.getUserQueryResults();
     }
 
     $scope.callgetRepresentativeTrends = function() {
-      $rootScope.$broadcast("callgetRepresentativeTrends", {});
+      //$rootScope.$broadcast("callgetRepresentativeTrends", {});
+      $scope.getRepresentativeTrendsWithoutCallback()
     }
 
     $scope.callGetUserQueryResultsWithCallBack = function() {
-      $rootScope.$broadcast("callGetUserQueryResultsWithCallBack", {});
+      //$rootScope.$broadcast("callGetUserQueryResultsWithCallBack", {});
+      $scope.getUserQueryResultsWithCallBack();
     }
 
-}]);
-
-
-
-// populates and controls the dataset attributes on the left-bar
-// does not dynamically adjust to change in dataset yet
-app.controller('datasetController', [
-  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
-  function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
+// merged options and dataset controllers
 
     $scope.inittablelist = function () {
       $http.get('/zv/gettablelist'
@@ -945,7 +941,7 @@ app.controller('datasetController', [
       $scope.tablelist = args;
     }
 
-    $scope.chartSettings = ChartSettings;
+    //$scope.chartSettings = ChartSettings;
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
     {
 
