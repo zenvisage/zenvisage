@@ -259,12 +259,6 @@ app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResu
         function (response) {
             console.log("success: ", response);
             var userQueryResults = response.data.outputCharts;
-            if (userQueryResults.length != 0) {
-                var xAxis = replaceAll(userQueryResults[0]["xType"], "'", "");
-                var yAxis = replaceAll(userQueryResults[0]["yType"], "'", "");
-                var zAttribute = replaceAll(userQueryResults[0]["zType"], "'", "");
-                $rootScope.$broadcast('updateAxes', xAxis, yAxis, zAttribute);
-            }
             plotResults.displayUserQueryResults(userQueryResults, false);
         },
         function (response) {
@@ -309,12 +303,6 @@ app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResu
         function (response) {
             console.log("success: ", response);
             var userQueryResults = response.data.outputCharts;
-            if (userQueryResults.length != 0) {
-                var xAxis = replaceAll(userQueryResults[0]["xType"], "'", "");
-                var yAxis = replaceAll(userQueryResults[0]["yType"], "'", "");
-                var zAttribute = replaceAll(userQueryResults[0]["zType"], "'", "");
-                $rootScope.$broadcast('updateAxes', xAxis, yAxis, zAttribute);
-            }
             plotResults.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
