@@ -5,7 +5,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
 
   $scope.AxisInfo = [];
 
-  $rootScope.$on("callLoadAxisInfo", function(){
+  $scope.$on("callLoadAxisInfo", function(){
     $scope.loadAxisInfo();
   });
 
@@ -58,7 +58,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
 app.controller('classInfoController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.classes = ["test1", "test2"];
-  $rootScope.$on("callGetClassInfo", function(){
+  $scope.$on("callGetClassInfo", function(){
     $scope.getClassInfo();
   });
 
@@ -902,15 +902,15 @@ app.controller('options-controller', [
 
     $scope.callGetUserQueryResults = function() {
 
-      $rootScope.$emit("callGetUserQueryResults", {});
+      $rootScope.$broadcast("callGetUserQueryResults", {});
     }
 
     $scope.callgetRepresentativeTrends = function() {
-      $rootScope.$emit("callgetRepresentativeTrends", {});
+      $rootScope.$broadcast("callgetRepresentativeTrends", {});
     }
 
     $scope.callGetUserQueryResultsWithCallBack = function() {
-      $rootScope.$emit("callGetUserQueryResultsWithCallBack", {});
+      $rootScope.$broadcast("callGetUserQueryResultsWithCallBack", {});
     }
 
 }]);
@@ -969,12 +969,12 @@ app.controller('datasetController', [
     }
 
     $scope.callLoadAxisInfo = function() {
-      $rootScope.$emit("callLoadAxisInfo", {});
+      $rootScope.$broadcast("callLoadAxisInfo", {});
     }
 
     $scope.callGetClassInfo = function() {
       log.info("show dynamic class info")
-      $rootScope.$emit("callGetClassInfo", {});
+      $rootScope.$broadcast("callGetClassInfo", {});
     }
 
     $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()
@@ -1380,15 +1380,15 @@ app.controller('datasetController', [
 
 
 
-    $rootScope.$on("callGetUserQueryResultsWithCallBack", function(){
+    $scope.$on("callGetUserQueryResultsWithCallBack", function(){
       $scope.getUserQueryResultsWithCallBack();
     });
 
-    $rootScope.$on("callGetUserQueryResults", function(){
+    $scope.$on("callGetUserQueryResults", function(){
       $scope.getUserQueryResults();
     });
 
-    $rootScope.$on("callgetRepresentativeTrends", function(){
+    $scope.$on("callgetRepresentativeTrends", function(){
       $scope.getRepresentativeTrendsWithoutCallback();
     });
 
