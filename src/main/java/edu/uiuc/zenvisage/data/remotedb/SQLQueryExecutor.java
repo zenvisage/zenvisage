@@ -1,5 +1,8 @@
 package edu.uiuc.zenvisage.data.remotedb;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -22,6 +25,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
 import edu.uiuc.zenvisage.api.Readconfig;
+import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.model.ClassElement;
 import edu.uiuc.zenvisage.service.utility.PasswordStorage;
 import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
@@ -471,30 +475,39 @@ public class SQLQueryExecutor {
 	}
 	
 	public void insertTable2(String tablename, String fileName) throws SQLException{
-//		StringBuilder sql = new StringBuilder("COPY ");
-		String tableAttributes = getTableAttributes(tablename);
-//		sql.append(tableAttributes);	
-//		sql.append(" FROM '"+ fileName +"' DELIMITER ',' CSV HEADER;");
-//		System.out.println("sql used to upload csv file:"+sql.toString());
-//	    Statement stmt = c.createStatement();
-//	    stmt.executeUpdate(sql.toString());
-//	    stmt.close();
-		StringBuilder sql = new StringBuilder();
-	    sql.append("CREATE TEMP TABLE tmp COPY tmp FROM '"+ fileName + "'; ");
-	    System.out.println(sql.toString());
-	    Statement stmt = c.createStatement();
-	    stmt.executeUpdate(sql.toString());
-	    
-
-	   sql = new StringBuilder("INSERT INTO " + tablename + 
-			   "SELECT "+ tableAttributes.substring(tablename.length()+1,tableAttributes.length()-1) +" FROM tmp;");
-	   System.out.println(sql.toString());
-	   stmt.executeUpdate(sql.toString());
-	   sql = new StringBuilder("DELETE FROM tmp;");
-	   System.out.println(sql.toString());
-	   stmt.executeUpdate(sql.toString());
-	 
+	  String tableAttributes = getTableAttributes(tablename);
+	  StringBuilder sql = new StringBuilder();
+//	  sql.append("COPY " + tablename '"+ fileName + "'; ");
+	  System.out.println(sql.toString());
+	  Statement stmt = c.createStatement();
+	  stmt.executeUpdate(sql.toString());
 	}
+	
+	
+    public void loadData1(String datafilename) throws IOException, SQLException{
+	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
+		String line;
+		line = bufferedReader.readLine();
+		String[] header=line.split(",");
+		for(int i=0;i<header.length;i++){
+			header[i]=header[i].toLowerCase().replaceAll("-", "");
+		}
+		int count=0;
+		String[] terms;
+		while ((line = bufferedReader.readLine()) != null){
+			terms=line.split(",");
+	        count=count+1;
+		}
+		//set min, max value for each of the column in database
+		for(int i=0;i<header.length;i++){
+//			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+//				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+//				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+//				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
+//			}
+		}
+		bufferedReader.close();
+    }
 	
 	public String getTableAttributes(String tablename) throws SQLException{
 		StringBuilder sql = new StringBuilder("select column_name from information_schema.columns where table_name = '"+ tablename+"'");
