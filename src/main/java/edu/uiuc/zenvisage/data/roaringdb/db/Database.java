@@ -30,7 +30,8 @@ public class Database {
 	public Database(String name,String schemafilename,String datafilename, boolean firstTime) throws IOException, InterruptedException, SQLException{
 		this.name=name;
 		this.databaseMetaData.dataset = name;
-		readSchema(schemafilename);
+		//readSchema(schemafilename);
+		readSchemaFromMetaTable(name);
 		if(firstTime)
 			loadData0(datafilename);
 		else

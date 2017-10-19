@@ -6,10 +6,10 @@ public class VariableMeta {
 	private boolean selectedX;
 	private boolean selectedY;
 	private boolean selectedZ;
-	private float min;
-	private float max;
+	private Float min;
+	private Float max;
 	public VariableMeta(String attribute, String type, boolean selectedX, boolean selectedY, 
-			boolean selectedZ, float min, float max){
+			boolean selectedZ, Float min, Float max){
 		this.attribute = attribute;
 		this.type = type;
 		this.selectedX = selectedX;
@@ -54,10 +54,10 @@ public class VariableMeta {
 	public void setMin(float min) {
 		this.min = min;
 	}
-	public float getMax() {
+	public Float getMax() {
 		return max;
 	}
-	public void setMax(float max) {
+	public void setMax(Float max) {
 		this.max = max;
 	}
 }

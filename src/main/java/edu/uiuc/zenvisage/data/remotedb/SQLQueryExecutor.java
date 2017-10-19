@@ -584,10 +584,17 @@ public class SQLQueryExecutor {
 		ResultSet rs = st.executeQuery(sql);
 		ArrayList<VariableMeta> ret = new ArrayList<>();
 		while(rs.next()){
+			String vMinS = rs.getString(6);
+			String vMaxS = rs.getString(7);
+			Float vMin = null;
+			if(vMinS != null)
+			  vMin= Float.parseFloat(vMinS);
+			Float vMax = null;
+			if(vMinS != null)
+			  vMax = Float.parseFloat(vMaxS);
 			ret.add(new VariableMeta(rs.getString(1),rs.getString(2), 
-					Boolean.parseBoolean(rs.getString(3)),Boolean.parseBoolean(rs.getString(4)),
-					Boolean.parseBoolean(rs.getString(5)),Float.parseFloat(rs.getString(6)),
-					Float.parseFloat(rs.getString(7))));
+					rs.getBoolean(3),rs.getBoolean(4),
+				    rs.getBoolean(5),vMin,vMax));
 		}
 		return ret;
 	}

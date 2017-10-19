@@ -923,7 +923,6 @@ public class ZvMain {
 				//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
 		//executor = new Executor(inMemoryDatabase);
-		
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
 		System.out.println("BUFFER:" +buffer);
