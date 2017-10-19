@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
@@ -53,12 +54,28 @@ public class ZvBasicAPI {
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-    	public ArrayList<String> doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+    	public Map<String, ArrayList<String>> login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
     		String uname = request.getParameter("uname");
     		String pass = request.getParameter("pass");
     		zvMain = new ZvMain();
     		if(zvMain.checkUser(uname, pass)) {
-    			return zvMain.getTablelist(uname);
+    			return zvMain.userinfo(uname);
+    		}else {
+    			return null;
+    		}
+    	}
+    
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+	@ResponseBody
+    	public Map<String, ArrayList<String>> register(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+    		String uname = request.getParameter("uname");
+    		String pass = request.getParameter("pass");
+    		if(uname == "" || pass=="") {
+    			return null;
+    		}
+    		zvMain = new ZvMain();
+    		if(zvMain.register(uname, pass)) {
+    			return zvMain.userinfo(uname);
     		}else {
     			return null;
     		}
@@ -71,6 +88,7 @@ public class ZvBasicAPI {
 		try {
 		logQueries("fileUpload",request,"");
 		zvMain.fileUpload(request, response);
+//		zvMain.updateUTtables();
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {

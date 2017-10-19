@@ -120,17 +120,22 @@ public class SQLQueryExecutor {
         return tablelist;
 	}
 	
-	
-	public ArrayList<String> gettablelist(String username) throws SQLException {
+	public Map<String, ArrayList<String>> userinfo(String username) throws SQLException {
 		Statement stmt = c.createStatement();
 		String sql = "SELECT tables FROM users_tables WHERE users = 'public' OR users ='"+username+"'";
 		ResultSet rs = stmt.executeQuery(sql);
+		Map<String, ArrayList<String>> info = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> tablelist = new ArrayList<String>();
+		ArrayList<String> username_info = new ArrayList<String>();
+//		ArrayList<String> userrole_info = new ArrayList<String>();
+		username_info.add(username);
+		info.put	("username", username_info);
 		while ( rs.next() ) {
             String tablename = rs.getString("tables");
             tablelist.add(tablename);
 		}
-        return tablelist;
+		info.put("tablelist", tablelist);
+        return info;
 	}
 	
 	
@@ -141,7 +146,7 @@ public class SQLQueryExecutor {
         ResultSet rs = stmt.executeQuery(sql);
         if(rs.next()) {
 	        if(PasswordStorage.verifyPassword(password, rs.getString("password"))) {	
-	                stmt.close();
+	        			stmt.close();
 	                System.out.println("Login Succeed");
 	                return true;
 	        	}
@@ -149,6 +154,27 @@ public class SQLQueryExecutor {
         stmt.close();
         System.out.println("Login Failed");
         return false;
+    }
+    
+    public boolean register(String username, String password) throws SQLException, CannotPerformOperationException {
+    		Statement stmt = c.createStatement();
+    		
+    		String sqlfinduser = "SELECT id FROM users WHERE id='" + username + "'";
+    		ResultSet rs = stmt.executeQuery(sqlfinduser);
+    		if(rs.next()) {
+    			System.out.println("User exists, please login");
+    			stmt.close();
+    			return false;
+    		}
+    		else {
+    			String hashedpass = PasswordStorage.createHash(password);
+        		String sql = "INSERT INTO users (id,password) VALUES ('"+username+"','"+hashedpass+"')";
+            System.out.println(sql);
+            stmt.execute(sql);
+            System.out.println("Register successfully");
+            stmt.close();
+            return true;
+    		}
     }
     
     

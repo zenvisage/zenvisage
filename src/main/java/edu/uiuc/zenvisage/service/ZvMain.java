@@ -400,9 +400,9 @@ public class ZvMain {
 		return retrieved;
 	}
 	
-	public ArrayList<String> getTablelist(String username) throws IOException, SQLException{
-		ArrayList<String> retrieved = sqlQueryExecutor.gettablelist(username);
-		System.out.println("Retrieved table list in db:"+retrieved);
+	public Map<String, ArrayList<String>> userinfo(String username) throws IOException, SQLException{
+		Map<String, ArrayList<String>> retrieved = sqlQueryExecutor.userinfo(username);
+		System.out.println("Retrieved userinfo in db:"+retrieved);
 		return retrieved;
 	}
 	
@@ -411,6 +411,13 @@ public class ZvMain {
         System.out.println("Login status:" + retrieved);
         return retrieved;
     }
+    
+    public boolean register(String username, String password) throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+        boolean retrieved = sqlQueryExecutor.register(username, password);
+        System.out.println("Registration status:" + retrieved);
+        return retrieved;
+    }
+    
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database
