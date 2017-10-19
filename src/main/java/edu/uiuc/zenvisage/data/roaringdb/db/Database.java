@@ -15,7 +15,7 @@ import java.util.Map;
 import org.roaringbitmap.RoaringBitmap;
 import edu.uiuc.zenvisage.data.roaringdb.db.Column;
 import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
-
+import edu.uiuc.zenvisage.model.VariableMeta;
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import  edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
@@ -30,7 +30,8 @@ public class Database {
 	public Database(String name,String schemafilename,String datafilename, boolean firstTime) throws IOException, InterruptedException, SQLException{
 		this.name=name;
 		this.databaseMetaData.dataset = name;
-		readSchema(schemafilename);
+		//readSchema(schemafilename);
+		readSchemaFromMetaTable(name);
 		if(firstTime)
 			loadData0(datafilename);
 		else
@@ -106,13 +107,35 @@ public class Database {
 
 		bufferedReader.close();
 	}
+	
+	private void readSchemaFromMetaTable(String tableName) throws IOException, InterruptedException, SQLException{
+     SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+	 while(!sqlQueryExecutor.isTableExists(tableName)){
+	   Thread.sleep(1000); 
+	 }
+	 List<VariableMeta> variableMetas = sqlQueryExecutor.getVariableMetaInfo(tableName);
+	 for (VariableMeta variableMeta: variableMetas){
+		 ColumnMetadata columnMetadata= new ColumnMetadata();
+		 columnMetadata.name=variableMeta.getAttribute().toLowerCase().replaceAll("-", "");
+		 columnMetadata.isIndexed=true;
+		 columnMetadata.dataType=variableMeta.getType();
+		 columnMetadata.columnType=variableMeta.getType();
 
+	     if(variableMeta.isSelectedX()){
+	    	 databaseMetaData.xAxisColumns.put(columnMetadata.name,columnMetadata);
+	     }
+	     if(variableMeta.isSelectedY()){
+	    	 databaseMetaData.yAxisColumns.put(columnMetadata.name,columnMetadata);
+	     }
 
+	     if(variableMeta.isSelectedZ()){
+	    	 databaseMetaData.zAxisColumns.put(columnMetadata.name,columnMetadata);
+	     }
+	     new Column(columnMetadata, this);
+	  }
+	}
 
     public void loadData0(String datafilename) throws IOException, SQLException{
-//      	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
-
-//       	InputStream is = getClass().getResourceAsStream(datafilename);
        	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 		String line;
 		line = bufferedReader.readLine();

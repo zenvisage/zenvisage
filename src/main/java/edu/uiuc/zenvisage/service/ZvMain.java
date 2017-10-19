@@ -132,11 +132,11 @@ public class ZvMain {
 		uploadDatasettoDB2(names,true);
 	}
 	
-	public void insertZenvisageMetatable(AxisVariables axisVariables) throws SQLException, IOException{
+	public void insertZenvisageMetatable(Variables variables) throws SQLException, IOException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
-		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream2(axisVariables);
+		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream3(variables);
 		
-		if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  axisVariables.getDatasetName())){
+		if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  variables.getDatasetName())){
 			System.out.println("MetaType Data successfully inserted into Postgres");
 		} else {
 			System.out.println("MetaType already exists!");
@@ -923,7 +923,6 @@ public class ZvMain {
 				//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
 		//executor = new Executor(inMemoryDatabase);
-		
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
 		System.out.println("BUFFER:" +buffer);

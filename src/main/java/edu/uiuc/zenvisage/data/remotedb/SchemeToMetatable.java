@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uiuc.zenvisage.model.AxisVariables;
+import edu.uiuc.zenvisage.model.Variable;
+import edu.uiuc.zenvisage.model.Variables;
 
 public class SchemeToMetatable {
 	
@@ -78,13 +80,18 @@ public class SchemeToMetatable {
 		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
 		
 	   	BufferedReader br = new BufferedReader(new FileReader(filePath));
-		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type) VALUES ");
+		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type, selectedX, selectedY, selectedZ) VALUES ");
 		String sCurrentLine;
 		while ((sCurrentLine = br.readLine()) != null) {
 //			System.out.println(sCurrentLine);
 			String split1[] = sCurrentLine.split(":");
 			String split2[] = split1[1].split(",");
-			sql.append("('" + tablename + "', '" + split1[0].toLowerCase().replaceAll("-", "") + "', '" + split2[0] + "'), ");
+			sql.append("('" + tablename + "', '" + split1[0].toLowerCase().replaceAll("-", "") 
+					+ "', '" + split2[0] + "', "
+			+ (split2[2].equals("T")?"True":"False") + ", " 
+			+ (split2[3].equals("T")?"True":"False") + ", " 
+			+ (split2[4].equals("T")?"True":"False")
+			+ "), ");
 			createTableSQLBuilder.append(split1[0].toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(split2[0]) + ", ");
 			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
@@ -143,6 +150,43 @@ public class SchemeToMetatable {
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 			tableAttributes.append(attribute.toLowerCase().toLowerCase().replaceAll("-", ""));
 			tableAttributes.append(",");
+		}
+		
+		tableAttributes.deleteCharAt(tableAttributes.length()-1);
+		tableAttributes.append(")");
+		
+		//Adding dynamic_class column
+		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
+				
+		sql.replace(sql.length()-2, sql.length(), ";");
+		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");
+		 
+		System.out.println("this.createTableSQL:"+this.createTableSQL);
+
+		return new String[]{sql.toString(),createTableSQLBuilder.toString(),tableAttributes.toString()};
+	}
+	
+	/*Base on schema input from front-end, create database and insert variables into metadatatable
+	 *First return is the metadatatable insert sql
+	 *Second return is the new csv database create sql
+	 */
+	public String[] schemeFileToMetaSQLStream3(Variables variables) throws IOException{
+
+		String tablename = variables.getDatasetName().toLowerCase();
+		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
+		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
+		StringBuilder tableAttributes = new StringBuilder();
+		
+		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type, xAxis, yAxis, zAxis) VALUES ");
+		
+		List<Variable> list = variables.getVariables();
+		for(int i = 0; i < list.size(); i++) {
+			Variable v = list.get(i);
+			String attribute = v.getName();
+			String type = v.getType();
+			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" 
+			+ v.isSelectedX() + "'), " + v.isSelectedY() + "'), " + v.isSelectedZ() + "'), ");
+			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 		}
 		
 		tableAttributes.deleteCharAt(tableAttributes.length()-1);
