@@ -24,6 +24,7 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
+import edu.uiuc.zenvisage.model.VariableMeta;
 import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.model.ClassElement;
@@ -500,11 +501,18 @@ public class SQLQueryExecutor {
 	    stmt.close();
 	}
 	
+	/**
+	 * Copy whole CSV table to postgres
+	 * 
+	 * @param tablename
+	 * @param fileName
+	 * @throws SQLException
+	 */
 	public void insertTable2(String tablename, String fileName) throws SQLException{
 	  String tableAttributes = getTableAttributes(tablename);
 	  StringBuilder sql = new StringBuilder();
-//	  sql.append("COPY " + tablename '"+ fileName + "'; ");
-	  System.out.println(sql.toString());
+	  sql.append("COPY " + tablename + " From '"+ fileName + "' DELIMITER ',' CSV HEADER;");
+	  System.out.println("sql used to upload csv file:"+sql.toString());
 	  Statement stmt = c.createStatement();
 	  stmt.executeUpdate(sql.toString());
 	}
@@ -565,6 +573,21 @@ public class SQLQueryExecutor {
 		ArrayList<Attribute> ret = new ArrayList<Attribute>();
 		while(rs.next()){
 			ret.add(new Attribute(rs.getString(1),rs.getString(2),rs.getString(3)));
+		}
+		return ret;
+	}
+	
+	public ArrayList<VariableMeta> getVariableMetaInfo(String tableName) throws SQLException{
+		String sql = "SELECT attribute, type, selectedX, selectedY, selectedZ, "
+				+ "min, max FROM zenvisage_metatable WHERE tablename = " + "'" + tableName + "'";
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		ArrayList<VariableMeta> ret = new ArrayList<>();
+		while(rs.next()){
+			ret.add(new VariableMeta(rs.getString(1),rs.getString(2), 
+					Boolean.parseBoolean(rs.getString(3)),Boolean.parseBoolean(rs.getString(4)),
+					Boolean.parseBoolean(rs.getString(5)),Float.parseFloat(rs.getString(6)),
+					Float.parseFloat(rs.getString(7))));
 		}
 		return ret;
 	}

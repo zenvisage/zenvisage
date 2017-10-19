@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.uiuc.zenvisage.model.DynamicClass;
+import edu.uiuc.zenvisage.model.Variables;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.model.AxisVariables;
 import edu.uiuc.zenvisage.service.ZvMain;
@@ -466,10 +467,12 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/getformdata", method = RequestMethod.GET)
 	@ResponseBody
 	public String getformdata(@RequestParam(value="query") String arg, HttpServletResponse response) {
-//		System.out.println(arg);
+		System.out.println(arg);
 		zvMain = new ZvMain();
 		try {
-		return zvMain.getInterfaceFomData(arg);
+			String ret = zvMain.getInterfaceFomData(arg);
+			System.out.println("get interface form data: " + ret);
+		    return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
@@ -543,11 +546,11 @@ public class ZvBasicAPI {
 	
 	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<AxisVariables> executeSelectXYZ(@RequestBody AxisVariables axisVariables) throws SQLException, IOException {
+	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException {
 		zvMain = new ZvMain();
-		if( axisVariables != null) {
-	      zvMain.insertZenvisageMetatable(axisVariables);
-          System.out.println(axisVariables.toString());
+		if( variables != null) {
+	      zvMain.insertZenvisageMetatable(variables);
+          System.out.println(variables.toString());
         } else {
           System.out.println("axisVariables are null");
         }
