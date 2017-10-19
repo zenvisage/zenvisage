@@ -24,31 +24,34 @@ $('#uploaderForm').on('submit', function(e) {
 // }
 
 $("#define-attributes").on('submit', function(e) {
-  var xList = [];
-  var yList = [];
-  var zList = [];
+     var attributeList =  [];
+     var selectedAxis =  [];
+  // var xList = [];
+  // var yList = [];
+  // var zList = [];
 
   $(".types").each(function(){
       var selectedXOption = $(this).children("option").filter(":selected").text()
-      xList.push($(this).val() + " " + selectedXOption);
-      var selectedYOption = $(this).children("option").filter(":selected").text()
-      yList.push($(this).val() + " " + selectedYOption);
-      var selectedZOption = $(this).children("option").filter(":selected").text()
-      zList.push($(this).val() + " " + selectedZOption);
+      attributeList.push($(this).val() + " " + selectedXOption);
+      selectedAxis.push(["true", "true", "true"])
+      // var selectedYOption = $(this).children("option").filter(":selected").text()
+      // yList.push($(this).val() + " " + selectedYOption);
+      // var selectedZOption = $(this).children("option").filter(":selected").text()
+      // zList.push($(this).val() + " " + selectedZOption);
   });
 
-  var filteredLists = filterUncheckAttributes(xList,yList,zList)
-  xList = filteredLists.x
-  yList = filteredLists.y
-  zList = filteredLists.z
-        console.log("x selected: ", xList);
-        console.log("y selected: ", yList);
-        console.log("z selected: ", zList);
+  var selectedAttributes = filterUncheckAttributes(attributeList,selectedAxis)
+  var selectedAttributesParsed = []
+  for (i = 0; i < selectedAttributes.length; i++) {
+      temp = selectedAttributes[i].split(" ");
+              console.log("final selected: ", temp);
+       selectedAttributesParsed.push({name:temp[0],type:temp[1],selectedX:temp[2],selectedY:temp[3],selectedZ:temp[4]})
+
+  }
+  
   $('#define-attributes').modal('toggle');
 
-
-
-  var xyzQuery = {datasetName:datasetNameInput, x:xList.toString(), y:yList.toString(), z:zList.toString()};
+  var xyzQuery = {datasetName:datasetNameInput, Variables:selectedAttributesParsed};
   console.log(xyzQuery);
   var myObject = JSON.stringify(xyzQuery);
 

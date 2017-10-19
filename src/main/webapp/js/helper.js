@@ -1498,55 +1498,59 @@ function getType(str1,str2,str3,str4){
     }
 }
 }
-function filterUncheckAttributes(x,y,z){
+function filterUncheckAttributes(attributeList,selectedAxis){
+
+  var returnList = [];
 
   $("input:checkbox[name=x-checkbox]:not(:checked)").each(function(){
-    if(x.includes($(this).val() + " " + "float")){
-      var indexFloat = x.indexOf($(this).val() + " " + "float");
-      x.splice(indexFloat, 1);
+    if(attributeList.includes($(this).val() + " " + "float")){
+      var indexFloat = attributeList.indexOf($(this).val() + " " + "float");
+      selectedAxis[indexFloat][0] = "false"
     }
-    if(x.includes($(this).val() + " " + "int")){
-      var indexFloat = x.indexOf($(this).val() + " " + "int");
-      x.splice(indexFloat, 1);
+    if(attributeList.includes($(this).val() + " " + "int")){
+      var indexInt = attributeList.indexOf($(this).val() + " " + "int");
+      selectedAxis[indexInt][0] = "false"
     }
-    if(x.includes($(this).val() + " " + "string")){
-      var indexFloat = x.indexOf($(this).val() + " " + "string");
-      x.splice(indexFloat, 1);
+    if(attributeList.includes($(this).val() + " " + "string")){
+      var indexString = attributeList.indexOf($(this).val() + " " + "string");
+      selectedAxis[indexString][0] = "false"
     }
         //  console.log("testx",x);
     })
   $("input:checkbox[name=y-checkbox]:not(:checked)").each(function(){
-    if(y.includes($(this).val() + " " + "float")){
-      var indexFloat = y.indexOf($(this).val() + " " + "float");
-      y.splice(indexFloat, 1);
+    if(attributeList.includes($(this).val() + " " + "float")){
+      var indexFloat = attributeList.indexOf($(this).val() + " " + "float");
+      selectedAxis[indexFloat][1] = "false"
     }
-    if(y.includes($(this).val() + " " + "int")){
-      var indexFloat = y.indexOf($(this).val() + " " + "int");
-      y.splice(indexFloat, 1);
+    if(attributeList.includes($(this).val() + " " + "int")){
+      var indexInt = attributeList.indexOf($(this).val() + " " + "int");
+      selectedAxis[indexInt][1] = "false"
     }
-    if(y.includes($(this).val() + " " + "string")){
-      var indexFloat = y.indexOf($(this).val() + " " + "string");
-      y.splice(indexFloat, 1);
+    if(attributeList.includes($(this).val() + " " + "string")){
+      var indexString = attributeList.indexOf($(this).val() + " " + "string");
+      selectedAxis[indexString][1] = "false"
     }
-  })
+        //  console.log("testx",x);
+    })
   $("input:checkbox[name=z-checkbox]:not(:checked)").each(function(){
-    if(z.includes($(this).val() + " " + "float")){
-      var indexFloat = z.indexOf($(this).val() + " " + "float");
-      z.splice(indexFloat, 1);
-    }
-    if(z.includes($(this).val() + " " + "int")){
-      var indexFloat = z.indexOf($(this).val() + " " + "int");
-      z.splice(indexFloat, 1);
-    }
-    if(z.includes($(this).val() + " " + "string")){
-      var indexFloat = z.indexOf($(this).val() + " " + "string");
-      z.splice(indexFloat, 1);
-    }
-  })
+      if(attributeList.includes($(this).val() + " " + "float")){
+        var indexFloat = attributeList.indexOf($(this).val() + " " + "float");
+        selectedAxis[indexFloat][2] = "false"
+      }
+      if(attributeList.includes($(this).val() + " " + "int")){
+        var indexInt = attributeList.indexOf($(this).val() + " " + "int");
+        selectedAxis[indexInt][2] = "false"
+      }
+      if(attributeList.includes($(this).val() + " " + "string")){
+        var indexString = attributeList.indexOf($(this).val() + " " + "string");
+        selectedAxis[indexString][2] = "false"
+      }
+          //  console.log("testx",x);
+      })
 
-    return {
-        x: x,
-        y: y,
-        z: z
-    };
+      for (i = 0; i < attributeList.length; i++) {
+          returnList.push(attributeList[i] + " " + selectedAxis[i][0]+ " " + selectedAxis[i][1]+ " " + selectedAxis[i][2])
+      }
+
+    return returnList;
 };
