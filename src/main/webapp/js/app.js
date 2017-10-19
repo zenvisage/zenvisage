@@ -1,4 +1,4 @@
-var app = angular.module('zenvisage', []);
+var app = angular.module('zenvisage', ['ngCookies']);
 var globalDatasetInfo;
 var allAxisColumns;
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
@@ -374,7 +374,7 @@ app.factory('datasetInfo', function() {
   };
 
   datasetService.storetablelist = function( response ) {
-    tablelist = response.data
+    tablelist = response;
   };
 
   datasetService.getCategoryData = function()
@@ -420,8 +420,8 @@ app.factory('plotResults', function() {
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
-    '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
-    function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
+    '$scope', '$rootScope', '$http', '$cookies','datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
+    function($scope, $rootScope, $http, $cookies, datasetInfo, plotResults, scatterService, ChartSettings){
     $scope.similarity = 'Euclidean';
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
@@ -439,6 +439,8 @@ app.controller('datasetController', [
     $scope.selectedSmoothing = "none";
     $scope.minDisplayThresh =0.0;
     // $scope.filter= '';
+
+
 
     $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)
@@ -924,9 +926,17 @@ app.controller('datasetController', [
       ).then(
           function (response) {
             console.log("success: ", response);
-            // $scope.tablelist = response.data
-            datasetInfo.storetablelist(response)
-            $scope.tablelist = datasetInfo.getTablelist()
+            console.log("cookies: ", userinfo);
+
+            var userinfo = $cookies.getObject('userinfo');
+            if(userinfo){
+              // $scope.updatetablelist(userinfo['tablelist']);
+              datasetInfo.storetablelist(userinfo['tablelist'])
+              $scope.tablelist = datasetInfo.getTablelist()
+            }else{
+              datasetInfo.storetablelist(response.data);
+              $scope.tablelist = datasetInfo.getTablelist();
+            }
           },
           function (response) {
             console.log("failed to get table list: ", response);
