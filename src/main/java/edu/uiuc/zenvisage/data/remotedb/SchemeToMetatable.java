@@ -174,10 +174,9 @@ public class SchemeToMetatable {
 
 		String tablename = variables.getDatasetName().toLowerCase();
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
-		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
-		StringBuilder tableAttributes = new StringBuilder();
+		//createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
 		
-		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type, xAxis, yAxis, zAxis) VALUES ");
+		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type, selectedX, selectedY, selectedZ) VALUES ");
 		
 		List<Variable> list = variables.getVariables();
 		for(int i = 0; i < list.size(); i++) {
@@ -185,12 +184,10 @@ public class SchemeToMetatable {
 			String attribute = v.getName();
 			String type = v.getType();
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" 
-			+ v.isSelectedX() + "'), " + v.isSelectedY() + "'), " + v.isSelectedZ() + "'), ");
+			+ typeToPostgresType(type) + "', " + v.isSelectedX() + ", " + 
+					v.isSelectedY() + ", " + v.isSelectedZ() + "), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 		}
-		
-		tableAttributes.deleteCharAt(tableAttributes.length()-1);
-		tableAttributes.append(")");
 		
 		//Adding dynamic_class column
 		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
@@ -198,9 +195,10 @@ public class SchemeToMetatable {
 		sql.replace(sql.length()-2, sql.length(), ";");
 		createTableSQLBuilder.replace(createTableSQLBuilder.length()-2,createTableSQLBuilder.length(), ");");
 		 
-		System.out.println("this.createTableSQL:"+this.createTableSQL);
+		System.out.println("metatable insert sql:"+sql.toString());
+		System.out.println("create csv table sql:"+createTableSQLBuilder.toString());
 
-		return new String[]{sql.toString(),createTableSQLBuilder.toString(),tableAttributes.toString()};
+		return new String[]{sql.toString(),createTableSQLBuilder.toString()};
 	}
 	
 	public String typeToPostgresType(String type){

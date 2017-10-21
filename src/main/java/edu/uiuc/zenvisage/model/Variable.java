@@ -36,4 +36,13 @@ public class Variable {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("{name:"+name+",");
+		sb.append("type:"+type+",");
+		sb.append("selectedX:"+selectedX+",");
+		sb.append("selectedY:"+selectedY+",");
+		sb.append("selectedZ:"+selectedZ+"}");
+		return sb.toString();
+	}
 }

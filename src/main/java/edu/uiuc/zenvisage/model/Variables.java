@@ -21,4 +21,12 @@ public class Variables {
 	public void setDatasetName(String datasetName) {
 		this.datasetName = datasetName;
 	}
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("datasetName:"+datasetName+"\n");
+		for(Variable v: variables){
+			sb.append(v.toString());
+		}
+		return sb.toString();
+	}
 }

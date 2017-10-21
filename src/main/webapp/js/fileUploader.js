@@ -51,7 +51,7 @@ $("#define-attributes").on('submit', function(e) {
   
   $('#define-attributes').modal('toggle');
 
-  var xyzQuery = {datasetName:datasetNameInput, Variables:selectedAttributesParsed};
+  var xyzQuery = {datasetName:datasetNameInput, variables:selectedAttributesParsed};
   console.log(xyzQuery);
   var myObject = JSON.stringify(xyzQuery);
 

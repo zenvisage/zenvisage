@@ -45,7 +45,8 @@ public class SQLQueryExecutor {
 	 * Settings specific to local PSQL database, need to change this!!!!
 	 */
 	private String database = "postgres";
-	private String host = "jdbc:postgresql://localhost:" + Readconfig.getPostgresport() + "/"+database;
+//	private String host = "jdbc:postgresql://localhost:" + Readconfig.getPostgresport() + "/"+database;
+	private String host = "jdbc:postgresql://localhost:5432/"+database;
 	private String username;
 	private String password;
 	Connection c = null;
@@ -509,9 +510,9 @@ public class SQLQueryExecutor {
 	 * @throws SQLException
 	 */
 	public void insertTable2(String tablename, String fileName) throws SQLException{
-	  String tableAttributes = getTableAttributes(tablename);
 	  StringBuilder sql = new StringBuilder();
-	  sql.append("COPY " + tablename + " From '"+ fileName + "' DELIMITER ',' CSV HEADER;");
+	  String tableAttributes = getTableAttributes(tablename);
+	  sql.append("COPY " + tableAttributes + " From '"+ fileName + "' DELIMITER ',' CSV HEADER;");
 	  System.out.println("sql used to upload csv file:"+sql.toString());
 	  Statement stmt = c.createStatement();
 	  stmt.executeUpdate(sql.toString());

@@ -87,9 +87,10 @@ public class ZvBasicAPI {
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) {
 		zvMain = new ZvMain();
 		try {
-		logQueries("fileUpload",request,"");
+//		logQueries("fileUpload",request,"");
 		zvMain.fileUpload(request, response);
 //		zvMain.updateUTtables();
+		System.out.println("uploaded!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
@@ -550,9 +551,9 @@ public class ZvBasicAPI {
 		zvMain = new ZvMain();
 		if( variables != null) {
 	      zvMain.insertZenvisageMetatable(variables);
-          System.out.println(variables.toString());
+          System.out.println("Variables:"+variables.toString());
         } else {
-          System.out.println("axisVariables are null");
+          System.out.println("Variables are null");
         }
 		return null;
 	}
