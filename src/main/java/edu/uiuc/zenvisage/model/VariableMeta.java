@@ -11,7 +11,7 @@ public class VariableMeta {
 	public VariableMeta(String attribute, String type, boolean selectedX, boolean selectedY, 
 			boolean selectedZ, Float min, Float max){
 		this.attribute = attribute;
-		this.type = type;
+		this.type = new String(postgresTypeToJavaType(type));
 		this.selectedX = selectedX;
 		this.selectedY = selectedY;
 		this.selectedZ = selectedZ;
@@ -59,5 +59,18 @@ public class VariableMeta {
 	}
 	public void setMax(Float max) {
 		this.max = max;
+	}
+ 	public String postgresTypeToJavaType(String type){
+ 		type = type.toLowerCase();
+		switch (type){
+			case "real": return "float";
+			case "text": return "string";
+			case "timestamp": return "date";
+			case "float": return "float";
+			case "int": return "int";
+			case "string": return "string";
+			case "date": return "date";
+		}
+		return null;
 	}
 }

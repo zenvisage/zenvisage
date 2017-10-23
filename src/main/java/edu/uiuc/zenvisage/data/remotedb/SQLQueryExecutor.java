@@ -557,6 +557,26 @@ public class SQLQueryExecutor {
 		return ret.toString();
 	}
 	
+	public String[] getTableAttributesInArray(String tablename) throws SQLException{
+		StringBuilder sql = new StringBuilder("select column_name from information_schema.columns where table_name = '"+ tablename+"'");
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql.toString());
+		ArrayList<String> ret = new ArrayList<>();
+		int count = 0;
+		System.out.println("tablename:"+tablename);
+		while(rs.next()){
+			ret.add(rs.getString(1));
+		}
+		String[] retArray = new String[ret.size()];
+		return ret.toArray(retArray);
+	}
+	
+	public ResultSet selectAllFramTable(String tablename) throws SQLException{
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery("select * from "+tablename);
+		return rs;
+	}
+	
 	public void updateMinMax(String tableName, String attribute, float min, float max) throws SQLException{
 		String sql = "UPDATE zenvisage_metatable"+ 
 				" SET min = " + min + ", max = " + max +
@@ -579,7 +599,7 @@ public class SQLQueryExecutor {
 	}
 	
 	public ArrayList<VariableMeta> getVariableMetaInfo(String tableName) throws SQLException{
-		String sql = "SELECT attribute, type, selectedX, selectedY, selectedZ, "
+		String sql = "SELECT attribute, type, selectedx, selectedy, selectedz, "
 				+ "min, max FROM zenvisage_metatable WHERE tablename = " + "'" + tableName + "'";
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);

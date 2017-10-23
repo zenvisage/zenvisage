@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,8 @@ public class Database {
 				loadData0(datafilename);
 			else
 				loadData1(datafilename);
+		}else{
+			loadData2(name);
 		}
 
 		//DatabaseCatalog.addDatabase(name, this);
@@ -116,15 +119,22 @@ public class Database {
 	private void readSchemaFromMetaTable(String tableName) throws IOException, InterruptedException, SQLException{
      SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 	 while(!sqlQueryExecutor.isTableExists(tableName)){
-	   Thread.sleep(1000); 
+	   Thread.sleep(2000); 
 	 }
 	 List<VariableMeta> variableMetas = sqlQueryExecutor.getVariableMetaInfo(tableName);
 	 for (VariableMeta variableMeta: variableMetas){
 		 ColumnMetadata columnMetadata= new ColumnMetadata();
 		 columnMetadata.name=variableMeta.getAttribute().toLowerCase().replaceAll("-", "");
-		 columnMetadata.isIndexed=true;
+		 columnMetadata.isIndexed=false;
 		 columnMetadata.dataType=variableMeta.getType();
-		 columnMetadata.columnType=variableMeta.getType();
+		 columnMetadata.unit = "0";
+		 String columType = "C";
+		 switch(columnMetadata.dataType){
+		   case "float":columType = "Q";break;
+		   case "int":columType = "Q";break;
+		   case "timestamp":columType = "Q";break;
+		 }
+		 columnMetadata.columnType=columType;
 
 	     if(variableMeta.isSelectedX()){
 	    	 databaseMetaData.xAxisColumns.put(columnMetadata.name,columnMetadata);
@@ -140,6 +150,12 @@ public class Database {
 	  }
 	}
 
+	/**
+	 * For loading from temp file without min, max
+	 * @param datafilename
+	 * @throws IOException
+	 * @throws SQLException
+	 */
     public void loadData0(String datafilename) throws IOException, SQLException{
        	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 		String line;
@@ -172,6 +188,12 @@ public class Database {
 		bufferedReader.close();
 	}
 
+	/**
+	 * For loading from temp file wit min, max
+	 * @param datafilename
+	 * @throws IOException
+	 * @throws SQLException
+	 */
     public void loadData1(String datafilename) throws IOException, SQLException{
 	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 		String line;
@@ -202,6 +224,37 @@ public class Database {
 		}
 
 		bufferedReader.close();
+    }
+    
+    /**
+     * for loading from the postgres database
+     * @param datafilename
+     * @throws IOException
+     * @throws SQLException
+     */
+    public void loadData2(String tablename) throws IOException, SQLException{
+    	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+		String[] header=sqlQueryExecutor.getTableAttributesInArray(tablename);
+		int count=0;
+		ResultSet rs = sqlQueryExecutor.selectAllFramTable(tablename);
+		while(rs.next()){
+			//minus away dynamic class, start from 1
+	        for(int i=1;i<header.length;i++){
+	       	     addValue(header[i-1].trim(), count, rs.getString(i));
+	        }
+	        count=count+1;
+		 }
+		this.rowCount=count;
+
+		//set min, max value for each of the column in database,
+		//minus away dynamic class
+		for(int i=1;i<header.length;i++){
+			ColumnMetadata columnMetadata = columns.get(header[i-1]).columnMetadata;
+			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+				sqlQueryExecutor.updateMinMax(name, header[i-1], columnMetadata.min, columnMetadata.max);
+			}
+		}
     }
 
     public RoaringBitmap getColumn(FilterPredicate filterPredicate) {

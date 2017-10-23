@@ -935,9 +935,6 @@ public class ZvMain {
 	public String getInterfaceFomData2(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
 		this.databaseName = fq.getDatabasename();
-		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
-		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
-				//System.out.println(locations[0]+"\n"+locations[1]);
 		inMemoryDatabase = new Database(this.databaseName, null, null, false);
 		//executor = new Executor(inMemoryDatabase);
 		
