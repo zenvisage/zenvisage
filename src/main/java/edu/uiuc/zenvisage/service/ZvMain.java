@@ -938,7 +938,7 @@ public class ZvMain {
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
-		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
+		inMemoryDatabase = new Database(this.databaseName, null, null, false);
 		//executor = new Executor(inMemoryDatabase);
 		
 

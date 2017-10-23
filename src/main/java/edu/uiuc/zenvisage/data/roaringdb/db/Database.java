@@ -32,10 +32,15 @@ public class Database {
 		this.databaseMetaData.dataset = name;
 		//readSchema(schemafilename);
 		readSchemaFromMetaTable(name);
-		if(firstTime)
-			loadData0(datafilename);
-		else
-			loadData1(datafilename);
+		/**
+		 * Separating schemafile read and metatable read
+		 */
+		if(schemafilename != null && datafilename != null){
+			if(firstTime)
+				loadData0(datafilename);
+			else
+				loadData1(datafilename);
+		}
 
 		//DatabaseCatalog.addDatabase(name, this);
 	}

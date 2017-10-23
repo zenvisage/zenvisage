@@ -44,7 +44,10 @@ public class VisualComponentList {
 			for(int j = 0; j < xList.size(); j++) {
 				map.put(new Float(xList.get(j).getNumberValue()), new Float(yList.get(j).getNumberValue()));
 			}
-			output.put(new String(i.getZValue().toString()), map);
+			//System.out.println("zValue:"+i.getZValue());
+			if(i.getZValue()==null || i.getZValue().toString() == null ) continue;
+			String key = new String(i.getZValue().toString());
+			output.put(key, map);
 		}
 		return output;
 	}
