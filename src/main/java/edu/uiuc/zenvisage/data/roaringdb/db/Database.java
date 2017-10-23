@@ -45,7 +45,7 @@ public class Database {
 			loadData2(name);
 		}
 
-		//DatabaseCatalog.addDatabase(name, this);
+		DatabaseCatalog.addDatabase(name, this);
 	}
 
 	public Map<String, Column> getColumns() {
@@ -131,7 +131,7 @@ public class Database {
 		 String columType = "C";
 		 switch(columnMetadata.dataType){
 		   case "float":columType = "Q";break;
-		   case "int":columType = "Q";break;
+		   case "int":columType = "O";break;
 		   case "timestamp":columType = "Q";break;
 		 }
 		 columnMetadata.columnType=columType;
@@ -145,6 +145,7 @@ public class Database {
 
 	     if(variableMeta.isSelectedZ()){
 	    	 databaseMetaData.zAxisColumns.put(columnMetadata.name,columnMetadata);
+	    	 columnMetadata.isIndexed=true;
 	     }
 	     new Column(columnMetadata, this);
 	  }
@@ -238,21 +239,22 @@ public class Database {
 		int count=0;
 		ResultSet rs = sqlQueryExecutor.selectAllFramTable(tablename);
 		while(rs.next()){
-			//minus away dynamic class, start from 1
-	        for(int i=1;i<header.length;i++){
-	       	     addValue(header[i-1].trim(), count, rs.getString(i));
+			//minus away dynamic class, start from 1, and +1 for id
+	        for(int i=1;i<header.length-1;i++){
+	        	//System.out.println("header[i].trim():	"+header[i].trim());
+	       	    addValue(header[i].trim(), count, rs.getString(i+1));
 	        }
 	        count=count+1;
 		 }
 		this.rowCount=count;
 
 		//set min, max value for each of the column in database,
-		//minus away dynamic class
-		for(int i=1;i<header.length;i++){
-			ColumnMetadata columnMetadata = columns.get(header[i-1]).columnMetadata;
+		//minus away dynamic class, start from 1, and +1 for id
+		for(int i=1;i<header.length-1;i++){
+			ColumnMetadata columnMetadata = columns.get(header[i]).columnMetadata;
 			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
 				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
-				sqlQueryExecutor.updateMinMax(name, header[i-1], columnMetadata.min, columnMetadata.max);
+				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
 			}
 		}
     }

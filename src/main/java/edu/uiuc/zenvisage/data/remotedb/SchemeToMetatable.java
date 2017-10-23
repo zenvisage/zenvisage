@@ -174,7 +174,7 @@ public class SchemeToMetatable {
 
 		String tablename = variables.getDatasetName().toLowerCase();
 		StringBuilder createTableSQLBuilder = new StringBuilder("Create table " + tablename + "(");
-		//createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
+		createTableSQLBuilder.append("id SERIAL PRIMARY KEY, ");
 		
 		StringBuffer sql = new StringBuffer("INSERT INTO zenvisage_metatable (tablename, attribute, type, selectedX, selectedY, selectedZ) VALUES ");
 		

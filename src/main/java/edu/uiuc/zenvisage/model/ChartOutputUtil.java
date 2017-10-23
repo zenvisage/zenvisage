@@ -90,7 +90,14 @@ public class ChartOutputUtil {
 ////			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
 //			range = orderedDistances.get(orderedDistances.size()-1);
 //		}
-		double maxDist = orderedDistances.get(Math.min(outputLength-1, args.outlierCount));
+			
+	    int index = Math.min(outputLength-1, args.outlierCount);
+	    if(index >= orderedDistances.size() || index <0){
+	    	index = 0;
+	    }
+		double maxDist = 0;
+		if(orderedDistances!=null && orderedDistances.size()!=0)
+			maxDist = orderedDistances.get(index);
 		//System.out.println("orderedDistances.size():"+Double.toString(orderedDistances.size()));
 		double normDist;
 //		System.out.println("args.isOutputNormalized():"+args.isOutputNormalized());

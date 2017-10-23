@@ -579,6 +579,8 @@ public class ZvMain {
 		 System.out.println("After SQL");
 		 
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+		 System.out.println("output size:"+output.size());
+	
 		 System.out.println("After To HashMap");
 		 output = cleanUpDataWithAllZeros(output);
 		 
@@ -695,6 +697,9 @@ public class ZvMain {
 		 if (args.getDownload() && method.equals("RepresentativeTrends")){
 			 analysis.download(output, normalizedgroups, args);
 		 }else{
+			 System.out.println("computer analysis using output, normalizedgroups, args");
+			 System.out.println("output size:"+output.size());
+			 System.out.println("normalizedgroups length:"+normalizedgroups.length);
 			 analysis.compute(output, normalizedgroups, args);
 		 }
 		 

@@ -549,6 +549,7 @@ public class SQLQueryExecutor {
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql.toString());
 		StringBuilder ret = new StringBuilder(tablename+"(");
+		rs.next();//skip id
 		while(rs.next()){
 			ret.append(rs.getString(1)+",");
 		}
