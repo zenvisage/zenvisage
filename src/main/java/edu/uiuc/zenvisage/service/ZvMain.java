@@ -420,6 +420,12 @@ public class ZvMain {
         return retrieved;
     }
     
+    public boolean insertUserTablePair(String username, String tablename) throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+        boolean retrieved = sqlQueryExecutor.insertusertablepair(username, tablename);
+        System.out.println("User table pair inserted:" + retrieved);
+        return retrieved;
+    }
+    
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database

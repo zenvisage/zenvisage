@@ -100,6 +100,19 @@ public class ZvBasicAPI {
 			}
 		}
 	}
+	
+    @RequestMapping(value = "/insertUserTablePair", method = RequestMethod.POST)
+	@ResponseBody
+    	public boolean insertUserTablePair(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+    		String uname = request.getParameter("username");
+    		String tname = request.getParameter("datasetName");
+    		zvMain = new ZvMain();
+    		if(zvMain.insertUserTablePair(uname,tname)) {
+    			return true;
+    		}else {
+    			return false;
+    		}
+    	}
 
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody

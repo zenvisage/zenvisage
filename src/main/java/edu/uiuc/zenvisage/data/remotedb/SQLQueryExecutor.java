@@ -179,8 +179,15 @@ public class SQLQueryExecutor {
     		}
     }
     
+	public boolean insertusertablepair(String username, String tablename) throws SQLException {
+    	Statement stmt = c.createStatement();
+    		String sql = "INSERT INTO users_tables (users,tables) VALUES ('"+username+"','"+tablename+"')";
+        stmt.execute(sql);
+        System.out.println("Insert user table pair successfully");
+        stmt.close();
+		return true;
+    }
     
-	
 
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
