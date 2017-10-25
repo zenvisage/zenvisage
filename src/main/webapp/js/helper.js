@@ -1438,7 +1438,7 @@ function autoSelect(source,type) {
 
 function parseCSV(data) {
  Papa.parse(data.get("csv"), {
- preview: 5,
+ preview: 7000,
  complete: function(results){
    var textAttributeName = "<tr> <td> Select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
    var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
@@ -1446,7 +1446,8 @@ function parseCSV(data) {
    var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
   console.log("this is fist line!",results["data"][1]);
    for (i = 0; i < results["data"][0].length; i++) {
-  type = getType(results["data"][1][i],results["data"][2][i],results["data"][3][i],results["data"][4][i])
+   previewRow = results["data"].map(function(value,index) { return value[i]; })
+   type = getType(previewRow)
    textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + results["data"][0][i] +
    "</div></td> </tr>";
    textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
@@ -1469,22 +1470,27 @@ function parseCSV(data) {
  }
 });
 
-function getType(str1,str2,str3,str4){
+function getType(previewRow){
     var results = [];
-    str1 = str1.toString();
-    str2 = str2.toString();
-    str3 = str3.toString();
-    str4 = str4.toString();
-    var nan = isNaN(Number(str1));
+    var nan = isNaN(Number(previewRow[1]));
+    console.log(nan);
     // var isfloat = /^\d*(\.|,)\d*$/;
     // var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
     // var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
     // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
     // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
     // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
-    if (!nan){
-        if (parseFloat(str1) === parseInt(str1) && parseFloat(str2) === parseInt(str2) && parseFloat(str3) === parseInt(str3) && parseFloat(str4) === parseInt(str4)) return "int";
-        else return "float";
+    // console.log(previewRow.length);
+      if (!nan){
+      var retval = "int"
+      console.log(previewRow[2]);
+      for (var i = 1; i < previewRow.length; i++) {
+        console.log(i);
+        if (parseFloat(previewRow[i]) !== parseInt(previewRow[i])){
+          return "float"
+        };
+      }
+      return retval;
     }
       // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
       // // else if (date.test(str)) return "date";
@@ -1493,6 +1499,7 @@ function getType(str1,str2,str3,str4){
         // else if (phone.test(str)) return "phone";
         return "string";
     }
+
 }
 }
 function filterUncheckAttributes(attributeList,selectedAxis){
