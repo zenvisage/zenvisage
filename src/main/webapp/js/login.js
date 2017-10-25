@@ -8,10 +8,14 @@
       $('#loginModal').modal('hide');
     });
 
-    $(window).on('load', function() {
-      if(!$cookies.getObject("userinfo")){
-        $('#loginModal').modal('show');
-      }
+    $("#loginmodaltrigger").on('click',function(e){
+      // $(window).on('load', function() {
+        if(!$cookies.getObject("userinfo")){
+          $('#loginModal').modal('show');
+        }else{
+          alert("You have signed in")
+        }
+      // })
     })
 
     $("#signIn").on('click',function(e){
