@@ -283,6 +283,13 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
               .attr("transform", "translate(0," + trans + ")")
               .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
             }  // for formatting all year x axis ticks except hardcoded real estate dataset
+            else{
+              graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(5, "s"));
+
+            }
       }
 
       if (deltaSimilarityDistance!=0){
@@ -712,7 +719,13 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
           } // for formatting all year x axis ticks except hardcoded real estate dataset
+          else{
+            graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(5, "s"));
 
+          }
     }
 
 
@@ -1014,6 +1027,13 @@ function displayOutlierResultsHelper( outlierResults )
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
           } // for formatting all year x axis ticks except hardcoded real estate dataset
+          else{
+            graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(5, "s"));
+
+          }
     }
 
     //}
