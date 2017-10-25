@@ -583,7 +583,6 @@ public class ZvMain {
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
 		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
 		 System.out.println("After SQL");
-		 
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 System.out.println("output size:"+output.size());
 	

@@ -10,7 +10,6 @@ public class VisualComponentList {
 	private String ztype;
 	private String xType;
     private String ytype;
-    private boolean noagg;
 	public ArrayList<VisualComponent> visualComponentList;
     public HashMap<String,VisualComponent> ZToVisualComponents = new HashMap<>();
 	
@@ -45,7 +44,7 @@ public class VisualComponentList {
 				map.put(new Float(xList.get(j).getNumberValue()), new Float(yList.get(j).getNumberValue()));
 			}
 			//System.out.println("zValue:"+i.getZValue());
-			if(i.getZValue()==null || i.getZValue().toString() == null ) continue;
+//			if(i.getZValue()==null || i.getZValue().toString() == null ) continue;
 			String key = new String(i.getZValue().toString());
 			output.put(key, map);
 		}

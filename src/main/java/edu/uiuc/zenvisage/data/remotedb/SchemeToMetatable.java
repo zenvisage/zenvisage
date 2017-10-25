@@ -184,7 +184,7 @@ public class SchemeToMetatable {
 			String attribute = v.getName();
 			String type = v.getType();
 			sql.append("('" + tablename + "', '" + attribute.toLowerCase().replaceAll("-", "") + "', '" 
-			+ typeToPostgresType(type) + "', " + v.isSelectedX() + ", " + 
+			+ type + "', " + v.isSelectedX() + ", " + 
 					v.isSelectedY() + ", " + v.isSelectedZ() + "), ");
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 		}

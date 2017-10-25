@@ -314,7 +314,6 @@ public class SQLQueryExecutor {
 		
 		System.out.println("Finished SQL Execution");
 
-		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
 		ArrayList <WrapperType> yList = null;
 		VisualComponent tempVisualComponent = null;
@@ -378,8 +377,6 @@ public class SQLQueryExecutor {
 		for(int i = 0; i < yAttributes.size(); i++) {
 			for(List<VisualComponent> vcList: vcMap.values()) {
 					this.visualComponentList.addVisualComponent(vcList.get(i));
-			
-					
 			}		
 		}
 		
