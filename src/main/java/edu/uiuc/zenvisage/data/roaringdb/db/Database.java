@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,9 @@ import edu.uiuc.zenvisage.data.roaringdb.db.Column;
 import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
 import edu.uiuc.zenvisage.model.VariableMeta;
 import edu.uiuc.zenvisage.data.Query.FilterPredicate;
+import edu.uiuc.zenvisage.data.remotedb.Attribute;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import  edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 
 public class Database {
@@ -42,7 +45,7 @@ public class Database {
 			else
 				loadData1(datafilename);
 		}else{
-			loadData2(name);
+			loadData3(name);
 		}
 
 		DatabaseCatalog.addDatabase(name, this);
@@ -185,7 +188,8 @@ public class Database {
 //				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
 //			}
 //		}
-
+		columns = null;
+		indexedColumns = null;
 		bufferedReader.close();
 	}
 
@@ -223,16 +227,12 @@ public class Database {
 				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
 			}
 		}
-
+		columns = null;
+		indexedColumns = null;
 		bufferedReader.close();
     }
     
-    /**
-     * for loading from the postgres database
-     * @param datafilename
-     * @throws IOException
-     * @throws SQLException
-     */
+    
     public void loadData2(String tablename) throws IOException, SQLException{
     	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 		String[] header=sqlQueryExecutor.getTableAttributesInArray(tablename);
@@ -266,6 +266,143 @@ public class Database {
 			}
 		}
     }
+    
+    /**
+     * for loading from the postgres database
+     * @param datafilename
+     * @throws IOException
+     * @throws SQLException
+     * @throws InterruptedException 
+     */
+    public void loadData3(String tablename) throws IOException, SQLException, InterruptedException{
+    	readSchemaFromMetaTable(tablename);
+    	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+		String[] header=sqlQueryExecutor.getTableAttributesInArray(tablename);
+		int offset = 0;
+		long num = sqlQueryExecutor.getRowCount(tablename);
+		ResultSet rs  = null;
+		
+		Map<String, String> typeMap = new HashMap<>();
+		ArrayList<Attribute> attributes = sqlQueryExecutor.getAllAttribute(tablename);
+		for(Attribute attribute:attributes){
+			typeMap.put(attribute.name.trim(), attribute.type);
+		}
+		
+		Map<String, Integer> intHeadersIndexMap = new HashMap<>();
+		Map<String, Integer> floatHeadersIndexMap = new HashMap<>();
+		//minus away dynamic class, start from 1, and +1 for id
+		for(int i=1;i<header.length-1;i++){
+			String curHeader = header[i].trim();
+			String type = typeMap.get(curHeader);
+			
+			switch(type){
+			  case "int":intHeadersIndexMap.put(curHeader, i+1);System.out.println("type:"+type+"header:"+curHeader);break;
+			  case "float":floatHeadersIndexMap.put(curHeader, i+1);System.out.println("type:"+type+"header:"+curHeader);
+			}
+		}
+		
+		/**
+		 * Header map to min, max value
+		 */
+		Map<String, Integer[]> intValueMap = new HashMap<>();
+		Map<String, Float[]> floatValueMap = new HashMap<>();
+		
+		
+		
+		while(num>offset){
+			int limit = 20000;
+			rs = sqlQueryExecutor.paginationSelectFromTable(tablename, limit, offset);
+			offset = offset + limit;
+			while(rs.next()){
+				//minus away dynamic class, start from 1, and +1 for id
+				Iterator itIntMap = intHeadersIndexMap.entrySet().iterator();
+		        while(itIntMap.hasNext()){
+		        	Map.Entry pair = (Map.Entry)itIntMap.next();
+		        	String curHeader = (String) pair.getKey();
+		        	Integer curIndex= (Integer) pair.getValue();
+		        	Integer curValue = Integer.parseInt(rs.getString(curIndex));
+		        	if(intValueMap.containsKey(curHeader)){
+		        		Integer[] oldValue = intValueMap.get(curHeader);
+		        		if(curValue < oldValue[0]){
+		        			oldValue[0] = curValue;
+		        		}
+		        		if(curValue > oldValue[1]){
+		        			oldValue[1] = curValue;
+		        		}
+		        		intValueMap.put(curHeader,  oldValue);
+		        	}else{
+		        		Integer[] newValue = new Integer[]{curValue, curValue};
+		        		intValueMap.put(curHeader, newValue);
+		        	}
+		        }
+		        
+		        Iterator itFloatMap = floatHeadersIndexMap.entrySet().iterator();
+		        while(itFloatMap.hasNext()){
+		        	Map.Entry pair = (Map.Entry)itFloatMap.next();
+		        	String curHeader = (String) pair.getKey();
+		        	Integer curIndex= (Integer) pair.getValue();
+		        	Float curValue = Float.parseFloat(rs.getString(curIndex));
+		        	Iterator itIntValueMap = intValueMap.entrySet().iterator();
+		        	if(intValueMap.containsKey(curHeader)){
+		        		Float[] oldValue = floatValueMap.get(curHeader);
+		        		if(curValue < oldValue[0]){
+		        			oldValue[0] = curValue;
+		        		}
+		        		if(curValue > oldValue[1]){
+		        			oldValue[1] = curValue;
+		        		}
+		        		floatValueMap.put(curHeader,  oldValue);
+		        	}else{
+		        		Float[] newValue = new Float[]{curValue, curValue};
+		        		floatValueMap.put(curHeader, newValue);
+		        	}
+		        }
+			 }
+		}
+		rs.close();
+		sqlQueryExecutor.st.close();
+		//set min, max value for each of the column in database,
+		//minus away dynamic class, start from 1, and +1 for id
+		Iterator itIntValueMap = intValueMap.entrySet().iterator();
+		while(itIntValueMap.hasNext()){
+        	Map.Entry pair = (Map.Entry)itIntValueMap.next();
+        	String curHeader = (String) pair.getKey();
+        	Integer[] curValue = (Integer[]) pair.getValue();
+			sqlQueryExecutor.updateMinMax(name, curHeader, curValue[0], curValue[1]);
+			updataInMemoryMetaDataMinMax(curHeader, curValue[0], curValue[1]);
+		}
+		
+		Iterator itFloatValueMap = floatValueMap.entrySet().iterator();
+		while(itFloatValueMap.hasNext()){
+        	Map.Entry pair = (Map.Entry)itFloatValueMap.next();
+        	String curHeader = (String) pair.getKey();
+        	Float[] curValue = (Float[]) pair.getValue();
+			sqlQueryExecutor.updateMinMax(name, curHeader, curValue[0], curValue[1]);
+			updataInMemoryMetaDataMinMax(curHeader, curValue[0], curValue[1]);
+		}
+		
+	
+    }
+    public void updataInMemoryMetaDataMinMax(String curHeader, float min, float max){
+//    	System.out.println("updating Columns...");
+		if(databaseMetaData.xAxisColumns.containsKey(curHeader)){
+			ColumnMetadata meta = databaseMetaData.xAxisColumns.get(curHeader);
+			meta.min = min;
+			meta.max = max;
+//			System.out.println("updating xColumns...");
+		}
+		if(databaseMetaData.yAxisColumns.containsKey(curHeader)){
+			ColumnMetadata meta = databaseMetaData.yAxisColumns.get(curHeader);
+			meta.min = min;
+			meta.max = max;
+		}
+		if(databaseMetaData.zAxisColumns.containsKey(curHeader)){
+			ColumnMetadata meta = databaseMetaData.zAxisColumns.get(curHeader);
+			meta.min = min;
+			meta.max = max;
+		}
+    }
+    
 
     public RoaringBitmap getColumn(FilterPredicate filterPredicate) {
     	String columnName = filterPredicate.getPropertyName();
