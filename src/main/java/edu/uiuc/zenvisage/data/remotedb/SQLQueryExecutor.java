@@ -54,8 +54,8 @@ public class SQLQueryExecutor {
 
 	// Initialize connection
 	public SQLQueryExecutor() {
-//		this.username = Readconfig.getUsername();
-//		this.password = Readconfig.getPassword();
+		this.username = Readconfig.getUsername();
+		this.password = Readconfig.getPassword();
 	      try {
 		         Class.forName("org.postgresql.Driver");
 		         c = DriverManager
