@@ -110,13 +110,25 @@ public class SQLQueryExecutor {
 	}
 	
 	
+//	public ArrayList<String> gettablelist() throws SQLException {
+//		Statement stmt = c.createStatement();
+//		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation' AND table_name != 'users' AND table_name != 'users_tables'";		
+//		ResultSet rs = stmt.executeQuery(sql);
+//		ArrayList<String> tablelist = new ArrayList<String>();
+//		while ( rs.next() ) {
+//            String tablename = rs.getString("table_name");
+//            tablelist.add(tablename);
+//		}
+//        return tablelist;
+//	}
+	
 	public ArrayList<String> gettablelist() throws SQLException {
 		Statement stmt = c.createStatement();
-		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation' AND table_name != 'users' AND table_name != 'users_tables'";		
+		String sql = "SELECT tables FROM users_tables WHERE users = 'public'";		
 		ResultSet rs = stmt.executeQuery(sql);
 		ArrayList<String> tablelist = new ArrayList<String>();
 		while ( rs.next() ) {
-            String tablename = rs.getString("table_name");
+            String tablename = rs.getString("tables");
             tablelist.add(tablename);
 		}
         return tablelist;
@@ -183,6 +195,7 @@ public class SQLQueryExecutor {
     	Statement stmt = c.createStatement();
     		String sql = "INSERT INTO users_tables (users,tables) VALUES ('"+username+"','"+tablename+"')";
         stmt.execute(sql);
+        System.out.println(sql);
         System.out.println("Insert user table pair successfully");
         stmt.close();
 		return true;

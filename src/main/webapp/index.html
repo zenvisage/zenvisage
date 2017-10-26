@@ -79,7 +79,10 @@
 
 
       <!-- Modal -->
-      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post">
+      <!-- <div ng-controller="fileuploadController"> -->
+      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post" ng-controller="fileuploadController">
+      <!-- <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post"> -->
+
         <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document" >
             <div class="modal-content">
@@ -107,6 +110,7 @@
           </div>
         </div>
       </form>
+    <!-- </div>   -->
 
 
       <div id="popup" class="modal fade" >

@@ -1,8 +1,8 @@
 // var app = angular.module('zenvisage', []);
 
   app.controller('loginModalController', [
-      '$scope', '$rootScope', '$cookies', 'datasetInfo',
-      function($scope, $rootScope, $cookies, datasetInfo){
+      '$scope', '$rootScope', '$http', '$cookies','datasetInfo',
+      function($scope, $rootScope, $http, $cookies, datasetInfo){
 
     $("#login_cancel").on('click',function(){
       $('#loginModal').modal('hide');
@@ -36,9 +36,10 @@
                     //Set 'expires' option in 2 hours
                     expiresValue.setMinutes(today.getMinutes() + 120);
                     $cookies.putObject("userinfo",response,{'expires': expiresValue})
-                    angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
-                    // datasetInfo.storetablelist(response['tablelist']);
-                    // $scope.tablelist = datasetInfo.getTablelist();
+                    // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
+                    datasetInfo.storetablelist(response['tablelist']);
+                    $scope.tablelist = datasetInfo.getTablelist();
+                    location.reload();
                   }else{
                     alert("Fail to log in");
                   }
@@ -59,10 +60,18 @@
                {
                   console.log(response);
                   if(response){
-                    alert("Register successfully");
-                    angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
-                    // datasetInfo.storetablelist(response['tablelist']);
-                    // $scope.tablelist = datasetInfo.getTablelist();
+                    alert("Register successfully and you have logged in");
+
+                    var today = new Date();
+                    var expiresValue = new Date(today);
+                    //Set 'expires' option in 2 hours
+                    expiresValue.setMinutes(today.getMinutes() + 120);
+                    $cookies.putObject("userinfo",response,{'expires': expiresValue})
+                    // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
+                    datasetInfo.storetablelist(response['tablelist']);
+                    $scope.tablelist = datasetInfo.getTablelist();
+                    location.reload();
+
                   }else{
                     alert("Username already exists, please login or choose another one");
                   }
@@ -71,7 +80,6 @@
       });
       return false;
     });
-
   }]);
 
 
