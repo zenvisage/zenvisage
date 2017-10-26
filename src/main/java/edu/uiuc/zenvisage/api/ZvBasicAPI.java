@@ -561,7 +561,7 @@ public class ZvBasicAPI {
 	
 	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException {
+	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException, InterruptedException {
 		zvMain = new ZvMain();
 		if( variables != null) {
 	      zvMain.insertZenvisageMetatable(variables);

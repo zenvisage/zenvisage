@@ -492,6 +492,15 @@ public class SQLQueryExecutor {
  		}
 		return false;
 	}
+	
+	public void dropCSV(String tableName) throws SQLException{
+		String sqlDropMeta = "DELETE FROM zenvisage_metatable where tablename = '"+tableName+"'";
+		String sqlDropTable = "DROP TABLE "+ tableName;
+		Statement stmt = c.createStatement();
+		stmt.executeUpdate(sqlDropMeta);
+		stmt.executeUpdate(sqlDropTable);
+		stmt.close();
+	}
 
 	public void insertTable(String tableName, String fileName, List<String> columns) throws SQLException{
 		StringBuilder sql = new StringBuilder("COPY "+ tableName + "(");

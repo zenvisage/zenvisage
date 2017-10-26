@@ -72,14 +72,16 @@ $("#define-attributes").on('submit', function(e) {
                             .text( formData.get("datasetName")));
               document.getElementById("loadingEclipse_upload").style.display = "none";
               document.getElementById("submitButton").style.display = "block";
+              alert("Upload successful");
           },
           error: function (jXHR, textStatus, errorThrown) {
               alert(errorThrown);
               document.getElementById("loadingEclipse_upload").style.display = "none";
               document.getElementById("submitButton").style.display = "block";
+              alert("Upload error");
           }
       });
-      alert("Upload successful");
+      
       },
       error: function (jXHR, textStatus, errorThrown) {
         alert(errorThrown);
