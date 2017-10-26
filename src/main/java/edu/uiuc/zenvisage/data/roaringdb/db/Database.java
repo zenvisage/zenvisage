@@ -237,17 +237,25 @@ public class Database {
     	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 		String[] header=sqlQueryExecutor.getTableAttributesInArray(tablename);
 		int count=0;
-		ResultSet rs = sqlQueryExecutor.selectAllFramTable(tablename);
-		while(rs.next()){
-			//minus away dynamic class, start from 1, and +1 for id
-	        for(int i=1;i<header.length-1;i++){
-	        	//System.out.println("header[i].trim():	"+header[i].trim());
-	       	    addValue(header[i].trim(), count, rs.getString(i+1));
-	        }
-	        count=count+1;
-		 }
-		this.rowCount=count;
-
+		int offset = 0;
+		long num = sqlQueryExecutor.getRowCount(tablename);
+		ResultSet rs  = null;
+		while(num>offset){
+			int limit = 20000;
+			rs = sqlQueryExecutor.paginationSelectFromTable(tablename, limit, offset);
+			offset = offset + limit;
+			while(rs.next()){
+				//minus away dynamic class, start from 1, and +1 for id
+		        for(int i=1;i<header.length-1;i++){
+		        	//System.out.println("header[i].trim():	"+header[i].trim());
+		       	    addValue(header[i].trim(), count, rs.getString(i+1));
+		        }
+		        count=count+1;
+			 }
+			this.rowCount=count;
+		}
+		rs.close();
+		sqlQueryExecutor.st.close();
 		//set min, max value for each of the column in database,
 		//minus away dynamic class, start from 1, and +1 for id
 		for(int i=1;i<header.length-1;i++){

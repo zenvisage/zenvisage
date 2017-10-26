@@ -123,6 +123,8 @@ public class ZvMain {
 		while (ret.next()){
 			size = ret.getInt("count");
 		}
+		sqlQueryExecutor.st.close();
+		ret.close();
 		return size;
 	}
 

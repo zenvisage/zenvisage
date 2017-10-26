@@ -277,7 +277,8 @@ private RawData fetchdata(String datasetName, ArrayList<String> xAttributes, Arr
 		}
 		rowCount++;
 	}
-	
+	rs.close();
+	sqlQueryExecutor.st.close();
 	
 	
 	//normalize Y values

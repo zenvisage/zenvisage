@@ -51,6 +51,7 @@ public class SQLQueryExecutor {
 	private String password;
 	Connection c = null;
 	public VisualComponentList visualComponentList;
+	public Statement st = null;
 
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -80,9 +81,8 @@ public class SQLQueryExecutor {
 
 	// Query database and return result
 	public ResultSet query(String sQLQuery) throws SQLException {
-	      Statement stmt = c.createStatement();
-	      ResultSet ret = stmt.executeQuery(sQLQuery);
-	      stmt.close();
+	      this.st = c.createStatement();
+	      ResultSet ret = st.executeQuery(sQLQuery);
 	      return ret;
 	}
 	
@@ -633,20 +633,29 @@ public class SQLQueryExecutor {
 		return ret.toArray(retArray);
 	}
 	
+	/*out of memory pulling*/
 	public ResultSet selectAllFramTable(String tablename) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery("select * from "+tablename);
-		st.close();
-		rs.close();
+		return rs;
+	}
+	/*pagination read, potentially prevents heap memory blow up*/
+	public ResultSet paginationSelectFromTable(String tablename, int limit, int offset ) throws SQLException{
+		this.st = c.createStatement();
+		ResultSet rs = st.executeQuery("select * from "+tablename +" order by id limit " + limit + " offset "+ offset);
 		return rs;
 	}
 	
-	public ResultSet paginationSelectFromTable(String tablename, int limit, int offset ) throws SQLException{
+	public long getRowCount(String tablename) throws SQLException{
 		Statement st = c.createStatement();
-		ResultSet rs = st.executeQuery("select * from "+tablename +" order by id limit " + limit + " offset "+ offset);
+		ResultSet rs = st.executeQuery("select count(*) AS exact_count FROM "+tablename);
+		while(rs.next()){
+			long ret = Long.parseLong(rs.getString(1));
+			rs.close();
+			return ret;
+		}
 		st.close();
-		rs.close();
-		return rs;
+		return 0;
 	}
 	
 	public void updateMinMax(String tableName, String attribute, float min, float max) throws SQLException{
@@ -705,7 +714,7 @@ public class SQLQueryExecutor {
 		System.out.println(sql0);
 		Statement st0 = c.createStatement();
 		st0.executeUpdate(sql0);
-		st0.close();
+		
 	    
 		for (ClassElement e: dc.classes){
 			String sql1 = "INSERT INTO zenvisage_dynamic_classes (tablename, attribute,ranges ) VALUES('" + dc.dataset + "','" + e.name + "','" + Arrays.deepToString(e.values) + "')";
@@ -713,6 +722,7 @@ public class SQLQueryExecutor {
 			st1.executeUpdate(sql1);
 			st1.close();
 		}
+		st0.close();
 	}
 	
 	public DynamicClass retrieveDynamicClassDetails(String query) throws SQLException{
