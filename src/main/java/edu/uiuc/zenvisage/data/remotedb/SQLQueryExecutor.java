@@ -82,7 +82,7 @@ public class SQLQueryExecutor {
 	public ResultSet query(String sQLQuery) throws SQLException {
 	      Statement stmt = c.createStatement();
 	      ResultSet ret = stmt.executeQuery(sQLQuery);
-	      //stmt.close();
+	      stmt.close();
 	      return ret;
 	}
 	
@@ -131,6 +131,8 @@ public class SQLQueryExecutor {
             String tablename = rs.getString("tables");
             tablelist.add(tablename);
 		}
+		stmt.close();
+		rs.close();
         return tablelist;
 	}
 	
@@ -149,6 +151,8 @@ public class SQLQueryExecutor {
             tablelist.add(tablename);
 		}
 		info.put("tablelist", tablelist);
+		stmt.close();
+		rs.close();
         return info;
 	}
 	
@@ -162,10 +166,13 @@ public class SQLQueryExecutor {
 	        if(PasswordStorage.verifyPassword(password, rs.getString("password"))) {	
 	        			stmt.close();
 	                System.out.println("Login Succeed");
+	                stmt.close();
+	                rs.close();
 	                return true;
 	        	}
         }
         stmt.close();
+        rs.close();
         System.out.println("Login Failed");
         return false;
     }
@@ -178,6 +185,7 @@ public class SQLQueryExecutor {
     		if(rs.next()) {
     			System.out.println("User exists, please login");
     			stmt.close();
+    			rs.close();
     			return false;
     		}
     		else {
@@ -187,6 +195,7 @@ public class SQLQueryExecutor {
             stmt.execute(sql);
             System.out.println("Register successfully");
             stmt.close();
+            rs.close();
             return true;
     		}
     }
@@ -437,8 +446,14 @@ public class SQLQueryExecutor {
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next())
 		{
-			return rs.getString(1);
+			
+			String retS = new String(rs.getString(1));
+			st.close();
+			rs.close();
+			return retS;
 		}
+		st.close();
+		rs.close();
 		return null;
 	}
 
@@ -453,8 +468,14 @@ public class SQLQueryExecutor {
  		while (rs.next())
  		{
 // 			System.out.println( rs.getString(1) + "\n" + rs.getString(2));
- 			return new String[]{ rs.getString(1), rs.getString(2)};
+ 			
+ 			String[] retStr = new String[]{ rs.getString(1), rs.getString(2)};
+ 			st.close();
+ 			rs.close();
+ 			return retStr;
  		}
+ 		st.close();
+		rs.close();
  		return null;
  	}
 
@@ -472,14 +493,20 @@ public class SQLQueryExecutor {
 		//if database already exist return false;
 		while (rs0.next())
  		{
-			if(Integer.parseInt(rs0.getString(1))>0) return false;
+			if(Integer.parseInt(rs0.getString(1))>0){
+				st0.close();
+				rs0.close();
+				return false;
+			}
  		}
 
 		Statement st = c.createStatement();
 
 //		System.out.println(sql);
 		count = st.executeUpdate(sql);
-
+		st0.close();
+		rs0.close();
+		st.close();
 		return count > 0;
 	}
 
@@ -491,18 +518,22 @@ public class SQLQueryExecutor {
 			 rs0 = st0.executeQuery(sql0);
 		}
 		catch(Exception PSQLException){
-
+			st0.close();
 			return false;
 		}
 		while (rs0.next())
  		{
 			if(rs0.getString(2).equals(tableName)) 
 			{
-				System.out.println(tableName +" already exists");	
+				System.out.println(tableName +" already exists");
+				st0.close();
+				rs0.close();
 				return true;
 			}
 			
  		}
+		st0.close();
+		rs0.close();
 		return false;
 	}
 	
@@ -542,6 +573,7 @@ public class SQLQueryExecutor {
 	  System.out.println("sql used to upload csv file:"+sql.toString());
 	  Statement stmt = c.createStatement();
 	  stmt.executeUpdate(sql.toString());
+	  stmt.close();
 	}
 	
 	
@@ -581,6 +613,8 @@ public class SQLQueryExecutor {
 		}
 		ret = new StringBuilder(ret.substring(0, ret.length()-("dynamic_class".length()+2)));
 		ret.append(")");
+		st.close();
+		rs.close();
 		return ret.toString();
 	}
 	
@@ -589,18 +623,29 @@ public class SQLQueryExecutor {
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql.toString());
 		ArrayList<String> ret = new ArrayList<>();
-		int count = 0;
 		System.out.println("tablename:"+tablename);
 		while(rs.next()){
 			ret.add(rs.getString(1));
 		}
 		String[] retArray = new String[ret.size()];
+		st.close();
+		rs.close();
 		return ret.toArray(retArray);
 	}
 	
 	public ResultSet selectAllFramTable(String tablename) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery("select * from "+tablename);
+		st.close();
+		rs.close();
+		return rs;
+	}
+	
+	public ResultSet paginationSelectFromTable(String tablename, int limit, int offset ) throws SQLException{
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery("select * from "+tablename +" order by id limit " + limit + " offset "+ offset);
+		st.close();
+		rs.close();
 		return rs;
 	}
 	
@@ -622,6 +667,8 @@ public class SQLQueryExecutor {
 		while(rs.next()){
 			ret.add(new Attribute(rs.getString(1),rs.getString(2),rs.getString(3)));
 		}
+		st.close();
+		rs.close();
 		return ret;
 	}
 	
@@ -644,6 +691,8 @@ public class SQLQueryExecutor {
 					rs.getBoolean(3),rs.getBoolean(4),
 				    rs.getBoolean(5),vMin,vMax));
 		}
+		st.close();
+		rs.close();
 		return ret;
 	}
 	
@@ -693,6 +742,8 @@ public class SQLQueryExecutor {
 			String[] cur = l.get(i);
 			dc.classes[i] = new ClassElement(dc.dataset,testArray, cur[0], cur[1], cur[2], Integer.parseInt(cur[3]));
 		}
+		st.close();
+		rs.close();
 		return dc;
 	}
 	
@@ -739,7 +790,8 @@ public class SQLQueryExecutor {
 			attributeList.add(rs.getString(1));
 		}
 		System.out.println(attributeList);
-		
+		st_attribute.close();
+		rs.close();
 		// create temporary table to store initial permutations 
 		
 		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations_temp")){
@@ -801,6 +853,7 @@ public class SQLQueryExecutor {
 		//System.out.print(t);
 
 		st.close(); 
+		
 
 		// drop the temporary table 
 		
