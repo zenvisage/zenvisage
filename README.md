@@ -137,3 +137,9 @@ Schema file is a .txt file which specifies the way data are processed on backend
    [postgres-installation]: https://chartio.com/resources/tutorials/how-to-start-postgresql-server-on-mac-os-x/
    [Docker-instructions]: https://github.com/zenvisage/zenvisage/wiki/Docker-Installation-Instruction-for-Mac
    <sup>1</sup>The smart-fuse optimization algorithms are not part of this release. Instead, we employ a simpler optimization scheme that works well for all but the most complex queries. 
+   
+### Data file uploading rules: 
+   1. columns cannot be more than 1600; 
+   2. column_name cannot have numbers in it; 
+   3. no null values for fields;
+   4. must be in .csv format;
