@@ -44,11 +44,10 @@ $("#define-attributes").on('submit', function(e) {
   var selectedAttributesParsed = []
   for (i = 0; i < selectedAttributes.length; i++) {
       temp = selectedAttributes[i].split(" ");
-              console.log("final selected: ", temp);
        selectedAttributesParsed.push({name:temp[0],type:temp[1],selectedX:temp[2],selectedY:temp[3],selectedZ:temp[4]})
 
   }
-  
+
   $('#define-attributes').modal('toggle');
 
   var xyzQuery = {datasetName:datasetNameInput, variables:selectedAttributesParsed};
@@ -60,14 +59,14 @@ $("#define-attributes").on('submit', function(e) {
       url: '/zv/selectXYZ',
       data: myObject,
       contentType: 'application/json; charset=utf-8',
-	  success: function (data) { console.log('called1');
+	  success: function (data) {
       $.ajax({
           url : '/zv/fileUpload',
           type: 'POST',
           data: formData,
           processData: false,
           contentType: false,
-          success: function (data) {console.log('called2');
+          success: function (data) {
               $('#dataset-form-control').append($("<option></option>")
                             .attr("value", formData.get("datasetName"))
                             .text( formData.get("datasetName")));

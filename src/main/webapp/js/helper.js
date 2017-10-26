@@ -1458,13 +1458,12 @@ function autoSelect(source,type) {
 
 function parseCSV(data) {
  Papa.parse(data.get("csv"), {
- preview: 7000,
+ // preview: 7000,
  complete: function(results){
    var textAttributeName = "<tr> <td> Select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
    var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
    +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
    var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
-  console.log("this is fist line!",results["data"][1]);
    for (i = 0; i < results["data"][0].length; i++) {
    previewRow = results["data"].map(function(value,index) { return value[i]; })
    type = getType(previewRow)
@@ -1474,10 +1473,15 @@ function parseCSV(data) {
    +"</select> </td></tr>";
    textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
    +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
-   +"<option value=" + results["data"][0][i] + " string'>string</option>"
-   +"<option value=" + results["data"][0][i] + " int'>int</option>"
-   +"<option value=" + results["data"][0][i] + " float'>float</option>"
-   +"</select> </td></tr>";
+   if(type === "float"){
+        textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
+   }
+
+   else if(type === "int"){
+     textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
+     textDataType += "<option value=" + results["data"][0][i] + " float'>float</option>"
+   }
+   textDataType += "</select> </td></tr>";
  }
 
    $('.x-attributes').html(textAttributeName);
@@ -1492,8 +1496,8 @@ function parseCSV(data) {
 
 function getType(previewRow){
     var results = [];
+      // console.log("length!: ",previewRow);
     var nan = isNaN(Number(previewRow[1]));
-    console.log(nan);
     // var isfloat = /^\d*(\.|,)\d*$/;
     // var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
     // var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
@@ -1501,24 +1505,20 @@ function getType(previewRow){
     // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
     // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
     // console.log(previewRow.length);
-      if (!nan){
       var retval = "int"
-      console.log(previewRow[2]);
-      for (var i = 1; i < previewRow.length; i++) {
-        console.log(i);
-        if (parseFloat(previewRow[i]) !== parseInt(previewRow[i])){
+      for (var i = 1; i < previewRow.length-3; i++) {
+        if(isNaN(Number(previewRow[i]))){
+          return "string"
+        }
+        else if (parseFloat(previewRow[i]) !== parseInt(previewRow[i])){
           return "float"
         };
       }
       return retval;
-    }
+
       // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
       // // else if (date.test(str)) return "date";
-    else {
-        // if (email.test(str)) return "e-mail";
-        // else if (phone.test(str)) return "phone";
-        return "string";
-    }
+
 
 }
 }
