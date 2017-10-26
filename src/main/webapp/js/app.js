@@ -925,13 +925,16 @@ app.controller('datasetController', [
           function (response) {
             console.log("success: ", response);
             console.log("cookies: ", userinfo);
-
             var userinfo = $cookies.getObject('userinfo');
             if(userinfo){
               // $scope.updatetablelist(userinfo['tablelist']);
+              document.getElementById("loginmodaltrigger").style.display = "none";
+              document.getElementById("signoutbutton").style.display = "block";
               datasetInfo.storetablelist(userinfo['tablelist'])
               $scope.tablelist = datasetInfo.getTablelist()
             }else{
+              document.getElementById("signoutbutton").style.display = "none";
+              document.getElementById("loginmodaltrigger").style.display = "block";
               datasetInfo.storetablelist(response.data);
               $scope.tablelist = datasetInfo.getTablelist();
             }
