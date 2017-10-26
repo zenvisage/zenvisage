@@ -9,13 +9,11 @@
     });
 
     $("#loginmodaltrigger").on('click',function(e){
-      // $(window).on('load', function() {
         if(!$cookies.getObject("userinfo")){
           $('#loginModal').modal('show');
         }else{
           alert("You have signed in")
         }
-      // })
     })
 
     $("#signIn").on('click',function(e){
@@ -79,6 +77,18 @@
                }
       });
       return false;
+    });
+
+
+    $("#signoutbutton").on('click',function(e){
+      if(!$cookies.getObject("userinfo")){
+        alert("You didn't sign in!");
+      }else{
+        $cookies.remove("userinfo");
+        alert("You have signed out!");
+        location.reload();
+      }
+
     });
   }]);
 
