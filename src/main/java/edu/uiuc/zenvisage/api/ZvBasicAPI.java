@@ -486,7 +486,7 @@ public class ZvBasicAPI {
 		try {
 //			String ret = zvMain.getInterfaceFomData(arg);
 			String ret = zvMain.getInterfaceFomData2(arg);
-			System.out.println("get interface form data: " + ret);
+//			System.out.println("get interface form data: " + ret);
 		    return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
