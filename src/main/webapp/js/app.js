@@ -46,8 +46,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           $('#class-creation-close-button')[0].click();
         },
         function (response) {
-          console.log("failed to create classes", response);
-          $("#errorModalText").html(response);
+          console.log("failed to create classes", response.data);
+          $("#errorModalText").html(response.data);
           $("#errorModal").modal();
         }
     );
@@ -69,7 +69,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
     $http.post('/zv/getClassInfo', query
     ).then(
         function (response) {
-          console.log("success: ", response);
+          console.log("success: ", response.data);
           globalDatasetInfo["classes"] = response.data
           var formattedRanges = formatRanges(response.data["classes"])
           for (var i = 0; i < response.data["classes"].length; i++){
@@ -78,8 +78,8 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
           }
         },
         function (response) {
-          console.log("failed to get class info: ", response);
-          $("#errorModalText").html(response);
+          console.log("failed to get class info: ", response.data);
+          $("#errorModalText").html(response.data);
           $("#errorModal").modal();
         }
     );
@@ -262,9 +262,9 @@ app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResu
             plotResults.displayUserQueryResults(userQueryResults, false);
         },
         function (response) {
-            console.log("failed ZQL Query", escape(response));
+            console.log("failed ZQL Query", escape(response.data));
             document.getElementById("loadingEclipse").style.display = "none";
-            $("#errorModalText").html(response);
+            $("#errorModalText").html(response.data);
             $("#errorModal").modal();
         }
     );
@@ -301,14 +301,14 @@ app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResu
     $http.get('/zv/executeZQLComplete', {params: {'query': JSON.stringify( $scope.queries )}}
     ).then(
         function (response) {
-            console.log("success: ", response);
+            console.log("success: ", response.data);
             var userQueryResults = response.data.outputCharts;
             plotResults.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
-            console.log("failed Node ZQL Query: ", escape(response));
+            console.log("failed Node ZQL Query: ", escape(response.data));
             document.getElementById("loadingEclipse").style.display = "none";
-            $("#errorModalText").html(response);
+            $("#errorModalText").html(response.data);
             $("#errorModal").modal();
         }
     );
