@@ -12,7 +12,7 @@
         if(!$cookies.getObject("userinfo")){
           $('#loginModal').modal('show');
         }else{
-          alert("You have signed in")
+          alert("You have logged in")
         }
     })
 
@@ -27,7 +27,7 @@
                {
                   console.log(response);
                   if(response){
-                    alert("Log in successfully");
+                    alert("You have logged in successfully");
 
                     var today = new Date();
                     var expiresValue = new Date(today);
@@ -39,7 +39,7 @@
                     $scope.tablelist = datasetInfo.getTablelist();
                     location.reload();
                   }else{
-                    alert("Fail to log in");
+                    alert("Failed to log in");
                   }
                }
       });
@@ -58,7 +58,7 @@
                {
                   console.log(response);
                   if(response){
-                    alert("Register successfully and you have logged in");
+                    alert("You have registered successfully and are now logged in");
 
                     var today = new Date();
                     var expiresValue = new Date(today);
@@ -71,7 +71,7 @@
                     location.reload();
 
                   }else{
-                    alert("Username already exists, please login or choose another one");
+                    alert("Username already exists, please login or use another username");
                   }
                   
                }
@@ -81,13 +81,9 @@
 
 
     $("#signoutbutton").on('click',function(e){
-      if(!$cookies.getObject("userinfo")){
-        alert("You didn't sign in!");
-      }else{
         $cookies.remove("userinfo");
         alert("You have signed out!");
         location.reload();
-      }
 
     });
   }]);
