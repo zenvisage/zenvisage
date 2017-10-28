@@ -336,7 +336,7 @@
       <div id="left-bar">
         <div id="sidebar" class="interface" ng-controller="datasetController"  >
           <h4>
-            <span data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"><img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
+            <span><img data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"  src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
             <a href="https://github.com/zenvisage/zenvisage/wiki/Functionalities-and-Options"><i class="glyphicon glyphicon-info-sign" style="font-size: 20px;"></i></a>
             <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 20px; "></i></a>
             <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
@@ -389,8 +389,8 @@
             </div>
           </div> -->
 
-          <h5><b>Category</b><span>
-          <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+          <h5><b>Category</b>
+          <button  type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" ><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
 
           <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button> </h5>
 
@@ -660,7 +660,7 @@
 
 
               <div class="col-md-3" style="width: 180px;">
-                <div data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
+                <div style="width:180px;" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
                   <div class="info-text">
                   <div><b>Data Smoothing</b>
                     <div class="qtooltipright">
@@ -668,7 +668,7 @@
                       <span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
                     </div>
                   </div>
-
+                  
                     <p></p>
                     <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
                       <option value="none">None</option>
@@ -760,7 +760,7 @@
 
               </div>
 
-              
+
 
             </div>
           </div>

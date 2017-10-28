@@ -7,8 +7,8 @@ app.controller('fileuploadController', [
   $('#uploaderForm').on('submit', function(e) {
       e.preventDefault();
       formData = new FormData(this);
-      if (formData.get("csv").name == "" ) {
-        alert("Please select corresponding files!");
+      if (formData.get("csv").name.split(".").pop() != "csv" ){
+        alert("Please select a csv file");
         return;
       }
       else if (formData.get("csv").size > 100000000) {
@@ -52,7 +52,7 @@ app.controller('fileuploadController', [
          selectedAttributesParsed.push({name:temp[0],type:temp[1],selectedX:temp[2],selectedY:temp[3],selectedZ:temp[4]})
 
     }
-    
+
     $('#define-attributes').modal('toggle');
 
     var xyzQuery = {datasetName:datasetNameInput, variables:selectedAttributesParsed};
@@ -99,7 +99,7 @@ app.controller('fileuploadController', [
                       $scope.tablelist = datasetInfo.getTablelist();
                       console.log("table inserted into your account successfully")
                     }
-                    
+
                   },
                   error: function(response){
                     alert("fail to insert dataset into your account")
@@ -135,4 +135,3 @@ app.controller('fileuploadController', [
 
 
 }]);
-
