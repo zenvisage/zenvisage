@@ -1460,7 +1460,7 @@ function parseCSV(data) {
  Papa.parse(data.get("csv"), {
  // preview: 7000,
  complete: function(results){
-   var textAttributeName = "<tr> <td> Select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
+   var textAttributeName = "<tr> <td> (De)select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
    var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
    +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
    var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
@@ -1487,6 +1487,7 @@ function parseCSV(data) {
    $('.x-attributes').html(textAttributeName);
    $('.y-attributes').html(textAttributeSelection);
    $('.z-attributes').html(textDataType);
+   $('#uploaderModal').modal('toggle');
    $('#define-attributes').modal('toggle');
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');

@@ -19,7 +19,9 @@ app.controller('fileuploadController', [
       datasetNameInput = $("#datasetNameInput").val();
       console.log('test:',$(this).attr('action'),$(this).attr('method'));
       log.info("dataset upload: ",$("#datasetNameInput").val())
-      $('#uploaderModal').modal('toggle');
+      // $('#uploaderModal').modal('toggle');
+      document.getElementById("uploadingProgressMessage").style.display = "block";
+      document.getElementById("submitButton").style.display = "none";
   });
 
   // function getCheckedAttributes(){
@@ -52,7 +54,6 @@ app.controller('fileuploadController', [
          selectedAttributesParsed.push({name:temp[0],type:temp[1],selectedX:temp[2],selectedY:temp[3],selectedZ:temp[4]})
 
     }
-
     $('#define-attributes').modal('toggle');
 
     var xyzQuery = {datasetName:datasetNameInput, variables:selectedAttributesParsed};

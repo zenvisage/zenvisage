@@ -103,7 +103,8 @@
               </div>
                 <div class="modal-footer">
                 <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
-                <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">
+                <!-- <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;"> -->
+                <p id = 'uploadingProgressMessage' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">Uploading...</p>
                 </div>
 
             </div>
@@ -660,7 +661,7 @@
 
 
               <div class="col-md-3" style="width: 180px;">
-                <div style="width:180px;" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
+                <div style="width:165px;" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
                   <div class="info-text">
                   <div><b>Data Smoothing</b>
                     <div class="qtooltipright">
@@ -668,7 +669,7 @@
                       <span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
                     </div>
                   </div>
-                  
+
                     <p></p>
                     <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
                       <option value="none">None</option>
