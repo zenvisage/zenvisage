@@ -116,7 +116,7 @@ app.controller('fileuploadController', [
                 location.reload();
             },
             error: function (jXHR, textStatus, errorThrown) {
-                alert(errorThrown);
+                alert("Server error. Have you tried the dataset upload instructions in the following link? https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets");
                 document.getElementById("loadingEclipse_upload").style.display = "none";
                 document.getElementById("submitButton").style.display = "block";
             }

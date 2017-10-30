@@ -125,7 +125,7 @@
             <br>
             <br>
             <br>
-            <div style="text-align:center; font-size:16px;"><p>Please click the play button on the top-left corner to start the interactive tutorial</p></div>
+            <div style="text-align:center; font-size:16px;"><p>Please click the play button to start the interactive tutorial</p><p>(also located on the top-left corner) </p> <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 30px; "></i></a></div>
             <br>
             <br>
             <br>
@@ -928,6 +928,7 @@
         $("#dataset-form-control").val('real_estate_tutorial');
         angular.element($("#sidebar")).scope().onDatasetChange('initialize');
         setTimeout(callintro, 2000);
+        $('#popup').modal('hide');
       };
 
     $('#popup').modal('toggle');

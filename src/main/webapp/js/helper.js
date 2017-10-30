@@ -1489,6 +1489,8 @@ function parseCSV(data) {
    $('.z-attributes').html(textDataType);
    $('#uploaderModal').modal('toggle');
    $('#define-attributes').modal('toggle');
+   document.getElementById("uploadingProgressMessage").style.display = "none";
+   document.getElementById("submitButton").style.display = "block";
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');
    $('#z-autoselect').trigger('click');
