@@ -115,23 +115,25 @@ app.controller('fileuploadController', [
                 $('#dataset-form-control').append($("<option></option>")
                               .attr("value", formData.get("datasetName"))
                               .text( formData.get("datasetName")));
-                document.getElementById("loadingEclipse_upload").style.display = "none";
-                document.getElementById("submitButton").style.display = "block";
+                              document.getElementById("uploadingProgressMessage").style.display = "block";
+                              document.getElementById("submitButton").style.display = "none";
                 alert("Upload successful");
                 location.reload();
             },
             error: function (jXHR, textStatus, errorThrown) {
-                alert("Server error. Have you tried the dataset upload instructions in the following link? https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets");
-                document.getElementById("loadingEclipse_upload").style.display = "none";
-                document.getElementById("submitButton").style.display = "block";
+              $("#errorModalText").html("Server error. Have you tried the dataset upload instructions in the following link? <a href='https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets'>here?</a>");
+              $("#errorModal").modal()
+                document.getElementById("uploadingProgressMessage").style.display = "block";
+                document.getElementById("submitButton").style.display = "none";
             }
         });
 
         },
         error: function (jXHR, textStatus, errorThrown) {
-          alert(errorThrown);
-          document.getElementById("loadingEclipse_upload").style.display = "none";
-          document.getElementById("submitButton").style.display = "block";
+          $("#errorModalText").html("Server error. Have you tried the dataset upload instructions in the following link? <a href='https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets'>here?</a>");
+          $("#errorModal").modal()
+          document.getElementById("uploadingProgressMessage").style.display = "block";
+          document.getElementById("submitButton").style.display = "none";
 
         }
     });
