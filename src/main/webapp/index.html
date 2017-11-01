@@ -367,7 +367,7 @@
             <!-- Button trigger modal -->
 
             <!--<select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()"  ng-model="selectedDataset" id="dataset-form-control">-->
-            <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset={real_estate};"  ng-model="selectedDataset" id="dataset-form-control">
+            <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset='real_estate';"  ng-model="selectedDataset" id="dataset-form-control">
               <option ng-repeat="table in tablelist">{{table}}</option>
             </select>
           </div>
@@ -946,6 +946,7 @@
       // tree.initialize();
       $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip({html: true});
+        $("#dataset-form-control option").val("real_estate");
         var scope = angular.element("#dataset-form-control").scope();
         scope.onDatasetChange();
         
