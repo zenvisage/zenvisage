@@ -366,7 +366,8 @@
             <h5><b>Dataset</b><button type="button"  class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
             <!-- Button trigger modal -->
 
-            <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()" ng-model="selectedDataset" id="dataset-form-control">
+            <!--<select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()"  ng-model="selectedDataset" id="dataset-form-control">-->
+            <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset={real_estate};"  ng-model="selectedDataset" id="dataset-form-control">
               <option ng-repeat="table in tablelist">{{table}}</option>
             </select>
           </div>
@@ -945,6 +946,9 @@
       // tree.initialize();
       $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip({html: true});
+        var scope = angular.element("#dataset-form-control").scope();
+        scope.onDatasetChange();
+        
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')

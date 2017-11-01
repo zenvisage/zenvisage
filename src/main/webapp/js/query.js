@@ -222,7 +222,8 @@ function getNumSegments()
 
 function getSelectedDataset()
 {
-  return $("#dataset-form-control option:selected").val();
+  var ret= $("#dataset-form-control option:selected").val();
+  return ret;
 }
 
 function mergejoin(outputcharts_orig,outputcharts_error)
