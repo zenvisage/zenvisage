@@ -74,7 +74,8 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var xlabel = replaceAll(userQueryResults[count]["xType"], "'", "");
     var ylabel = replaceAll(userQueryResults[count]["yType"], "'", "");
     var zAttribute = replaceAll(userQueryResults[count]["zType"], "'", ""); // city
-    var zValue = replaceAll(userQueryResults[count]["title"], "'", ""); // the actual city value, like NY
+    var zValueFull = userQueryResults[count]["title"]
+    var zValue = replaceAll(zValueFull.substring(0, 25), "'", ""); // the actual city value, like NY
 
     if (zAttribute=="dynamic_class" && zValue[0]=="-"){
       skipped+=1;
@@ -563,7 +564,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
-    var title = varFinalArray[count]["title"];
+    var title = varFinalArray[count]["title"].substring(0,25);
 
     var clusterCount = varFinalArray[count]["count"];
 
@@ -873,7 +874,7 @@ function displayOutlierResultsHelper( outlierResults )
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
-    var title = varFinalArray[count]["title"];
+    var title = varFinalArray[count]["title"].substring(0,25);
 
     var clusterCount = varFinalArray[count]["count"];
 

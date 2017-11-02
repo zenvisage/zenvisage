@@ -931,12 +931,12 @@ app.controller('datasetController', [
               document.getElementById("loginmodaltrigger").style.display = "none";
               document.getElementById("signoutbutton").style.display = "block";
               datasetInfo.storetablelist(userinfo['tablelist'])
-              $scope.tablelist = datasetInfo.getTablelist()
+              $scope.tablelist = datasetInfo.getTablelist().reverse();
             }else{
               document.getElementById("signoutbutton").style.display = "none";
               document.getElementById("loginmodaltrigger").style.display = "block";
               datasetInfo.storetablelist(response.data);
-              $scope.tablelist = datasetInfo.getTablelist();
+              $scope.tablelist = datasetInfo.getTablelist().reverse();
             }
           },
           function (response) {
