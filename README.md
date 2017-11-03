@@ -46,7 +46,7 @@ For making the above change, you could run the following commands:
               
 * Update Database Schema
         
-            DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT); CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);
+            DROP schema public cascade; CREATE schema public; CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT, selectedX BOOLEAN, selectedY BOOLEAN, selectedZ BOOLEAN); CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);CREATE TABLE dynamic_class_aggregations (Table_Name TEXT NOT NULL, Tag TEXT NOT NULL, Attributes TEXT NOT NULL, Ranges TEXT NOT NULL, Count INT NOT NULL);CREATE TABLE users (id TEXT, password TEXT);CREATE TABLE users_tables (users TEXT, tables TEXT);INSERT INTO users_tables (users, tables) VALUES ('public', 'cmu'), ('public', 'flights'),('public', 'real_estate'),('public', 'weather'),('public', 'real_estate_tutorial');
 
 * Clean Postgres
 
@@ -73,15 +73,6 @@ For making the above change, you could run the following commands:
             sudo sh run.sh 
 
 * Launch `http://localhost:8080/` (preferably in Chrome, if has error mostly because of uncleared cache, use incognito mode probably fix). 
-
-### Configuration
-
-In file  ```src/main/resources/config.properties```.
-
-        username=postgres
-        password=zenvisage
-        port=8080
-        metatable=zenvisage_metatable
 
 ### Dataset Upload Requirements
 
@@ -146,3 +137,9 @@ Schema file is a .txt file which specifies the way data are processed on backend
    [postgres-installation]: https://chartio.com/resources/tutorials/how-to-start-postgresql-server-on-mac-os-x/
    [Docker-instructions]: https://github.com/zenvisage/zenvisage/wiki/Docker-Installation-Instruction-for-Mac
    <sup>1</sup>The smart-fuse optimization algorithms are not part of this release. Instead, we employ a simpler optimization scheme that works well for all but the most complex queries. 
+   
+### Data file uploading rules: 
+   1. columns cannot be more than 1600; 
+   2. column_name cannot have numbers in it; 
+   3. no null values for fields;
+   4. must be in .csv format;
