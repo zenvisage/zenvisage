@@ -47,6 +47,10 @@ public class Readconfig {
 	static public int getPostgresport() {
 		return Integer.valueOf(props.getProperty("postgresport"));
 	}
+	
+	static public boolean getLogger() {
+		return Boolean.valueOf(props.getProperty("logger"));
+	}
 
 	
 }

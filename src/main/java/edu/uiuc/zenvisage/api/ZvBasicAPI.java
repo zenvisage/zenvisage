@@ -398,6 +398,11 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/logger", method = RequestMethod.POST)
 	@ResponseBody
 	public void logger(HttpServletRequest request, HttpServletResponse response) {
+		if(!Readconfig.getLogger()) {
+//			System.out.print("Logger is off!\n");
+			return;
+		}
+		
 		System.out.print("logFilename:");
 		System.out.println(logFilename);
 		zvMain = new ZvMain();

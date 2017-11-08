@@ -954,13 +954,13 @@
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
-      var loggerOn=false
+      // var loggerOn=false
       var log = log4javascript.getLogger();
       var ajaxAppender = new log4javascript.AjaxAppender("/zv/logger");
-      if (!loggerOn){
-        console.log("off")
-        log.setLevel(log4javascript.Level.OFF)
-      }
+      // if (!loggerOn){
+      //   console.log("off")
+      //   log.setLevel(log4javascript.Level.OFF)
+      // }
       ajaxAppender.setTimed(true);
       ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
       log.addAppender(ajaxAppender);
