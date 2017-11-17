@@ -62,10 +62,6 @@ For making the above change, you could run the following commands:
             \connect postgres;
             DROP schema public cascade;
 
-* Data files location:
-            Have you data folder under zenvisage folder, same level of src folder, name it data
-            https://drive.google.com/drive/u/1/folders/0B3otFgGFeJnpVk96dEZqUnVaV2c
-
         
 * In Terminal:
 
