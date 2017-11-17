@@ -2,7 +2,7 @@
 Zenvisage is a visual data exploration system that can automatically identify and recommend visualizations that match desired user patterns. The user can specify at a high level what they are looking for either via interactions or via a query language (ZQL), and the system will perform the necessary computation to identify these visualizations.
 
 ### Version
-The current version is 0.1.
+The current version is 0.2, live at [link].
 
 ### Features
 Zenvisage enables users to effortlessly receive visualization recommendations for interesting trends, patterns, and insights from large datasets. Here are the key features of Zenvisage:
@@ -13,13 +13,20 @@ Zenvisage enables users to effortlessly receive visualization recommendations fo
 
 * In addition to returning results for user-submitted queries, zenvisage runs a host of parallel queries to find the most typical and outlier trends for the subset of data the user is currently viewing and presents them as additional context for the user.
 
+* Since Version 0.2, Zenvisage also supports pattern specification, equation specification, and zooming into specific areas of the search canvas. Here's a [Medium blog post][Medium] about our new features. 
+
+* You can try out Zenvisage Version 0.2 at this [link]. You don't need to install anything for this!
+
 ### Additional Readings
-* Our project webpage is [here] [zenvisage-website]; regular updates will be posted at this webpage.
-* Our VLDB'17 paper describing ZQL, our SmartFuse<sup>1</sup> ZQL optimizer, as well as a ZQL-centric user study is [here] [zenvisage-vldb].
-* Our CIDR'17 paper describing the overall Zenvisage system, along with some target user scenarios is [here] [zenvisage-cidr].
+* Our project webpage is [here][zenvisage-website]; regular updates will be posted at this webpage.
+* Our VLDB'17 paper describing ZQL, our SmartFuse<sup>1</sup> ZQL optimizer, as well as a ZQL-centric user study is [here][zenvisage-vldb].
+* Our CIDR'17 paper describing the overall Zenvisage system, along with some target user scenarios is [here][zenvisage-cidr].
+* Our technical report describing the use of Zenvisage to address genomics, astrophysics, and battery science use-cases is [here][zenvisage-chi].
 
 
 ### Required Software
+You can try out Zenvisage Version 0.2 at this [link] without installing any software. You only need to install software if you'd like to run a local deployment. 
+
 * Java Platform (JDK) >= 8; once installed, update `JAVA_HOME` to your installed java folder.
 * PostgreSQL >= 9.5;  many ways to install this, including an [app][postgres-installation] on Mac OSX.
 * Apache Maven 3.0.5;  many ways to install this, including `brew install maven` on Mac OSX.
@@ -90,7 +97,10 @@ You can also refer to [wiki][System-Overview] for more details on the system. So
    [postgres-installation]: https://chartio.com/resources/tutorials/how-to-start-postgresql-server-on-mac-os-x/
    [Docker-instructions]: https://github.com/zenvisage/zenvisage/wiki/Docker-Installation-Instruction-for-Mac
    [Data-upload-instructions]: https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets
+   [Medium]: https://medium.com/@adityagp/effortless-exploration-with-zenvisage-2-0-c1a515477399
+   [zenvisage-chi]: https://arxiv.org/pdf/1710.00763.pdf
    [System-Overview]: https://github.com/zenvisage/zenvisage/wiki/System-Overview
    [Troubleshooting]:https://github.com/zenvisage/zenvisage/wiki/Troubleshooting-and-FAQs
+   [link]: http://zenvisage.cs.illinois.edu
    <sup>1</sup>The smart-fuse optimization algorithms are not part of this release. Instead, we employ a simpler optimization scheme that works well for all but the most complex queries. 
 
