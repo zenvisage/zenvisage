@@ -138,6 +138,10 @@
         </div>
     </div>
 
+    <div id="mobilePopup">
+      <span class="popuptext" id="myPopup">Zenvisage is not inteded for mobile screen resolutions.</span>
+    </div>
+
     <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
       <div class="modal-dialog" role="document">
         <div class="modal-content" style = "left: 10%; width: 500px">
@@ -950,7 +954,7 @@
         $("#dataset-form-control option").val("real_estate");
         var scope = angular.element("#dataset-form-control").scope();
         scope.onDatasetChange();
-        
+
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
