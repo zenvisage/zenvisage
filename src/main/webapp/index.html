@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<noscript>
+  <div>
+    <p>This site requires JavaScript and only support for desktop browser display resolution.</p>
+  </div>
+</noscript>
 <html lang="en" ng-app="zenvisage">
   <head>
     <meta charset="utf-8">
@@ -12,6 +17,7 @@
     <link href="css/introjs.css" rel="stylesheet">
     <!-- <script type="text/javascript" src="secret.json"></script> -->
     </head>
+    <div id = "container">
   <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
 
@@ -922,7 +928,35 @@
     <script type="text/javascript" src="js/lib/StackBlur.js"></script>
     <script type="text/javascript" src="js/lib/canvg.js"></script>
     <script src="js/intro.js"></script>
-
+    <script type="text/javascript">
+        $(document).ready(function(){
+           var w = window.innerWidth;
+           var h = window.innerHeight;
+           var x = document.getElementById("container");
+           if(w < 800 || h < 400){           
+             x.style.display = "none";
+             alert("Current w:"+w+"h:"+h+"\nApplication does not supported for mobile \nor w<800 and h<400");
+           }else{
+             x.style.display = "block";
+           }
+        });
+        var id;
+        function doneResizing(){
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var x = document.getElementById("container");
+            if(w < 800 || h < 400){
+                x.style.display = "none";
+                alert("Current w:"+w+"h:"+h+"\nApplication does not supported for mobile \nor w<800 and h<400");
+            }else{
+                x.style.display = "block";
+            }
+        }
+        $(window).resize(function() {
+             clearTimeout(id);
+             id = setTimeout(doneResizing, 600);
+        });
+    </script>
     <script>
     //code for intro tutorial
     var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
@@ -973,7 +1007,7 @@
 
 
 
-
+  </div>
   </body>
 
 </html>
