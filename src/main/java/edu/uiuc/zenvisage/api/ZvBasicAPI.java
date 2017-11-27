@@ -409,7 +409,8 @@ public class ZvBasicAPI {
 		try {
 			if (logFilename.equals("")){
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");
+		//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 				logFilename = "../"+sdf.format(timestamp)+".log";
 			}
 			File file = new File(logFilename);
@@ -436,7 +437,7 @@ public class ZvBasicAPI {
 		System.out.println(querieslogFilename);
 		if (querieslogFilename.equals("")){
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 			querieslogFilename = "../"+"Queries-"+sdf.format(timestamp)+".log";
 		}		
 		File file = new File(querieslogFilename);
