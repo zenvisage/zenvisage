@@ -53,7 +53,7 @@ width: 90%;
   height: 242px !important;
   overflow-x: auto;
 }
-@media screen and (max-width: 1260px){
+@media screen and (max-width: 1264px){
     #table-div{
         display:none;
     }
