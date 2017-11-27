@@ -278,7 +278,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
                 return mapper[ d.toString() ]
               }));
         }
-        else if(getSelectedXAxis()==="year"){
+        else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
             graph.append("g")
               .attr("class", "axis axis--x")
               .attr("transform", "translate(0," + trans + ")")
@@ -714,7 +714,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
             }));
       }
 
-      else if(getSelectedXAxis()==="year"){
+      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
           graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
@@ -1022,7 +1022,7 @@ function displayOutlierResultsHelper( outlierResults )
               return mapper[ d.toString() ]
             }));
       }
-      else if(getSelectedXAxis()==="year"){
+      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
           graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
