@@ -348,8 +348,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       // Add the line by appending an svg:path element with the data line we created above
       // do this AFTER the axes above so that the line is above the tick-lines
 
-      if (getScatterplotOption())
-      {
+      if (getScatterplotOption()) {
         graph.selectAll("dot")
             .data(data)
             .enter().append("circle")
@@ -357,49 +356,40 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
             .attr("cx", function(d) { return x(d.xval); })
             .attr("cy", function(d) { return y(d.yval); })
             .style("fill", "black");
-      }
-      else
-      {
-        graph.append("path").attr("d", valueline(data))
-            .attr("stroke", "black")
-            .attr("stroke-width", 1)
-            .attr("fill", "none");
-      if(errorData != null){
-        graph.selectAll("dot")
-          .data(data)
-          .enter().append("line")
-          .attr("r", 1)
-          .attr("x1", function(d) {
-            return x(d.xval);
-          })
-          .attr("y1", function(d) {
-            return y(d.yval + (d.errorval / 2));
-          })
-          .attr("x2", function(d) {
-            return x(d.xval);
-          })
-          .attr("y2", function(d) {
-            return y(d.yval - (d.errorval / 2));
-          })
-          .style("stroke", "blue");
+      } else if (getBarchartOption()) {
+          graph.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .style("fill","steelblue")
+                .attr("x", function(d) { return x(d.xval); })
+                .attr("width", width/data.length)
+                .attr("y", function(d) { return y(d.yval); })
+                .attr("height", function(d) {return height-y(d.yval);});
 
-        graph.selectAll("dot")
-          .data(data)
-          .enter().append("line")
-          .attr("r", 1)
-          .attr("x1", function(d) {
-            return x(d.xval)-2;
-          })
-          .attr("y1", function(d) {
-            return y(d.yval + (d.errorval / 2));
-          })
-          .attr("x2", function(d) {
-            return x(d.xval)+2;
-          })
-          .attr("y2", function(d) {
-            return y(d.yval + (d.errorval / 2));
-          })
-          .style("stroke", "blue");
+      } else {
+          graph.append("path").attr("d", valueline(data))
+              .attr("stroke", "black")
+              .attr("stroke-width", 1)
+              .attr("fill", "none");
+        if(errorData != null){
+          graph.selectAll("dot")
+            .data(data)
+            .enter().append("line")
+            .attr("r", 1)
+            .attr("x1", function(d) {
+              return x(d.xval);
+            })
+            .attr("y1", function(d) {
+              return y(d.yval + (d.errorval / 2));
+            })
+            .attr("x2", function(d) {
+              return x(d.xval);
+            })
+            .attr("y2", function(d) {
+              return y(d.yval - (d.errorval / 2));
+            })
+            .style("stroke", "blue");
 
           graph.selectAll("dot")
             .data(data)
@@ -409,25 +399,43 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
               return x(d.xval)-2;
             })
             .attr("y1", function(d) {
-              return y(d.yval - (d.errorval / 2));
+              return y(d.yval + (d.errorval / 2));
             })
             .attr("x2", function(d) {
               return x(d.xval)+2;
             })
             .attr("y2", function(d) {
-              return y(d.yval - (d.errorval / 2));
+              return y(d.yval + (d.errorval / 2));
             })
             .style("stroke", "blue");
 
-              }
-      }
+            graph.selectAll("dot")
+              .data(data)
+              .enter().append("line")
+              .attr("r", 1)
+              .attr("x1", function(d) {
+                return x(d.xval)-2;
+              })
+              .attr("y1", function(d) {
+                return y(d.yval - (d.errorval / 2));
+              })
+              .attr("x2", function(d) {
+                return x(d.xval)+2;
+              })
+              .attr("y2", function(d) {
+                return y(d.yval - (d.errorval / 2));
+              })
+              .style("stroke", "blue");
+
+                }
+        }
 
       if (data2 != null && data2 != undefined && includeSketch && getShowOriginalSketch())
       {
         graph.append("g").attr("clip-path", "url(#clip-" + newCount.toString() + ")")
                           .append("path").attr("d", valueline(data2))
                           .attr("stroke", "teal")
-                          .attr("stroke-width", 1)
+                          .attr("stroke-wid", 1)
                           .attr("fill", "none");
       }
 
@@ -775,6 +783,17 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
           .attr("cx", function(d) { return x(d.xval); })
           .attr("cy", function(d) { return y(d.yval); })
           .style("fill", "black");
+    }else if (getBarchartOption()) {
+        graph.selectAll(".bar")
+              .data(data)
+              .enter().append("rect")
+              .attr("class", "bar")
+              .style("fill","steelblue")
+              .attr("x", function(d) { return x(d.xval); })
+              .attr("width", width/data.length)
+              .attr("y", function(d) { return y(d.yval); })
+              .attr("height", function(d) {return height-y(d.yval);});
+
     }
     else
     {
@@ -1078,6 +1097,17 @@ function displayOutlierResultsHelper( outlierResults )
           .attr("cx", function(d) { return x(d.xval); })
           .attr("cy", function(d) { return y(d.yval); })
           .style("fill", "black");
+    }else if (getBarchartOption()) {
+        graph.selectAll(".bar")
+              .data(data)
+              .enter().append("rect")
+              .attr("class", "bar")
+              .style("fill","steelblue")
+              .attr("x", function(d) { return x(d.xval); })
+              .attr("width", width/data.length)
+              .attr("y", function(d) { return y(d.yval); })
+              .attr("height", function(d) {return height-y(d.yval);});
+
     }
     else
     {

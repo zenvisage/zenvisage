@@ -488,6 +488,15 @@ app.controller('datasetController', [
       }
     });
 
+    $scope.$watch('showBar', function( newValue, oldValue ) {
+      if (newValue !== oldValue)
+      {
+        document.getElementById("loadingEclipse").style.display = "inline";
+        log.info("showBar",$scope.showBar)
+          //$scope.callGetUserQueryResultsWithCallBack(); //dont call representative trends
+          $scope.callGetUserQueryResults();
+      }
+    });
     $scope.$watchGroup( ['considerRange' ], function( newValue, oldValue ) {
       if (newValue !== oldValue)
       {

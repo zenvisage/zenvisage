@@ -190,7 +190,10 @@ function getScatterplotOption()
 {
   return angular.element($("#table-div")).scope().showScatterplot;
 }
-
+function getBarchartOption()
+{
+  return angular.element($("#table-div")).scope().showBar;
+}
 function getflipY()
 {
   return angular.element($("#table-div")).scope().flipY;
