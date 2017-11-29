@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<noscript>
+  <div>
+    <h1>This site requires JavaScript enabled and only support for laptop/desktop browser display browser size.</h1>
+  </div>
+</noscript>
 <html lang="en" ng-app="zenvisage">
   <head>
     <meta charset="utf-8">
@@ -12,6 +17,7 @@
     <link href="css/introjs.css" rel="stylesheet">
     <!-- <script type="text/javascript" src="secret.json"></script> -->
     </head>
+    <div id = "container" style="display:none;">
   <body class = "intro_after_dataload">
     <!-- this div contains everything in the body -->
 
@@ -27,7 +33,7 @@
               <form id="logInForm" action="" method="post">
 
                 <div class="form-group">
-                  <label>Username:</label><input type="text" id="username" class="form-control input-lg" name="uname">
+                  <label>Email:</label><input type="text" id="username" class="form-control input-lg" name="uname">
                 </div>
                 <div class="form-group">
                   <label>Password:</label><input type="password" id="password" class="form-control input-lg" name="pass">
@@ -136,6 +142,10 @@
           </div>
           </div>
         </div>
+    </div>
+
+    <div id="mobilePopup">
+      <span class="popuptext" id="myPopup">Zenvisage is not inteded for mobile screen resolutions.</span>
     </div>
 
     <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
@@ -921,7 +931,35 @@
     <script type="text/javascript" src="js/lib/StackBlur.js"></script>
     <script type="text/javascript" src="js/lib/canvg.js"></script>
     <script src="js/intro.js"></script>
-
+    <script type="text/javascript">
+        $(document).ready(function(){
+           var w = window.innerWidth;
+           var h = window.innerHeight;
+           var x = document.getElementById("container");
+           if(w < 1000 || h < 300){           
+             x.style.display = "none";
+             alert("Sorry — Zenvisage is not currently supported on small screen devices. Please enlarge your browser window widths or check back in later for mobile version!");
+           }else{
+             x.style.display = "block";
+           }
+        });
+        var id;
+        function doneResizing(){
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var x = document.getElementById("container");
+            if(w < 1000 || h < 300){
+                x.style.display = "none";
+                alert("Sorry — Zenvisage is not currently supported on small screen devices. Please enlarge your browser window widths or check back in later for mobile version!");
+            }else{
+                x.style.display = "block";
+            }
+        }
+        $(window).resize(function() {
+             clearTimeout(id);
+             id = setTimeout(doneResizing, 600);
+        });
+    </script>
     <script>
     //code for intro tutorial
     var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
@@ -957,13 +995,13 @@
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
-      var loggerOn=false
+      // var loggerOn=false
       var log = log4javascript.getLogger();
       var ajaxAppender = new log4javascript.AjaxAppender("/zv/logger");
-      if (!loggerOn){
-        console.log("off")
-        log.setLevel(log4javascript.Level.OFF)
-      }
+      // if (!loggerOn){
+      //   console.log("off")
+      //   log.setLevel(log4javascript.Level.OFF)
+      // }
       ajaxAppender.setTimed(true);
       ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
       log.addAppender(ajaxAppender);
@@ -972,7 +1010,7 @@
 
 
 
-
+  </div>
   </body>
 
 </html>

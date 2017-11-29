@@ -47,6 +47,14 @@ public class Readconfig {
 	static public int getPostgresport() {
 		return Integer.valueOf(props.getProperty("postgresport"));
 	}
+	
+	static public boolean getBackendLogger() {
+		return Boolean.valueOf(props.getProperty("logger"));
+	}
+	
+	static public boolean getBackendQueriesLog() {
+		return Boolean.valueOf(props.getProperty("querieslog"));
+	}
 
 	
 }
