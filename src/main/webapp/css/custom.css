@@ -48,11 +48,16 @@ hr {
 #results-table{
 width: 90%;
 }
+
 #table-div {
   height: 242px !important;
   overflow-x: auto;
 }
-
+@media screen and (max-width: 1264px){
+    #table-div{
+        display:none;
+    }
+}
 #graph-div {
   height: 242px !important;
   border: 0.5px solid #D9D9D9;
@@ -379,4 +384,12 @@ svg#treesvg {
 }
 .info-text {
   margin-bottom: 15px;
+}
+
+#mobilePopup{ display: none; }
+
+/* use a media query to filter small devices */
+@media only screen and (max-device-width:480px) {
+    /* show the popup */
+    #mobilePopup { display: block; }
 }
