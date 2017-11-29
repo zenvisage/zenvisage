@@ -49,6 +49,7 @@ public class ZvBasicAPI {
 	private ZvMain zvMain;
 	public String logFilename="";
 	public String querieslogFilename="";
+	public String username="Anonymous user";
     public ZvBasicAPI(){
 
 	}
@@ -60,6 +61,7 @@ public class ZvBasicAPI {
     		String pass = request.getParameter("pass");
     		zvMain = new ZvMain();
     		if(zvMain.checkUser(uname, pass)) {
+    			username = uname;
     			return zvMain.userinfo(uname);
     		}else {
     			return null;
@@ -76,6 +78,7 @@ public class ZvBasicAPI {
     		}
     		zvMain = new ZvMain();
     		if(zvMain.register(uname, pass)) {
+    			username = uname;
     			return zvMain.userinfo(uname);
     		}else {
     			return null;
@@ -398,11 +401,12 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/logger", method = RequestMethod.POST)
 	@ResponseBody
 	public void logger(HttpServletRequest request, HttpServletResponse response) {
-		if(!Readconfig.getLogger()) {
-//			System.out.print("Logger is off!\n");
+		if(!Readconfig.getBackendLogger()) {
+			System.out.print("Logger is off!\n");
 			return;
 		}
-		
+		System.out.print("Username:");
+		System.out.println(username);
 		System.out.print("logFilename:");
 		System.out.println(logFilename);
 		zvMain = new ZvMain();
@@ -418,6 +422,7 @@ public class ZvBasicAPI {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 			String log = request.getParameter("timestamp")+","+request.getRemoteAddr()+','+request.getParameter("message")+'\n';
 			System.out.println(log);
+			writer.write("Username: "+username+'\n');
 			writer.write(log);
 			writer.close();
 		} catch (Exception e) {
@@ -432,7 +437,13 @@ public class ZvBasicAPI {
 	 
 	
 	public void logQueries(String type,HttpServletRequest request,String message) {
+		if(!Readconfig.getBackendQueriesLog()) {
+			System.out.print("Queries Log is off!\n");
+			return;
+		}
 		zvMain = new ZvMain();
+		System.out.print("Username:");
+		System.out.println(username);
 		System.out.print("QuerieslogFilename:");
 		System.out.println(querieslogFilename);
 		if (querieslogFilename.equals("")){
@@ -459,6 +470,7 @@ public class ZvBasicAPI {
 				log  = sdf.format(timestamp)+",null,"+type+','+message+'\n';
 			}
 			System.out.println(log);
+			writer.write("Username: "+username+'\n');
 			writer.write(log);
 			writer.close();
 		} catch(Exception e){
