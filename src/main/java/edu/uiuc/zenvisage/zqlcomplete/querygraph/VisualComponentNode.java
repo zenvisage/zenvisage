@@ -115,26 +115,13 @@ public class VisualComponentNode extends QueryNode{
 			this.state = State.FINISHED;
 			return;
 		}
-
-		// call SQL backend
-		ZQLRow row = buildRowFromNode();
-		try {
-			// run zqlquery on this ZQLRow on the database table db
-			if(this.db == null || this.db.equals("")) {
-				// default case
-				sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
-			}
-			sqlQueryExecutor.ZQLQueryEnhanced(row, this.db);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
 		//update the look table with name variable, e.g, f1)
 		String name = this.getVc().getName().getName();
 
 		//Fills in missing info into vcList for output purposes
 		AxisVariable axisVar = (AxisVariable) lookuptable.get(z.getVariable());
-		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
+		VisualComponentList vcList = getVisualCollection();
 		// If our Z values are from the output of a process, we need to sort the list using the scores
 		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length > 0) {
 			double[] scores = axisVar.getScores();
@@ -150,6 +137,27 @@ public class VisualComponentNode extends QueryNode{
 		//System.out.println("vcList for node "+ name);
 		//System.out.println(sqlQueryExecutor.getVisualComponentList());
 		this.state = State.FINISHED;
+	}
+	
+	/**
+	 * Grabs the Visual Collection from data source. Currently implemented with Postgres backing it. 
+	 * In progress to make more modular, so can connect with any backend data tool.
+	 * @return
+	 */
+	private VisualComponentList getVisualCollection() {
+		// call SQL backend
+		ZQLRow row = buildRowFromNode();
+		try {
+			// run zqlquery on this ZQLRow on the database table db
+			if(this.db == null || this.db.equals("")) {
+				// default case
+				sqlQueryExecutor.ZQLQueryEnhanced(row, "real_estate");
+			}
+			sqlQueryExecutor.ZQLQueryEnhanced(row, this.db);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sqlQueryExecutor.getVisualComponentList();
 	}
 	
 	/**
@@ -304,7 +312,6 @@ public class VisualComponentNode extends QueryNode{
 	 */
 	//TODO: FIX it doesn't work for non-strings
 	private String generateParenthesizedList(List<String> values) {
-		// TODO Auto-generated method stub
 		String parentheSizedValues="(";
 		for(String value: values){
 			value = value.replaceAll("'", "").replaceAll("\"", "");
