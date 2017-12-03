@@ -102,14 +102,17 @@ svg#treesvg {
 
 #middle-left{
   height: 60vh; !important;
+  min-width: 495px;
   overflow-x: auto;
   -webkit-flex: 1;
   flex:1;
+  position:relative;
 }
 
 #middle-right{
   height: 100% !important;
   -webkit-flex: 1;
+  min-width: 495px;
   overflow-x: auto;
   flex:1;
   position:relative;
