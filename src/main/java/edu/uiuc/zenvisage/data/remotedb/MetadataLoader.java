@@ -19,12 +19,13 @@ import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 public class MetadataLoader {
 	private String name;
 	private Map<String,Column> columns= new HashMap<String,Column>();
-	public DatabaseMetaData databaseMetaData= new DatabaseMetaData();
+	public DatabaseMetaData databaseMetaData;
 	public long rowCount;
 
 	public MetadataLoader(String name,String schemafilename,String datafilename, boolean firstTime) throws IOException, InterruptedException, SQLException{
 		this.name=name;
 		this.databaseMetaData.dataset = name;
+		databaseMetaData = new DatabaseMetaData();
 		readSchema(schemafilename);
 		if(firstTime)
 			loadData0(datafilename);
