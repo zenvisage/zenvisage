@@ -122,7 +122,7 @@ public class Database {
 	private void readSchemaFromMetaTable(String tableName) throws IOException, InterruptedException, SQLException{
      SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 	 while(!sqlQueryExecutor.isTableExists(tableName)){
-	   Thread.sleep(2000); 
+	   Thread.sleep(200); 
 	 }
 	 List<VariableMeta> variableMetas = sqlQueryExecutor.getVariableMetaInfo(tableName);
 	 for (VariableMeta variableMeta: variableMetas){
@@ -169,7 +169,7 @@ public class Database {
 			header[i]=header[i].toLowerCase().replaceAll("-", "");
 		}
 		int count=0;
-		 String[] terms;
+		String[] terms;
 		while ((line = bufferedReader.readLine()) != null){
 			 terms=line.split(",");
             for(int i=0;i<header.length;i++){
