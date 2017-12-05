@@ -106,7 +106,8 @@ public class ZvMain {
 //	public String databaseName;
 	public String buffer = null;
 	
-	private  SQLQueryExecutor sqlQueryExecutor;
+	public static SQLQueryExecutor sqlQueryExecutor;
+	
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
 	public ZvMain() {

@@ -46,12 +46,12 @@ import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
 public class ZvBasicAPI {
 
 	@Autowired
-	private ZvMain zvMain;
+	public static ZvMain zvMain;
 	public String logFilename="";
 	public String querieslogFilename="";
 	public String username="Anonymous user";
     public ZvBasicAPI(){
-
+      zvMain = new ZvMain();
 	}
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -59,7 +59,7 @@ public class ZvBasicAPI {
     	public Map<String, ArrayList<String>> login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
     		String uname = request.getParameter("uname");
     		String pass = request.getParameter("pass");
-    		zvMain = new ZvMain();
+    		
     		if(zvMain.checkUser(uname, pass)) {
     			username = uname;
     			return zvMain.userinfo(uname);
@@ -76,7 +76,6 @@ public class ZvBasicAPI {
     		if(uname == "" || pass=="") {
     			return null;
     		}
-    		zvMain = new ZvMain();
     		if(zvMain.register(uname, pass)) {
     			username = uname;
     			return zvMain.userinfo(uname);
@@ -88,7 +87,6 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) {
-		zvMain = new ZvMain();
 		try {
 //		logQueries("fileUpload",request,"");
 		zvMain.fileUpload(request, response);
@@ -111,7 +109,6 @@ public class ZvBasicAPI {
     		String uname = request.getParameter("userName");
     		System.out.println(uname);
     		String tname = request.getParameter("datasetName");
-    		zvMain = new ZvMain();
     		if(zvMain.insertUserTablePair(uname,tname)) {
     			return zvMain.userinfo(uname);
     		}else {
@@ -124,7 +121,6 @@ public class ZvBasicAPI {
 	public String createClasses(HttpServletRequest request, HttpServletResponse response) {
 		String type="Create Classes";
 		StringBuilder stringBuilder = new StringBuilder();
-	    zvMain = new ZvMain();
 	    try {
 		    Scanner scanner = new Scanner(request.getInputStream());
 		    while (scanner.hasNextLine()) {
@@ -153,7 +149,6 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public String getClassInfo(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
 		StringBuilder stringBuilder = new StringBuilder();
-	    zvMain = new ZvMain();
 		try {
 		    Scanner scanner = new Scanner(request.getInputStream());
 		    while (scanner.hasNextLine()) {
@@ -177,7 +172,6 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/gettablelist", method = RequestMethod.GET)
 	@ResponseBody
 	public ArrayList<String> gettablelist(HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException, SQLException {
-		zvMain = new ZvMain();
 //		System.out.println(arg);
 		try {
 			return zvMain.getTablelist();
@@ -214,7 +208,6 @@ public class ZvBasicAPI {
 	public String postRepresentative(HttpServletRequest request, HttpServletResponse response) {
 	//	logQueries("postRepresentative",request);
 		StringBuilder stringBuilder = new StringBuilder();
-		zvMain = new ZvMain();
 		try {
 			Scanner scanner = new Scanner(request.getInputStream());
 			while (scanner.hasNextLine()) {
@@ -257,7 +250,6 @@ public class ZvBasicAPI {
 		String type="postOutlier";
 	//	logQueries(type,request);
 		StringBuilder stringBuilder = new StringBuilder();
-	    zvMain = new ZvMain();
 		try {
 		    Scanner scanner = new Scanner(request.getInputStream());
 		    while (scanner.hasNextLine()) {
@@ -284,7 +276,6 @@ public class ZvBasicAPI {
 		String type="downloadSimilarity";
 		//		logQueries(type,request);
 		StringBuilder stringBuilder = new StringBuilder();
-		zvMain = new ZvMain();
 		try {
 			Scanner scanner = new Scanner(request.getInputStream());
 			while (scanner.hasNextLine()) {
@@ -318,7 +309,6 @@ public class ZvBasicAPI {
 		String type="downloadOutlier";
 		System.out.println("downloadOutlier");
 		StringBuilder stringBuilder = new StringBuilder();
-	    zvMain = new ZvMain();
 		try {
 		    Scanner scanner = new Scanner(request.getInputStream());
 		    while (scanner.hasNextLine()) {
@@ -375,7 +365,6 @@ public class ZvBasicAPI {
 		String type="postSimilarity";
 		StringBuilder stringBuilder = new StringBuilder();
 	    String bodyforlogging;
-		zvMain = new ZvMain();
 		try {
 			scanner = new Scanner(request.getInputStream());
 		    while (scanner.hasNextLine()) {
@@ -409,7 +398,6 @@ public class ZvBasicAPI {
 		System.out.println(username);
 		System.out.print("logFilename:");
 		System.out.println(logFilename);
-		zvMain = new ZvMain();
 		try {
 			if (logFilename.equals("")){
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -441,7 +429,6 @@ public class ZvBasicAPI {
 			System.out.print("Queries Log is off!\n");
 			return;
 		}
-		zvMain = new ZvMain();
 		System.out.print("Username:");
 		System.out.println(username);
 		System.out.print("QuerieslogFilename:");
@@ -484,7 +471,6 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public String getDissimilarity(@RequestParam(value="query") String arg, HttpServletResponse response) {
 //		System.out.println(arg);
-		zvMain = new ZvMain();
 		try {
 		return zvMain.runDragnDropInterfaceQuerySeparated(arg, "DissimilaritySearch");
 		} catch (Exception e) {
@@ -502,7 +488,6 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public String getformdata(@RequestParam(value="query") String arg, HttpServletResponse response) {
 		System.out.println(arg);
-		zvMain = new ZvMain();
 		try {
 			String ret = zvMain.getInterfaceFormData2(arg);
 //			System.out.println("get interface form data: " + ret);
@@ -562,7 +547,6 @@ public class ZvBasicAPI {
 	public String executeZQLComplete(@RequestParam(value="query")  String arg, HttpServletResponse response) {
 		// for testing my query graph executor with zql.html
 		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
-		zvMain = new ZvMain();
 		try {
 		String outputGraphExecutor = zvMain.runQueryGraph(arg);
 		logQueries("ZQL",null,arg);
@@ -581,7 +565,6 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException, InterruptedException {
-		zvMain = new ZvMain();
 		if( variables != null) {
 	      zvMain.insertZenvisageMetatable(variables);
           System.out.println("Variables:"+variables.toString());
@@ -594,7 +577,6 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/executeScatter", method = RequestMethod.GET)
 	@ResponseBody
 	public String executeScatter(@RequestParam(value="query")  String arg, HttpServletResponse response) {
-		zvMain = new ZvMain();
 		try {
 			String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
 			logQueries("ZQL-Scatter",null,arg);
