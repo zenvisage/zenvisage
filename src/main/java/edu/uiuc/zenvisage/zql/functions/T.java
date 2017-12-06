@@ -1,11 +1,13 @@
 /**
  * 
  */
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql.functions;
 
 import java.util.List;
 
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.zql.AxisVariable;
+import edu.uiuc.zenvisage.zql.AxisVariableScores;
 
 /**
  * @author tarique

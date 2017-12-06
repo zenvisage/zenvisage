@@ -6,4 +6,4 @@
  * @author eideh
  *
  */
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;

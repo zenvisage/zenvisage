@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql.functions;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +16,9 @@ import org.apache.commons.math3.util.FastMath;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.DDTW.VCComparator;
+import edu.uiuc.zenvisage.zql.AxisVariable;
+import edu.uiuc.zenvisage.zql.AxisVariableScores;
+import edu.uiuc.zenvisage.zql.functions.DDTW.VCComparator;
 
 /**
  * @author tarique

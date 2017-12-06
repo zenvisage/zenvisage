@@ -1,11 +1,13 @@
 /**
  * 
  */
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql.filters;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import edu.uiuc.zenvisage.zql.AxisVariableScores;
 
 /**
  * @author tarique

@@ -1,4 +1,6 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql.filters;
+
+import edu.uiuc.zenvisage.zql.AxisVariableScores;
 
 /**
  * @author tarique

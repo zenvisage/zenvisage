@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql.functions;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,6 +10,8 @@ import java.util.List;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
+import edu.uiuc.zenvisage.zql.AxisVariable;
+import edu.uiuc.zenvisage.zql.AxisVariableScores;
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;

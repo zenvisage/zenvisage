@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql.functions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +17,8 @@ import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.distance.SegmentationDistance.Segment;
+import edu.uiuc.zenvisage.zql.AxisVariable;
+import edu.uiuc.zenvisage.zql.AxisVariableScores;
 
 /**
  * @author tarique
