@@ -49,10 +49,16 @@ public class ZvBasicAPI {
 	private ZvMain zvMain;
 	public String logFilename="";
 	public String querieslogFilename="";
-	public String username="Anonymous user";
+	private String username="Anonymous user";
     public ZvBasicAPI(){
 
 	}
+    
+    @RequestMapping(value = "/loginAvailable", method = RequestMethod.GET)
+	@ResponseBody
+    	public boolean loginAvailable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+    		return Readconfig.getLoginAvaliable();
+    	}
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody

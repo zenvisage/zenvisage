@@ -919,33 +919,51 @@ app.controller('datasetController', [
 
 // merged options and dataset controllers
 
-    $scope.inittablelist = function () {
-      $http.get('/zv/gettablelist'
-      ).then(
-          function (response) {
-            console.log("success: ", response);
-            console.log("cookies: ", userinfo);
-            var userinfo = $cookies.getObject('userinfo');
-            if(userinfo){
-              // $scope.updatetablelist(userinfo['tablelist']);
-              document.getElementById("loginmodaltrigger").style.display = "none";
-              document.getElementById("signoutbutton").style.display = "block";
-              datasetInfo.storetablelist(userinfo['tablelist'])
-              $scope.tablelist = datasetInfo.getTablelist().reverse();
-            }else{
-              document.getElementById("signoutbutton").style.display = "none";
-              document.getElementById("loginmodaltrigger").style.display = "block";
-              datasetInfo.storetablelist(response.data);
-              $scope.tablelist = datasetInfo.getTablelist().reverse();
-            }
-          },
-          function (response) {
-            console.log("failed to get table list: ", response);
-            $("#errorModalText").html(response);
-            $("#errorModal").modal();
-          }
-      );
-    };
+$scope.inittablelist = function () {
+  var login_ava = false;
+  $http.get('/zv/gettablelist'
+  ).then(
+    function (response) {
+      console.log("success: ", response);
+      console.log("cookies: ", userinfo);
+      var userinfo = $cookies.getObject('userinfo');
+      
+      $http.get('zv/loginAvailable')
+      .then(
+        function (response_ava){
+          login_ava = response_ava;
+        }
+      )
+      if(login_ava){
+        if(userinfo){
+          // $scope.updatetablelist(userinfo['tablelist']);
+          document.getElementById("loginmodaltrigger").style.display = "none";
+          document.getElementById("signoutbutton").style.display = "block";
+          datasetInfo.storetablelist(userinfo['tablelist'])
+          $scope.tablelist = datasetInfo.getTablelist().reverse();
+        }else{
+          document.getElementById("signoutbutton").style.display = "none";
+          document.getElementById("loginmodaltrigger").style.display = "block";
+          datasetInfo.storetablelist(response.data);
+          $scope.tablelist = datasetInfo.getTablelist().reverse();
+        }
+      }
+      else{
+        document.getElementById("signoutbutton").style.display = "none";
+        document.getElementById("loginmodaltrigger").style.display = "none";
+        datasetInfo.storetablelist(response.data);
+        $scope.tablelist = datasetInfo.getTablelist().reverse();
+      }
+      
+    },
+    function (response) {
+      console.log("failed to get table list: ", response);
+      $("#errorModalText").html(response);
+      $("#errorModal").modal();
+    }
+      
+  );
+};
 
     $scope.updatetablelist = function updatetablelist(args){
       // datasetInfo.storetablelist(args);

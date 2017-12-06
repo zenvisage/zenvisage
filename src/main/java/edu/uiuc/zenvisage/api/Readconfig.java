@@ -55,6 +55,10 @@ public class Readconfig {
 	static public boolean getBackendQueriesLog() {
 		return Boolean.valueOf(props.getProperty("querieslog"));
 	}
+	
+	static public boolean getLoginAvaliable() {
+		return Boolean.valueOf(props.getProperty("loginavailable"));
+	}
 
 	
 }

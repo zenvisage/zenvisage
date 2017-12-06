@@ -6,7 +6,7 @@ app.controller('fileuploadController', [
   var datasetNameInput;
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
-    if($cookies.getObject('userinfo')){
+    if($cookies.getObject('userinfo') ){
       formData = new FormData(this);
       if (formData.get("csv").name.split(".").pop() != "csv" ){
         alert("Please select a csv file");
