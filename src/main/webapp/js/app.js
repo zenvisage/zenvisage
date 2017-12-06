@@ -940,29 +940,30 @@ $scope.inittablelist = function () {
       $http.get('zv/loginAvailable')
       .then(
         function (response_ava){
-          login_ava = response_ava;
+          login_ava = response_ava.data;
+          if(login_ava){
+            if(userinfo){
+              // $scope.updatetablelist(userinfo['tablelist']);
+              document.getElementById("loginmodaltrigger").style.display = "none";
+              document.getElementById("signoutbutton").style.display = "block";
+              datasetInfo.storetablelist(userinfo['tablelist'])
+              $scope.tablelist = datasetInfo.getTablelist().reverse();
+            }else{
+              document.getElementById("signoutbutton").style.display = "none";
+              document.getElementById("loginmodaltrigger").style.display = "block";
+              datasetInfo.storetablelist(response.data);
+              $scope.tablelist = datasetInfo.getTablelist().reverse();
+            }
+          }
+          else{
+            document.getElementById("signoutbutton").style.display = "none";
+            document.getElementById("loginmodaltrigger").style.display = "none";
+            datasetInfo.storetablelist(response.data);
+            $scope.tablelist = datasetInfo.getTablelist().reverse();
+          }
         }
       )
-      if(login_ava){
-        if(userinfo){
-          // $scope.updatetablelist(userinfo['tablelist']);
-          document.getElementById("loginmodaltrigger").style.display = "none";
-          document.getElementById("signoutbutton").style.display = "block";
-          datasetInfo.storetablelist(userinfo['tablelist'])
-          $scope.tablelist = datasetInfo.getTablelist().reverse();
-        }else{
-          document.getElementById("signoutbutton").style.display = "none";
-          document.getElementById("loginmodaltrigger").style.display = "block";
-          datasetInfo.storetablelist(response.data);
-          $scope.tablelist = datasetInfo.getTablelist().reverse();
-        }
-      }
-      else{
-        document.getElementById("signoutbutton").style.display = "none";
-        document.getElementById("loginmodaltrigger").style.display = "none";
-        datasetInfo.storetablelist(response.data);
-        $scope.tablelist = datasetInfo.getTablelist().reverse();
-      }
+      
       
     },
     function (response) {
