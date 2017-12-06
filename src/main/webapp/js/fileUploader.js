@@ -93,9 +93,9 @@ app.controller('fileuploadController', [
                   data: insertUserTablePair,
                   success: function(response){
 
-                    if(username == 'public'){
-                      alert("Inserted as public dataset");
-                    }else{
+                    // if(username == 'public'){
+                    //   alert("Inserted as public dataset");
+                    // }else{
                       var today = new Date();
                       var expiresValue = new Date(today);
                       //Set 'expires' option in 2 hours
@@ -104,8 +104,8 @@ app.controller('fileuploadController', [
                       // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
                       datasetInfo.storetablelist(response['tablelist']);
                       $scope.tablelist = datasetInfo.getTablelist();
-                      console.log("table inserted into your account successfully")
-                    }
+                      // console.log("table inserted into your account successfully")
+                    // }
 
                   },
                   error: function(response){
