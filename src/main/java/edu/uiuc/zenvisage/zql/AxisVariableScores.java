@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,11 @@ public void setScore(double[] score) {
 	this.score = score;
 }
 private double [] score;
- AxisVariableScores(ArrayList<ArrayList<String>> axisvars, double[] score) {
+ public AxisVariableScores(ArrayList<ArrayList<String>> axisvars, double[] score) {
 	 this.axisvars = axisvars;
 	 this.score = score;
  }
- AxisVariableScores(ArrayList<ArrayList<String>> axisvars, List<Double> s) {
+ public AxisVariableScores(ArrayList<ArrayList<String>> axisvars, List<Double> s) {
 	 this.axisvars = axisvars;
 	 this.score = new double[s.size()];
 	 for (int i = 0; i < s.size(); i++) {

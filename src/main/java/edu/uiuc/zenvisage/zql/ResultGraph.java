@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;
 
 /**
  * @author Edward Xue

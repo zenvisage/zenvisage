@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,12 +8,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.zql.QueryNode.State;
+import edu.uiuc.zenvisage.zql.filters.ArgAnySortFilterPrimitive;
+import edu.uiuc.zenvisage.zql.filters.ArgMaxSortFilterPrimitive;
+import edu.uiuc.zenvisage.zql.filters.ArgMinSortFilterPrimitive;
+import edu.uiuc.zenvisage.zql.functions.DEuclidean;
+import edu.uiuc.zenvisage.zql.functions.TIncreasingness;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowResult;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTableResult;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 /**
  * @author Edward Xue

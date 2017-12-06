@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
 import edu.uiuc.zenvisage.service.ScatterRep;
+import edu.uiuc.zenvisage.zql.QueryNode.State;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 public class ScatterProcessNode extends ProcessNode {
 	static final Logger logger = LoggerFactory.getLogger(ScatterProcessNode.class);

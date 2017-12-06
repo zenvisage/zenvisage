@@ -3,7 +3,7 @@ package edu.uiuc.zenvisage.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.Polygon;
+import edu.uiuc.zenvisage.zql.Polygon;
 
 public class Sketch {
 	private ArrayList<Point> points=new ArrayList<Point>();

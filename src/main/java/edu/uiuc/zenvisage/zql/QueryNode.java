@@ -1,8 +1,8 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;
 
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
+import edu.uiuc.zenvisage.zql.QueryNode.State;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 /**
  * @author Edward Xue

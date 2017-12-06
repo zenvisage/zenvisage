@@ -1,4 +1,4 @@
-package edu.uiuc.zenvisage.zqlcomplete.querygraph;
+package edu.uiuc.zenvisage.zql;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.zql.QueryNode.State;
 import edu.uiuc.zenvisage.zqlcomplete.executor.VizColumn;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 /**
  * @author Edward Xue

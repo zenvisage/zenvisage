@@ -73,15 +73,15 @@ import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
 import edu.uiuc.zenvisage.server.DatabaseAutoLoader;
 import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
+import edu.uiuc.zenvisage.zql.QueryGraph;
+import edu.uiuc.zenvisage.zql.ScatterProcessNode;
+import edu.uiuc.zenvisage.zql.ZQLParser;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowResult;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowVizResult;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ScatterProcessNode;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 import edu.uiuc.zenvisage.service.distance.*;
 
 /**
@@ -248,7 +248,7 @@ public class ZvMain {
 	   QueryGraph graph;
 	   try {
 		   graph = parser.processZQLTable(zqlTable);
-		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 		   //convert it into front-end format.
 		   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
 		   //System.out.println(" Query Graph Execution Results Are:");
@@ -277,7 +277,7 @@ public class ZvMain {
 		   logger.info("Parsing ZQLTable to Graph took " + (endTime - startTime) + "ms");
 		   
 		   startTime = System.currentTimeMillis();
-		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 		   endTime = System.currentTimeMillis();
 		   logger.info("Execution took " + (endTime - startTime) + "ms");		   
 		   //convert it into front-end format.

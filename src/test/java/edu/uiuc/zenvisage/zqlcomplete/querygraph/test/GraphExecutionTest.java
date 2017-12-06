@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.service.ZvMain;
+import edu.uiuc.zenvisage.zql.ScatterVCNode;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ScatterVCNode;
 
 public class GraphExecutionTest {
 	static final Logger logger = LoggerFactory.getLogger(GraphExecutionTest.class);
