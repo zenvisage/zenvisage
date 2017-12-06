@@ -738,6 +738,9 @@
                       <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">
                         <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
                       </form>
+                      <form>
+                        <input ng-model="showBar" id="showBar" type="checkbox" name="show-bar"><label for="showBar">Show Bar Chart</label><br>
+                      </form>
                       <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="22">
                         <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
                       </form>

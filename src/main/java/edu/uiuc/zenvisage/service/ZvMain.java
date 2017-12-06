@@ -95,8 +95,7 @@ public class ZvMain {
 //	private InMemoryDatabase inMemoryDatabase;
 //	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
 
-	private Database inMemoryDatabase;
-
+	public static Map<String,Database> inMemoryDatabases;
 	//public Executor executor = new Executor(inMemoryDatabase);
 	public Analysis analysis;
 	public Distance distance;
@@ -104,14 +103,16 @@ public class ZvMain {
 	public Normalization outputNormalization;
 	public PiecewiseAggregation paa;
 	public ArrayList<List<Double>> data;
-	public String databaseName;
+//	public String databaseName;
 	public String buffer = null;
 	
-	private  SQLQueryExecutor sqlQueryExecutor;
+	public static SQLQueryExecutor sqlQueryExecutor;
+	
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
 	public ZvMain() {
 		sqlQueryExecutor = new SQLQueryExecutor();
+		inMemoryDatabases = new HashMap<String,Database>();
 		System.out.println("ZVMAIN LOADED");
 	}
 	
@@ -372,7 +373,7 @@ public class ZvMain {
 		String result = "";
 		
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
-		 this.databaseName=args.databasename;
+//		this.databaseName=args.databasename;
 	    ZQLParser parser = new ZQLParser();
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
 	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
@@ -502,14 +503,15 @@ public class ZvMain {
 		 System.out.println("runErrorQuery executing!");
 		 ZvQuery args_error = new ObjectMapper().readValue(query,ZvQuery.class);
 		 args_error.setYaxisAsError(); 
-		 this.databaseName=args_error.databasename;
+//		 this.databaseName=args_error.databasename;
+		 String databaseName = args_error.databasename;
 		 Query q_error = new Query("query").setGrouby(args_error.groupBy+","+args_error.xAxis).setAggregationFunc(args_error.aggrFunc).setAggregationVaribale(args_error.getAggrVar());
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q_error, args_error);
 		 System.out.println("args_error:"+args_error.toString());
 		 System.out.println("Before SQL");
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
-		 sqlQueryExecutor.ZQLQueryEnhanced(q_error.getZQLRow(), this.databaseName);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q_error.getZQLRow(), databaseName);
 		 System.out.println("After SQL");
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 
@@ -550,7 +552,8 @@ public class ZvMain {
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		 this.databaseName=args.databasename;
+//		 this.databaseName=args.databasename;
+		 String databaseName = args.databasename;
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
@@ -566,7 +569,7 @@ public class ZvMain {
 				//	 if (method.equals("SimilaritySearch"))
 						 setFilter(q, args);
 						 
-			 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
+			 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), databaseName);
 			 System.out.println("After SQL for no agg");
 			 rawVisualComponentList =  sqlQueryExecutor.getVisualComponentList();		
 			 args.setAggrFunc("avg");
@@ -590,7 +593,7 @@ public class ZvMain {
 		  */
 		 System.out.println("Before SQL");
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
-		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), databaseName);
 		 System.out.println("After SQL");
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 System.out.println("output size:"+output.size());
@@ -779,7 +782,8 @@ public class ZvMain {
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 System.out.println(args.databasename);
-		 this.databaseName=args.databasename;
+//		 this.databaseName=args.databasename;
+		 String databaseName = args.databasename;
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
@@ -938,11 +942,18 @@ public class ZvMain {
 
 	public String getInterfaceFomData(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
-		this.databaseName = fq.getDatabasename();
+//		this.databaseName = fq.getDatabasename();
+		String databaseName = fq.getDatabasename();
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
-		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
+		Database inMemoryDatabase;
+		if(inMemoryDatabases.containsKey(databaseName)){
+			inMemoryDatabase = inMemoryDatabases.get(databaseName);
+		} else {
+			inMemoryDatabase = new Database(databaseName, locations[0], locations[1], false);
+			inMemoryDatabases.put(databaseName, inMemoryDatabase);
+		}
 		//executor = new Executor(inMemoryDatabase);
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
@@ -951,10 +962,17 @@ public class ZvMain {
 		return buffer;
     }
 	
-	public String getInterfaceFomData2(String query) throws IOException, InterruptedException, SQLException{
+	public String getInterfaceFormData2(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
-		this.databaseName = fq.getDatabasename();
-		inMemoryDatabase = new Database(this.databaseName, null, null, false);
+		String databaseName = fq.getDatabasename();
+		Database inMemoryDatabase;
+		if(inMemoryDatabases.containsKey(databaseName)){
+			inMemoryDatabase = inMemoryDatabases.get(databaseName);
+		} else {
+			inMemoryDatabase = new Database(databaseName, null, null, false);
+			inMemoryDatabases.put(databaseName, inMemoryDatabase);
+		}
+		
 		//executor = new Executor(inMemoryDatabase);
 		
 
