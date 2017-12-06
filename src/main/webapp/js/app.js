@@ -1,6 +1,8 @@
 var app = angular.module('zenvisage', ['ngCookies']);
 var globalDatasetInfo;
 var allAxisColumns;
+var login_ava;
+
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
 
   $scope.AxisInfo = [];
@@ -929,7 +931,6 @@ app.controller('datasetController', [
 // merged options and dataset controllers
 
 $scope.inittablelist = function () {
-  var login_ava = false;
   $http.get('/zv/gettablelist'
   ).then(
     function (response) {
