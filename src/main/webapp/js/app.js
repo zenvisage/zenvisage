@@ -629,7 +629,8 @@ app.controller('datasetController', [
   }
 
   $scope.populateWeatherQuery1 = function() {
-
+      $("#dataset-form-control").val('weather');
+      angular.element($("#sidebar")).scope().onDatasetChange('weather');
       $scope.removeAndInsertRows( 1 );
 
       // $scope.insertRow()
@@ -669,6 +670,8 @@ app.controller('datasetController', [
   }
 
     $scope.populateWeatherQuery2 = function() {
+      $("#dataset-form-control").val('weather');
+      angular.element($("#sidebar")).scope().onDatasetChange('weather');
       $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'month'}")
@@ -701,6 +704,8 @@ app.controller('datasetController', [
     }
 
     $scope.populateWeatherQuery3 = function() {
+      $("#dataset-form-control").val('weather');
+      angular.element($("#sidebar")).scope().onDatasetChange('weather');
       $scope.removeAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
@@ -762,7 +767,8 @@ app.controller('datasetController', [
     // }
 
     $scope.populateQuery3 = function() {
-
+      $("#dataset-form-control").val('real_estate');
+      angular.element($("#sidebar")).scope().onDatasetChange('real_estate');
       $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year','month'}")
@@ -793,6 +799,8 @@ app.controller('datasetController', [
     }
 
     $scope.populateQuery4 = function() {
+      $("#dataset-form-control").val('real_estate');
+      angular.element($("#sidebar")).scope().onDatasetChange('real_estate');
       $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
       $($( ".tabler" )[0]).find(".x-val").val("x1<-{'year'}")
@@ -823,6 +831,8 @@ app.controller('datasetController', [
     }
 
     $scope.populateQuery5 = function() {
+      $("#dataset-form-control").val('real_estate');
+      angular.element($("#sidebar")).scope().onDatasetChange('real_estate');
       //Pairwise example
       $scope.removeAndInsertRows( 2 );
       $($( ".tabler" )[0]).find(".name").val("f1")
@@ -853,6 +863,8 @@ app.controller('datasetController', [
   //    removeZqlRow(4);
     }
     $scope.populateQuery7 = function() {
+      $("#dataset-form-control").val('real_estate');
+      angular.element($("#sidebar")).scope().onDatasetChange('real_estate');
       //Increasing example
       $scope.removeAndInsertRows( 1 );
       $($( ".tabler" )[0]).find(".name").val("f1")
@@ -937,7 +949,7 @@ $scope.inittablelist = function () {
       console.log("success: ", response);
       console.log("cookies: ", userinfo);
       var userinfo = $cookies.getObject('userinfo');
-      
+
       $http.get('zv/loginAvailable')
       .then(
         function (response_ava){
@@ -964,15 +976,15 @@ $scope.inittablelist = function () {
           }
         }
       )
-      
-      
+
+
     },
     function (response) {
       console.log("failed to get table list: ", response);
       $("#errorModalText").html(response);
       $("#errorModal").modal();
     }
-      
+
   );
 };
 
@@ -1292,6 +1304,7 @@ $scope.inittablelist = function () {
     };
 
    $scope.onDatasetChange = function(input) {
+      console.log("on change,",getSelectedDataset());
       document.getElementById("loadingEclipse").style.display = "inline";
       document.getElementById("loadingEclipse2").style.display = "inline";
       log.info("dataset selected",$('#dataset-form-control').val())
@@ -1300,6 +1313,8 @@ $scope.inittablelist = function () {
       clearUserQueryResultsTable();
       console.log('selected dataset',getSelectedDataset());
       if(input == 'initialize'){var q = constructDatasetChangeQuery('real_estate_tutorial');} //just for tutorial purposes
+      else if(input == 'weather'){var q = constructDatasetChangeQuery('weather');}
+      else if(input == 'real_estate'){var q = constructDatasetChangeQuery('real_estate');}
       else{
             var q = constructDatasetChangeQuery(getSelectedDataset());
           }
