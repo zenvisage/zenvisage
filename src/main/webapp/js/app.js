@@ -1361,7 +1361,11 @@ $scope.inittablelist = function () {
             $scope.selectedXAxis = "mjd57000";
             $scope.selectedYAxis = "psf_flux";
             $scope.selectedErrorAxis = "psf_flux_err"
-          }
+          }else if(datasetname == "weather"){
+          $scope.selectedCategory = "location";
+          $scope.selectedXAxis = "month";
+          $scope.selectedYAxis = "temperature";
+        }
           else{
             $scope.selectedCategory = $scope.categories[0];
             $scope.selectedXAxis = $scope.xAxisItems[0];
