@@ -514,7 +514,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
         }
       }catch(err){;}
     },
-    helper: function() {
+    helper: function(event) {
       return $(this).clone().css({
         width: $(event.target).width(),
         'border-style': "solid",
@@ -1213,7 +1213,7 @@ function displayOutlierResultsHelper( outlierResults )
         }
       }catch(err){;}
     },
-    helper: function() {
+    helper: function(event) {
       return $(this).clone().css({
         width: $(event.target).width(),
         'border-style': "solid",

@@ -319,11 +319,11 @@ function createSketchpad( data , flipY)
 
   function mousedownEvent () {
     // prevents mouse drags from selecting page text.
-    if (event.preventDefault) {
-      event.preventDefault();  // Firefox, Chrome, etc.
+    if (d3.event.preventDefault) {
+      d3.event.preventDefault();  // Firefox, Chrome, etc.
     } else {
-      event.returnValue = false;  // IE
-      event.cancelBubble = true;
+      d3.event.returnValue = false;  // IE
+      d3.event.cancelBubble = true;
     }
     isDrawing = true;
   }
