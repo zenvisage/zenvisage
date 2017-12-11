@@ -266,16 +266,26 @@ public class SQLQueryExecutor {
 	}
 
 	/*This is the main ZQL->SQLExcecution query*/
-	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
+	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException {
+		ZQLQueryEnhanced(zqlRow.getZ().getAttribute(), 
+				(String) zqlRow.getViz().getMap().get(VizColumn.aggregation),
+				zqlRow.getX().getAttributes().size(),
+				zqlRow.getY().getAttributes().size(),
+				zqlRow.getX().getAttributes(),
+				zqlRow.getY().getAttributes(),
+				zqlRow.getConstraint(),
+				databaseName);
+	}
+	
+	public void ZQLQueryEnhanced(String z, String agg, int xLen, int yLen, List<String> xAttributes, List<String> yAttributes, String constraints, String databaseName) throws SQLException{
 		String sql = null;
 
+		// Cleaning attributes
 		databaseName = databaseName.toLowerCase();
-		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String agg = ((String) zqlRow.getViz().getMap().get(VizColumn.aggregation)).toLowerCase().replaceAll("\"", "");
-
+		z = z.toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		agg = agg.toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		
 		//support list of x, y values, general all possible x,y combinations, generate sql
-		int xLen = zqlRow.getX().getAttributes().size();
-		int yLen = zqlRow.getY().getAttributes().size();
 
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
@@ -285,7 +295,7 @@ public class SQLQueryExecutor {
 		//this would build agg(soldprice),agg(listingprice),
 		StringBuilder build = new StringBuilder();
 		for(int j = 0; j < yLen; j++) {
-			String cleanY = zqlRow.getY().getAttributes().get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+			String cleanY = yAttributes.get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 			build.append(agg);
 			build.append("(");
 			build.append(cleanY);
@@ -296,11 +306,11 @@ public class SQLQueryExecutor {
 		build.setLength(build.length() - 1);
 		
 		for(int i = 0; i < xLen; i++){
-			String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+			String x = xAttributes.get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 
 			boolean hasZ = (z != null) && !z.equals("");
 			//zqlRow.getConstraint() has replaced the whereCondiditon
-			if (zqlRow.getConstraint() == null || zqlRow.getConstraint() =="") {
+			if (constraints == null || constraints =="") {
 				sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
 						+ " FROM " + databaseName
 						+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
@@ -309,7 +319,7 @@ public class SQLQueryExecutor {
 
 				sql = "SELECT " + (hasZ ? (z + "," + x) : x) + " ," + build.toString()
 				+ " FROM " + databaseName
-				+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
+				+ " WHERE " + appendConstraints(constraints) //zqlRow.getConstraint() has replaced the whereCondiditon
 				+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
 				+ " ORDER BY " + x;
 			}
@@ -322,7 +332,7 @@ public class SQLQueryExecutor {
 			
 			System.out.println("Running ZQL Query :"+sql);
 			//excecute sql and put into VisualComponentList
-			executeSQL(sql, zqlRow, databaseName, x, zqlRow.getY().getAttributes());
+			executeSQL(sql, z, databaseName, x, yAttributes);
 		}
 
 
@@ -330,7 +340,7 @@ public class SQLQueryExecutor {
         //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 	}
 
-	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, List<String> yAttributes) throws SQLException{
+	public void executeSQL(String sql, String z, String databaseName, String x, List<String> yAttributes) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		
@@ -349,7 +359,7 @@ public class SQLQueryExecutor {
 			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
 			if(rs.getString(2) == null || rs.getString(2).isEmpty()) continue;
 			
-			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
+			if(zType == null) zType = getMetaType(z, databaseName);
 			if(zType == null) zType = "string";	// if zAttribute is null, set the zType to be string
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
 
