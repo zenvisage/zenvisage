@@ -50,9 +50,9 @@ public class DEuclidean implements D {
 			for (VisualComponent vc : f1.getVisualComponentList()) {
 				for (String attributeConstraint : attributeConstraints) {
 					boolean satisfied = false;
-					if (attributeConstraint == vc.getxAttribute()) satisfied = true;
-					if (attributeConstraint == vc.getyAttribute()) satisfied = true;
-					if (attributeConstraint == vc.getZValue().getStrValue()) satisfied = true;
+					if (attributeConstraint.equals(vc.getxAttribute())) satisfied = true;
+					if (attributeConstraint.equals(vc.getyAttribute())) satisfied = true;
+					if (attributeConstraint.equals(vc.getZValue().getStrValue())) satisfied = true;
 					if (satisfied) {
 						f1List.add(vc);
 					}
@@ -61,9 +61,9 @@ public class DEuclidean implements D {
 			for (VisualComponent vc : f2.getVisualComponentList()) {
 				for (String attributeConstraint : attributeConstraints) {
 					boolean satisfied = false;
-					if (attributeConstraint == vc.getxAttribute()) satisfied = true;
-					if (attributeConstraint == vc.getyAttribute()) satisfied = true;
-					if (attributeConstraint == vc.getZValue().getStrValue()) satisfied = true;
+					if (attributeConstraint.equals(vc.getxAttribute())) satisfied = true;
+					if (attributeConstraint.equals(vc.getyAttribute())) satisfied = true;
+					if (attributeConstraint.equals(vc.getZValue().getStrValue())) satisfied = true;
 					if (satisfied) {
 						f2List.add(vc);
 					}

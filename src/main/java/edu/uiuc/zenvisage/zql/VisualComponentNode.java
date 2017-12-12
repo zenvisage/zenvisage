@@ -157,6 +157,17 @@ public class VisualComponentNode extends QueryNode{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		// Replace zvalues [*] with actual values like [CA,NY,...]
+		ZColumn z = row.getZ();
+		AxisVariable zAxisVariable = (AxisVariable) lookuptable.get(z.getVariable());
+		if (z.getValues().get(0).equals("*")) {
+			List<String> zValues = new ArrayList<>();
+			for (VisualComponent vc : sqlQueryExecutor.getVisualComponentList().visualComponentList) {
+				zValues.add(vc.getZValue().toString());
+			}
+			zAxisVariable.setValues(zValues);
+		}
 		return sqlQueryExecutor.getVisualComponentList();
 	}
 	
