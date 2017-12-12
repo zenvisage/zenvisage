@@ -75,7 +75,7 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.QueryGraph;
 import edu.uiuc.zenvisage.zql.ScatterProcessNode;
-import edu.uiuc.zenvisage.zql.ZQLParser;
+import edu.uiuc.zenvisage.zql.ZQLTableToGraph;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
@@ -244,7 +244,7 @@ public class ZvMain {
    public String runQueryGraph(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
-	   ZQLParser parser = new ZQLParser();
+	   ZQLTableToGraph parser = new ZQLTableToGraph();
 	   QueryGraph graph;
 	   try {
 		   graph = parser.processZQLTable(zqlTable);
@@ -268,7 +268,7 @@ public class ZvMain {
 	   long endTime = System.currentTimeMillis();
 	   logger.info("Mapping json to table took " + (endTime - startTime) + "ms");
 	   
-	   ZQLParser parser = new ZQLParser();
+	   ZQLTableToGraph parser = new ZQLTableToGraph();
 	   QueryGraph graph;
 	   try {
 		   startTime = System.currentTimeMillis();
@@ -374,7 +374,7 @@ public class ZvMain {
 		
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
 //		this.databaseName=args.databasename;
-	    ZQLParser parser = new ZQLParser();
+	    ZQLTableToGraph parser = new ZQLTableToGraph();
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
 	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
 		

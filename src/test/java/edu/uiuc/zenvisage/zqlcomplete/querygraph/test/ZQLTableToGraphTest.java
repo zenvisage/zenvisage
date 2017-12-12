@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.uiuc.zenvisage.zql.QueryGraph;
-import edu.uiuc.zenvisage.zql.ZQLParser;
+import edu.uiuc.zenvisage.zql.ZQLTableToGraph;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
@@ -85,7 +85,7 @@ public class ZQLTableToGraphTest {
 		
 		table.setZqlRows(rows);
 		
-		ZQLParser parser = new ZQLParser();
+		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
 			graph = parser.processZQLTable(table);
@@ -188,7 +188,7 @@ public class ZQLTableToGraphTest {
 		rows.add(row3);
 		
 		table.setZqlRows(rows);
-		ZQLParser parser = new ZQLParser();
+		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
 			graph = parser.processZQLTable(table);
