@@ -272,6 +272,34 @@ app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResu
     );
   };
 
+  $scope.submitZQLScript = function () {
+      // var test_script = "db = real_estate\n" +
+		// 		"ax x1 = [year]\n" +
+		// 		"ax y1 = [soldprice]\n" +
+		// 		"ax z1 = [state.*]\n" +
+		// 		"vc f1 = {x1, y1, z1}\n" +
+		// 		"ax y2 = [listingprice]\n" +
+		// 		"vc f2 = {x1, y1, z1}\n" +
+		// 		"ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))\n" +
+		// 		"vc f3 = {x1, y1, v1}\n" +
+		// 		"display(f3)";
+        var script = document.getElementById('zqlScriptCode').value;
+        $http.get('/zv/executeZQLScript', {params: {'query': script}}
+        ).then(
+          function (response) {
+              console.log("success: ", response);
+              var userQueryResults = response.data.outputCharts;
+              plotResults.displayUserQueryResults(userQueryResults, false);
+          },
+          function (response) {
+              console.log("failed ZQL Query", escape(response.data));
+              document.getElementById("loadingEclipse").style.display = "none";
+              $("#errorModalText").html(response.data);
+              $("#errorModal").modal();
+          }
+        );
+  };
+
   function submitNodeZQL( d )
   {
     $scope.queries['zqlRows'] = [];
@@ -442,7 +470,26 @@ app.controller('datasetController', [
     $scope.minDisplayThresh =0.0;
     // $scope.filter= '';
 
+    $scope.changeZQLTableState = function() {
+        // activate zqltable, and deactivate zqlscript
+        if (!$scope.zqltable) {
+            $scope.zqltable = true;
+            $scope.zqlscript = false;
+        } else {
+            // deactive zqltable
+            $scope.zqltable = false;
+        }
+    }
 
+    $scope.changeZQLScriptState = function() {
+        // activate zqlscript, deactivate zqltable
+        if (!$scope.zqlscript) {
+            $scope.zqlscript = true;
+            $scope.zqltable = false;
+        } else {
+            $scope.zqlscript = false;
+        }
+    }
 
     $scope.$watchGroup(['similarity'], function( newValue, oldValue ) {
       if (newValue !== oldValue)

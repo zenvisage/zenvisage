@@ -568,6 +568,25 @@ public class ZvBasicAPI {
 		return null;
 	}
 	
+	@RequestMapping(value = "/executeZQLScript", method = RequestMethod.GET)
+	@ResponseBody
+	public String executeZQLScript(@RequestParam(value="query")  String arg, HttpServletResponse response) {
+		// for testing my query graph executor with zql.html
+		// String outputExecutor = zvMain.runZQLCompleteQuery(arg);
+		try {
+		String outputGraphExecutor = zvMain.runZQLScript(arg);
+		logQueries("ZQL",null,arg);
+		return outputGraphExecutor;
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return null;
+	}
 	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException, InterruptedException {
