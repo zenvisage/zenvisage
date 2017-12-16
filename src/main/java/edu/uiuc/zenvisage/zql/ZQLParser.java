@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
+import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 import edu.uiuc.zenvisage.zqlcomplete.executor.XColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
@@ -68,7 +69,30 @@ public class ZQLParser {
 	        }
 	        System.out.println("---");
 	    }
-	    
+	    String temp = "process(argmin={x1,y1}, k=1, DEuclidean(f1,f2))";
+		match = Pattern.compile(processPattern).matcher(temp);
+	    while (match.find()) {
+	        for (int i = 0; i <= match.groupCount(); i++) {
+	            System.out.println(i + " " + match.group(i));
+	            //System.out.println(match.start(i) + " " + match.end(i));
+	            // match start: regexMatcher.start(i)
+	            // match end: regexMatcher.end(i)
+	        }
+	        System.out.println("---");
+	    }
+	    pattern = "(argmax)\\s*=\\s*\\{("+listPattern+")\\}";
+		//pattern = "(argmin)\\s*=\\s*\\{("+listPattern+")\\}";
+	    temp = "argmax={x1}";
+		match = Pattern.compile(pattern).matcher(temp);
+	    while (match.find()) {
+	        for (int i = 0; i <= match.groupCount(); i++) {
+	            System.out.println(i + " " + match.group(i));
+	            //System.out.println(match.start(i) + " " + match.end(i));
+	            // match start: regexMatcher.start(i)
+	            // match end: regexMatcher.end(i)
+	        }
+	        System.out.println("---");
+	    }
 	}
 	/**
 	 * Parse a ZQL Script, line by line
@@ -86,12 +110,69 @@ public class ZQLParser {
 				handleAxisVariableAssignment(line, lookUpTable);
 			} else if (isVCAssignment(line)) {
 				handleVCAssignment(line, lookUpTable, table);
+			} else if (isProcess(line)) {
+				handleProcess(line, lookUpTable, table);
 			}
 		}
 		
 		return null;
 	}
 	
+	static String listPattern = "(\\s*([a-zA-Z0-9_\\*]+(?:\\.\\*)?)\\s*,)*\\s*([a-zA-Z0-9_\\*]+(?:\\.\\*)?)";
+	static String variablePattern = "\\s*([a-zA-Z0-9_\\*]+)\\s*";
+	static String assignPattern = "\\s*([a-zA-Z0-9_]+)\\s*=\\s*(\\[?" + listPattern + "\\]?)|(?<=\\[)?(\\*)(?=\\])?";
+	static String axisPattern =  "(ax)\\s" + assignPattern;
+	static String vcPattern = "vc\\s" + variablePattern + "\\s*=\\s*\\{(.+),(.+),(.+)\\}";
+	static String processPattern = "process\\((.+\\}),([^,]+),(.+)\\)";
+
+	private static boolean isProcess(String input) {
+		//process(argmin_{v1}, k=1, DEuclidean(f1,f2))
+		Matcher match = Pattern.compile(processPattern).matcher(input);
+		return match.find();
+	}
+	
+	private static void handleProcess(String input, LookUpTable lookUpTable, ZQLTable table) {
+		ZQLRow row = new ZQLRow();
+		Processe process = row.getProcesse();
+		Matcher match = Pattern.compile(processPattern).matcher(input);
+		if (match.find()) {
+			String arg = match.group(1);
+			String pattern = "(argmax)\\s*=\\s*\\{("+listPattern+")\\}";
+			Matcher argMatch = Pattern.compile(pattern).matcher(arg);
+			String argType = null;
+			List<String> values = null;
+			if (argMatch.find()) {
+				argType = argMatch.group(1);
+				values = parseList(argMatch.group(2));
+			} else {
+				pattern = "(argmin)\\s*=\\s*\\{("+listPattern+")\\}";
+				argMatch = Pattern.compile(pattern).matcher(arg);
+				if (argMatch.find()) {
+					argType = argMatch.group(1);
+					values = parseList(argMatch.group(2));
+				}
+			}
+			process.setMetric(argType); // sets argmin
+			process.getAxisList1().addAll(values); // sets axis variable we iterate over argmin_{x1,y2}
+			
+			String count = match.group(2);
+			pattern = "[a-zA-Z]+\\s*=\\s*([0-9]+)";
+			Matcher countMatch = Pattern.compile(pattern).matcher(count);
+			if (countMatch.find()) {
+				String realCount = countMatch.group(1);
+				process.setCount(realCount);
+			}
+			String method = match.group(3);
+			pattern = "([a-zA-Z0-9_]+)\\(("+listPattern+")\\)";
+			Matcher methodMatch = Pattern.compile(pattern).matcher(method);
+			if (methodMatch.find()) {
+				String methodName = methodMatch.group(1);
+				String methodArgs = methodMatch.group(2);
+				process.setMethod(methodName);
+				process.getArguments().addAll(parseList(methodArgs));
+			}
+		}
+	}
 	
 	private static boolean isVCAssignment(String input) {
         //String pattern = "vc\\s" + variablePattern + "\\s*=\\s*\\{(.+)\\}";
@@ -105,11 +186,11 @@ public class ZQLParser {
 			String variable = match.group(1);
 			ZQLRow row = new ZQLRow();
 			String x = match.group(2);
-			handleX(input, lookUpTable,row);
+			handleX(x, lookUpTable,row);
 			String y = match.group(3);
-			handleY(input, lookUpTable,row);
+			handleY(y, lookUpTable,row);
 			String z = match.group(4);
-			handleZ(input, lookUpTable,row);
+			handleZ(z, lookUpTable,row);
 			table.getZqlRows().add(row);
 		}
 		
@@ -167,11 +248,6 @@ public class ZQLParser {
 		return match.find();
 	}
 	
-	static String listPattern = "(\\s*([a-zA-Z0-9_\\*]+(?:\\.\\*)?)\\s*,)*\\s*([a-zA-Z0-9_\\*]+(?:\\.\\*)?)";
-	static String variablePattern = "\\s*([a-zA-Z0-9_\\*]+)\\s*";
-	static String assignPattern = "\\s*([a-zA-Z0-9_]+)\\s*=\\s*(\\[?" + listPattern + "\\]?)|(?<=\\[)?(\\*)(?=\\])?";
-	static String axisPattern =  "(ax)\\s" + assignPattern;
-	static String vcPattern = "vc\\s" + variablePattern + "\\s*=\\s*\\{(.+),(.+),(.+)\\}";
 	private static void handleAxisVariableAssignment(String input, LookUpTable lookUpTable) {
 		//String pattern = "(ax)\\s([a-zA-Z0-9_]+)\\s*=\\s*(\\[?" + listPattern + "\\]?)|(?<=\\[)?(\\*)(?=\\])?";
 		Matcher match = Pattern.compile(axisPattern).matcher(input);

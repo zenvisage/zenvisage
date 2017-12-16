@@ -26,7 +26,8 @@ public class ZQLParserTest {
 				+ "ax z1 = [state.*]\n"
 				+ "vc f1 = {x1, y1, z1}\n"
 				+ "ax y2 = [listingprice]\n"
-				+ "vc f2 = {x1, y1, z2}\n");
+				+ "vc f2 = {x1, y1, z2}\n"
+				+ "process(argmin={z1},k=1,DEuclidean(f1,f2))");
 		
 	}
 }
