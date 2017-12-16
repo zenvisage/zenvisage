@@ -42,11 +42,13 @@ public class ZQLTableToGraph {
 	 * @throws SQLException 
 	 * @throws IOException 
 	 */
-	public QueryGraph processZQLTable(ZQLTable table) throws SQLException, IOException {
+	public QueryGraph processZQLTable(ZQLTable table, LookUpTable lookUpTable) throws SQLException, IOException {
 		
 		List<Node> queryEntryNodes = new ArrayList<Node>();
 		QueryGraph graph = new QueryGraph();
-		LookUpTable lookuptable = new LookUpTable();
+		if (lookUpTable == null) {
+			lookUpTable = new LookUpTable();
+		}
 		String db = table.getDb();
 		
 		// get the possible axis attributes (like year, month for x)
@@ -77,13 +79,13 @@ public class ZQLTableToGraph {
 			// Create the nodes
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz(), row.getSketchPoints());
 			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
-			VisualComponentNode vcNode = new VisualComponentNode(vc, lookuptable, sqlQueryExecutor);
+			VisualComponentNode vcNode = new VisualComponentNode(vc, lookUpTable, sqlQueryExecutor);
 			Processe process = row.getProcesse();
-			ProcessNode processNode = new ProcessNode(process, lookuptable);
+			ProcessNode processNode = new ProcessNode(process, lookUpTable);
 			
 			if(vc.getViz().getMap().containsKey(VizColumn.type) && vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
-				vcNode = new ScatterVCNode(vc, lookuptable, sqlQueryExecutor);
-				processNode = new ScatterProcessNode(process, lookuptable);
+				vcNode = new ScatterVCNode(vc, lookUpTable, sqlQueryExecutor);
+				processNode = new ScatterProcessNode(process, lookUpTable);
 			}
 			vcNode.setDb(db);
 
@@ -138,8 +140,8 @@ public class ZQLTableToGraph {
 				if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 						// if ZAttribute and ZValues are both null emptyZ case
-						boolean emptyZ = (z.getValues() == null || z.getValues().isEmpty()) && z.getAttribute().equals("");
-						if ( (z.getValues() != null && !z.getValues().isEmpty()) || emptyZ ) {
+						//boolean emptyZ = (z.getValues() == null || z.getValues().isEmpty()) && z.getAttribute().equals("");
+						if ( (z.getValues() != null && !z.getValues().isEmpty())  ) {
 							queryEntryNodes.add(vcNode);
 							graph.entryNodes.add(vcNode);
 							continue;

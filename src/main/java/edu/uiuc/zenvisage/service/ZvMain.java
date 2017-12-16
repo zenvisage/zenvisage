@@ -75,6 +75,7 @@ import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
 import edu.uiuc.zenvisage.zql.QueryGraph;
 import edu.uiuc.zenvisage.zql.ScatterProcessNode;
+import edu.uiuc.zenvisage.zql.ZQLParser;
 import edu.uiuc.zenvisage.zql.ZQLTableToGraph;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
@@ -247,7 +248,7 @@ public class ZvMain {
 	   ZQLTableToGraph parser = new ZQLTableToGraph();
 	   QueryGraph graph;
 	   try {
-		   graph = parser.processZQLTable(zqlTable);
+		   graph = parser.processZQLTable(zqlTable, null);
 		   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 		   //convert it into front-end format.
 		   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
@@ -272,7 +273,7 @@ public class ZvMain {
 	   QueryGraph graph;
 	   try {
 		   startTime = System.currentTimeMillis();
-		   graph = parser.processZQLTable(zqlTable);
+		   graph = parser.processZQLTable(zqlTable, null);
 		   endTime = System.currentTimeMillis();
 		   logger.info("Parsing ZQLTable to Graph took " + (endTime - startTime) + "ms");
 		   
@@ -290,6 +291,28 @@ public class ZvMain {
 	   }
    }
 
+   /**
+    * 
+    * @param zqlQuery Receives as a string the JSON format of a ZQLTable
+    * @return String representing JSON format of Result (output of running ZQLTable through our query graph)
+    * @throws IOException
+    * @throws InterruptedException
+    */
+   public String runZQLScript(String script) throws IOException, InterruptedException{
+	   System.out.println(script);
+	   //edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+	   //ZQLTableToGraph parser = new ZQLTableToGraph();
+	   QueryGraph graph;
+	   graph = ZQLParser.parseScript(script);
+	   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
+	   //convert it into front-end format.
+	   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
+	   //System.out.println(" Query Graph Execution Results Are:");
+	   //System.out.println(result);
+	   System.out.println("Done");
+	   return result;
+   }   
+   
    public ScatterOutput convertVCListtoScatterOutput(VisualComponentList vcList) {
 	   ScatterOutput finalOutput = new ScatterOutput();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL

@@ -88,7 +88,7 @@ public class ZQLTableToGraphTest {
 		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
-			graph = parser.processZQLTable(table);
+			graph = parser.processZQLTable(table, null);
 			//System.out.println(graph.toString());
 			 graph.printString();
 		} catch (SQLException e) {
@@ -191,7 +191,7 @@ public class ZQLTableToGraphTest {
 		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
-			graph = parser.processZQLTable(table);
+			graph = parser.processZQLTable(table, null);
 			//System.out.println(graph.toString());
 			 graph.printString();
 		} catch (SQLException e) {
