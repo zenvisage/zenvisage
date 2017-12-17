@@ -96,6 +96,35 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
 
 }]);
 
+app.controller('zqlScriptController', ['$scope', '$rootScope', '$http', 'plotResults', function($scope, $rootScope, $http, plotResults) {
+    $scope.submitZQLScript = function () {
+        // var test_script = "db = real_estate\n" +
+  		// 		"ax x1 = [year]\n" +
+  		// 		"ax y1 = [soldprice]\n" +
+  		// 		"ax z1 = [state.*]\n" +
+  		// 		"vc f1 = {x1, y1, z1}\n" +
+  		// 		"ax y2 = [listingprice]\n" +
+  		// 		"vc f2 = {x1, y1, z1}\n" +
+  		// 		"ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))\n" +
+  		// 		"vc f3 = {x1, y1, v1}\n" +
+  		// 		"display(f3)";
+          var script = document.getElementById('zqlScriptCode').value;
+          $http.get('/zv/executeZQLScript', {params: {'query': script}}
+          ).then(
+            function (response) {
+                console.log("success: ", response);
+                var userQueryResults = response.data.outputCharts;
+                plotResults.displayUserQueryResults(userQueryResults, false);
+            },
+            function (response) {
+                console.log("failed ZQL Query", escape(response.data));
+                document.getElementById("loadingEclipse").style.display = "none";
+                $("#errorModalText").html(response.data);
+                $("#errorModal").modal();
+            }
+          );
+    };
+}]);
 
 app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResults', '$compile', function ($scope, $rootScope, $http, plotResults, $compile) {
   $scope.input = {};
@@ -270,34 +299,6 @@ app.controller('zqlTableController', ['$scope', '$rootScope', '$http', 'plotResu
             $("#errorModal").modal();
         }
     );
-  };
-
-  $scope.submitZQLScript = function () {
-      // var test_script = "db = real_estate\n" +
-		// 		"ax x1 = [year]\n" +
-		// 		"ax y1 = [soldprice]\n" +
-		// 		"ax z1 = [state.*]\n" +
-		// 		"vc f1 = {x1, y1, z1}\n" +
-		// 		"ax y2 = [listingprice]\n" +
-		// 		"vc f2 = {x1, y1, z1}\n" +
-		// 		"ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))\n" +
-		// 		"vc f3 = {x1, y1, v1}\n" +
-		// 		"display(f3)";
-        var script = document.getElementById('zqlScriptCode').value;
-        $http.get('/zv/executeZQLScript', {params: {'query': script}}
-        ).then(
-          function (response) {
-              console.log("success: ", response);
-              var userQueryResults = response.data.outputCharts;
-              plotResults.displayUserQueryResults(userQueryResults, false);
-          },
-          function (response) {
-              console.log("failed ZQL Query", escape(response.data));
-              document.getElementById("loadingEclipse").style.display = "none";
-              $("#errorModalText").html(response.data);
-              $("#errorModal").modal();
-          }
-        );
   };
 
   function submitNodeZQL( d )
@@ -872,8 +873,7 @@ app.controller('datasetController', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
       $($( ".tabler" )[3]).find(".process").val("")
-      removeZqlRow(6);
-      removeZqlRow(5);
+
 //      removeZqlRow(4);
     }
 

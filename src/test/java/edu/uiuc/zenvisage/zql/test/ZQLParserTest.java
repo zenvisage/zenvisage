@@ -33,9 +33,10 @@ public class ZQLParserTest {
 				+ "ax z1 = [state.*]\n"
 				+ "vc f1 = {x1, y1, z1}\n"
 				+ "ax y2 = [listingprice]\n"
-				+ "vc f2 = {x1, y1, z2}\n"
+				+ "vc f2 = {x1, y2, z2}\n"
 				+ "ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))\n"
-				+ "vc f3 = {x1, y1, v1}\n"
+				+ "ax y2 = [soldprice, listingprice]\n" // can actually reuse y2!
+				+ "vc f3 = {x1, y2, v1}\n"
 				+ "display(f3)");
 	}
 	
@@ -48,9 +49,10 @@ public class ZQLParserTest {
 				+ "ax z1 = [state.*]\n"
 				+ "vc f1 = {x1, y1, z1}\n"
 				+ "ax y2 = [listingprice]\n"
-				+ "vc f2 = {x1, y1, z1}\n"
+				+ "vc f2 = {x1, y2, z1}\n"
 				+ "ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))\n"
-				+ "vc f3 = {x1, y1, v1}\n"
+				+ "ax y2 = [soldprice, listingprice]\n" // can actually reuse y2!
+				+ "vc f3 = {x1, y2, v1}\n"
 				+ "display(f3)";
 		try {
 			zvMain.runZQLScript(script);

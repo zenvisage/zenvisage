@@ -582,8 +582,19 @@
                 </tfoot>
               </table>
             </div>
-            <div ng-show="zqlscript" ng-controller="zqlTableController">
+            <div ng-show="zqlscript" ng-controller="zqlScriptController">
               <textarea id = "zqlScriptCode" rows="10" cols="100">
+                db = real_estate
+                ax x1 = [year]
+                ax y1 = soldprice
+                ax z1 = [state.*]
+                vc f1 = {x1, y1, z1}
+                ax y2 = [listingprice]
+                vc f2 = {x1, y2, z1}
+                ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))
+                ax y2 = [soldprice, listingprice]
+                vc f3 = {x1, y2, v1}
+                display(f3)
               </textarea>
               <button ng-click="submitZQLScript()">Submit</button>
             </div>
