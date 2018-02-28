@@ -67,19 +67,22 @@ import edu.uiuc.zenvisage.service.utility.DataReformation;
 import edu.uiuc.zenvisage.service.utility.LinearNormalization;
 import edu.uiuc.zenvisage.service.utility.Normalization;
 import edu.uiuc.zenvisage.service.utility.Original;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
 import edu.uiuc.zenvisage.service.utility.PiecewiseAggregation;
 import edu.uiuc.zenvisage.server.DatabaseAutoLoader;
 import edu.uiuc.zenvisage.server.UploadHandleServlet;
 import edu.uiuc.zenvisage.service.utility.Zscore;
+import edu.uiuc.zenvisage.zql.QueryGraph;
+import edu.uiuc.zenvisage.zql.ScatterProcessNode;
+import edu.uiuc.zenvisage.zql.ZQLParser;
+import edu.uiuc.zenvisage.zql.ZQLTableToGraph;
 import edu.uiuc.zenvisage.zql.executor.ZQLExecutor;
 import edu.uiuc.zenvisage.zql.executor.ZQLTable;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowResult;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRowVizResult;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ScatterProcessNode;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 import edu.uiuc.zenvisage.service.distance.*;
 
 /**
@@ -93,8 +96,7 @@ public class ZvMain {
 //	private InMemoryDatabase inMemoryDatabase;
 //	private Map<String,Database> inMemoryDatabases = new HashMap<String,Database>();
 
-	private Database inMemoryDatabase;
-
+	public static Map<String,Database> inMemoryDatabases;
 	//public Executor executor = new Executor(inMemoryDatabase);
 	public Analysis analysis;
 	public Distance distance;
@@ -102,14 +104,16 @@ public class ZvMain {
 	public Normalization outputNormalization;
 	public PiecewiseAggregation paa;
 	public ArrayList<List<Double>> data;
-	public String databaseName;
+//	public String databaseName;
 	public String buffer = null;
 	
-	private  SQLQueryExecutor sqlQueryExecutor;
+	public static SQLQueryExecutor sqlQueryExecutor;
+	
 	static final Logger logger = LoggerFactory.getLogger(ZvMain.class);
 
-	public ZvMain() throws IOException, InterruptedException, SQLException{
+	public ZvMain() {
 		sqlQueryExecutor = new SQLQueryExecutor();
+		inMemoryDatabases = new HashMap<String,Database>();
 		System.out.println("ZVMAIN LOADED");
 	}
 	
@@ -121,41 +125,43 @@ public class ZvMain {
 		while (ret.next()){
 			size = ret.getInt("count");
 		}
+		sqlQueryExecutor.st.close();
+		ret.close();
 		return size;
 	}
-//	public void loadData() throws IOException, InterruptedException{
-//
-//		inMemoryDatabase = createDatabase("real_estate","/data/real_estate.txt","/data/real_estate.csv");
-//		inMemoryDatabases.put("real_estate", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmu", "/data/cmuwithoutidschema.txt", "/data/fullcmuwithoutid.csv");
-//		inMemoryDatabases.put("cmu", inMemoryDatabase);
-//
-//
-//		inMemoryDatabase = createDatabase("cmutesting", "/data/cmuhaha.txt", "/data/cmuhaha.csv");
-//		inMemoryDatabases.put("cmutesting", inMemoryDatabase);
-//
-//		inMemoryDatabase = createDatabase("sales", "/data/sales.txt", "/data/sales.csv");
-//		inMemoryDatabases.put("sales", inMemoryDatabase);
-//
-//		System.out.println("Done loading data");
-//	}
-
-//	public static Database createDatabase(String name,String schemafile,String datafile) throws IOException, InterruptedException{
-//    	Database database = new Database(name,schemafile,datafile);
-//    	return database;
-//
-//    }
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
-		uploadDatasettoDB(names,true);
+		uploadDatasettoDB2(names,true);
 	}
-
+	
+	public void insertZenvisageMetatable(Variables variables) throws SQLException, IOException, InterruptedException{
+		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream3(variables);
+		String datasetName = variables.getDatasetName();
+		if(sqlQueryExecutor.isTableExists(datasetName)){
+			sqlQueryExecutor.dropCSV(datasetName);
+		}
+		while(sqlQueryExecutor.isTableExists(datasetName)){
+			Thread.sleep(500);
+		}
+		if(!sqlQueryExecutor.isTableExists(datasetName)){
+			if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  variables.getDatasetName())){
+				System.out.println("MetaType Data successfully inserted into Postgres");
+			} else {
+				System.out.println("MetaType already exists!");
+			}
+			sqlQueryExecutor.createTable(ret[1]);
+		}else{
+			System.out.println("Table already exists!");
+		}
+	}
 		
-   public  void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+	/*
+	 * This is for auto uploader.
+	 */
+    public void uploadDatasettoDB(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		
 		if (names.size() == 3) {
@@ -169,7 +175,7 @@ public class ZvMain {
 				if(sqlQueryExecutor.insert(locationTupleSQL, "zenvisage_metafilelocation", "database", names.get(0))){
 					System.out.println("Metafilelocation Data successfully inserted into Postgres");
 				} else {
-					System.out.println("Metafilelocation already exists!");
+					System.out.println("Metafilelocation aluploadDatasettoDBready exists!");
 				}
 				
 				/*insert zenvisage_metatable*/
@@ -192,7 +198,7 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			new Database(names.get(0), names.get(2), names.get(1), true);
+			//new Database(names.get(0), names.get(2), names.get(1), true);
 			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
 
 
@@ -200,9 +206,21 @@ public class ZvMain {
 		}
 		
 	}
-	
-	
-	
+   
+   
+   public void uploadDatasettoDB2(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+		if (names.size() == 2) {
+			/*create csv table*/	
+			if(overwrite){
+				while(!sqlQueryExecutor.isTableExists(names.get(0))){
+					 Thread.sleep(1000); 
+				}
+				sqlQueryExecutor.insertTable2(names.get(0), names.get(1));
+				System.out.println("Successfully uploaded csv: " + names.get(0));
+			
+			}
+		}
+	}
 	
 //   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 //		  System.out.println(zqlQuery);
@@ -227,11 +245,11 @@ public class ZvMain {
    public String runQueryGraph(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
-	   ZQLParser parser = new ZQLParser();
+	   ZQLTableToGraph parser = new ZQLTableToGraph();
 	   QueryGraph graph;
 	   try {
-		   graph = parser.processZQLTable(zqlTable);
-		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   graph = parser.processZQLTable(zqlTable, null);
+		   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 		   //convert it into front-end format.
 		   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
 		   //System.out.println(" Query Graph Execution Results Are:");
@@ -251,16 +269,16 @@ public class ZvMain {
 	   long endTime = System.currentTimeMillis();
 	   logger.info("Mapping json to table took " + (endTime - startTime) + "ms");
 	   
-	   ZQLParser parser = new ZQLParser();
+	   ZQLTableToGraph parser = new ZQLTableToGraph();
 	   QueryGraph graph;
 	   try {
 		   startTime = System.currentTimeMillis();
-		   graph = parser.processZQLTable(zqlTable);
+		   graph = parser.processZQLTable(zqlTable, null);
 		   endTime = System.currentTimeMillis();
 		   logger.info("Parsing ZQLTable to Graph took " + (endTime - startTime) + "ms");
 		   
 		   startTime = System.currentTimeMillis();
-		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 		   endTime = System.currentTimeMillis();
 		   logger.info("Execution took " + (endTime - startTime) + "ms");		   
 		   //convert it into front-end format.
@@ -273,6 +291,28 @@ public class ZvMain {
 	   }
    }
 
+   /**
+    * 
+    * @param zqlQuery Receives as a string the JSON format of a ZQLTable
+    * @return String representing JSON format of Result (output of running ZQLTable through our query graph)
+    * @throws IOException
+    * @throws InterruptedException
+    */
+   public String runZQLScript(String script) throws IOException, InterruptedException{
+	   System.out.println(script);
+	   //edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+	   //ZQLTableToGraph parser = new ZQLTableToGraph();
+	   QueryGraph graph;
+	   graph = ZQLParser.parseScript(script);
+	   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
+	   //convert it into front-end format.
+	   String result = new ObjectMapper().writeValueAsString(convertVCListtoVisualOutput(output));
+	   //System.out.println(" Query Graph Execution Results Are:");
+	   //System.out.println(result);
+	   System.out.println("Done");
+	   return result;
+   }   
+   
    public ScatterOutput convertVCListtoScatterOutput(VisualComponentList vcList) {
 	   ScatterOutput finalOutput = new ScatterOutput();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
@@ -289,6 +329,7 @@ public class ZvMain {
 	    }
 		return finalOutput;	   
    }
+   
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
 		Result finalOutput = new Result();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
@@ -355,8 +396,8 @@ public class ZvMain {
 		String result = "";
 		
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
-		 this.databaseName=args.databasename;
-	    ZQLParser parser = new ZQLParser();
+//		this.databaseName=args.databasename;
+	    ZQLTableToGraph parser = new ZQLTableToGraph();
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
 	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
 		
@@ -393,6 +434,31 @@ public class ZvMain {
 		System.out.println("Retrieved table list in db:"+retrieved);
 		return retrieved;
 	}
+	
+	public Map<String, ArrayList<String>> userinfo(String username) throws IOException, SQLException{
+		Map<String, ArrayList<String>> retrieved = sqlQueryExecutor.userinfo(username);
+		System.out.println("Retrieved userinfo in db:"+retrieved);
+		return retrieved;
+	}
+	
+    public boolean checkUser(String username, String password) throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+        boolean retrieved = sqlQueryExecutor.checkuser(username, password);
+        System.out.println("Login status:" + retrieved);
+        return retrieved;
+    }
+    
+    public boolean register(String username, String password) throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+        boolean retrieved = sqlQueryExecutor.register(username, password);
+        System.out.println("Registration status:" + retrieved);
+        return retrieved;
+    }
+    
+    public boolean insertUserTablePair(String username, String tablename) throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+        boolean retrieved = sqlQueryExecutor.insertusertablepair(username, tablename);
+        System.out.println("User table pair inserted:" + retrieved);
+        return retrieved;
+    }
+    
 	/* Will be obsolete when the new separated query method is utilized */
 //	public String runDragnDropInterfaceQuery(String query) throws InterruptedException, IOException{
 //		// get data from database
@@ -460,14 +526,15 @@ public class ZvMain {
 		 System.out.println("runErrorQuery executing!");
 		 ZvQuery args_error = new ObjectMapper().readValue(query,ZvQuery.class);
 		 args_error.setYaxisAsError(); 
-		 this.databaseName=args_error.databasename;
+//		 this.databaseName=args_error.databasename;
+		 String databaseName = args_error.databasename;
 		 Query q_error = new Query("query").setGrouby(args_error.groupBy+","+args_error.xAxis).setAggregationFunc(args_error.aggrFunc).setAggregationVaribale(args_error.getAggrVar());
 		 if (method.equals("SimilaritySearch"))
 			 setFilter(q_error, args_error);
 		 System.out.println("args_error:"+args_error.toString());
 		 System.out.println("Before SQL");
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
-		 sqlQueryExecutor.ZQLQueryEnhanced(q_error.getZQLRow(), this.databaseName);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q_error.getZQLRow(), databaseName);
 		 System.out.println("After SQL");
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
 		 
@@ -508,16 +575,35 @@ public class ZvMain {
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
 		 ZvQuery args = new ObjectMapper().readValue(query,ZvQuery.class);
-		 this.databaseName=args.databasename;
+//		 this.databaseName=args.databasename;
+		 String databaseName = args.databasename;
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
 			 args.setOutlierCount(size);
 			 query = new ObjectMapper().writeValueAsString(args);
 		 }
+		 
+		 VisualComponentList rawVisualComponentList=null;
+		 boolean noAgg=false;
+		 if(args.aggrFunc.equals("")){
+			 noAgg=true;
+			 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
+				//	 if (method.equals("SimilaritySearch"))
+						 setFilter(q, args);
+						 
+			 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), databaseName);
+			 System.out.println("After SQL for no agg");
+			 rawVisualComponentList =  sqlQueryExecutor.getVisualComponentList();		
+			 args.setAggrFunc("avg");
+		 }
+		 	 
+		 
 		 Query q = new Query("query").setGrouby(args.groupBy+","+args.xAxis).setAggregationFunc(args.aggrFunc).setAggregationVaribale(args.aggrVar);
 	//	 if (method.equals("SimilaritySearch"))
 			 setFilter(q, args);
+			 
+		 
 
 //		 ExecutorResult executorResult = executor.getData(q);
 //		 if (executorResult == null) return "";
@@ -530,9 +616,11 @@ public class ZvMain {
 		  */
 		 System.out.println("Before SQL");
 		 //sqlQueryExecutor.ZQLQuery(Z, X, Y, table, whereCondition);
-		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), this.databaseName);
+		 sqlQueryExecutor.ZQLQueryEnhanced(q.getZQLRow(), databaseName);
 		 System.out.println("After SQL");
 		 LinkedHashMap<String, LinkedHashMap<Float, Float>> output =  sqlQueryExecutor.getVisualComponentList().toInMemoryHashmap();
+		 System.out.println("output size:"+output.size());
+	
 		 System.out.println("After To HashMap");
 		 output = cleanUpDataWithAllZeros(output);
 		 
@@ -649,11 +737,24 @@ public class ZvMain {
 		 if (args.getDownload() && method.equals("RepresentativeTrends")){
 			 analysis.download(output, normalizedgroups, args);
 		 }else{
+			 System.out.println("computer analysis using output, normalizedgroups, args");
+			 System.out.println("output size:"+output.size());
+			 System.out.println("normalizedgroups length:"+normalizedgroups.length);
 			 analysis.compute(output, normalizedgroups, args);
 		 }
+		 
+		 if(noAgg)
+		 convertToRawViz(analysis,rawVisualComponentList);
+		 
 		 System.out.println("After Distance calulations");
 		 return analysis; 
 	}
+	
+	public void convertToRawViz(Analysis analysis,VisualComponentList rawVisualComponentList){
+		
+	}
+	
+	
 	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		 Analysis analysis = buildAnalysisDragnDropInterfaceQuery(query,method);
 		 return analysis.getChartOutput().finalOutput;
@@ -704,7 +805,8 @@ public class ZvMain {
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 System.out.println(args.databasename);
-		 this.databaseName=args.databasename;
+//		 this.databaseName=args.databasename;
+		 String databaseName = args.databasename;
 		 if (args.downloadAll){
 			 int size = getDatasetLength(args.groupBy,args.databasename);
 			 System.out.println("size:"+Integer.toString(size));
@@ -863,19 +965,45 @@ public class ZvMain {
 
 	public String getInterfaceFomData(String query) throws IOException, InterruptedException, SQLException{
 		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
-		this.databaseName = fq.getDatabasename();
+//		this.databaseName = fq.getDatabasename();
+		String databaseName = fq.getDatabasename();
 		//inMemoryDatabase = inMemoryDatabases.get(this.databaseName);
 		String locations[] = sqlQueryExecutor.getMetaFileLocation(databaseName);
 				//System.out.println(locations[0]+"\n"+locations[1]);
-		inMemoryDatabase = new Database(this.databaseName, locations[0], locations[1], false);
+		Database inMemoryDatabase;
+		if(inMemoryDatabases.containsKey(databaseName)){
+			inMemoryDatabase = inMemoryDatabases.get(databaseName);
+		} else {
+			inMemoryDatabase = new Database(databaseName, locations[0], locations[1], false);
+			inMemoryDatabases.put(databaseName, inMemoryDatabase);
+		}
+		//executor = new Executor(inMemoryDatabase);
+
+		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
+		System.out.println("BUFFER:" +buffer);
+//		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
+		return buffer;
+    }
+	
+	public String getInterfaceFormData2(String query) throws IOException, InterruptedException, SQLException{
+		FormQuery fq = new ObjectMapper().readValue(query,FormQuery.class);
+		String databaseName = fq.getDatabasename();
+		Database inMemoryDatabase;
+		if(inMemoryDatabases.containsKey(databaseName)){
+			inMemoryDatabase = inMemoryDatabases.get(databaseName);
+		} else {
+			inMemoryDatabase = new Database(databaseName, null, null, false);
+			inMemoryDatabases.put(databaseName, inMemoryDatabase);
+		}
+		
 		//executor = new Executor(inMemoryDatabase);
 		
 
 		buffer = new ObjectMapper().writeValueAsString(inMemoryDatabase.getFormMetdaData());
-		System.out.println(buffer);
+		System.out.println("BUFFER:" +buffer);
 //		System.out.println( new ObjectMapper().writeValueAsString(inMemoryDatabases.get(fq.getDatabasename()).getFormMetdaData()) );
 		return buffer;
-}
+    }
 
 
 

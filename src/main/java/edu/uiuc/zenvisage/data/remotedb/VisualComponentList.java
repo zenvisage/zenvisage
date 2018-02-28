@@ -1,16 +1,16 @@
 package edu.uiuc.zenvisage.data.remotedb;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class VisualComponentList {
 
-	private String ztype;
-	private String xType;
-    private String ytype;
-	private ArrayList<VisualComponent> visualComponentList;
-
+	public ArrayList<VisualComponent> visualComponentList;
+    public HashMap<String,VisualComponent> ZToVisualComponents = new HashMap<>();
+	
+	
 	public VisualComponentList(){}
 	
 	public ArrayList<VisualComponent> getVisualComponentList() {
@@ -40,10 +40,14 @@ public class VisualComponentList {
 			for(int j = 0; j < xList.size(); j++) {
 				map.put(new Float(xList.get(j).getNumberValue()), new Float(yList.get(j).getNumberValue()));
 			}
-			output.put(new String(i.getZValue().toString()), map);
+			//System.out.println("zValue:"+i.getZValue());
+//			if(i.getZValue()==null || i.getZValue().toString() == null ) continue;
+			String key = new String(i.getZValue().toString());
+			output.put(key, map);
 		}
 		return output;
 	}
+	
 	
 	public String toString(){
 		StringBuilder ret = new StringBuilder();
@@ -53,46 +57,5 @@ public class VisualComponentList {
 		return ret.toString();
 	}
 	
-	/**
-	 * @return the ztype
-	 */
-	public String getZtype() {
-		return ztype;
-	}
-
-	/**
-	 * @param ztype the ztype to set
-	 */
-	public void setZtype(String ztype) {
-		this.ztype = ztype;
-	}
-
-	/**
-	 * @return the xType
-	 */
-	public String getxType() {
-		return xType;
-	}
-
-	/**
-	 * @param xType the xType to set
-	 */
-	public void setxType(String xType) {
-		this.xType = xType;
-	}
-
-	/**
-	 * @return the ytype
-	 */
-	public String getYtype() {
-		return ytype;
-	}
-
-	/**
-	 * @param ytype the ytype to set
-	 */
-	public void setYtype(String ytype) {
-		this.ytype = ytype;
-	}
 
 }

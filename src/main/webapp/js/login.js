@@ -1,1 +1,91 @@
-var _0x8926=["\x74\x6F\x67\x67\x6C\x65","\x6D\x6F\x64\x61\x6C","\x23\x6C\x6F\x67\x69\x6E\x44\x69\x61\x6C\x6F\x67","\x63\x6C\x69\x63\x6B","\x6C\x65\x6E\x67\x74\x68","\x76\x61\x6C","\x23\x75\x73\x65\x72\x6E\x61\x6D\x65","\x75\x73\x65\x72\x6E\x61\x6D\x65","\x23\x70\x61\x73\x73\x77\x6F\x72\x64","\x70\x61\x73\x73\x77\x6F\x72\x64","\x68\x69\x64\x65","\x72\x65\x6D\x6F\x76\x65","\x23\x6C\x6F\x67\x69\x6E\x4D\x6F\x64\x61\x6C","\x6F\x6E","\x23\x73\x69\x67\x6E\x49\x6E"];$(_0x8926[2])[_0x8926[1]](_0x8926[0]);$(_0x8926[14])[_0x8926[13]](_0x8926[3],function(){for(var _0xd97cx1=0;_0xd97cx1< secret[_0x8926[4]];_0xd97cx1++){var _0xd97cx2=secret[_0xd97cx1];if(($(_0x8926[6])[_0x8926[5]]()=== _0xd97cx2[_0x8926[7]])& ($(_0x8926[8])[_0x8926[5]]()=== _0xd97cx2[_0x8926[9]])){$(_0x8926[2])[_0x8926[1]](_0x8926[10]);$(_0x8926[12])[_0x8926[11]]()}}})
+// var app = angular.module('zenvisage', []);
+
+  app.controller('loginModalController', [
+      '$scope', '$rootScope', '$http', '$cookies','datasetInfo',
+      function($scope, $rootScope, $http, $cookies, datasetInfo){
+
+    $("#login_cancel").on('click',function(){
+      $('#loginModal').modal('hide');
+    });
+
+    $("#loginmodaltrigger").on('click',function(e){
+        if(!$cookies.getObject("userinfo")){
+          $('#loginModal').modal('show');
+        }else{
+          alert("You have logged in")
+        }
+    })
+
+    $("#signIn").on('click',function(e){
+      // e.preventDefault();
+      $('#loginModal').modal('hide');
+      $.ajax({
+               type: "POST",
+               url: "/zv/login",
+               data: $("#logInForm").serialize(), // serializes the form's elements.
+               success: function(response)
+               {
+                  console.log(response);
+                  if(response){
+                    alert("You have logged in successfully");
+
+                    var today = new Date();
+                    var expiresValue = new Date(today);
+                    //Set 'expires' option in 2 hours
+                    expiresValue.setMinutes(today.getMinutes() + 120);
+                    $cookies.putObject("userinfo",response,{'expires': expiresValue})
+                    // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
+                    datasetInfo.storetablelist(response['tablelist']);
+                    $scope.tablelist = datasetInfo.getTablelist();
+                    location.reload();
+                  }else{
+                    alert("Failed to log in");
+                  }
+               }
+      });
+      return false;
+    });
+
+
+    $("#register").on('click',function(e){
+      // e.preventDefault();
+      $('#loginModal').modal('hide');
+      $.ajax({
+               type: "POST",
+               url: "/zv/register",
+               data: $("#logInForm").serialize(), // serializes the form's elements.
+               success: function(response)
+               {
+                  console.log(response);
+                  if(response){
+                    alert("You have registered successfully and are now logged in");
+
+                    var today = new Date();
+                    var expiresValue = new Date(today);
+                    //Set 'expires' option in 2 hours
+                    expiresValue.setMinutes(today.getMinutes() + 120);
+                    $cookies.putObject("userinfo",response,{'expires': expiresValue})
+                    // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
+                    datasetInfo.storetablelist(response['tablelist']);
+                    $scope.tablelist = datasetInfo.getTablelist();
+                    location.reload();
+
+                  }else{
+                    alert("Username already exists, please login or use another username");
+                  }
+                  
+               }
+      });
+      return false;
+    });
+
+
+    $("#signoutbutton").on('click',function(e){
+        $cookies.remove("userinfo");
+        alert("You have signed out!");
+        location.reload();
+
+    });
+  }]);
+
+

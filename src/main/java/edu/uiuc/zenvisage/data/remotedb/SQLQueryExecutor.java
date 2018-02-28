@@ -1,5 +1,8 @@
 package edu.uiuc.zenvisage.data.remotedb;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,8 +24,14 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.model.DynamicClass;
+import edu.uiuc.zenvisage.model.VariableMeta;
 import edu.uiuc.zenvisage.api.Readconfig;
+import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
 import edu.uiuc.zenvisage.model.ClassElement;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
+
 import java.util.Arrays;
 
 /**
@@ -36,11 +45,13 @@ public class SQLQueryExecutor {
 	 * Settings specific to local PSQL database, need to change this!!!!
 	 */
 	private String database = "postgres";
+//	private String host = "jdbc:postgresql://localhost:" + Readconfig.getPostgresport() + "/"+database;
 	private String host = "jdbc:postgresql://localhost:5432/"+database;
 	private String username;
 	private String password;
 	Connection c = null;
 	public VisualComponentList visualComponentList;
+	public Statement st = null;
 
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -70,9 +81,8 @@ public class SQLQueryExecutor {
 
 	// Query database and return result
 	public ResultSet query(String sQLQuery) throws SQLException {
-	      Statement stmt = c.createStatement();
-	      ResultSet ret = stmt.executeQuery(sQLQuery);
-	      //stmt.close();
+	      this.st = c.createStatement();
+	      ResultSet ret = st.executeQuery(sQLQuery);
 	      return ret;
 	}
 	
@@ -100,17 +110,106 @@ public class SQLQueryExecutor {
 	}
 	
 	
+//	public ArrayList<String> gettablelist() throws SQLException {
+//		Statement stmt = c.createStatement();
+//		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation' AND table_name != 'users' AND table_name != 'users_tables'";		
+//		ResultSet rs = stmt.executeQuery(sql);
+//		ArrayList<String> tablelist = new ArrayList<String>();
+//		while ( rs.next() ) {
+//            String tablename = rs.getString("table_name");
+//            tablelist.add(tablename);
+//		}
+//        return tablelist;
+//	}
+	
 	public ArrayList<String> gettablelist() throws SQLException {
 		Statement stmt = c.createStatement();
-		String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name != 'zenvisage_metatable' AND table_name != 'zenvisage_dynamic_classes' AND table_name != 'zenvisage_metafilelocation'";
+		String sql = "SELECT tables FROM users_tables WHERE users = 'public'";		
 		ResultSet rs = stmt.executeQuery(sql);
 		ArrayList<String> tablelist = new ArrayList<String>();
 		while ( rs.next() ) {
-            String tablename = rs.getString("table_name");
+            String tablename = rs.getString("tables");
             tablelist.add(tablename);
 		}
+		stmt.close();
+		rs.close();
         return tablelist;
 	}
+	
+	public Map<String, ArrayList<String>> userinfo(String username) throws SQLException {
+		Statement stmt = c.createStatement();
+		String sql = "SELECT tables FROM users_tables WHERE users = 'public' OR users ='"+username+"'";
+		ResultSet rs = stmt.executeQuery(sql);
+		Map<String, ArrayList<String>> info = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> tablelist = new ArrayList<String>();
+		ArrayList<String> username_info = new ArrayList<String>();
+//		ArrayList<String> userrole_info = new ArrayList<String>();
+		username_info.add(username);
+		info.put	("username", username_info);
+		while ( rs.next() ) {
+            String tablename = rs.getString("tables");
+            tablelist.add(tablename);
+		}
+		info.put("tablelist", tablelist);
+		stmt.close();
+		rs.close();
+        return info;
+	}
+	
+	
+    public boolean checkuser(String username, String password) throws SQLException, CannotPerformOperationException, InvalidHashException {
+        Statement stmt = c.createStatement();
+        String sql = "SELECT id, password FROM users WHERE id='" + username + "'";
+//        System.out.println(sql);
+        ResultSet rs = stmt.executeQuery(sql);
+        if(rs.next()) {
+	        if(PasswordStorage.verifyPassword(password, rs.getString("password"))) {	
+	        			stmt.close();
+	                System.out.println("Login Succeed");
+	                stmt.close();
+	                rs.close();
+	                return true;
+	        	}
+        }
+        stmt.close();
+        rs.close();
+        System.out.println("Login Failed");
+        return false;
+    }
+    
+    public boolean register(String username, String password) throws SQLException, CannotPerformOperationException {
+    		Statement stmt = c.createStatement();
+    		
+    		String sqlfinduser = "SELECT id FROM users WHERE id='" + username + "'";
+    		ResultSet rs = stmt.executeQuery(sqlfinduser);
+    		if(rs.next()) {
+    			System.out.println("User exists, please login");
+    			stmt.close();
+    			rs.close();
+    			return false;
+    		}
+    		else {
+    			String hashedpass = PasswordStorage.createHash(password);
+        		String sql = "INSERT INTO users (id,password) VALUES ('"+username+"','"+hashedpass+"')";
+            System.out.println(sql);
+            stmt.execute(sql);
+            System.out.println("Register successfully");
+            stmt.close();
+            rs.close();
+            return true;
+    		}
+    }
+    
+	public boolean insertusertablepair(String username, String tablename) throws SQLException {
+    	Statement stmt = c.createStatement();
+    		String sql = "INSERT INTO users_tables (users,tables) VALUES ('"+username+"','"+tablename+"')";
+        stmt.execute(sql);
+        System.out.println(sql);
+        System.out.println("Insert user table pair successfully");
+        stmt.close();
+		return true;
+    }
+    
 
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
@@ -167,16 +266,26 @@ public class SQLQueryExecutor {
 	}
 
 	/*This is the main ZQL->SQLExcecution query*/
-	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException{
+	public void ZQLQueryEnhanced(ZQLRow zqlRow, String databaseName) throws SQLException {
+		ZQLQueryEnhanced(zqlRow.getZ().getAttribute(), 
+				(String) zqlRow.getViz().getMap().get(VizColumn.aggregation),
+				zqlRow.getX().getAttributes().size(),
+				zqlRow.getY().getAttributes().size(),
+				zqlRow.getX().getAttributes(),
+				zqlRow.getY().getAttributes(),
+				zqlRow.getConstraint(),
+				databaseName);
+	}
+	
+	public void ZQLQueryEnhanced(String z, String agg, int xLen, int yLen, List<String> xAttributes, List<String> yAttributes, String constraints, String databaseName) throws SQLException{
 		String sql = null;
 
+		// Cleaning attributes
 		databaseName = databaseName.toLowerCase();
-		String z = zqlRow.getZ().getAttribute().toLowerCase().replaceAll("'", "").replaceAll("\"", "");
-		String agg = ((String) zqlRow.getViz().getMap().get(VizColumn.aggregation)).toLowerCase().replaceAll("\"", "");
-
+		z = z.toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		agg = agg.toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+		
 		//support list of x, y values, general all possible x,y combinations, generate sql
-		int xLen = zqlRow.getX().getAttributes().size();
-		int yLen = zqlRow.getY().getAttributes().size();
 
 		this.visualComponentList = new VisualComponentList();
 		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
@@ -186,7 +295,7 @@ public class SQLQueryExecutor {
 		//this would build agg(soldprice),agg(listingprice),
 		StringBuilder build = new StringBuilder();
 		for(int j = 0; j < yLen; j++) {
-			String cleanY = zqlRow.getY().getAttributes().get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+			String cleanY = yAttributes.get(j).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 			build.append(agg);
 			build.append("(");
 			build.append(cleanY);
@@ -197,11 +306,11 @@ public class SQLQueryExecutor {
 		build.setLength(build.length() - 1);
 		
 		for(int i = 0; i < xLen; i++){
-			String x = zqlRow.getX().getAttributes().get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
+			String x = xAttributes.get(i).toLowerCase().replaceAll("'", "").replaceAll("\"", "");
 
 			boolean hasZ = (z != null) && !z.equals("");
 			//zqlRow.getConstraint() has replaced the whereCondiditon
-			if (zqlRow.getConstraint() == null || zqlRow.getConstraint() =="") {
+			if (constraints == null || constraints =="") {
 				sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
 						+ " FROM " + databaseName
 						+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
@@ -210,7 +319,7 @@ public class SQLQueryExecutor {
 
 				sql = "SELECT " + (hasZ ? (z + "," + x) : x) + " ," + build.toString()
 				+ " FROM " + databaseName
-				+ " WHERE " + appendConstraints(zqlRow.getConstraint()) //zqlRow.getConstraint() has replaced the whereCondiditon
+				+ " WHERE " + appendConstraints(constraints) //zqlRow.getConstraint() has replaced the whereCondiditon
 				+ " GROUP BY " + (hasZ ? (z + "," + x) : x)
 				+ " ORDER BY " + x;
 			}
@@ -223,7 +332,7 @@ public class SQLQueryExecutor {
 			
 			System.out.println("Running ZQL Query :"+sql);
 			//excecute sql and put into VisualComponentList
-			executeSQL(sql, zqlRow, databaseName, x, zqlRow.getY().getAttributes());
+			executeSQL(sql, z, databaseName, x, yAttributes);
 		}
 
 
@@ -231,13 +340,12 @@ public class SQLQueryExecutor {
         //System.out.println("Printing Visual Groups:\n" + this.visualComponentList.toString());
 	}
 
-	public void executeSQL(String sql, ZQLRow zqlRow, String databaseName, String x, List<String> yAttributes) throws SQLException{
+	public void executeSQL(String sql, String z, String databaseName, String x, List<String> yAttributes) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		
 		System.out.println("Finished SQL Execution");
 
-		WrapperType zValue = null;
 		ArrayList <WrapperType> xList = null;
 		ArrayList <WrapperType> yList = null;
 		VisualComponent tempVisualComponent = null;
@@ -251,7 +359,7 @@ public class SQLQueryExecutor {
 			if(rs.getString(1) == null || rs.getString(1).isEmpty()) continue;
 			if(rs.getString(2) == null || rs.getString(2).isEmpty()) continue;
 			
-			if(zType == null) zType = getMetaType(zqlRow.getZ().getAttribute().toLowerCase(), databaseName);
+			if(zType == null) zType = getMetaType(z, databaseName);
 			if(zType == null) zType = "string";	// if zAttribute is null, set the zType to be string
 			if(xType == null) xType = getMetaType(x, databaseName);	// uses the x and y that have extra stuff like '' removed
 
@@ -303,6 +411,11 @@ public class SQLQueryExecutor {
 					this.visualComponentList.addVisualComponent(vcList.get(i));
 			}		
 		}
+		
+		//TODO: FIXME Assumes there is always one Y atttribute in the query
+		for(String key: vcMap.keySet()) {
+			this.visualComponentList.ZToVisualComponents.put(key, vcMap.get(key).get(0));
+		}
 		rs.close();
 		st.close();
 		System.out.println(this.visualComponentList.getVisualComponentList().size() + " Visual Components Created");
@@ -343,8 +456,14 @@ public class SQLQueryExecutor {
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next())
 		{
-			return rs.getString(1);
+			
+			String retS = new String(rs.getString(1));
+			st.close();
+			rs.close();
+			return retS;
 		}
+		st.close();
+		rs.close();
 		return null;
 	}
 
@@ -359,8 +478,14 @@ public class SQLQueryExecutor {
  		while (rs.next())
  		{
 // 			System.out.println( rs.getString(1) + "\n" + rs.getString(2));
- 			return new String[]{ rs.getString(1), rs.getString(2)};
+ 			
+ 			String[] retStr = new String[]{ rs.getString(1), rs.getString(2)};
+ 			st.close();
+ 			rs.close();
+ 			return retStr;
  		}
+ 		st.close();
+		rs.close();
  		return null;
  	}
 
@@ -378,14 +503,20 @@ public class SQLQueryExecutor {
 		//if database already exist return false;
 		while (rs0.next())
  		{
-			if(Integer.parseInt(rs0.getString(1))>0) return false;
+			if(Integer.parseInt(rs0.getString(1))>0){
+				st0.close();
+				rs0.close();
+				return false;
+			}
  		}
 
 		Statement st = c.createStatement();
 
 //		System.out.println(sql);
 		count = st.executeUpdate(sql);
-
+		st0.close();
+		rs0.close();
+		st.close();
 		return count > 0;
 	}
 
@@ -397,19 +528,32 @@ public class SQLQueryExecutor {
 			 rs0 = st0.executeQuery(sql0);
 		}
 		catch(Exception PSQLException){
-
+			st0.close();
 			return false;
 		}
 		while (rs0.next())
  		{
 			if(rs0.getString(2).equals(tableName)) 
 			{
-				System.out.println(tableName +" already exists");	
+				System.out.println(tableName +" already exists");
+				st0.close();
+				rs0.close();
 				return true;
 			}
 			
  		}
+		st0.close();
+		rs0.close();
 		return false;
+	}
+	
+	public void dropCSV(String tableName) throws SQLException{
+		String sqlDropMeta = "DELETE FROM zenvisage_metatable where tablename = '"+tableName+"'";
+		String sqlDropTable = "DROP TABLE "+ tableName;
+		Statement stmt = c.createStatement();
+		stmt.executeUpdate(sqlDropMeta);
+		stmt.executeUpdate(sqlDropTable);
+		stmt.close();
 	}
 
 	public void insertTable(String tableName, String fileName, List<String> columns) throws SQLException{
@@ -419,9 +563,109 @@ public class SQLQueryExecutor {
 		}
 		sql.deleteCharAt(sql.length()-1);
 		sql.append(") FROM '"+ fileName +"' DELIMITER ',' CSV HEADER;");
+		System.out.println("sql used to upload csv file:"+sql.toString());
 	    Statement stmt = c.createStatement();
 	    stmt.executeUpdate(sql.toString());
 	    stmt.close();
+	}
+	
+	/**
+	 * Copy whole CSV table to postgres
+	 * 
+	 * @param tablename
+	 * @param fileName
+	 * @throws SQLException
+	 */
+	public void insertTable2(String tablename, String fileName) throws SQLException{
+	  StringBuilder sql = new StringBuilder();
+	  String tableAttributes = getTableAttributes(tablename);
+	  sql.append("COPY " + tableAttributes + " From '"+ fileName + "' DELIMITER ',' CSV HEADER;");
+	  System.out.println("sql used to upload csv file:"+sql.toString());
+	  Statement stmt = c.createStatement();
+	  stmt.executeUpdate(sql.toString());
+	  stmt.close();
+	}
+	
+	
+    public void loadData1(String datafilename) throws IOException, SQLException{
+	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
+		String line;
+		line = bufferedReader.readLine();
+		String[] header=line.split(",");
+		for(int i=0;i<header.length;i++){
+			header[i]=header[i].toLowerCase().replaceAll("-", "");
+		}
+		int count=0;
+		String[] terms;
+		while ((line = bufferedReader.readLine()) != null){
+			terms=line.split(",");
+	        count=count+1;
+		}
+		//set min, max value for each of the column in database
+		for(int i=0;i<header.length;i++){
+//			if(columnMetadata.dataType.equals("int") || columnMetadata.dataType.equals("float") ){
+//				SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
+//				//System.out.println("min:" + columnMetadata.min + "max:"+columnMetadata.max);
+//				sqlQueryExecutor.updateMinMax(name, header[i], columnMetadata.min, columnMetadata.max);
+//			}
+		}
+		bufferedReader.close();
+    }
+	
+	public String getTableAttributes(String tablename) throws SQLException{
+		StringBuilder sql = new StringBuilder("select column_name from information_schema.columns where table_name = '"+ tablename+"'");
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql.toString());
+		StringBuilder ret = new StringBuilder(tablename+"(");
+		rs.next();//skip id
+		while(rs.next()){
+			ret.append(rs.getString(1)+",");
+		}
+		ret = new StringBuilder(ret.substring(0, ret.length()-("dynamic_class".length()+2)));
+		ret.append(")");
+		st.close();
+		rs.close();
+		return ret.toString();
+	}
+	
+	public String[] getTableAttributesInArray(String tablename) throws SQLException{
+		StringBuilder sql = new StringBuilder("select column_name from information_schema.columns where table_name = '"+ tablename+"'");
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql.toString());
+		ArrayList<String> ret = new ArrayList<>();
+		System.out.println("tablename:"+tablename);
+		while(rs.next()){
+			ret.add(rs.getString(1));
+		}
+		String[] retArray = new String[ret.size()];
+		st.close();
+		rs.close();
+		return ret.toArray(retArray);
+	}
+	
+	/*out of memory pulling*/
+	public ResultSet selectAllFramTable(String tablename) throws SQLException{
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery("select * from "+tablename);
+		return rs;
+	}
+	/*pagination read, potentially prevents heap memory blow up*/
+	public ResultSet paginationSelectFromTable(String tablename, int limit, int offset ) throws SQLException{
+		this.st = c.createStatement();
+		ResultSet rs = st.executeQuery("select * from "+tablename +" order by id limit " + limit + " offset "+ offset);
+		return rs;
+	}
+	
+	public long getRowCount(String tablename) throws SQLException{
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery("select count(*) AS exact_count FROM "+tablename);
+		while(rs.next()){
+			long ret = Long.parseLong(rs.getString(1));
+			rs.close();
+			return ret;
+		}
+		st.close();
+		return 0;
 	}
 	
 	public void updateMinMax(String tableName, String attribute, float min, float max) throws SQLException{
@@ -442,6 +686,32 @@ public class SQLQueryExecutor {
 		while(rs.next()){
 			ret.add(new Attribute(rs.getString(1),rs.getString(2),rs.getString(3)));
 		}
+		st.close();
+		rs.close();
+		return ret;
+	}
+	
+	public ArrayList<VariableMeta> getVariableMetaInfo(String tableName) throws SQLException{
+		String sql = "SELECT attribute, type, selectedx, selectedy, selectedz, "
+				+ "min, max FROM zenvisage_metatable WHERE tablename = " + "'" + tableName + "'";
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		ArrayList<VariableMeta> ret = new ArrayList<>();
+		while(rs.next()){
+			String vMinS = rs.getString(6);
+			String vMaxS = rs.getString(7);
+			Float vMin = null;
+			if(vMinS != null)
+			  vMin= Float.parseFloat(vMinS);
+			Float vMax = null;
+			if(vMinS != null)
+			  vMax = Float.parseFloat(vMaxS);
+			ret.add(new VariableMeta(rs.getString(1),rs.getString(2), 
+					rs.getBoolean(3),rs.getBoolean(4),
+				    rs.getBoolean(5),vMin,vMax));
+		}
+		st.close();
+		rs.close();
 		return ret;
 	}
 	
@@ -454,7 +724,7 @@ public class SQLQueryExecutor {
 		System.out.println(sql0);
 		Statement st0 = c.createStatement();
 		st0.executeUpdate(sql0);
-		st0.close();
+		
 	    
 		for (ClassElement e: dc.classes){
 			String sql1 = "INSERT INTO zenvisage_dynamic_classes (tablename, attribute,ranges ) VALUES('" + dc.dataset + "','" + e.name + "','" + Arrays.deepToString(e.values) + "')";
@@ -462,6 +732,7 @@ public class SQLQueryExecutor {
 			st1.executeUpdate(sql1);
 			st1.close();
 		}
+		st0.close();
 	}
 	
 	public DynamicClass retrieveDynamicClassDetails(String query) throws SQLException{
@@ -491,6 +762,8 @@ public class SQLQueryExecutor {
 			String[] cur = l.get(i);
 			dc.classes[i] = new ClassElement(dc.dataset,testArray, cur[0], cur[1], cur[2], Integer.parseInt(cur[3]));
 		}
+		st.close();
+		rs.close();
 		return dc;
 	}
 	
@@ -537,7 +810,8 @@ public class SQLQueryExecutor {
 			attributeList.add(rs.getString(1));
 		}
 		System.out.println(attributeList);
-		
+		st_attribute.close();
+		rs.close();
 		// create temporary table to store initial permutations 
 		
 		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations_temp")){
@@ -599,6 +873,7 @@ public class SQLQueryExecutor {
 		//System.out.print(t);
 
 		st.close(); 
+		
 
 		// drop the temporary table 
 		

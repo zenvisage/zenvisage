@@ -10,7 +10,6 @@ var xrangeNew;
 
 function createSketchpad( data , flipY)
 {
-console.log('createSketchpad')
 
   // change these values somewhere. hard coded for now
   var topMargin = 0;
@@ -175,7 +174,6 @@ console.log('createSketchpad')
 
     // Add the second x axis
     if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
-      console.log("small1");
     focus.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
@@ -189,7 +187,6 @@ console.log('createSketchpad')
           .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
         } // for formatting all year x axis ticks except hardcoded real estate dataset
   else{
-    console.log("big1");
     focus.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
@@ -229,18 +226,17 @@ console.log('createSketchpad')
 
   function brushed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+    if (d3.event.sourceEvent === null) return; // ignore when not brushed
     var s = d3.event.selection || x2.range();
     x.domain(s.map(x2.invert, x2));
     focus.select(".line").attr("d", valueline);
     if ((Math.log10(xmax)<=3)&(Math.log10(xmax)>=-3)){
-      console.log("small2");
     focus.select(".axis--x").call(d3.axisBottom(x).ticks(8, "s"));
     }
     else if(getSelectedXAxis()==="year"){
         focus.select(".axis--x").call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d"))); // for formatting all year x axis ticks except hardcoded real estate dataset
       }
     else{
-      console.log("big2");
       focus.select(".axis--x").call(d3.axisBottom(x).ticks(6, "s"));
     }
     // svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
@@ -290,7 +286,6 @@ console.log('createSketchpad')
         val = Math.max(valueRange[0], Math.min(val, valueRange[1]));
         currentData[row]["yval"] = val;
         if (val === null || yclickedval === undefined || isNaN(val)) {
-          console.log(val);
         }
       }
 
@@ -324,11 +319,11 @@ console.log('createSketchpad')
 
   function mousedownEvent () {
     // prevents mouse drags from selecting page text.
-    if (event.preventDefault) {
-      event.preventDefault();  // Firefox, Chrome, etc.
+    if (d3.event.preventDefault) {
+      d3.event.preventDefault();  // Firefox, Chrome, etc.
     } else {
-      event.returnValue = false;  // IE
-      event.cancelBubble = true;
+      d3.event.returnValue = false;  // IE
+      d3.event.cancelBubble = true;
     }
     isDrawing = true;
   }
@@ -422,7 +417,6 @@ function setPoint(event, g, context) {
       val = Math.max(valueRange[0], Math.min(val, valueRange[1]));
       data[row][1] = val;
       if (val === null || value === undefined || isNaN(val)) {
-        console.log(val);
       }
     }
     lastDrawRow = closest_row;
@@ -451,6 +445,7 @@ function patternLoad(){
   log.info("patternLoad : ",xvals,yvals)
   createSketchpad( data );
   refreshZoomEventHandler();
+  finishDraw();
 }
 
 function Point(x, y){

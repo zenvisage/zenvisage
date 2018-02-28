@@ -7,6 +7,7 @@ import java.util.List;
  * @author tarique
  *
  */
+@Deprecated
 public class ZQLTable {
 	private List<ZQLRow> zqlRows;
 	

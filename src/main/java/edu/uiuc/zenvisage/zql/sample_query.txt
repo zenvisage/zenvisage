@@ -1,0 +1,14 @@
+ax x1 = [year]
+ax y1 = [soldprice]
+ax z1 = [state.*] // == [CA,NY, ...]
+vc f1 = {x1, y1, z1}
+ax y2 = [listingprice]
+vc f2 = {x1, y2, z1}
+ax v_temp = DEuclidean(f1, f2, [v1])
+ax v1 = argmax(v_temp, 5)
+ax v2 = argmin(v_temp, 5)
+ax v3 = v1 + v2
+sort(v3)
+display(v3)
+vc f3 = {x1, [soldprice, listingprice], v3}
+display(f3)

@@ -8,6 +8,10 @@ import java.util.List;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
+import edu.uiuc.zenvisage.data.remotedb.Points;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
+import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
+import edu.uiuc.zenvisage.data.remotedb.WrapperType;
 import edu.uiuc.zenvisage.model.BaselineQuery;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.cluster.OutlierTrend;
@@ -86,12 +90,27 @@ public class ChartOutputUtil {
 ////			range = orderedDistances.get(0) - orderedDistances.get(orderedDistances.size()-1);
 //			range = orderedDistances.get(orderedDistances.size()-1);
 //		}
-		double maxDist = orderedDistances.get(Math.min(outputLength, args.outlierCount));
-		System.out.println("orderedDistances.size():"+Double.toString(orderedDistances.size()));
+			
+	    int index = Math.min(outputLength-1, args.outlierCount);
+	    if(index >= orderedDistances.size() || index <0){
+	    	index = 0;
+	    }
+		double maxDist = 0;
+		if(orderedDistances!=null && orderedDistances.size()!=0)
+			maxDist = orderedDistances.get(index);
+		//System.out.println("orderedDistances.size():"+Double.toString(orderedDistances.size()));
+		double normDist;
+//		System.out.println("args.isOutputNormalized():"+args.isOutputNormalized());
 		for(int i = 0; i < Math.min(outputLength, args.outlierCount); i++) {
-			System.out.println("orderedDistances:"+Double.toString(orderedDistances.get(i)));
+			//System.out.println("orderedDistances:"+Double.toString(orderedDistances.get(i)));
 //			double normDist =normalize(orderedDistances, range, i);
-			double normDist =normalize(orderedDistances,maxDist, i);
+			if (args.isOutputNormalized()) {
+				normDist =normalize(orderedDistances,maxDist, i);
+			}else {
+				//System.out.println("not normalized dist");
+				normDist =orderedDistances.get(i);
+			}
+			
 			boolean displayThisViz = false;
 			if (args.minDisplayThresh!=0.0){
 				 if (normDist>=args.minDisplayThresh){
@@ -131,6 +150,28 @@ public class ChartOutputUtil {
 		return;
 	}
 
+	
+	public void convertToRawViz(VisualComponentList v){	
+		for(Chart chart:finalOutput.outputCharts){
+			String ztype=chart.zType;
+			chart.xData=new ArrayList<>();
+			chart.yData=new ArrayList<>();
+			VisualComponent vc =v.ZToVisualComponents.get(ztype);
+			Points points =vc.getPoints();
+			int i=0;
+			for(WrapperType x:points.getXList()){
+				chart.xData.add(Double.toString(x.getNumberValue()));
+				chart.yData.add(Double.toString(points.getYList().get(i).getNumberValue()));
+				i++;
+			}
+		}
+	
+	}
+	
+	
+	
+	
+	
 	/*z= (xi-min(x)) /(max(x)-min(x))*/
 //	public double normalize(List<Double> orderedDistances, double range, int i){
 //		if (range == 0)
@@ -226,10 +267,11 @@ public class ChartOutputUtil {
 			// chartOutput.setRank(i+1);
 			// chartOutput.setyType(args.aggrFunc+"("+args.yAxis+")");
 
-			chartOutput.setxType(repTrend.getKey());
+			chartOutput.setxType(args.xAxis);
 			chartOutput.setyType(args.yAxis);
 			chartOutput.setzType(args.groupBy);
 			chartOutput.setRank(i+1);
+			chartOutput.setTitle(repTrend.getKey());
 			
 			// fill in chart data
 			LinkedHashMap<Float,Float> points = orig.get(repTrend.getKey());
@@ -240,7 +282,7 @@ public class ChartOutputUtil {
 				chartOutput.yData.add(Float.toString(points.get(k)));
 				c++;
 			}
-			chartOutput.count = repTrend.getSimilarTrends();
+			chartOutput.setCount(repTrend.getSimilarTrends());
 			finalOutput.outputCharts.add(chartOutput);
 		}
 

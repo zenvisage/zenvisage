@@ -43,6 +43,22 @@ public class Readconfig {
 	static public String getPassword(){
 		return props.getProperty("password");
 	}
+	
+	static public int getPostgresport() {
+		return Integer.valueOf(props.getProperty("postgresport"));
+	}
+	
+	static public boolean getBackendLogger() {
+		return Boolean.valueOf(props.getProperty("logger"));
+	}
+	
+	static public boolean getBackendQueriesLog() {
+		return Boolean.valueOf(props.getProperty("querieslog"));
+	}
+	
+	static public boolean getLoginAvaliable() {
+		return Boolean.valueOf(props.getProperty("loginavailable"));
+	}
 
 	
 }

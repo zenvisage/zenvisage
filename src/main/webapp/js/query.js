@@ -48,7 +48,7 @@ function Query( searchMethod ) {
 
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
   this.distanceNormalized = "linear"; // fix to dynamically fetch
-  this.outputNormalized = false; // fix to dynamically fetch
+  this.outputNormalized = getOutputNormalized();
   this.clustering = "KMeans"; // fix to dynamically fetch
   this.kmeansClusterSize = getClusterSize();
   this.distance_metric = getDistanceMethod(); // fix to dynamically fetch
@@ -190,7 +190,10 @@ function getScatterplotOption()
 {
   return angular.element($("#table-div")).scope().showScatterplot;
 }
-
+function getBarchartOption()
+{
+  return angular.element($("#table-div")).scope().showBar;
+}
 function getflipY()
 {
   return angular.element($("#table-div")).scope().flipY;
@@ -205,6 +208,15 @@ function getShowOriginalSketch()
 {
   return angular.element($("#table-div")).scope().showOriginalSketch;
 }
+function getOutputNormalized()
+{
+  return angular.element($("#table-div")).scope().outputNormalized;
+}
+
+function getCsvHeaders()
+{
+  return angular.element($("#define-attributes")).scope().csvHeaders;
+}
 
 function getNumSegments()
 {
@@ -213,13 +225,14 @@ function getNumSegments()
 
 function getSelectedDataset()
 {
-  return $("#dataset-form-control option:selected").val();
+  var ret= $("#dataset-form-control option:selected").val();
+  return ret;
 }
 
 function mergejoin(outputcharts_orig,outputcharts_error)
 {
- console.log("original: ",outputcharts_orig);
- console.log("error: ",outputcharts_error);
+ //console.log("original: ",outputcharts_orig);
+ //console.log("error: ",outputcharts_error);
   var errochartsmap = {};
   outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
 
@@ -227,14 +240,14 @@ function mergejoin(outputcharts_orig,outputcharts_error)
   outputcharts_orig.forEach(function(outputcharts_orig) {
       outputcharts_orig["error"] = errochartsmap[outputcharts_orig.title];
   });
-console.log("final: ",outputcharts_orig);
+  // console.log("final: ",outputcharts_orig);
   return outputcharts_orig;
 }
 
 function mergejoin_representative(outputcharts_orig,outputcharts_error)
 {
- console.log("original: ",outputcharts_orig);
- console.log("error: ",outputcharts_error);
+ // console.log("original: ",outputcharts_orig);
+ // console.log("error: ",outputcharts_error);
   var errochartsmap = {};
   outputcharts_error.forEach(function(outputcharts_error) {errochartsmap[outputcharts_error.title] = outputcharts_error.yData;});
 
@@ -242,7 +255,7 @@ function mergejoin_representative(outputcharts_orig,outputcharts_error)
   outputcharts_orig.forEach(function(outputcharts_orig) {
       outputcharts_orig["error"] = errochartsmap[outputcharts_orig.xType];
   });
-console.log("final: ",outputcharts_orig);
+  //console.log("final: ",outputcharts_orig);
   return outputcharts_orig;
 }
 

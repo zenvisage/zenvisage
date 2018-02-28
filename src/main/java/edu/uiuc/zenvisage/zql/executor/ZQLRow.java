@@ -13,6 +13,7 @@ import edu.uiuc.zenvisage.model.Sketch;
  * @author tarique
  *
  */
+@Deprecated
 public class ZQLRow {
 	private String name;
 	private List<String> x;

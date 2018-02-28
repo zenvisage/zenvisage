@@ -27,32 +27,37 @@ hr {
 }
 
 .undraggable-user-query-results, .undraggable-representative-results, .undraggable-outlier-results{
- width: 275px;
+ width: 235px;
  height: 105px;
  text-align: center;
  font-size: 12px;
+ margin-right: 5px;
 }
 
 .undraggable-representative-results, .undraggable-outlier-results{
- width: 250px;
+ width: 235px;
  height: 105px;
  text-align: center;
  font-size: 12px;
 }
-
 
 .radio input[type=radio]{
   margin-left: 0px; !important
 }
 
 #results-table{
-width: 100%;
+width: 90%;
 }
+
 #table-div {
   height: 242px !important;
   overflow-x: auto;
 }
-
+@media screen and (max-width: 1264px){
+    #table-div{
+        display:none;
+    }
+}
 #graph-div {
   height: 242px !important;
   border: 0.5px solid #D9D9D9;
@@ -96,15 +101,18 @@ svg#treesvg {
 }
 
 #middle-left{
-  height: 100% !important;
+  height: 60vh; !important;
+  min-width: 495px;
   overflow-x: auto;
   -webkit-flex: 1;
   flex:1;
+  position:relative;
 }
 
 #middle-right{
   height: 100% !important;
   -webkit-flex: 1;
+  min-width: 495px;
   overflow-x: auto;
   flex:1;
   position:relative;
@@ -120,9 +128,9 @@ svg#treesvg {
 }
 
 #everything {
-  height:100%;
+  /*height:100%;
   width:100%;
-  overflow-x: hidden;
+  overflow-x: hidden;*/
   display:flex;
   display: -webkit-flex;
   flex-direction: row;
@@ -200,6 +208,7 @@ svg#treesvg {
   padding-top: 7px;
   padding-left: 5px;
 }
+
 .modal-body{
   margin-left: 20px;
 }
@@ -298,7 +307,7 @@ svg#treesvg {
 
 .qtooltip .qtooltiptext {
     visibility: hidden;
-    width: 250px;
+    width: 500px;
     background-color: black;
     color: #fff;
     text-align: left;
@@ -306,9 +315,10 @@ svg#treesvg {
     padding: 5px 5px 5px 5px;
     /* Position the tooltip */
     position: absolute;
-    z-index: 1;
-    top: -5px;
-    left: 105%;
+    z-index: 10;
+    top: 100%;
+    left: 50%;
+    margin-left: -80px;
 }
 
 .qtooltip .qtooltiptext::after {
@@ -322,6 +332,39 @@ svg#treesvg {
     border-color: black transparent transparent transparent;
 }
 .qtooltip:hover .qtooltiptext {
+    visibility: visible;
+}
+.qtooltipright {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+.qtooltipright .qtooltiptextright{
+    visibility: hidden;
+    width: 400px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    right: 50%;
+    margin-left: -80px;
+}
+.qtooltipright .qtooltiptextright::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    margin-left: -10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.qtooltipright:hover .qtooltiptextright {
     visibility: visible;
 }
 .btn-circle {
@@ -344,4 +387,12 @@ svg#treesvg {
 }
 .info-text {
   margin-bottom: 15px;
+}
+
+#mobilePopup{ display: none; }
+
+/* use a media query to filter small devices */
+@media only screen and (max-device-width:480px) {
+    /* show the popup */
+    #mobilePopup { display: block; }
 }

@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uiuc.zenvisage.service.ZvMain;
+import edu.uiuc.zenvisage.zql.ScatterVCNode;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ScatterVCNode;
 
 public class GraphExecutionTest {
 	static final Logger logger = LoggerFactory.getLogger(GraphExecutionTest.class);
@@ -213,7 +213,8 @@ public class GraphExecutionTest {
 		}
 	}
 
-	// Testing if we can understand {z1}x{z2} by just writing {z1,z2} 
+	// Testing if we can understand {z1}x{z2} by just writing {z1,z2}
+	// Finds the states that are most similar to the soldprice over year trend for CA
 	@Test
 	public void TextNewCrossProductExecution() throws SQLException{
 		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"constraints\":\"state='CA'\"},{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y1\",\"attributes\":[]},\"z\":{\"variable\":\"z2\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"processe\":{\"variables\":[\"v1\",\"v2\"],\"method\":\"DEuclidean\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\",\"f2\"],\"axisList1\":[\"z1\",\"z2\"],\"axisList2\":[]}},{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f3\"},\"x\":{\"variable\":\"x1\",\"attributes\":[]},\"y\":{\"variable\":\"y2\",\"attributes\":[\"soldprice\", \"soldpricepersqft\"]},\"z\":{\"variable\":\"v2\",\"values\":[]}}]}";
@@ -258,8 +259,9 @@ public class GraphExecutionTest {
 	}
 	
 	@Test
+	// Find the states where the soldprice over year trend is the most similar to its listingprice over year trend
 	public void TestPairwiseProcessQueryExecution() throws SQLException {
-		//Q5
+		//Q6
 		//String arg = "{\"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"values\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"values\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"constraints\":[{\"key\":\"state\",\"operator\":\"=\",\"value\":\"'CA'\"}]},{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"variable\":\"x1\",\"values\":[]},\"y\":{\"variable\":\"y1\",\"values\":[]},\"z\":{\"variable\":\"z1\",\"values\":[]},\"processe\":{\"variables\":[\"v1\"],\"method\":\"Dissimilar\",\"count\":\"7\",\"metric\":\"D\",\"arguments\":[\"f1\",\"f2\"]}},{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f3\"},\"x\":{\"variable\":\"x1\",\"values\":[]},\"y\":{\"variable\":\"y1\",\"values\":[]},\"z\":{\"variable\":\"v1\",\"values\":[]}}]}";
 		// attribute can be null or empty string
 		//String arg = "{\"zqlRows\":[{\"name\":{\"name\":\"f1\",\"output\":false,\"sketch\":false},\"x\":{\"variable\":\"x1\",\"attribute\":\"year\",\"values\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attribute\":\"soldprice\",\"values\":[\"'soldprice'\"]},\"z\":{\"variable\":\"z1\",\"attribute\":\"state\",\"values\":[\"*\"],\"expression\":\"\"},\"processe\":{\"variables\":[],\"method\":\"\",\"axis\":[],\"count\":\"\",\"metric\":\"\",\"arguments\":[],\"parameters\":{}},\"viz\":{\"variable\":\"\",\"type\":[],\"parameters\":[]},\"sketchPoints\":null,\"constraint\":[{\"key\":\"state\",\"operator\":\"=\",\"value\":\"'CA'\"}],\"output\":false},{\"name\":{\"name\":\"f2\",\"output\":false,\"sketch\":false},\"x\":{\"variable\":\"x1\",\"attribute\":null,\"values\":[]},\"y\":{\"variable\":\"y1\",\"attribute\":null,\"values\":[]},\"z\":{\"variable\":\"z1\",\"attribute\":\"\",\"values\":[],\"expression\":\"\"},\"processe\":{\"variables\":[\"v1\"],\"method\":\"Dissimilar\",\"axis\":[],\"count\":\"7\",\"metric\":\"D\",\"arguments\":[\"f1\",\"f2\"],\"parameters\":{}},\"viz\":{\"variable\":\"\",\"type\":[],\"parameters\":[]},\"sketchPoints\":null,\"constraint\":[],\"output\":false},{\"name\":{\"name\":\"f3\",\"output\":true,\"sketch\":false},\"x\":{\"variable\":\"x1\",\"attribute\":null,\"values\":[]},\"y\":{\"variable\":\"y1\",\"attribute\":null,\"values\":[]},\"z\":{\"variable\":\"v1\",\"attribute\":\"\",\"values\":[],\"expression\":\"\"},\"processe\":{\"variables\":[],\"method\":\"\",\"axis\":[],\"count\":\"\",\"metric\":\"\",\"arguments\":[],\"parameters\":{}},\"viz\":{\"variable\":\"\",\"type\":[],\"parameters\":[]},\"sketchPoints\":null,\"constraint\":[],\"output\":true}]}";

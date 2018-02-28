@@ -35,20 +35,34 @@ public class DatabaseAutoLoader {
 //
 		if(!sqlQueryExecutor.isTableExists(metatable) ){
 			String createPublicSchemaSQL = "CREATE schema public;";
-			String createMetaTableSQL = "CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT); CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, type TEXT, axis TEXT, min FLOAT, max FLOAT);";
+			String createMetaTableSQL = "CREATE TABLE zenvisage_metafilelocation "
+					+ "(database TEXT, metafilelocation TEXT, csvfilelocation TEXT); "
+					+ "CREATE TABLE zenvisage_metatable (tablename TEXT, attribute TEXT, "
+					+ "type TEXT, axis TEXT, min FLOAT, max FLOAT, "
+					+ "selectedX BOOLEAN, selectedY BOOLEAN, selectedZ BOOLEAN);";
 			sqlQueryExecutor.executeUpdate(createPublicSchemaSQL);
 			sqlQueryExecutor.createTable(createMetaTableSQL);
 			reload = true;
 		}
 
 		if(!sqlQueryExecutor.isTableExists(metafilelocation)){
-			String createMetaFileLocationSQL ="CREATE TABLE zenvisage_metafilelocation (database TEXT, metafilelocation TEXT, csvfilelocation TEXT);";
+			String createMetaFileLocationSQL ="CREATE TABLE zenvisage_metafilelocation "
+					+ "(database TEXT, metafilelocation TEXT, csvfilelocation TEXT);";
 			sqlQueryExecutor.createTable(createMetaFileLocationSQL);
 			reload = true;
 		}
 
 		if(!sqlQueryExecutor.isTableExists("zenvisage_dynamic_classes")){
-			String createDynamicClassesSQL ="CREATE TABLE zenvisage_dynamic_classes (tablename TEXT, attribute TEXT, ranges TEXT);";
+			String createDynamicClassesSQL ="CREATE TABLE zenvisage_dynamic_classes "
+					+ "(tablename TEXT, attribute TEXT, ranges TEXT);";
+			sqlQueryExecutor.createTable(createDynamicClassesSQL);
+			reload = true;
+		}
+		
+		if(!sqlQueryExecutor.isTableExists("dynamic_class_aggregations")){
+			String createDynamicClassesSQL ="CREATE TABLE dynamic_class_aggregations "
+					+ "(Table_Name TEXT NOT NULL, Tag TEXT NOT NULL, Attributes TEXT NOT NULL, "
+					+ "Ranges TEXT NOT NULL, Count INT NOT NULL);";
 			sqlQueryExecutor.createTable(createDynamicClassesSQL);
 			reload = true;
 		}
@@ -67,7 +81,8 @@ public class DatabaseAutoLoader {
 
 		List<String> dataset1 = new ArrayList<String>(); // real_estate
 		dataset1.add("real_estate");
-		File file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.csv")).getFile());
+		File file = new File(zvServer.getClass().getClassLoader().
+				getResource(("real_estate.csv")).getFile());
 		dataset1.add(file.getAbsolutePath());
 		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
 		dataset1.add(file.getAbsolutePath());
@@ -96,7 +111,8 @@ public class DatabaseAutoLoader {
 
 		List<String> dataset5 = new ArrayList<String>(); //cmu
 		dataset5.add("real_estate_tutorial");
-		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate_tutorial.csv")).getFile());
+		file = new File(zvServer.getClass().getClassLoader().
+				getResource(("real_estate_tutorial.csv")).getFile());
 		dataset5.add(file.getAbsolutePath());
 		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
 		dataset5.add(file.getAbsolutePath());

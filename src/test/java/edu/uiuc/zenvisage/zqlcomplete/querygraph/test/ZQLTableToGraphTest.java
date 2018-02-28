@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import edu.uiuc.zenvisage.zql.QueryGraph;
+import edu.uiuc.zenvisage.zql.ZQLTableToGraph;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Constraints;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
@@ -18,8 +20,6 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraph;
-import edu.uiuc.zenvisage.zqlcomplete.querygraph.ZQLParser;
 
 /**
  * @author eideh
@@ -85,10 +85,10 @@ public class ZQLTableToGraphTest {
 		
 		table.setZqlRows(rows);
 		
-		ZQLParser parser = new ZQLParser();
+		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
-			graph = parser.processZQLTable(table);
+			graph = parser.processZQLTable(table, null);
 			//System.out.println(graph.toString());
 			 graph.printString();
 		} catch (SQLException e) {
@@ -188,10 +188,10 @@ public class ZQLTableToGraphTest {
 		rows.add(row3);
 		
 		table.setZqlRows(rows);
-		ZQLParser parser = new ZQLParser();
+		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
-			graph = parser.processZQLTable(table);
+			graph = parser.processZQLTable(table, null);
 			//System.out.println(graph.toString());
 			 graph.printString();
 		} catch (SQLException e) {
