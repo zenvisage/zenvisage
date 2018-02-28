@@ -69,7 +69,17 @@ For making the above change, you could run the following commands:
             sudo rm -f -r target/
             sudo rm nohup.out
             sudo kill $(sudo lsof -t -i:8080)  
+ 
+* Configuration
+
+In file  ```src/main/resources/config.properties```.
+
+        username=postgres
+        password=zenvisage
+        port=8080
+        metatable=zenvisage_metatable           
             
+ 
  * Build and deploy code. Inside the zenvisage folder,
  
             sudo sh build.sh
