@@ -651,7 +651,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[3]).find(".z-val").val("v2")
       $($( ".tabler" )[3]).find(".constraints").val("")
       // $($( ".tabler" )[3]).find(".process").val("")
-      
+
       $scope.insertRow()
       removeZqlRow(6);
       removeZqlRow(5);
@@ -809,7 +809,7 @@ app.controller('options-controller', [
       removeZqlRow(6);
       removeZqlRow(5);
   //    removeZqlRow(4);
-    } 
+    }
     $scope.populateQuery7 = function() {
       //Increasing example
       $scope.removeAndInsertRows( 1 );
@@ -819,7 +819,7 @@ app.controller('options-controller', [
       $($( ".tabler" )[0]).find(".z-val").val("z1<-'state'.*")
       $($( ".tabler" )[0]).find(".constraints").val("")
       $($( ".tabler" )[0]).find(".process").val("")
-      
+
       $scope.insertProcessRow()
       $($( ".tabler" )[1]).find(".process").val("v1<-argmax_{z1}[k=5]Tincreasing(f1)")
 
@@ -896,7 +896,8 @@ app.controller('options-controller', [
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
   '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
-  function($scope, $rootScope, $http, datasetInfo, plotResults, scatterService, ChartSettings){
+  function($scope, $rootScope, $http, datasetInfo, plotResults, ScatterService, ChartSettings){
+  $scope.queries = {};
 
     $scope.inittablelist = function () {
       $http.get('/zv/gettablelist'
@@ -917,7 +918,6 @@ app.controller('datasetController', [
     $scope.chartSettings = ChartSettings;
     function initializeSketchpadOnDataAttributeChange( xdata, ydata, zdata )
     {
-
       clearRepresentativeTable();
       clearOutlierTable();
       clearUserQueryResultsTable();
@@ -926,7 +926,10 @@ app.controller('datasetController', [
           case 'Bar':
               break;
           case 'Scatter':
-              scatterService.initializeScatterPlot(xdata["min"],xdata["max"],ydata["min"],ydata["max"]);
+              $scope.getScatterData();
+              // ScatterService.initializeScatterPlot(
+              //   $scope.data
+              // );
               break;
           default: // Line
               initializeSketchpadNew(
@@ -945,6 +948,58 @@ app.controller('datasetController', [
       log.info("show dynamic class info")
       $rootScope.$emit("callGetClassInfo", {});
     }
+
+    $scope.scatterDatasetChangeQuery = function scatterDatasetChangeQuery(){
+      $scope.queries["db"] = getSelectedDataset();
+      $scope.queries['zqlRows'] = [];
+      var name = $(this).find(".name").val()
+      var x = $(this).find(".x-val").val()
+      var y = $(this).find(".y-val").val()
+      var z = $(this).find(".z-val").val()
+      var constraints = $(this).find(".constraints").val()
+      var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+          input["name"] = {"output": true,"sketch": true,"name": "f1"};
+          input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+          input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : true};
+          input["viz"] = {"map":{"type":"scatter"}};
+          $scope.queries['zqlRows'].push(input);
+    };
+
+
+    $scope.submit = function (){
+      console.log("hi!");
+        var polygons = ScatterService.getPolygons();
+        $rootScope.polygons = polygons;
+        $rootScope.$digest();
+    };
+
+    $scope.getScatterData = function getScatterData(){
+      // get datasetchange query
+      $scope.scatterDatasetChangeQuery();
+        console.log(JSON.stringify( $scope.queries ));
+      //$http.get('/zv/executeScatter', {params: {'query': {"db":"real_estate", "zqlRows":[{"name":{"output":true,"sketch":true,"name":"f1"},"x":{"variable":"x1","attributes":["'year'"]},"y":{"variable":"y1","attributes":["'listingprice'"]},"z":{"variable":"z1","aggregate":true,"attribute":"'state'","values":["*"]}, "viz":{"map": {"type":"scatter"}} }]}}}
+      $http.get('/zv/executeScatter', {params: {'query': JSON.stringify( $scope.queries )}}
+      ).then(
+          function (response) {
+              $scope.data = response.data.outputCharts[0].points;
+              //$scope.scatterService = ScatterService.drawScatter( $scope.data );
+              //$scope.scatterService = ScatterService.drawScatter( data2 );
+              console.log("data: ", response.data.outputCharts[0].points);
+              $scope.scatterService = ScatterService.initializeScatterPlot( $scope.data );
+              $scope.submit;
+              setTimeout(function () {
+                  $rootScope.shared = {value:"The input controller just changed this"};
+                  $rootScope.$digest();
+              }, 3000);
+          },
+          function (response) {
+          //    console.log("failed: ", escape(response));
+          }
+      );
+    }
+
+
 
     $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()
     {
@@ -1043,6 +1098,7 @@ app.controller('datasetController', [
       );
 
     }
+
     $scope.downloadResults =function downloadResults(args){
       console.log("downloading results")
       var q = constructUserQuery(); //goes to query.js

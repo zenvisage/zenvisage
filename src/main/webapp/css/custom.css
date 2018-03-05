@@ -266,6 +266,12 @@ svg#treesvg {
   margin-left: 7px;
 }
 
+#colorbar {
+    overflow: hidden;
+    width: 40px;
+    height: 100%;
+    margin-left: 300px;
+}
 
 .filestyle {
   display: block;

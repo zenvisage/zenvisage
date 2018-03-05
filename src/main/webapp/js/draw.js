@@ -108,27 +108,6 @@ console.log('createSketchpad')
   var context = svg.append("g")
       .attr("class", "context")
       .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-//zoom here
-      // var zoomclip = svg.append("rect")
-      //   .attr("width", zoomwidth)
-      //   .attr("height", zoomheight)
-      //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      //   .attr('fill', 'none')
-      //   .attr('pointer-events', 'all');
-      //   // .call(d3.zoom()      // zoom y axis behavior
-      //   // .scaleExtent([1, Infinity])
-      //   // .translateExtent([[0, 0], [width, height]]).extent([[0, 0], [width, height]])
-      //   // .on("zoom", zoomed))
-      //   // .on("mousedown.zoom", null)
-      //   // .on("mousemove.zoom", null)
-      //   // .on("mouseup.zoom", null)
-      //   // .on("selectstart.zoom", null)
-      //   // .on("click.zoom", null)
-      //   // .on("dblclick.zoom", null)
-      //   // .on("touchstart.zoom", null)
-      //   // .on("touchmove.zoom", null)
-      //   // .on("touchend.zoom", null)
-      //   // .on("touchcancel.zoom", null);
 
   var brush = d3.brushX()
       //.scaleExtent([1, Infinity])
@@ -352,7 +331,7 @@ console.log('createSketchpad')
 
 function plotSketchpadNew( data )//, xType, yType, zType)
 {
-    document.getElementById("loadingEclipse").style.display = "inline";
+  document.getElementById("loadingEclipse").style.display = "inline";
   $("#draw-div").children().remove();
   sketchpad = createSketchpad( data )
 

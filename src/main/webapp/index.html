@@ -244,11 +244,8 @@
 
           <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
             <!-- <h5><b>Category</b>
-
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
-
             <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button>
-
             </h5>
             <div>
             <div ng-repeat="category in categories">
@@ -319,10 +316,10 @@
             <div class="input-group" id="graph-buttons">
 
             <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
-             <!-- <div class="btn-group" id="left-button-group">
+             <div class="btn-group" id="left-button-group">
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
                 </select>
-              </div> -->
+              </div>
 
               <div class="btn-group">
                 <button type="button" name="options" ng-click="zqltable = !zqltable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
@@ -346,14 +343,18 @@
             </div>
 
             <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
-            <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="chartSettings.selectedChartOption=='Scatter'">
-              <div class="col-md-11">
+            <div id="scatter-div" ng-controller="scatterController" ng-show="chartSettings.selectedChartOption=='Scatter'">
+              <div class="col-md-12">
                   <svg id="main-chart">
                   </svg>
-
+                  <div class="row col-md-1">
+                  <div id="colorbar"></div>
+                  </div>
               </div>
+              <!-- <div class="row col-md-1">
               <div id="colorbar"></div>
-              <div class="row col-md-1">
+              </div>  -->
+              <!-- <div class="row col-md-1">
                   <div class="col-md-12">
                       <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                   </div>
@@ -369,7 +370,7 @@
                   <div class="col-md-12">
                       <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
                   </div>
-              </div>
+              </div> -->
 
           </div>
 
@@ -726,7 +727,6 @@
 
     <script>
     //code for intro tutorial
-
     var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
     var starttutorial = function(input){
         startintro = true;
@@ -736,8 +736,6 @@
         angular.element($("#sidebar")).scope().onDatasetChange('initialize');
         setTimeout(callintro, 2000);
       };
-
-
       // var tree = tree();
       // tree.initialize();
       $(document).ready(function(){

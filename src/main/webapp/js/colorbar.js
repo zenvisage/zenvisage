@@ -26,11 +26,11 @@ var yScale = d3.scaleLinear()
     .range([0, 158])
     .domain([3,0]);
 
-/*var yAxis = d3.svg.axis()
+var yAxis = d3.svg.axis()
     	.orient("left")
     	.ticks(5)  //Set rough # of ticks
     	  //.tickFormat(formatPercent)
-    	.scale(xScale);*/
+    	.scale(xScale);
 
 svg.append("g")
     .attr("class", "axis") //Assign "axis" class

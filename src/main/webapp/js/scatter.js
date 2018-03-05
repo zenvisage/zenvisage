@@ -12,9 +12,11 @@ app.factory('ScatterService', function () {
         }
 
 
-        factory.drawScatter = function ( data ) {
+        factory.initializeScatterPlot = function ( data ) {
+//xmin, xmax, ymin, ymax, xlabel, ylabel, category
 
-            var container, data, xlabel, ylabel, title;
+            // var container, data, xlabel, ylabel, title;
+            var container, xlabel, ylabel, title;
             var scaleMultiplier = 1.05;
             var infoToReturn = {};
             //Find an element to render the chart
@@ -24,20 +26,19 @@ app.factory('ScatterService', function () {
             // finding actual dimensions of div
             var heightOfDiv = container.innerHeight();
             var widthOfDiv = container.innerWidth();
-
             // finding relative point radius
             var radius = 2;
 
             // Setting margins as percentages
-            //var topMargin = widthOfDiv * 0.08;
-            //var bottomMargin = widthOfDiv * 0.08;
-            //var rightMargin = widthOfDiv * 0.08;
-            //var leftMargin = widthOfDiv * 0.08;
+            var topMargin = widthOfDiv * 0.08;
+            var bottomMargin = widthOfDiv * 0.08;
+            var rightMargin = widthOfDiv * 0.08;
+            var leftMargin = widthOfDiv * 0.08;
             // Setting margins as percentages
-            var topMargin = 5;
-            var bottomMargin = 30;
-            var rightMargin = 0;
-            var leftMargin = 30;
+            // var topMargin = 5;
+            // var bottomMargin = 30;
+            // var rightMargin = 0;
+            // var leftMargin = 60;
 
             infoToReturn.leftMargin = leftMargin;
             infoToReturn.topMargin = topMargin;
@@ -77,55 +78,59 @@ app.factory('ScatterService', function () {
             //     .scale(xScale)
             //     .orient("bottom")
             //     .tickSize(6, -height);
-            var xAxis = d3.axisBottom(xScale).tickSize(6, -height);
-            var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
 
+            var xAxis = d3.axisBottom(xScale).tickSize(6, -height);
+            // var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
+            var yAxis = d3.axisLeft(yScale).ticks(3,"s");
             // var yAxis = d3.svg.axis()
             //     .scale(yScale)
             //     .orient("left")
             //     .tickSize(6, -width);
-
+            d3.select("#main-chart").selectAll("*").remove();
+            d3.select("#colorbar").selectAll("*").remove();
             var svg = d3.select("#main-chart")
-                .attr("width", 400)
-                .attr("height", 200)
+                // .attr("viewBox", "0 0 520 620")
+                .attr("width", 300)
+                .attr("height", 210)
+                .attr('fill', 'none')
                 .append("g") //group that will house the plot
                 .attr("id", "main-area")
-                .attr("transform",  "translate(40,20) scale(1.2)"); //to center the g in the svg
+                .attr("transform",  "translate(25,20) scale(1.0)"); //to center the g in the svg
 
 
 
             //////////////////////////////////////////////////////GRID LINES
-            var yAxisTickValues = yAxis.scale().ticks(yAxis.ticks());
-            var xAxisTickValues = xAxis.scale().ticks(xAxis.ticks());
-            var xAxisTickSize = xAxisTickValues[1] - xAxisTickValues[0];
-            var yAxisTickSize = yAxisTickValues[1] - yAxisTickValues[0];
-            svg.append("g")
-                .attr("class", "x axis")
-                .selectAll("line")
-                .data(d3.range(0, xMax, xAxisTickSize / 4))
-                .enter().append("line")
-                .attr("x1", function (d) {
-                    return xScale(d);
-                })
-                .attr("y1", 0)
-                .attr("x2", function (d) {
-                    return xScale(d);
-                })
-                .attr("y2", height);
-
-            svg.append("g")
-                .attr("class", "y axis")
-                .selectAll("line")
-                .data(d3.range(0, yMax, yAxisTickSize / 4))
-                .enter().append("line")
-                .attr("x1", 0)
-                .attr("y1", function (d) {
-                    return yScale(d);
-                })
-                .attr("x2", width)
-                .attr("y2", function (d) {
-                    return yScale(d);
-                });
+            // var yAxisTickValues = yAxis.scale().ticks(yAxis.ticks());
+            // var xAxisTickValues = xAxis.scale().ticks(xAxis.ticks());
+            // var xAxisTickSize = xAxisTickValues[1] - xAxisTickValues[0];
+            // var yAxisTickSize = yAxisTickValues[1] - yAxisTickValues[0];
+            // svg.append("g")
+            //     .attr("class", "x axis")
+            //     .selectAll("line")
+            //     .data(d3.range(0, xMax, xAxisTickSize / 4))
+            //     .enter().append("line")
+            //     .attr("x1", function (d) {
+            //         return xScale(d);
+            //     })
+            //     .attr("y1", 0)
+            //     .attr("x2", function (d) {
+            //         return xScale(d);
+            //     })
+            //     .attr("y2", height);
+            //
+            // svg.append("g")
+            //     .attr("class", "y axis")
+            //     .selectAll("line")
+            //     .data(d3.range(0, yMax, yAxisTickSize / 4))
+            //     .enter().append("line")
+            //     .attr("x1", 0)
+            //     .attr("y1", function (d) {
+            //         return yScale(d);
+            //     })
+            //     .attr("x2", width)
+            //     .attr("y2", function (d) {
+            //         return yScale(d);
+            //     });
 
 
             // ------------------ HEX BIN PROPERTIES --------------------------------------
@@ -169,7 +174,8 @@ app.factory('ScatterService', function () {
 
 
             drawHexbin();
-createcolorbar();
+            createcolorbar();
+            drawPolygon();
             // ------------------- DRAWING PLOTS FUNCTIONS -------------------------------------
 
             /**
@@ -203,46 +209,52 @@ createcolorbar();
 
 
 
-                                            function createcolorbar(){
-                                            var svg = d3.select("#colorbar").append("svg").attr("transform",  "translate(30)")
-                                                .attr("width", 30)
-                                                .attr("height", 180);
-                                            var gradient = svg.append("defs")
-                                              .append("linearGradient")
-                                                .attr("id", "gradient")
-                                                .attr("x1", "0%")
-                                                .attr("y1", "0%")
-                                                .attr("x2", "0%")
-                                                .attr("y2", "100%")
-                                                .attr("spreadMethod", "pad");
-                                            gradient.append("stop")
-                                                .attr("offset", "0%")
-                                                .attr("stop-color", "darkblue")
-                                                .attr("stop-opacity", 1);
-                                            gradient.append("stop")
-                                                .attr("offset", "100%")
-                                                .attr("stop-color", "lightblue")
-                                                .attr("stop-opacity", 1);
-                                            svg.append("rect")
-                                                .attr("width", 10)
-                                                .attr("height", 160)
-                                                .style("fill", "url(#gradient)").attr("transform","translate(20,10)");
 
-                                            var yScale = d3.scaleLinear()
-                                                .range([0, 158])
-                                                .domain([d3.max(binLengths),0]);
 
-                                            /*var yAxis = d3.svg.axis()
-                                                  .orient("left")
-                                                  .ticks(5)  //Set rough # of ticks
-                                                    //.tickFormat(formatPercent)
-                                                  .scale(xScale);*/
 
-                                            svg.append("g")
-                                                .attr("class", "axis") //Assign "axis" class
-                                                .attr("transform","translate(20,10)")
-                                                .call(d3.axisLeft(yScale).ticks(5).tickSize(0));
-                                            };
+
+              function createcolorbar(){
+              var svg = d3.select("#colorbar").append("svg").attr("transform","translate(0)")
+                  .attr("width", 90)
+                  .attr("height", 180);
+              var gradient = svg.append("defs")
+                .append("linearGradient")
+                  .attr("id", "gradient")
+                  .attr("x1", "0%")
+                  .attr("y1", "0%")
+                  .attr("x2", "0%")
+                  .attr("y2", "100%")
+                  .attr("spreadMethod", "pad");
+              gradient.append("stop")
+                  .attr("offset", "0%")
+                  .attr("stop-color", "darkblue")
+                  .attr("stop-opacity", 1);
+              gradient.append("stop")
+                  .attr("offset", "100%")
+                  .attr("stop-color", "lightblue")
+                  .attr("stop-opacity", 1);
+              svg.append("rect")
+                  .attr("width", 10)
+                  .attr("height", 160)
+                  .style("fill", "url(#gradient)").attr("transform","translate(10,10)");
+
+              var yScale = d3.scaleLinear()
+                  .range([0, 158])
+                  .domain([d3.max(binLengths),0]);
+
+              /*var yAxis = d3.svg.axis()
+                    .orient("left")
+                    .ticks(5)  //Set rough # of ticks
+                      //.tickFormat(formatPercent)
+                    .scale(xScale);*/
+
+              svg.append("g")
+                  .attr("class", "axis") //Assign "axis" class
+                  .attr("transform","translate(20,10)")
+                  .call(d3.axisRight(yScale).ticks(5,"s").tickSize(0));
+              };
+
+
             // adding the axes
             svg.append("g")
                 .attr("class", "y axis")
@@ -252,18 +264,23 @@ createcolorbar();
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
+
             currentRepresentativePlot = infoToReturn;
             return infoToReturn;
         };
 
-        factory.drawPolygon = function (){
+
+
+        function drawPolygon() {
             drawPolygonFlag = true;
-            enableButton('undo');
-            enableButton('green-polygon');
-            enableButton('red-polygon');
-            enableButton('submit');
+            // enableButton('undo');
+            // enableButton('green-polygon');
+            // enableButton('red-polygon');
             clickPolyPoints(d3.select("#main-chart"));
-        };
+        }
+
+        var currentPolygon;
+        var drawPolygonFlag = false;
 
         // adding double tap to  d3 events
         d3.selection.prototype.dblTap = function (callback) {
@@ -284,6 +301,7 @@ createcolorbar();
          */
         function clickPolyPoints(svg) {
             var polygon = svg.append('polygon').classed("userPolygon", true);
+            //var polygon = svg.append('rect').classed("userPolygon", true);
             polypoints = [];
             currentPolygon = polygon;
             //currentPolypoints = polypoints;
@@ -300,6 +318,14 @@ createcolorbar();
 
                     }
                 );
+                svg.on("mouseover", function () {
+                        var tempPolypoints = polypoints.slice();
+                        tempPolypoints.push(d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
+                        updatePolygon(polygon, tempPolypoints);
+
+                    }
+                );
+
                 svg.on("contextmenu", function (data, index) {
                     //handle right click
                     //stop showing browser menu
@@ -314,10 +340,13 @@ createcolorbar();
                     //console.log("Double click! + ",this);
                     svg.on("click", null);
                     svg.on("mousemove", null);
+                    svg.on("mouseover", null);
                     svg.on("contextmenu", null);
                     svg.on("mouseout", null);
-                    disableButton('undo');
+              //      disableButton('undo'); TODO
                     highlightPolygon();
+                    console.log(polypoints);
+                    console.log("hi!",getPolygons());
                 });
 
                 svg.dblTap(function () {
@@ -350,7 +379,7 @@ createcolorbar();
                 })
         }
 
-        factory.undoPolyPoints = function (){
+        function undoPolyPoints() {
             if (polypoints.length > 0) {
                 polypoints = polypoints.slice(0, polypoints.length - 1);
                 updatePolygon(currentPolygon, polypoints);
@@ -359,15 +388,13 @@ createcolorbar();
                 disableButton('undo');
             }
 
-        };
-
-        factory.changePolygonColorRed = function() {
+        }
+        function changePolygonColorRed() {
             currentPolygon.classed("red-polygon", true);
-        };
-
-        factory.changePolygonColorGreen = function() {
+        }
+        function changePolygonColorGreen() {
             currentPolygon.classed("red-polygon", false);
-        };
+        }
 
         function changePolygonColor(color) {
             currentPolygon.attr("style", "fill: " + color);
@@ -378,7 +405,11 @@ createcolorbar();
             //console.log(polygon.attr('points'));
         }
 
-        factory.getPolygons = function() {
+
+
+
+
+        getPolygons = function() {
             var result = [];
             var polygons = $('.userPolygon');
             for (var i = 0; i < polygons.length; i++) {
@@ -389,8 +420,11 @@ createcolorbar();
                 for (var j = 0; j < polygon.points.length; j++) {
                     var xCoordinate = polygon.points[j].x;
                     var scaledXCoordinate = currentRepresentativePlot.xScale.invert(xCoordinate - currentRepresentativePlot.leftMargin);
+                  //var scaledXCoordinate =  currentRepresentativePlot.xScale.invert(xCoordinate);
                     var yCoordinate = polygon.points[j].y;
                     var scaledYCoordinate = currentRepresentativePlot.yScale.invert(yCoordinate - currentRepresentativePlot.topMargin);
+                //  console.log(currentRepresentativePlot.TopMargin);
+                //  var scaledYCoordinate =  currentRepresentativePlot.yScale.invert(yCoordinate);
                     var currentCoordinates = [scaledXCoordinate, scaledYCoordinate];
                     // checking for duplicate last two points
                     //if (!newPolygon.points[newPolygon.points.length - 1] == currentCoordinates)
@@ -432,26 +466,26 @@ $scope.data;
       }
   );*/
 
+        // var data = [{'xval': 4, 'yval': 55.5}, {'xval': 3.5, 'yval': 30},{'xval': 0.5, 'yval':7},
+        //             {'xval': 3, 'yval':15},{'xval': 3.2, 'yval':20},{'xval': 3.2, 'yval':20},
+        //             {'xval': 3.2, 'yval':35},{'xval': 3.2, 'yval':45},{'xval': 3.8, 'yval':50},
+        //             {'xval': 0.5, 'yval':7},{'xval': 0.5, 'yval':7},{'xval': 0.5, 'yval':7},
+        //             {'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},
+        //             {'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},
+        //             {'xval': 1.6, 'yval': 10}, {'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17},
+        //             {'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17}]
 
-
-        var data = [{'xval': 4, 'yval': 55.5}, {'xval': 3.5, 'yval': 30},{'xval': 0.5, 'yval':7},
-                    {'xval': 3, 'yval':15},{'xval': 3.2, 'yval':20},{'xval': 3.2, 'yval':20},
-                    {'xval': 3.2, 'yval':35},{'xval': 3.2, 'yval':45},{'xval': 3.8, 'yval':50},
-                    {'xval': 0.5, 'yval':7},{'xval': 0.5, 'yval':7},{'xval': 0.5, 'yval':7},
-                    {'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},
-                    {'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},{'xval': 3, 'yval': 5},
-                    {'xval': 1.6, 'yval': 10}, {'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17},
-                    {'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17},{'xval': 2.5, 'yval': 17}]
-
-        //$scope.scatterService = ScatterService.drawScatter( $scope.data );
-        //currentRepresentativePlot = ScatterService.drawScatter( data );
-        //drawRandomChart();
+        // $scope.scatterService = ScatterService.drawScatter( $scope.data );
+        // currentRepresentativePlot = ScatterService.drawScatter( data );
+        // drawRandomChart();
         // $scope.scatterService = ScatterService;
+
         $scope.submit = function (){
             var polygons = ScatterService.getPolygons();
             $rootScope.polygons = polygons;
             $rootScope.$digest();
         };
+
         setTimeout(function () {
             $rootScope.shared = {value:"The input controller just changed this"};
             $rootScope.$digest();
