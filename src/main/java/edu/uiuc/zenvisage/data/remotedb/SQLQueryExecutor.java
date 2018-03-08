@@ -547,6 +547,37 @@ public class SQLQueryExecutor {
 		return false;
 	}
 	
+	public boolean check_root_user() throws SQLException{
+		Statement st0 = c.createStatement();
+		String sql0 = "SELECT COUNT(*) FROM users where id = 'root'";
+		ResultSet rs0;
+		try{
+			rs0 = st0.executeQuery(sql0);
+		}
+		catch(Exception PSQLException){
+			st0.close();
+			return false;
+		}
+		rs0.next();
+		if(rs0.getInt("count") == 1){
+			st0.close();
+			rs0.close();
+			return true;
+		}
+		st0.close();
+		rs0.close();
+		return false;
+	}
+
+	public void insert_root_user() throws SQLException, CannotPerformOperationException{
+		Statement st = c.createStatement();
+		String hashedpass = PasswordStorage.createHash("root");
+		String sql = "INSERT INTO users (id, password) VALUES ('"+"root"+"','"+hashedpass+"')";
+		st.execute(sql);
+		System.out.println("Add user root successfully");
+		st.close();
+	}
+
 	public void dropCSV(String tableName) throws SQLException{
 		String sqlDropMeta = "DELETE FROM zenvisage_metatable where tablename = '"+tableName+"'";
 		String sqlDropTable = "DROP TABLE "+ tableName;

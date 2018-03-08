@@ -434,6 +434,16 @@ public class ZvMain {
 		System.out.println("Retrieved table list in db:"+retrieved);
 		return retrieved;
 	}
+
+	public boolean checkRootUser() throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+		boolean check = sqlQueryExecutor.check_root_user();
+		System.out.println("Has root user or not:" + check);
+		return check;
+	}
+
+	public void insertRootUser() throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+		sqlQueryExecutor.insert_root_user();
+	}
 	
 	public Map<String, ArrayList<String>> userinfo(String username) throws IOException, SQLException{
 		Map<String, ArrayList<String>> retrieved = sqlQueryExecutor.userinfo(username);

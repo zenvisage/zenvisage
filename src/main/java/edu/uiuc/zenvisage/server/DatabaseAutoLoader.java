@@ -7,6 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
+import javax.servlet.ServletException;
+
+
 import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.service.ZvMain;
@@ -124,9 +129,17 @@ public class DatabaseAutoLoader {
 		zvMain.uploadDatasettoDB(dataset5,false);
 	}
 
-	public void run() throws SQLException, IOException, InterruptedException{
+	public void initializeRootUser() throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+		ZvMain zvMain=new ZvMain();
+		if(!zvMain.checkRootUser()){ 
+    		zvMain.insertRootUser();
+    	}
+	}
+
+	public void run() throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
 		boolean reload = createMetaTables();
 		if(reload) loadDemoDatasets();
+		initializeRootUser();
 	}
 
 }

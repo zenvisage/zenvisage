@@ -9,11 +9,12 @@ app.controller('fileuploadController', [
     
     if($cookies.getObject('userinfo') || !login_ava){
       formData = new FormData(this);
+      var username = $cookies.getObject('userinfo')['username'][0]; 
       if (formData.get("csv").name.split(".").pop() != "csv" ){
         alert("Please select a csv file");
         return;
       }
-      else if (formData.get("csv").size > 100000000) {
+      else if (formData.get("csv").size > 100000000 && username != 'root') {
         alert("Do not upload files over 100MB");
         return;
       }
