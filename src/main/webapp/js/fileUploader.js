@@ -6,8 +6,8 @@ app.controller('fileuploadController', [
   var datasetNameInput;
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
-    
-    if($cookies.getObject('userinfo') || !login_ava){
+
+    if(!login_ava){
       formData = new FormData(this);
       var username = $cookies.getObject('userinfo')['username'][0]; 
       if (formData.get("csv").name.split(".").pop() != "csv" ){
@@ -15,6 +15,20 @@ app.controller('fileuploadController', [
         return;
       }
       else if (formData.get("csv").size > 100000000 && username != 'root') {
+      parseCSV(formData);
+      datasetNameInput = $("#datasetNameInput").val();
+      console.log('test:',$(this).attr('action'),$(this).attr('method'));
+      log.info("dataset upload: ",$("#datasetNameInput").val())
+      // $('#uploaderModal').modal('toggle');
+      document.getElementById("uploadingProgressMessage").style.display = "block";
+      document.getElementById("submitButton").style.display = "none";
+    }else if($cookies.getObject('userinfo')){
+
+      formData = new FormData(this);
+      if (formData.get("csv").name.split(".").pop() != "csv" ){
+        alert("Please select a csv file");
+        return;
+      }else if(formData.get("csv").size > 100000000) {
         alert("Do not upload files over 100MB");
         return;
       }
