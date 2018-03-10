@@ -926,7 +926,7 @@ app.controller('datasetController', [
           case 'Bar':
               break;
           case 'Scatter':
-              $scope.getScatterData();
+              $scope.getScatterData("initialize");
               // ScatterService.initializeScatterPlot(
               //   $scope.data
               // );
@@ -967,16 +967,53 @@ app.controller('datasetController', [
     };
 
 
-    $scope.submit = function (){
-      console.log("hi!");
-        var polygons = ScatterService.getPolygons();
-        $rootScope.polygons = polygons;
-        $rootScope.$digest();
-    };
+    $scope.getScatterResultQuery = function getScatterResultQuery(){
+      var points = [];
+      $scope.queries["db"] = getSelectedDataset();
+      this.xAxis = getSelectedXAxis();
+      this.yAxis = getSelectedYAxis();
+      $scope.queries['zqlRows'] = [];
+      var name = $(this).find(".name").val()
+      var x = $(this).find(".x-val").val()
+      var y = $(this).find(".y-val").val()
+      var z = $(this).find(".z-val").val()
+      var constraints = $(this).find(".constraints").val()
 
-    $scope.getScatterData = function getScatterData(){
+      var polygons = ScatterService.getPolygons()[0]["points"];
+
+      for(var i = 0; i < polygons.length-1; i++){
+        points.push(new Point( polygons[i][0], polygons[i][1] ));
+        // this.dataX.push( xp );
+        // this.dataY.push( yp );
+      }
+
+      var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+          input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+          input["name"] = {"output": true,"sketch": true,"name": "f1"};
+          input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+          input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : true};
+          input["viz"] = {"map":{"type":"scatter"}};
+          $scope.queries['zqlRows'].push(input);
+    }
+
+    // $scope.submit = function (){
+    //   console.log("hi!");
+    //     var polygons = ScatterService.getPolygons();
+    //     $rootScope.polygons = polygons;
+    //     $rootScope.$digest();
+    // };
+
+    $scope.getScatterData = function getScatterData(mode){
       // get datasetchange query
-      $scope.scatterDatasetChangeQuery();
+      if(mode == "initialize"){
+        console.log("initialize");
+        $scope.scatterDatasetChangeQuery();
+      }
+      else{
+        console.log("getsScatterResults");
+        $scope.getScatterResultQuery();
+      }
         console.log(JSON.stringify( $scope.queries ));
       //$http.get('/zv/executeScatter', {params: {'query': {"db":"real_estate", "zqlRows":[{"name":{"output":true,"sketch":true,"name":"f1"},"x":{"variable":"x1","attributes":["'year'"]},"y":{"variable":"y1","attributes":["'listingprice'"]},"z":{"variable":"z1","aggregate":true,"attribute":"'state'","values":["*"]}, "viz":{"map": {"type":"scatter"}} }]}}}
       $http.get('/zv/executeScatter', {params: {'query': JSON.stringify( $scope.queries )}}

@@ -346,7 +346,8 @@ app.factory('ScatterService', function () {
               //      disableButton('undo'); TODO
                     highlightPolygon();
                     console.log(polypoints);
-                    console.log("hi!",getPolygons());
+                    console.log("dblclick!");
+                    angular.element($("#sidebar")).scope().getScatterData("getResults");
                 });
 
                 svg.dblTap(function () {
@@ -405,11 +406,7 @@ app.factory('ScatterService', function () {
             //console.log(polygon.attr('points'));
         }
 
-
-
-
-
-        getPolygons = function() {
+        factory.getPolygons = function () {
             var result = [];
             var polygons = $('.userPolygon');
             for (var i = 0; i < polygons.length; i++) {
