@@ -7,44 +7,35 @@ app.controller('fileuploadController', [
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
 
-    if(!login_ava){
-      formData = new FormData(this);
-      var username = $cookies.getObject('userinfo')['username'][0]; 
-      if (formData.get("csv").name.split(".").pop() != "csv" ){
-        alert("Please select a csv file");
-        return;
-      }
-      else if (formData.get("csv").size > 100000000 && username != 'root') {
-      parseCSV(formData);
-      datasetNameInput = $("#datasetNameInput").val();
-      console.log('test:',$(this).attr('action'),$(this).attr('method'));
-      log.info("dataset upload: ",$("#datasetNameInput").val())
-      // $('#uploaderModal').modal('toggle');
-      document.getElementById("uploadingProgressMessage").style.display = "block";
-      document.getElementById("submitButton").style.display = "none";
-    }else if($cookies.getObject('userinfo')){
-
-      formData = new FormData(this);
-      if (formData.get("csv").name.split(".").pop() != "csv" ){
-        alert("Please select a csv file");
-        return;
-      }else if(formData.get("csv").size > 100000000) {
+    formData = new FormData(this);
+    if (formData.get("csv").name.split(".").pop() != "csv" ){
+      alert("Please select a csv file");
+      return;
+    }
+    if (!login_ava) {   // if login is not available (configured to be off), allow uploads
+      uploadDataset()
+    } else if ($cookies.getObject('userinfo')) {  // user is logged in
+      var username = $cookies.getObject('userinfo')['username'][0];
+      if (formData.get("csv").size > 100000000 && username != 'root') {
         alert("Do not upload files over 100MB");
         return;
       }
-      parseCSV(formData);
-      datasetNameInput = $("#datasetNameInput").val();
-      console.log('test:',$(this).attr('action'),$(this).attr('method'));
-      log.info("dataset upload: ",$("#datasetNameInput").val())
-      // $('#uploaderModal').modal('toggle');
-      document.getElementById("uploadingProgressMessage").style.display = "block";
-      document.getElementById("submitButton").style.display = "none";
-    }else{
+      uploadDataset()
+    } else {
       alert("Please log in first to upload dataset.")
     }
-
   });
 
+  // uploadDataset uploads the global formData variable
+  function uploadDataset() {
+    parseCSV(formData);
+    datasetNameInput = $("#datasetNameInput").val();
+    console.log('test:',$(this).attr('action'),$(this).attr('method'));
+    log.info("dataset upload: ",$("#datasetNameInput").val())
+    // $('#uploaderModal').modal('toggle');
+    document.getElementById("uploadingProgressMessage").style.display = "block";
+    document.getElementById("submitButton").style.display = "none";
+  }
   // function getCheckedAttributes(){
   //   $("input:checkbox[name=type]:checked").each(function(){
   //       console.log($(this).val());
