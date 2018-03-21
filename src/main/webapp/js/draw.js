@@ -436,3 +436,8 @@ function Point(x, y){
   this.xval=x;
   this.yval=y;
 }
+
+function ScatterPoint(x, y){
+  this.x=x;
+  this.y=y;
+}

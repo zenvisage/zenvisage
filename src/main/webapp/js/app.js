@@ -968,7 +968,8 @@ app.controller('datasetController', [
 
 
     $scope.getScatterResultQuery = function getScatterResultQuery(){
-      var points = [];
+      var polygons = [];
+      var polygon = [];
       $scope.queries["db"] = getSelectedDataset();
       this.xAxis = getSelectedXAxis();
       this.yAxis = getSelectedYAxis();
@@ -979,21 +980,24 @@ app.controller('datasetController', [
       var z = $(this).find(".z-val").val()
       var constraints = $(this).find(".constraints").val()
 
-      var polygons = ScatterService.getPolygons()[0]["points"];
-
-      for(var i = 0; i < polygons.length-1; i++){
-        points.push(new Point( polygons[i][0], polygons[i][1] ));
+      var polypoints = ScatterService.getPolygons()[0]["points"];
+      console.log("get polygons:",ScatterService.getPolygons());
+      for(var i = 0; i < polypoints.length-1; i++){
+        polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
         // this.dataX.push( xp );
         // this.dataY.push( yp );
       }
-
+      polygons.push({"points": polygon})
+      console.log("polygon:",polygon);
+      console.log("polygons:",polygons);
       var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-          input["sketchPoints"] = new SketchPoints(this.xAxis, this.yAxis, points);
+          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
           input["name"] = {"output": true,"sketch": true,"name": "f1"};
           input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
           input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
           input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : true};
           input["viz"] = {"map":{"type":"scatter"}};
+          input["processe"] = {"variables":["v2"],"method":"Filter","count":"1","metric":"argmin","arguments":["f1"],"axisList1":[],"axisList2":[]};
           $scope.queries['zqlRows'].push(input);
     }
 
@@ -1022,7 +1026,8 @@ app.controller('datasetController', [
               $scope.data = response.data.outputCharts[0].points;
               //$scope.scatterService = ScatterService.drawScatter( $scope.data );
               //$scope.scatterService = ScatterService.drawScatter( data2 );
-              console.log("data: ", response.data.outputCharts[0].points);
+              console.log("first element of outputcharts: ", response.data.outputCharts[0].points);
+              console.log("all output charts: ", response.data.outputCharts);
               $scope.scatterService = ScatterService.initializeScatterPlot( $scope.data );
               $scope.submit;
               setTimeout(function () {

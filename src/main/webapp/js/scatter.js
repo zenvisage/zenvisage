@@ -161,7 +161,7 @@ app.factory('ScatterService', function () {
 
             var hexbin = d3_hexbin.hexbin()
                 //.size([width, height])
-                .radius(10);
+                .radius(5);
 
 
             var binLengths = hexbin( points ).map(function (elem) {
