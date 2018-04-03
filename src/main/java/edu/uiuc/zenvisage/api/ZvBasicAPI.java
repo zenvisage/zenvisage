@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -83,13 +84,30 @@ public class ZvBasicAPI {
     			return null;
     		}
     		if(zvMain.register(uname, pass)) {
-    			username = uname;
+    			username = uname; 
     			return zvMain.userinfo(uname);
     		}else {
     			return null;
     		}
     	}
     
+    @RequestMapping(value = "/file_size_checker", method = RequestMethod.POST)
+    
+    	public @ResponseBody Map<String, String> file_size_checker(@RequestParam String size) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException{
+    		int size_limit = 100000000;
+    		int file_size = Integer.parseInt(size);
+    		String printing = String.format("file size is %s", file_size);
+    		Map <String, String> failed_return = new HashMap<String, String> ();
+    		failed_return.put("return", "extreme large file size");
+    		System.out.println(printing);
+    		if (file_size > size_limit) {
+    			return failed_return;
+    		}
+    		else {
+    			return null; 
+    		}
+    	}
+
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) {

@@ -4,6 +4,7 @@ app.controller('fileuploadController', [
 
   var formData;
   var datasetNameInput;
+  var checker = '';
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
 
@@ -16,15 +17,44 @@ app.controller('fileuploadController', [
       uploadDataset()
     } else if ($cookies.getObject('userinfo')) {  // user is logged in
       var username = $cookies.getObject('userinfo')['username'][0];
-      if (formData.get("csv").size > 100000000 && username != 'root') {
-        alert("Do not upload files over 100MB");
-        return;
+      var file_size = {
+        "size": formData.get("csv").size.toString(),
+      };
+      
+      if (username != 'root') {
+        $.ajax({
+                type: "POST",
+                url: "/zv/file_size_checker",
+                data: file_size,
+                async: false,
+                success: function(response){
+                  callback_for_file_checker(response);
+                },
+                error: function() {
+                  alert("failed!!");
+                } 
+
+        });
+        if(checker == "true"){
+          return;
+        }
       }
-      uploadDataset()
+      // if (formData.get("csv").size > 1 && username != 'root') {
+      //   alert("Do not upload files over 100MB");
+      //   return;
+      // }
+      uploadDataset();
     } else {
-      alert("Please log in first to upload dataset.")
+      alert("Please log in first to upload dataset.");
     }
   });
+
+  function callback_for_file_checker(response){
+    if(response){
+      alert("Do not upload files over 100MB");
+      checker = "true";
+    }
+  }
 
   // uploadDataset uploads the global formData variable
   function uploadDataset() {
