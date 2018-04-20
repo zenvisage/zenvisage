@@ -276,18 +276,20 @@ public class ZvMain {
    public ScatterOutput convertVCListtoScatterOutput(VisualComponentList vcList) {
 	   ScatterOutput finalOutput = new ScatterOutput();
 		//VisualComponentList -> Result. Only care about the outputcharts. this is for submitZQL
-	    for(VisualComponent viz : vcList.getVisualComponentList()) {
-	    	ScatterChart outputChart = new ScatterChart();
-
-	    	outputChart.zval = viz.getZValue().toString();
-	    	ArrayList<WrapperType> xList = viz.getPoints().getXList();
-	    	ArrayList<WrapperType> yList = viz.getPoints().getYList();
-	    	for(int i = 0; i < viz.getPoints().getXList().size(); i++) {
-	    		outputChart.points.add(new Point(xList.get(i).getNumberValue(), yList.get(i).getNumberValue()));
-	    	}
-	    	finalOutput.outputCharts.add(outputChart);
-	    }
-		return finalOutput;	   
+	   int vc_index = 0;
+	   for(VisualComponent viz : vcList.getVisualComponentList()) {
+		   ScatterChart outputChart = new ScatterChart();
+		   outputChart.setxAttribute((++vc_index)+" : "+viz.getxAttribute());
+		   outputChart.setyAttribute(viz.getyAttribute());
+		   outputChart.zval = viz.getZValue().toString();
+		   ArrayList<WrapperType> xList = viz.getPoints().getXList();
+		   ArrayList<WrapperType> yList = viz.getPoints().getYList();
+		   for(int i = 0; i < viz.getPoints().getXList().size(); i++) {
+			   outputChart.points.add(new Point(xList.get(i).getNumberValue(), yList.get(i).getNumberValue()));
+		   }
+		   finalOutput.outputCharts.add(outputChart);
+	   }
+	   return finalOutput;	   
    }
    public Result convertVCListtoVisualOutput(VisualComponentList vcList){
 		Result finalOutput = new Result();

@@ -133,6 +133,26 @@ public class GraphExecutionTest {
 	}
 	
 	@Test
+	//
+	public void TestScatterRankExecution() throws SQLException {
+		//String arg = "{\"db\":\"cmu\",\"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'fp'\",\"bp\"],\"variable\":\"x1\"},\"y\":{\"attributes\":[\"'o2m'\",\"ea\"],\"variable\":\"y1\"},\"z\":{\"attribute\":\"'class'\",\"values\":[\"*\"],\"variable\":\"z1\",\"aggregate\":true},\"viz\":{\"map\":{\"type\":\"scatter\"}},\"sketchPoints\":{\"polygons\":[{\"points\":[{\"xval\":376.225,\"yval\":20.74246913580247},{\"xval\":223.94345238095238,\"yval\":8.620246913580246},{\"xval\":686.7599206349206,\"yval\":8.620246913580246}]}],\"minX\":92.95,\"maxX\":752.45,\"minY\":-5.6,\"maxY\":21.82,\"yAxis\":\"o2m\",\"xAxis\":\"fp\",\"groupBy\":\"class\",\"aggrFunc\":\"avg\",\"aggrVar\":\"o2m\"},\"processe\":{\"variables\":[\"v2\"],\"method\":\"Rank\",\"count\":\"50\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";
+//		String arg = "{\"db\":\"cmu\",\"zqlRows\":[{\"name\":{\"output\":true,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'o2m'\"],\"variable\":\"x1\"},\"y\":{\"attributes\":[\"'fp'\"],\"variable\":\"y1\"},\"z\":{\"attribute\":\"'class'\",\"values\":[\"*\"],\"variable\":\"v1\",\"aggregate\":false},\"viz\":{\"map\":{\"type\":\"scatter\"}},\"sketchPoints\":{\"polygons\":[{\"points\":[{\"xval\":11.256349206349208,\"yval\":645.6206790123457},{\"xval\":6.147698412698412,\"yval\":204.36913580246915},{\"xval\":18.962619047619047,\"yval\":241.52716049382718}]}],\"minX\":-5.6,\"maxX\":21.82,\"minY\":92.95,\"maxY\":752.45,\"yAxis\":\"fp\",\"xAxis\":\"o2m\",\"groupBy\":\"class\",\"aggrFunc\":\"avg\",\"aggrVar\":\"fp\"},\"processe\":{\"variables\":[\"v1\"],\"method\":\"Rank\",\"count\":\"50\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[\"z1\"],\"axisList2\":[]}}]}";
+		String arg = "{\"db\":\"cmu\",\"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":false,\"name\":\"f1\"},\"x\":{\"attributes\":[\"'fp'\"],\"variable\":\"x1\"},\"y\":{\"attributes\":[\"'o2m'\"],\"variable\":\"y1\"},\"z\":{\"attribute\":\"'class'\",\"values\":[\"*\"],\"variable\":\"z1\",\"aggregate\":false},\"viz\":{\"map\":{\"type\":\"scatter\"}},\"sketchPoints\":{\"polygons\":[{\"points\":[{\"xval\":292.61944444444447,\"yval\":19.79962962962963},{\"xval\":137.35198412698412,\"yval\":6.734567901234568},{\"xval\":489.68968253968256,\"yval\":5.252962962962961}]}],\"minX\":92.95,\"maxX\":752.45,\"minY\":-5.6,\"maxY\":21.82,\"yAxis\":\"o2m\",\"xAxis\":\"fp\",\"groupBy\":\"class\",\"aggrFunc\":\"avg\",\"aggrVar\":\"o2m\"},\"processe\":{\"variables\":[\"v1\"],\"method\":\"Rank\",\"count\":\"50\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[\"z1\"],\"axisList2\":[]}},{\"name\":{\"output\":true,\"sketch\":false,\"name\":\"f2\"},\"x\":{\"attributes\":[\"'fp'\"],\"variable\":\"x1\"},\"y\":{\"attributes\":[\"'o2m'\"],\"variable\":\"y1\"},\"z\":{\"values\":[],\"variable\":\"v1\",\"aggregate\":false},\"viz\":{\"map\":{\"type\":\"scatter\"}}}]}";
+		try {
+			ZvMain zvMain = new ZvMain();
+			logger.info("testing Scatter query");
+			String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
+			logger.info("Output");
+			//logger.info(outputGraphExecutor);
+
+			assertFalse(outputGraphExecutor.equals(nullOutput));
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
 	//aggregates all Z into one scatter plot
 	public void TestAggregateScatterQueryExecution() throws SQLException {
 		String arg = "{\"db\":\"real_estate\", \"zqlRows\":[{\"name\":{\"output\":false,\"sketch\":true,\"name\":\"f1\"},\"x\":{\"variable\":\"x1\",\"attributes\":[\"'year'\"]},\"y\":{\"variable\":\"y1\",\"attributes\":[\"'soldprice'\"]},\"z\":{\"aggregate\":true,\"variable\":\"z1\",\"attribute\":\"'state'\",\"values\":[\"*\"]},\"sketchPoints\":{\"xAxis\":\"year\",\"yAxis\":\"soldprice\",\"groupBy\":\"state\",\"polygons\":[ {\"points\":[ {\"xval\":\"5\", \"yval\":\"200000\"}, {\"xval\":\"200\", \"yval\":\"410585\"} ]} ] }, \"viz\":{\"map\": {\"type\":\"scatter\"}} , \"processe\":{\"variables\":[\"v2\"],\"method\":\"Filter\",\"count\":\"1\",\"metric\":\"argmin\",\"arguments\":[\"f1\"],\"axisList1\":[],\"axisList2\":[]}}]}";

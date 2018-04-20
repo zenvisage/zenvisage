@@ -37,11 +37,131 @@ function formatRanges( classData ){
 //   return formattedRanges
 // }
 
+function displayUserQueryResultsScatterHelper( userQueryResults)
+{
+  console.log("test!",userQueryResults);
+  clearUserQueryResultsTable();
+  var resultsDiv = $("#results-table");
+  var current = 0;
+  var connectSeparatedPoints = true;
+  var m = [0, 0, 20, 20]; // margins
+  var width = 275//200// - m[1] - m[3]; // width
+  var height = 105//85// - m[0] - m[2]; // height
+
+
+  for (var count = 0; count < userQueryResults.length; count++)
+  {
+    if (count % 2 == 0)
+    {
+      var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
+      current = count;
+    }
+    $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
+  }
+
+  for (var count = 0; count < userQueryResults.length; count++)
+  {
+  var data = userQueryResults[count]['points'];
+          console.log("data!",data);
+  var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
+  var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
+  var ymin = d3.max(data, function(d) {return Math.min(d.yval); })
+  var xmin = d3.max(data, function(d) {return Math.min(d.xval); })
+  var yScale = d3.scaleLinear()
+      .domain([0, ymax])
+      .range([height, 0]);
+  var xScale = d3.scaleLinear()
+      .domain([0, xmax])
+      .range([0, width]);
+  // define xscale
+
+  // define yscale
+
+    var points = new Array(data.length)
+    for (var i = 0; i < data.length; i++) {
+        var point = [xScale(data[i]['xval']), yScale(data[i]['yval'])]
+        points[i] = point;
+    }
+    var xlabel = userQueryResults[count]["xAttribute"]
+    var ylabel = userQueryResults[count]["yAttribute"]
+    var zAttribute = userQueryResults[count]["zval"]
+    var zlabel = userQueryResults[count]["zval"]
+
+    var hexColorRed = d3.scaleLinear()
+        .domain([0, data.length])
+        .range(["white", "maroon"]);
+
+
+    // Add an SVG element with the desired dimensions and margin.
+    var graph = d3.select("#result-" + count.toString())
+          .append("svg")
+        //  .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
+          .attr("width", width)// + m[1] + m[3])
+          .attr("height", height)// + m[0] + m[2])
+          .attr('fill', 'none')
+          .attr("id","resultsvg-" + count.toString())
+          // .append("g") //group that will house the plot
+          // .attr("id", "main-area2")
+          //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+    //
+    // graph.append("defs").append("clipPath")
+    //     .attr("id", "clip-" + count.toString())
+    //     .append("rect")
+    //     .attr("width", 180)
+    //     .attr("height", 65)
+    //     .attr("transform", "translate(20,20)");
+
+    var hexbin = d3_hexbin.hexbin()
+        //.size([width, height])
+        .radius(5);
+
+
+    var binLengths = hexbin( points ).map(function (elem) {
+        return elem.length;
+    });
+
+    var hexColor = d3.scaleLinear()
+        .domain([0, d3.max(binLengths)])
+        .range(["lightblue", "darkblue"]);
+
+// d3.select("resultsvg-" + count.toString()).append("g")
+
+    console.log("points!", points);
+    var hexbinPlot = graph.append("g")
+            .attr("clip-path", "url(#clip)")
+            .selectAll(".hexagon")
+            .data(hexbin(points)) // returns an array of bins
+            .enter().append("path") // enter returns all fictitious elements according to number of data points
+            .attr("class", "hexagon") // the class hexagon is a custom class made to incorporate stroke and fill
+            .attr("d", hexbin.hexagon())
+            .attr("transform", function (d) {
+              console.log("hi!");
+                return "translate(" + d.x + "," + d.y + ") scale(0.8)"; // Each bin (or d) returned by hexbin(points) is an array containing the bin’s points
+            });
+
+            //load the points animatedly
+            //reference url for ease: https://github.com/mbostock/d3/wiki/Transitions#d3_ease
+
+            hexbinPlot.transition()
+                .style("fill", function (d, i) {
+
+                    return hexColor(d.length);
+                    //return color[i];
+                })
+                .duration(900)
+                //.ease('sin');
+
+              }
+  }
+
+
+
 
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
 {
+  console.log("test!",userQueryResults);
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;

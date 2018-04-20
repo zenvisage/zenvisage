@@ -2,9 +2,12 @@ package edu.uiuc.zenvisage.zqlcomplete.querygraph;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -65,8 +68,23 @@ public class ScatterProcessNode extends ProcessNode {
 		if(process.getMethod().equals("Rep")) {
 			output = scatterRepExecution();
 		} else if (process.getMethod().equals("Rank")) {
-			output = scatterRankExecution();
+			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
+			List<Polygon> rectangles = vcNode.getVc().getSketch().getPolygons();
+			List<String> values = scatterRankExecution(rectangles);
+			double[] scores = new double[values.size()];
+			for (int i = 0; i < values.size(); i++) {
+				scores[i] = i;
+			}
+			
+			// z1
+		    String axisName = process.getAxisList1().get(0);
+			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
+			// newAxisVar is a subset of axisVar after processing
+			AxisVariable newAxisVar = new AxisVariable(axisVar.getAttributeType(), axisVar.getAttribute(), values, scores);
+			// v1, axisvar
+			lookuptable.put(process.getVariables().get(0), newAxisVar);
 		}
+
 		this.state = State.FINISHED;
 	}
 	
@@ -79,6 +97,7 @@ public class ScatterProcessNode extends ProcessNode {
 		return output;
 	}
 	
+	// TODO: broken: should return axis variables
 	public static void computeScatterRep(VisualComponentList input, VisualComponentQuery q, Result finalOutput) {
 		List<VisualComponent> vcList = input.getVisualComponentList();
 		int len = Math.min(vcList.size(), q.getNumOfResults());
@@ -106,10 +125,66 @@ public class ScatterProcessNode extends ProcessNode {
 		return null;
 	}
 	
-	private Result scatterRankExecution() {
+	private List<String> scatterRankExecution(List<Polygon> polygons) {
 		// lookup table the VCNode we depend on
 		// task processor: (eg find the charts that match the scatter data in these rectangles)
-		return null;
+		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
+		Result output = new Result();
+		return computeScatterRank(vcNode.getVcList(), vcNode.getVc(), output, polygons);
+	}
+	
+	public static List<String> computeScatterRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Polygon> polygons) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		List<Double> ratioList =new ArrayList<Double>();
+		int len = Math.min(vcList.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
+			len = vcList.size();
+		}
+		for (int vc_index = 0; vc_index < len; vc_index++) {
+			VisualComponent vc = vcList.get(vc_index);
+			double ratio = computeBoundingBoxRatio(vc,polygons);
+			ratioList.add(ratio);
+		}
+		
+		 Map<Integer, Double> m = new HashMap<> ();
+		 for (int i = 0; i < len; i++) {
+		   m.put(i, ratioList.get(i));
+		 }
+		int [] ranks = m.entrySet().stream().sorted(Entry.comparingByValue()).mapToInt(Entry::getKey).toArray();
+		
+		for (int vc_index = 0; vc_index <  len; vc_index++) {
+			Chart chartOutput = new Chart();
+			VisualComponent vc = vcList.get(vc_index);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
+			chartOutput.setyType(vc.getyAttribute());
+			chartOutput.setzType(vc.getZValue().toString());
+//			System.out.println("Testing " + vc.getxAttribute());
+//			System.out.println("Testing " + q.getY().getAttributes().get(1));
+//			System.out.println("Testing " + vc.getyAttribute());
+			chartOutput.count = vc.getPoints().getXList().size();
+			chartOutput.setRank(ranks[vc_index]);
+			System.out.println("VC_index: " + vc_index + " , Rank is: " + ranks[vc_index]);
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();
+//			System.out.println("PP Adding aggregate scatterplot with x attribute " + vc.getxAttribute() + " and y attribute " + vc.getyAttribute());
+//			System.out.println("Num points is " + vc.getPoints().getXList().size());
+			
+
+			
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
+			}
+			finalOutput.outputCharts.add(chartOutput);
+			//finalOutput.outputCharts.sort((o1, o2) -> ((Integer)o1.getRank()).compareTo((Integer)o2.getRank()));
+		}
+		finalOutput.outputCharts.sort((o1, o2) -> ((Integer)o1.getRank()).compareTo((Integer)o2.getRank()));
+		List<String> res = new ArrayList<>();
+		for (Chart c : finalOutput.outputCharts) {
+			res.add(c.getzType());
+		}
+		int xa = 1;
+		return res;
 	}
 	
 	/**
@@ -134,6 +209,29 @@ public class ScatterProcessNode extends ProcessNode {
 				}
 			}
 		}
+	}
+	
+	private static double computeBoundingBoxRatio(VisualComponent vc, List<Polygon> polygons) {
+		
+		ArrayList<WrapperType> xList = vc.getPoints().getXList();
+		ArrayList<WrapperType> yList = vc.getPoints().getYList();
+		double numPointsInside = 0; 
+		double numPointsOutside = 0;
+		Iterator<WrapperType> yIt = yList.iterator();
+		for(Iterator<WrapperType> xIt = xList.iterator(); xIt.hasNext();) {
+			float x = xIt.next().getNumberValue();
+			float y = yIt.next().getNumberValue();
+			Point point = new Point(x,y);
+			if(inArea(point,polygons)) {
+				numPointsInside ++; 
+			}
+			else {
+				numPointsOutside ++; 
+			}
+		}
+		
+		return (numPointsInside/numPointsOutside); 
+		
 	}
 	
 	private static boolean inArea(Point point, List<Polygon> polygons) {

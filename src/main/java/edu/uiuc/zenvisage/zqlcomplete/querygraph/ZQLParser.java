@@ -138,8 +138,8 @@ public class ZQLParser {
 				if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 						// if ZAttribute and ZValues are both null emptyZ case
-						boolean emptyZ = (z.getValues() == null || z.getValues().isEmpty()) && z.getAttribute().equals("");
-						if ( (z.getValues() != null && !z.getValues().isEmpty()) || emptyZ ) {
+						//boolean emptyZ = (z.getValues() == null || z.getValues().isEmpty()) && z.getAttribute().equals("");
+						if ( (z.getValues() != null && !z.getValues().isEmpty())) {
 							queryEntryNodes.add(vcNode);
 							graph.entryNodes.add(vcNode);
 							continue;

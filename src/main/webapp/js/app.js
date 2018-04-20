@@ -403,6 +403,11 @@ app.factory('plotResults', function() {
       displayOutlierResultsHelper( outlierResults )
     }
 
+    plottingService.displayUserQueryResultsScatter = function displayUserQueryResultsScatter( userQueryResults )
+    {
+      displayUserQueryResultsScatterHelper( userQueryResults )
+    }
+
     return plottingService;
 });
 
@@ -990,15 +995,35 @@ app.controller('datasetController', [
       polygons.push({"points": polygon})
       console.log("polygon:",polygon);
       console.log("polygons:",polygons);
+      // var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+      //     input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
+      //     input["name"] = {"output": true,"sketch": true,"name": "f1"};
+      //     input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+      //     input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+      //     input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
+      //     input["viz"] = {"map":{"type":"scatter"}};
+      //     input["processe"] = {"variables":["v2"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":[],"axisList2":[]};
+      //     $scope.queries['zqlRows'].push(input);
+
+
       var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
           input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
-          input["name"] = {"output": true,"sketch": true,"name": "f1"};
+          input["name"] = {"output": false,"sketch": false,"name": "f1"};
           input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
           input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : true};
+          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
           input["viz"] = {"map":{"type":"scatter"}};
-          input["processe"] = {"variables":["v2"],"method":"Filter","count":"1","metric":"argmin","arguments":["f1"],"axisList1":[],"axisList2":[]};
+          input["processe"] = {"variables":["v1"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":["z1"],"axisList2":[]};
           $scope.queries['zqlRows'].push(input);
+      var input2 = { "name": name, "x": x, "y": y, "z": z};
+          input2["name"] = {"output": true,"sketch": false,"name": "f2"};
+          input2["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+          input2["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+          input2["z"] = { "values": [], "variable" : "v1", "aggregate" : false};
+          input2["viz"] = {"map":{"type":"scatter"}};
+          $scope.queries['zqlRows'].push(input2);
+
+
     }
 
     // $scope.submit = function (){
@@ -1030,15 +1055,18 @@ app.controller('datasetController', [
               console.log("all output charts: ", response.data.outputCharts);
               $scope.scatterService = ScatterService.initializeScatterPlot( $scope.data );
               $scope.submit;
-              setTimeout(function () {
-                  $rootScope.shared = {value:"The input controller just changed this"};
-                  $rootScope.$digest();
-              }, 3000);
+              // setTimeout(function () {
+              //     $rootScope.shared = {value:"The input controller just changed this"};
+              //     $rootScope.$digest();
+              // }, 3000);
+              plotResults.displayUserQueryResultsScatter(response.data.outputCharts);
           },
           function (response) {
           //    console.log("failed: ", escape(response));
           }
       );
+
+
     }
 
 

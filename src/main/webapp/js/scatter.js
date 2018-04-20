@@ -14,7 +14,6 @@ app.factory('ScatterService', function () {
 
         factory.initializeScatterPlot = function ( data ) {
 //xmin, xmax, ymin, ymax, xlabel, ylabel, category
-
             // var container, data, xlabel, ylabel, title;
             var container, xlabel, ylabel, title;
             var scaleMultiplier = 1.05;

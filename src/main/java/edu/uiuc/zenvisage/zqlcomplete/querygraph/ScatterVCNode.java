@@ -127,11 +127,30 @@ public class ScatterVCNode extends VisualComponentNode {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		//update the look table with name variable, e.g, f1)
+		String name = this.getVc().getName().getName();
+
+		//Fills in missing info into vcList for output purposes
+		AxisVariable axisVar = (AxisVariable) lookuptable.get(this.getVc().getZ().getVariable());
 		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
+		// If our Z values are from the output of a process, we need to sort the list using the scores
+		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length > 0) {
+			double[] scores = axisVar.getScores();
+			List<String> values = axisVar.getValues();
+			sortVisualComponentList(vcList, scores, values, axisVar.getAttribute());
+		} else {
+			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
+				VisualComponent vc = vcList.getVisualComponentList().get(i);;
+				vc.setzAttribute(this.getVc().getZ().getAttribute());
+			}			
+		}
 		if (this.getVc().getZ().isAggregate()) {
 			return createAggregatedScatterResults(vcList);
 		}
 		
+		this.getLookUpTable().put(name, vcList);
+
 		return vcList;
 	}
 	
@@ -144,8 +163,27 @@ private VisualComponentList createAggregatedScatterResults(VisualComponentList v
 		return vcList;
 	}
 	
+//	ArrayList<WrapperType> aggregateXList = new ArrayList<WrapperType>();
+//	ArrayList<WrapperType> aggregateYList = new ArrayList<WrapperType>();
+//	for (VisualComponent vc : vcList.getVisualComponentList()) {
+//		//String zValue = vc.getZValue().getStrValue();
+//		Points points = vc.getPoints();
+//		List<WrapperType> xValues = points.getXList();
+//		List<WrapperType> yValues = points.getYList();
+//		aggregateXList.addAll(xValues);
+//		aggregateYList.addAll(yValues);
+//	}
+//	Points aggregatePoints = new Points(aggregateXList, aggregateYList);
+//	String xAttribute = vcList.getVisualComponentList().get(0).getxAttribute();
+//	String yAttribute = vcList.getVisualComponentList().get(0).getyAttribute();
+//	VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
+//
+//	VisualComponentList out = new VisualComponentList();
+//	out.addVisualComponent(aggregateVisualComponent);
+	
 	ArrayList<WrapperType> aggregateXList = new ArrayList<WrapperType>();
 	ArrayList<WrapperType> aggregateYList = new ArrayList<WrapperType>();
+	VisualComponentList out = new VisualComponentList();
 	for (VisualComponent vc : vcList.getVisualComponentList()) {
 		//String zValue = vc.getZValue().getStrValue();
 		Points points = vc.getPoints();
@@ -153,15 +191,18 @@ private VisualComponentList createAggregatedScatterResults(VisualComponentList v
 		List<WrapperType> yValues = points.getYList();
 		aggregateXList.addAll(xValues);
 		aggregateYList.addAll(yValues);
+		Points aggregatePoints = new Points(aggregateXList, aggregateYList);
+		String xAttribute = vc.getxAttribute();
+		String yAttribute = vc.getyAttribute();
+		System.out.println("Adding aggregate scatterplot with x attribute " + vc.getxAttribute() + " and y attribute " + vc.getyAttribute());
+		System.out.println("Num x points is " + vc.getPoints().getXList().size());
+		System.out.println("Num y points is " + vc.getPoints().getYList().size());
+		System.out.println("First point in xlist " + vc.getPoints().getXList().get(0));
+		System.out.println("First point in ylist " + vc.getPoints().getYList().get(0));
+		VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
+		//out = new VisualComponentList();
+		out.addVisualComponent(aggregateVisualComponent);
 	}
-	Points aggregatePoints = new Points(aggregateXList, aggregateYList);
-	String xAttribute = vcList.getVisualComponentList().get(0).getxAttribute();
-	String yAttribute = vcList.getVisualComponentList().get(0).getyAttribute();
-	VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
-
-	VisualComponentList out = new VisualComponentList();
-	out.addVisualComponent(aggregateVisualComponent);
-	
 	return out;
 }
 	//TODO: implement
