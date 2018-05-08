@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.SQLException; 
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -814,7 +814,7 @@ public class SQLQueryExecutor {
 		rs.close();
 		// create temporary table to store initial permutations 
 		
-		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations_temp")){
+		if(sqlQueryExecutor.isTableExists("dynamic_class_aggregations_temp") == false){
 				createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
 	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
@@ -840,7 +840,7 @@ public class SQLQueryExecutor {
 		st_ranges.close();
 		
 		// create the final table to hold the aggregations 
-	if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations")){
+	if(sqlQueryExecutor.isTableExists("dynamic_class_aggregations") == false){
 		createTable("CREATE TABLE dynamic_class_aggregations  " +
                 " (Table_Name           TEXT    NOT NULL, " +
                 " Tag            TEXT     NOT NULL, " +
