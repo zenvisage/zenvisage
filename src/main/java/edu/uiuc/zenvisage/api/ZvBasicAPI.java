@@ -1,7 +1,7 @@
 package edu.uiuc.zenvisage.api;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.PrintWriter; 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,8 +91,8 @@ public class ZvBasicAPI {
     		}
     	}
     
-    @RequestMapping(value = "/file_size_checker", method = RequestMethod.POST)
-    
+    //check file size, no larger than 100 MB
+    @RequestMapping(value = "/file_size_checker", method = RequestMethod.POST)    
     	public @ResponseBody Map<String, String> file_size_checker(@RequestParam String size) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException{
     		int size_limit = 100000000;
     		int file_size = Integer.parseInt(size);
@@ -122,10 +122,10 @@ public class ZvBasicAPI {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			}
+			} 
 		}
 	}
-	
+	 
     @RequestMapping(value = "/insertUserTablePair", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, ArrayList<String>> insertUserTablePair(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
@@ -134,11 +134,19 @@ public class ZvBasicAPI {
     		System.out.println(uname);
     		String tname = request.getParameter("datasetName");
     		if(zvMain.insertUserTablePair(uname,tname)) {
+    			//XuMO: check whether split table or not
+    			if (zvMain.check_split_table_or_not(tname, uname)){
+    				System.out.println("Need to split data table");
+    				String join_key = zvMain.get_join_key(tname, uname);
+    				System.out.println("join key is "+join_key);
+    				zvMain.operations_for_split_table(tname, join_key);
+    			}
     			return zvMain.userinfo(uname);
     		}else {
     			return null;
     		}
     	}
+
 
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody
@@ -354,7 +362,7 @@ public class ZvBasicAPI {
 			}
 		}
 		return null;
-	}
+	} 
 	
 	@RequestMapping(value = "/postSimilarity_error", method = RequestMethod.POST)
 	@ResponseBody
@@ -604,7 +612,8 @@ public class ZvBasicAPI {
 			}
 		}
 		return null;
-	}
+	} 
+
 	@RequestMapping(value = "/selectXYZ", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException, InterruptedException {
@@ -616,6 +625,13 @@ public class ZvBasicAPI {
         }
 		return null;
 	}
+
+	//Add join key attribute to join key table
+    @RequestMapping(value = "/join_key_adder", method = RequestMethod.POST)
+    	public @ResponseBody Map<String, String> join_key_adder(@RequestParam String username, String dataset, String join_key) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException{
+    		zvMain.insertJoinKey(username, dataset, join_key);
+    		return null;
+    	}
 
 	@RequestMapping(value = "/executeScatter", method = RequestMethod.GET)
 	@ResponseBody

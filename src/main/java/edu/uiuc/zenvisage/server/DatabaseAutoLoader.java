@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List; 
 
 import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
 import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
@@ -54,6 +54,14 @@ public class DatabaseAutoLoader {
 			String createMetaFileLocationSQL ="CREATE TABLE zenvisage_metafilelocation "
 					+ "(database TEXT, metafilelocation TEXT, csvfilelocation TEXT);";
 			sqlQueryExecutor.createTable(createMetaFileLocationSQL);
+			reload = true;
+		}
+
+		// //XuMo: create join_key_table automatically
+		if(!sqlQueryExecutor.isTableExists("join_key_table")){
+			String createJoinKeyTable = "CREATE TABLE join_key_table "+
+					"(username TEXT, tablename TEXT, joinKeyName TEXT);";
+			sqlQueryExecutor.createTable(createJoinKeyTable);
 			reload = true;
 		}
 

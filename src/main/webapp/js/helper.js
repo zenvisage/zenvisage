@@ -1486,7 +1486,7 @@ function autoSelect(source,type) {
       });
   }
 }
-
+ 
 function parseCSV(data) {
  Papa.parse(data.get("csv"), {
  // preview: 7000,
@@ -1518,7 +1518,7 @@ function parseCSV(data) {
    $('.x-attributes').html(textAttributeName);
    $('.y-attributes').html(textAttributeSelection);
    $('.z-attributes').html(textDataType);
-   $('#uploaderModal').modal('toggle');
+   //$('#uploaderModal').modal('toggle');
    $('#define-attributes').modal('toggle');
    document.getElementById("uploadingProgressMessage").style.display = "none";
    document.getElementById("submitButton").style.display = "block";
@@ -1532,9 +1532,9 @@ function getType(previewRow){
     var results = [];
       // console.log("length!: ",previewRow);
     var nan = isNaN(Number(previewRow[1]));
-    var isfloat = /^\d*(\.|,)\d*$/;
-    var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
-    var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
+    // var isfloat = /^\d*(\.|,)\d*$/;
+    // var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
+    // var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
     // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
     // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
     // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
@@ -1542,22 +1542,19 @@ function getType(previewRow){
       var retval = "int"
       for (var i = 1; i < previewRow.length-3; i++) {
         if(isNaN(Number(previewRow[i]))){
-          retval= "string"
+          return "string"
         }
-        else if (isfloat.test(previewRow[i]) || commaFloat.test(previewRow[i]) || dotFloat.test(previewRow[i])){
-          retval= "float"
-        }
-        // else if (parseFloat(previewRow[i]) !== parseInt(previewRow[i])){
-        //   return "float"
-        // };
+        else if (parseFloat(previewRow[i]) !== parseInt(previewRow[i])){
+          return "float"
+        };
       }
       return retval;
 
       // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
       // // else if (date.test(str)) return "date";
+
+
 }
-
-
 }
 function filterUncheckAttributes(attributeList,selectedAxis){
 
