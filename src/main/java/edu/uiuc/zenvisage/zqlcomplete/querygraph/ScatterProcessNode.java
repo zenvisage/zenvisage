@@ -136,6 +136,7 @@ public class ScatterProcessNode extends ProcessNode {
 	public static List<String> computeScatterRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Polygon> polygons) {
 		List<VisualComponent> vcList = input.getVisualComponentList();
 		List<Double> ratioList =new ArrayList<Double>();
+		List<String> titleList =new ArrayList<String>();
 		int len = Math.min(vcList.size(), q.getNumOfResults());
 		if (q.getNumOfResults() == 0) {
 			len = vcList.size();
@@ -144,26 +145,57 @@ public class ScatterProcessNode extends ProcessNode {
 			VisualComponent vc = vcList.get(vc_index);
 			double ratio = computeBoundingBoxRatio(vc,polygons);
 			ratioList.add(ratio);
+			String title = vc.getZValue().toString() + ":" + ratio;
+			titleList.add(title); 
 		}
 		
-		 Map<Integer, Double> m = new HashMap<> ();
+		List<Integer> ranks =new ArrayList<Integer>();
 		 for (int i = 0; i < len; i++) {
-		   m.put(i, ratioList.get(i));
+		   ranks.add(i);
 		 }
-		int [] ranks = m.entrySet().stream().sorted(Entry.comparingByValue()).mapToInt(Entry::getKey).toArray();
+		 
+	        float R[] = new float[len];
+	        
+	        // Sweep through all elements in A
+	        // for each element count the number
+	        // of less than and equal elements
+	        // separately in r and s
+	        for (int i = 0; i < len; i++) {
+	            int r = 1, s = 1;
+	             
+	            for (int j = 0; j < len; j++) 
+	            {
+	                if (j != i && ratioList.get(j) < ratioList.get(i))
+	                    r += 1;
+	                     
+	                if (j != i && ratioList.get(j) == ratioList.get(i))
+	                    s += 1;     
+	            }
+	         
+	        // Use formula to obtain  rank
+	        R[i] = r + (float)(s - 1) / (float) 2;
+	     
+	        } 
+	     
+	        for (int i = 0; i < len; i++)
+	            System.out.print(R[i] + "  ");
+		 
+//		 Collections.sort(ranks, (c1, c2) -> ratioList.get(c2) >  ratioList.get(c1)  ? +1 : ratioList.get(c2)  ==  ratioList.get(c1)  ? 0 : -1);
+//		int [] ranks = m.entrySet().stream().sorted(Entry.comparingByValue()).mapToInt(Entry::getKey).toArray();
 		
 		for (int vc_index = 0; vc_index <  len; vc_index++) {
 			Chart chartOutput = new Chart();
 			VisualComponent vc = vcList.get(vc_index);
 			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
 			chartOutput.setyType(vc.getyAttribute());
+			System.out.println("RANK,ZAXIS,RATIO: " + R[vc_index] + ":" + titleList.get(vc_index));
 			chartOutput.setzType(vc.getZValue().toString());
 //			System.out.println("Testing " + vc.getxAttribute());
 //			System.out.println("Testing " + q.getY().getAttributes().get(1));
 //			System.out.println("Testing " + vc.getyAttribute());
 			chartOutput.count = vc.getPoints().getXList().size();
-			chartOutput.setRank(ranks[vc_index]);
-			System.out.println("VC_index: " + vc_index + " , Rank is: " + ranks[vc_index]);
+//			chartOutput.setRank(ranks.get(vc_index));
+			chartOutput.setRank((int) R[vc_index]);
 			ArrayList<WrapperType> xList = vc.getPoints().getXList();
 			ArrayList<WrapperType> yList = vc.getPoints().getYList();
 //			System.out.println("PP Adding aggregate scatterplot with x attribute " + vc.getxAttribute() + " and y attribute " + vc.getyAttribute());
@@ -178,7 +210,7 @@ public class ScatterProcessNode extends ProcessNode {
 			finalOutput.outputCharts.add(chartOutput);
 			//finalOutput.outputCharts.sort((o1, o2) -> ((Integer)o1.getRank()).compareTo((Integer)o2.getRank()));
 		}
-		finalOutput.outputCharts.sort((o1, o2) -> ((Integer)o1.getRank()).compareTo((Integer)o2.getRank()));
+		finalOutput.outputCharts.sort((o1, o2) -> ((Integer)o2.getRank()).compareTo((Integer)o1.getRank()));
 		List<String> res = new ArrayList<>();
 		for (Chart c : finalOutput.outputCharts) {
 			res.add(c.getzType());
@@ -230,8 +262,8 @@ public class ScatterProcessNode extends ProcessNode {
 			}
 		}
 		
-		return (numPointsInside/numPointsOutside); 
-		
+//		return (numPointsInside/numPointsOutside); 
+		return (numPointsInside); 
 	}
 	
 	private static boolean inArea(Point point, List<Polygon> polygons) {

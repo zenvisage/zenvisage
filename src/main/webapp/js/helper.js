@@ -45,8 +45,8 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
   var current = 0;
   var connectSeparatedPoints = true;
   var m = [0, 0, 20, 20]; // margins
-  var width = 275//200// - m[1] - m[3]; // width
-  var height = 105//85// - m[0] - m[2]; // height
+  var width = 200//200// - m[1] - m[3]; // width
+  var height = 85//85// - m[0] - m[2]; // height
 
 
   for (var count = 0; count < userQueryResults.length; count++)
@@ -62,9 +62,10 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
   for (var count = 0; count < userQueryResults.length; count++)
   {
   var data = userQueryResults[count]['points'];
+
           console.log("data!",data);
-  var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
-  var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
+  var ymax = d3.max(data, function(d) {return Math.max(d.yval)+10; })
+  var xmax = d3.max(data, function(d) {return Math.max(d.xval)+10; })
   var ymin = d3.max(data, function(d) {return Math.min(d.yval); })
   var xmin = d3.max(data, function(d) {return Math.min(d.xval); })
   var yScale = d3.scaleLinear()
@@ -85,7 +86,7 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
     var xlabel = userQueryResults[count]["xAttribute"]
     var ylabel = userQueryResults[count]["yAttribute"]
     var zAttribute = userQueryResults[count]["zval"]
-    var zlabel = userQueryResults[count]["zval"]
+
 
     var hexColorRed = d3.scaleLinear()
         .domain([0, data.length])
@@ -95,7 +96,7 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#result-" + count.toString())
           .append("svg")
-        //  .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
+          .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
           .attr('fill', 'none')
@@ -111,10 +112,35 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
     //     .attr("height", 65)
     //     .attr("transform", "translate(20,20)");
 
+    var trans = height-20
+    d3.select("#undraggable-result-"+count.toString()).append("g")
+    console.log("zlabel test: ",zAttribute);
+    d3.select("#undraggable-result-"+count.toString()).append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+           (trans + m[0] + 30) + ")")
+      .style("text-anchor", "middle")
+      .attr("count", count.toString())
+      .attr("id",'ztitle')
+      .attr("type",'queryResult')
+      .attr('label',zAttribute)
+      .text( zAttribute );
+
     var hexbin = d3_hexbin.hexbin()
         //.size([width, height])
         .radius(5);
 
+    var xAxis = d3.axisBottom(xScale).tickSize(3, -height);
+    // var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
+    var yAxis = d3.axisLeft(yScale).ticks(3,"s");
+    graph.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    graph.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
     var binLengths = hexbin( points ).map(function (elem) {
         return elem.length;
