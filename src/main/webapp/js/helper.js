@@ -49,23 +49,21 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
   var height = 85//85// - m[0] - m[2]; // height
 
 
-  for (var count = 0; count < userQueryResults.length; count++)
+  for (var count = 0; count < userQueryResults.length; count++){
+  if (count % 2 == 0)
   {
-    if (count % 2 == 0)
-    {
-      var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
-      current = count;
-    }
-    $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
+    var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
+    current = count;
   }
+  $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
+}
 
   for (var count = 0; count < userQueryResults.length; count++)
   {
   var data = userQueryResults[count]['points'];
-
           console.log("data!",data);
-  var ymax = d3.max(data, function(d) {return Math.max(d.yval)+10; })
-  var xmax = d3.max(data, function(d) {return Math.max(d.xval)+10; })
+  var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
+  var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
   var ymin = d3.max(data, function(d) {return Math.min(d.yval); })
   var xmin = d3.max(data, function(d) {return Math.min(d.xval); })
   var yScale = d3.scaleLinear()
@@ -96,7 +94,7 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#result-" + count.toString())
           .append("svg")
-          .attr("viewBox","0 0 " + width.toString()+" "+ (height+15).toString())
+          .attr("viewBox","0 0 " + (width-25).toString()+" "+ (height+20).toString())
           .attr("width", width)// + m[1] + m[3])
           .attr("height", height)// + m[0] + m[2])
           .attr('fill', 'none')
