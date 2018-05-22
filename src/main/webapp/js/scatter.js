@@ -88,7 +88,7 @@ app.factory('ScatterService', function () {
             d3.select("#main-chart").selectAll("*").remove();
             d3.select("#colorbar").selectAll("*").remove();
             var svg = d3.select("#main-chart")
-                // .attr("viewBox", "0 0 520 620")
+                .attr("viewBox", "0 0 270 230")
                 .attr("width", 300)
                 .attr("height", 210)
                 .attr('fill', 'none')
@@ -96,7 +96,11 @@ app.factory('ScatterService', function () {
                 .attr("id", "main-area")
                 .attr("transform",  "translate(25,20) scale(1.0)"); //to center the g in the svg
 
-
+          svg.append("defs").append("clipPath")
+              .attr("id", "clip")
+              .append("rect")
+              .attr("width", 300)
+              .attr("height", 210);
 
             //////////////////////////////////////////////////////GRID LINES
             // var yAxisTickValues = yAxis.scale().ticks(yAxis.ticks());
@@ -183,6 +187,8 @@ app.factory('ScatterService', function () {
             function drawHexbin() {
                 var hexbinPlot = svg.append("g")
                         .attr("clip-path", "url(#clip)")
+                        .attr("width", 180)
+                        .attr("height", 65)
                         .selectAll(".hexagon")
                         .data(hexbin(points)) // returns an array of bins
                         .enter().append("path") // enter returns all fictitious elements according to number of data points

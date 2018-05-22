@@ -58,6 +58,8 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
   $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
 }
 
+
+
   for (var count = 0; count < userQueryResults.length; count++)
   {
   var data = userQueryResults[count]['points'];
@@ -99,16 +101,13 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
           .attr("height", height)// + m[0] + m[2])
           .attr('fill', 'none')
           .attr("id","resultsvg-" + count.toString())
-          // .append("g") //group that will house the plot
-          // .attr("id", "main-area2")
-          //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-    //
-    // graph.append("defs").append("clipPath")
-    //     .attr("id", "clip-" + count.toString())
-    //     .append("rect")
-    //     .attr("width", 180)
-    //     .attr("height", 65)
-    //     .attr("transform", "translate(20,20)");
+
+    graph.append("defs").append("clipPath")
+        .attr("id", "clip-" + count.toString())
+        .append("rect")
+        .attr("width", 200)
+        .attr("height", 85)
+
 
     var trans = height-20
     d3.select("#undraggable-result-"+count.toString()).append("g")
@@ -152,14 +151,13 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
 
     console.log("points!", points);
     var hexbinPlot = graph.append("g")
-            .attr("clip-path", "url(#clip)")
+            .attr("clip-path", "url(#clip-" + count.toString() + ")")
             .selectAll(".hexagon")
             .data(hexbin(points)) // returns an array of bins
             .enter().append("path") // enter returns all fictitious elements according to number of data points
             .attr("class", "hexagon") // the class hexagon is a custom class made to incorporate stroke and fill
             .attr("d", hexbin.hexagon())
             .attr("transform", function (d) {
-              console.log("hi!");
                 return "translate(" + d.x + "," + d.y + ") scale(0.8)"; // Each bin (or d) returned by hexbin(points) is an array containing the bin’s points
             });
 
@@ -943,7 +941,6 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
                   return y(d.yval - (d.errorval / 2));
                 })
                 .style("stroke", "blue");
-
                   }
     }
   }
