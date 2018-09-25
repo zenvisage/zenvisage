@@ -1252,6 +1252,7 @@ function uploadToSketchpadNew( draggableId, graphType )
   angular.element($("#sidebar")).scope().selectedXAxis = xType;
   angular.element($("#sidebar")).scope().selectedYAxis = yType;
   plotSketchpadNew( draggedGraph )//, xType, yType, zType);
+  return draggedGraph
 }
 
 // function addRow() {
@@ -1271,6 +1272,7 @@ $(document).ready(function(){
     drop: function( event, ui )
     {
       log.info("dropped successfully to canvas")
+      console.log("drop",$(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'))
       uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
     }
   });
