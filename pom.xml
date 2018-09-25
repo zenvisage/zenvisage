@@ -158,7 +158,12 @@
 			</resource>
 			<resource>
 				<directory>src/main/webapp</directory>
-			</resource>
+                                <filtering>true</filtering>
+                                <excludes>
+                                    <exclude>node_modules</exclude>
+                                </excludes>
+                        </resource>
+                        
 		</resources>
 		<plugins>
 			<plugin>
