@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/core/params/index.ts"
+  ],
+  "names": [],
+  "mappings": ";;;;;AAQA,6BAAwB;AACxB,kCAA6B;AAC7B,mCAA8B;AAC9B,iCAA4B",
+  "sourcesContent": [
+    "/**\n * This module contains code for State Parameters.\n *\n * See [[ParamDeclaration]]\n *\n * @preferred @publicapi @module params\n */ /** */\nexport * from './interface';\nexport * from './param';\nexport * from './paramTypes';\nexport * from './stateParams';\nexport * from './paramType';\n"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/core/view/index.ts"
+  ],
+  "names": [],
+  "mappings": ";;;;;AAEA,4BAAuB",
+  "sourcesContent": [
+    "/** @publicapi @module view */ /** */\nexport * from './interface';\nexport * from './view';\n"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/core/path/index.ts"
+  ],
+  "names": [],
+  "mappings": ";;;;;AAAA,gCAAgC,CAAC,MAAM;AACvC,gCAA2B;AAC3B,iCAA4B",
+  "sourcesContent": [
+    "/** @internalapi @module path */ /** */\nexport * from './pathNode';\nexport * from './pathUtils';\n"
+  ]
+}

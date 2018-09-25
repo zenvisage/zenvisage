@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/core/common/index.ts"
+  ],
+  "names": [],
+  "mappings": ";;;;;AAAA,gCAAgC,CAAC,MAAM;AACvC,8BAAyB;AACzB,oCAA+B;AAC/B,4BAAuB;AACvB,2BAAsB;AACtB,kCAA6B;AAC7B,6BAAwB;AACxB,+BAA0B;AAC1B,6BAAwB",
+  "sourcesContent": [
+    "/** @publicapi @module common */ /** */\nexport * from './common';\nexport * from './coreservices';\nexport * from './glob';\nexport * from './hof';\nexport * from './predicates';\nexport * from './queue';\nexport * from './strings';\nexport * from './trace';\n"
+  ]
+}

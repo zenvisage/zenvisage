@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/core/transition/index.ts"
+  ],
+  "names": [],
+  "mappings": ";;;;;AAAA;;;;;;;;;;;GAWG,CAAC,MAAM;AACV,iCAA4B;AAC5B,mCAA8B;AAC9B,oCAA+B;AAC/B,qCAAgC;AAChC,kCAA6B;AAC7B,sCAAiC;AACjC,2CAAsC;AACtC,yCAAoC",
+  "sourcesContent": [
+    "/**\n * # Transition subsystem\n *\n * This module contains APIs related to a Transition.\n *\n * See:\n * - [[TransitionService]]\n * - [[Transition]]\n * - [[HookFn]], [[TransitionHookFn]], [[TransitionStateHookFn]], [[HookMatchCriteria]], [[HookResult]]\n *\n * @preferred @publicapi @module transition\n */ /** */\nexport * from './interface';\nexport * from './hookBuilder';\nexport * from './hookRegistry';\nexport * from './rejectFactory';\nexport * from './transition';\nexport * from './transitionHook';\nexport * from './transitionEventType';\nexport * from './transitionService';\n"
+  ]
+}
