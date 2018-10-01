@@ -5,7 +5,7 @@ describe('Zenvisage', function() {
   beforeEach(angular.mock.module('zenvisage'));
 
   // Before each test set our injected Users factory (_Users_) to our local Users variable
-
+  
   // A simple test to verify the Users factory exists
   it('should succeed', function() {
     var arr = separateTwoArrays([[1,2,3],[2,2,3]])
@@ -16,6 +16,7 @@ describe('Zenvisage', function() {
 
   it('should succeed', function() {
     var firstRankResult;
+    var draggedGraph = uploadToSketchpadNew( "representative-result-0", "representativeQuery")
     function uploadToSketchpadNewCallback(callback){
         uploadToSketchpadNew( "representative-result-0", "representativeQuery")
         callback()
