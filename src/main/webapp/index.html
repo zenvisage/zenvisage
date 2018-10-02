@@ -18,7 +18,8 @@
     <!-- <script type="text/javascript" src="secret.json"></script> -->
     </head>
     <div id = "container" style="display:none;">
-  <body class = "intro_after_dataload">
+  <!-- <body class = "intro_after_dataload"> -->
+  <body>
     <!-- this div contains everything in the body -->
 
 
@@ -980,26 +981,26 @@
     </script>
     <script>
     //code for intro tutorial
-    var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
-    var starttutorial = function(input){
-        startintro = true;
-        //introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
-      //  console.log("hi",$("#dataset-form-control").val());
-        $("#dataset-form-control").val('real_estate_tutorial');
-        angular.element($("#sidebar")).scope().onDatasetChange('initialize');
-        setTimeout(callintro, 2000);
-        $('#popup').modal('hide');
-      };
+    // var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
+    // var starttutorial = function(input){
+    //     startintro = true;
+    //     //introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
+    //   //  console.log("hi",$("#dataset-form-control").val());
+    //     $("#dataset-form-control").val('real_estate_tutorial');
+    //     angular.element($("#sidebar")).scope().onDatasetChange('initialize');
+    //     setTimeout(callintro, 2000);
+    //     $('#popup').modal('hide');
+    //   };
 
     // popup to inform tutorial
-    $('#popup').modal('toggle');
-    if(localStorage.getItem("DontShow")) {
-    $('#popup').modal('hide');
-    }
-    $('#popup').on('submit', function(e) {
-        localStorage.setItem("DontShow", "true");
-        $('#popup').modal('toggle');
-    });
+    // $('#popup').modal('toggle');
+    // if(localStorage.getItem("DontShow")) {
+    // $('#popup').modal('hide');
+    // }
+    // $('#popup').on('submit', function(e) {
+    //     localStorage.setItem("DontShow", "true");
+    //     $('#popup').modal('toggle');
+    // });
 
 
       // var tree = tree();
