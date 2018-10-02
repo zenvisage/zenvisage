@@ -4,18 +4,33 @@ describe('Zenvisage', function() {
   //   expect(browser.getTitle()).toEqual('Zenvisage');
   // });
 
-  it('should be Louisville', function() {
+  it('DragNDrop should be Louisville', function() {
+    debugger;
     // implicit and page load timeouts
     browser.manage().timeouts().pageLoadTimeout(4000000);
     browser.manage().timeouts().implicitlyWait(2500000);
 
     browser.driver.manage().timeouts().implicitlyWait(50000);
     browser.get('http://localhost:80/');
+
+    // browser.executeAsyncScript(function (){
     element(by.model('equation')).sendKeys("y=x^2");
     element(by.xpath('//button[. = "add"]')).click();
-    expect(element(by.id('row-0')).getText()).
-      toEqual('city: Louisville (0.43)'); // This is wrong!
-    expect(browser.getTitle()).toEqual('Zenvisage');
+
+    browser.pause();
+    element(by.css('text[count="1"]')).getText().then(function(text){
+      console.log(text)
+    });
+    // });
+
+    //   toEqual('city: Louisville (0.43)'); 
+    // });
+    // .
+    //   toEqual('city: Louisville (0.43)'); // This is wrong!
+    // });
+    // expect(element(by.id('row-0')).getText()).
+    //   toEqual('city: Louisville (0.43)'); // This is wrong!
+    // });
   });
 });
 
