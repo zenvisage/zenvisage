@@ -192,106 +192,47 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .attr("fill", "grey");
 
       var trans = height-20
-
-
-      if (getSelectedDataset()==="real_estate")
-      {
-        if(getSelectedXAxis()==="month")
-        {
+      
+	  if(getSelectedXAxis()==="timestep")
+	  {
+	      graph.append("g")
+	        .attr("class", "axis axis--x")
+	        .attr("transform", "translate(0," + trans + ")")
+	        .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+	            var mapper = {
+	              "0": '0hr',
+	              "1": '6hr',
+	              "2": '12hr',
+	              "3": '18hr',
+	              "4": '24hr',
+	              "5": '36hr',
+	              "6": '48hr',
+	              "7": '4d',
+	              "8": '7d',
+	              "9": '9d',
+	              "10":'14d'
+	            }
+	            return mapper[ d.toString() ]
+	          }));
+	  }
+	  else if(getSelectedXAxis()==="quarter"){
+		  graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(3, "s"));
+	  }
+	  else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+	      graph.append("g")
+	        .attr("class", "axis axis--x")
+	        .attr("transform", "translate(0," + trans + ")")
+	        .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+	  } // for formatting all year x axis ticks except hardcoded real estate dataset
+	  else{
           graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
-            .call( d3.axisBottom(x).ticks(4).tickFormat(function (d) {
-                var mapper = {
-                  "50": "02/2008",
-                  "100": "04/2012",
-                }
-                return mapper[ d.toString() ]
-              }));
-        }
-        else if(getSelectedXAxis()==="quarter")
-        {
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-                var mapper = {
-                  "10": "Q2/2006",
-                  "20": "Q4/2008",
-                  "30": "Q2/2011",
-                  "40": "Q4/2013",
-                }
-                return mapper[ d.toString() ]
-              }));
-        }
-        else if(getSelectedXAxis()==="year")
-        {
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-                var mapper = {
-                  "1": "2004",
-                  "2": "2005",
-                  "3": "2006",
-                  "4": "2007",
-                  "5": "2008",
-                  "6": "2009",
-                  "7": "2010",
-                  "8": "2011",
-                  "9": "2012",
-                  "10": "2013",
-                  "11": "2014",
-                  "12": "2015",
-                }
-                return mapper[ d.toString() ]
-              }));
-        }
-        else{
-          graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call(d3.axisBottom(x).ticks(5, "s"));
-
-        }
-      }
-      else{
-        if(getSelectedXAxis()==="timestep")
-        {
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-                var mapper = {
-                  "0": '0hr',
-                  "1": '6hr',
-                  "2": '12hr',
-                  "3": '18hr',
-                  "4": '24hr',
-                  "5": '36hr',
-                  "6": '48hr',
-                  "7": '4d',
-                  "8": '7d',
-                  "9": '9d',
-                  "10":'14d'
-                }
-                return mapper[ d.toString() ]
-              }));
-        }
-        else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
-            graph.append("g")
-              .attr("class", "axis axis--x")
-              .attr("transform", "translate(0," + trans + ")")
-              .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-            }  // for formatting all year x axis ticks except hardcoded real estate dataset
-            else{
-              graph.append("g")
-              .attr("class", "axis axis--x")
-              .attr("transform", "translate(0," + trans + ")")
-              .call(d3.axisBottom(x).ticks(5, "s"));
-
-            }
-      }
+            .call(d3.axisBottom(x).ticks(5, "s"));
+	  }
 
       if (deltaSimilarityDistance!=0){
         fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")
@@ -637,70 +578,8 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
 
     var trans = height-20
 
-
-    if (getSelectedDataset()==="real_estate")
+    if(getSelectedXAxis()==="timestep")
     {
-      if(getSelectedXAxis()==="month")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(4).tickFormat(function (d) {
-              var mapper = {
-                "50": "02/2008",
-                "100": "04/2012",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else if(getSelectedXAxis()==="quarter")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "10": "Q2/2006",
-                "20": "Q4/2008",
-                "30": "Q2/2011",
-                "40": "Q4/2013",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else if(getSelectedXAxis()==="year")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "1": "2004",
-                "2": "2005",
-                "3": "2006",
-                "4": "2007",
-                "5": "2008",
-                "6": "2009",
-                "7": "2010",
-                "8": "2011",
-                "9": "2012",
-                "10": "2013",
-                "11": "2014",
-                "12": "2015",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else{
-        graph.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(5, "s"));
-      }
-    }
-    else{
-      if(getSelectedXAxis()==="timestep")
-      {
         graph.append("g")
           .attr("class", "axis axis--x")
           .attr("transform", "translate(0," + trans + ")")
@@ -720,23 +599,26 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
               }
               return mapper[ d.toString() ]
             }));
-      }
-
-      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+    }
+    else if(getSelectedXAxis()==="quarter"){
+		  graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(3, "s"));
+	  }
+    else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
           graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-          } // for formatting all year x axis ticks except hardcoded real estate dataset
-          else{
-            graph.append("g")
+    } // for formatting all year x axis ticks except hardcoded real estate dataset
+    else{
+          graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(5, "s"));
 
-          }
     }
-
 
     d3.select("#undraggable-representative-result-"+count.toString()).append("g")
 
@@ -956,71 +838,8 @@ function displayOutlierResultsHelper( outlierResults )
     var trans = height-20
     // create xAxis
 
-
-    if (getSelectedDataset()==="real_estate")
+    if(getSelectedXAxis()==="timestep")
     {
-      if(getSelectedXAxis()==="month")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(4).tickFormat(function (d) {
-              var mapper = {
-                "50": "02/2008",
-                "100": "04/2012",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else if(getSelectedXAxis()==="quarter")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "10": "Q2/2006",
-                "20": "Q4/2008",
-                "30": "Q2/2011",
-                "40": "Q4/2013",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else if(getSelectedXAxis()==="year")
-      {
-        graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "1": "2004",
-                "2": "2005",
-                "3": "2006",
-                "4": "2007",
-                "5": "2008",
-                "6": "2009",
-                "7": "2010",
-                "8": "2011",
-                "9": "2012",
-                "10": "2013",
-                "11": "2014",
-                "12": "2015",
-              }
-              return mapper[ d.toString() ]
-            }));
-      }
-      else{
-        graph.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + trans + ")")
-        .call(d3.axisBottom(x).ticks(5, "s"));
-
-      }
-    }
-    else{
-      if(getSelectedXAxis()==="timestep")
-      {
         graph.append("g")
           .attr("class", "axis axis--x")
           .attr("transform", "translate(0," + trans + ")")
@@ -1040,20 +859,24 @@ function displayOutlierResultsHelper( outlierResults )
               }
               return mapper[ d.toString() ]
             }));
-      }
-      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+    }
+    else if(getSelectedXAxis()==="quarter"){
+		  graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call(d3.axisBottom(x).ticks(3, "s"));
+	  }
+    else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
           graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-          } // for formatting all year x axis ticks except hardcoded real estate dataset
-          else{
-            graph.append("g")
+    } // for formatting all year x axis ticks except hardcoded real estate dataset
+    else{
+          graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(5, "s"));
-
-          }
     }
 
     //}
