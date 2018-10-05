@@ -95,8 +95,8 @@
 			<artifactId>edu.uiuc.zenvisage.javaml</artifactId>
 			<groupId>javaml</groupId>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/javaml-0.1.5.jar</systemPath>
-			<version>0.1.5</version>
+			<systemPath>${basedir}/lib/javaml-0.1.7.jar</systemPath>
+			<version>0.1.7</version>
 		</dependency>
 
 		<dependency>
