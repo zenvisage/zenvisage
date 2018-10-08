@@ -1012,7 +1012,7 @@
         $('[data-toggle="tooltip"]').tooltip({html: true});
         $("#dataset-form-control option").val("real_estate");
         var scope = angular.element("#dataset-form-control").scope();
-        scope.onDatasetChange();
+        // scope.onDatasetChange(); //TODO: Commented out for testing purposes
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
