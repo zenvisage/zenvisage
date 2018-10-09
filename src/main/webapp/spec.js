@@ -17,15 +17,15 @@ describe('Zenvisage', function() {
   //   // expect(arr).toEqual([1,2,3]);
   // });
 
-  // it('Input equation first rank should be Plymouth', function() {
-  //   // implicit and page load timeouts
-  //   initializeTest(); 
-  //   // Enter equation y = x^2 and press "Add" Button
-  //   element(by.model('equation')).sendKeys("y=x^2");
-  //   element(by.xpath('//button[. = "add"]')).click();
-  //   checkNthResultEquals(1,'city: Plymouth (0.383)');
+  it('Input equation first rank should be Plymouth', function() {
+    // implicit and page load timeouts
+    initializeTest(); 
+    // Enter equation y = x^2 and press "Add" Button
+    element(by.model('equation')).sendKeys("y=x^2");
+    element(by.xpath('//button[. = "add"]')).click();
+    checkNthResultEquals(1,'city: Plymouth (0.383)');
     
-  // });
+  });
   
   it('Drag and Drop', function() {
     // implicit and page load timeouts
