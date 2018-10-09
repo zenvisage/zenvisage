@@ -1,5 +1,3 @@
-var TestingFunc =  function() { 
-
 //stores dygraphs
 var userQueryDygraphs = {};
 var representativeDygraphs = {};
