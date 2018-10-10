@@ -1,5 +1,7 @@
 describe('Zenvisage', function() {
-  
+  ////////////////////////////////////////////////////////////
+  //// Test Oracle as Self (Visual Examination Hard Coded)////
+  ////////////////////////////////////////////////////////////
   it('Title Equality Test', function() {
     // implicit and page load timeouts
     browser.manage().timeouts().pageLoadTimeout(400000);
@@ -17,17 +19,19 @@ describe('Zenvisage', function() {
   //   // expect(arr).toEqual([1,2,3]);
   // });
 
-  it('Input equation first rank should be Plymouth', function() {
+  it('Input equation first rank should be Plymouth.', function() {
     // implicit and page load timeouts
     initializeTest(); 
     // Enter equation y = x^2 and press "Add" Button
     element(by.model('equation')).sendKeys("y=x^2");
     element(by.xpath('//button[. = "add"]')).click();
     checkNthResultEquals(1,'city: Plymouth (0.383)');
-    
   });
   
-  it('Drag and Drop', function() {
+  /////////////////////////////////////
+  //// Test Oracle as Partial Logic////
+  /////////////////////////////////////
+  it('Drag and Drop should correspond to first ranked item.', function() {
     // implicit and page load timeouts
     initializeTest(); 
     // Drag and Drop the first cluster 
@@ -50,6 +54,39 @@ describe('Zenvisage', function() {
     }); 
   });
 
+  it('Check that score@rank n > score@rank m, where n<m.', function() {
+    initializeTest(); 
+    // By default there is max 50 number of results, so we set 0<n<40 and create m by adding an integer 1<x<10
+    var n = Math.floor(Math.random() * Math.floor(20));
+    var x = Math.floor((Math.random() * ((19 + 1) - 1)) + 1);
+    var m = n +x;
+    // console.log(n,m)
+    expect(n).toBeLessThan(m);
+    element.all(by.css("#undraggable-result-"+n+">text")).get(0).getText().then(function(text){
+      var rankN = extractScoreFromResults(text);
+      element.all(by.css("#undraggable-result-"+m+">text")).get(0).getText().then(function(text){
+        var rankM = extractScoreFromResults(text);
+        // console.log(rankN["score"],rankM["score"])
+        expect(rankM["score"]).toBeLessThanOrEqual(rankN["score"]);
+      });
+    });
+  });
+  function extractScoreFromResults(text){
+    // 'city: Plymouth (0.383)'
+    var firstSplit = text.indexOf(":"); 
+    var scoreSplit = text.indexOf("(");
+    var attribute = text.substring(0,firstSplit);
+    var attributeValue = text.substring(firstSplit+2,scoreSplit);
+    var score = parseFloat(text.substring(scoreSplit+1,text.length-1));
+    return {
+            "attribute": attribute,
+            "attributeValue":attributeValue,
+            "score":score
+          }
+  }
+  function checkScoreWithinRange(score){
+    return ( score <= 1 && score >= 0 ) ? true : false
+  }
   function checkNthResultEquals(N,equalToText){
     element(by.css('text[count="'+N+'"]')).getText().then(function(text){
       expect(text).toEqual(equalToText);
@@ -62,7 +99,7 @@ describe('Zenvisage', function() {
   // 1) Why is the Cluster results for real_estate tutorial different in Selenium compared to the actual interface (Expected 'Barnegat Township (877 more like this)' to equal 'Catonsville (56 more like this)')
   // 2) Initialize with different dataset, check representative and outlier corresponds to the "correct visualizations"
   // 3) Write high level functions for checking equality for Rank 1, Rank 1 Cluster, Rank j Outlier, etc
-  // 4) Check that scores are always between 
+  // 4) Check that scores are always between 0 and 1 
   // 5) Testing querying input modalities: 
   //    - Pattern Query 
   // 6) Smoothing: 
@@ -79,7 +116,6 @@ describe('Zenvisage', function() {
     browser.manage().timeouts().pageLoadTimeout(4000000);
     browser.manage().timeouts().implicitlyWait(2500000);
 
-    browser.driver.manage().timeouts().implicitlyWait(50000);
     browser.get('http://localhost:80/');
     // Initialize angular webapp and trigger rendering via onDatasetChange
     browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
