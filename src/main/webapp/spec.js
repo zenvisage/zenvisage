@@ -54,6 +54,12 @@ describe('Zenvisage', function() {
     }); 
   });
 
+  
+  it('Check last similarity above cutoff', function() {
+    // TODO: Vary similarity cutoff, check that the last ranked item is larger or equal to the similarity cutoff
+    expect(1).toEqual(1)
+  });
+
   it('Check that score@rank n > score@rank m, where n<m.', function() {
     initializeTest(); 
     // By default there is max 50 number of results, so we set 0<n<40 and create m by adding an integer 1<x<10
@@ -92,6 +98,8 @@ describe('Zenvisage', function() {
       expect(text).toEqual(equalToText);
     });
   }
+
+  // When set filter as city='Bristol', drag and drop first ranked item
   // Several TODOs : 
   // 0) Figure out how to do dataset changing before scope call? This doesn't seem to work: 
   //  $('#dataset-form-control option').val('real_estate');
