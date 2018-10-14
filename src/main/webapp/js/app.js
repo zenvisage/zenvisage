@@ -1432,9 +1432,9 @@ $scope.inittablelist = function () {
 
 
           initializeSketchpadOnDataAttributeChange(
-                response.xAxisColumns[$scope.xAxisItems[0]],
-                response.yAxisColumns[$scope.yAxisItems[0]],
-                response.zAxisColumns[$scope.categories[0]]
+                response.xAxisColumns[$scope.selectedXAxis],
+                response.yAxisColumns[$scope.selectedYAxis],
+                response.zAxisColumns[$scope.selectedCategory]
               );
           $scope.getUserQueryResultsWithCallBack();
 
