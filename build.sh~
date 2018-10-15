@@ -1,10 +1,10 @@
 #!bin/bash
 mvn clean
 if [[ "$?" -ne 0 ]] ; then
-  echo 'could not perform tests'; exit 42
+  echo 'mvn clean failed. Exited with non-zero value';exit 42
 fi
 mvn install
 if [[ "$?" -ne 0 ]] ; then
-  echo 'could not perform tests'; exit 42
+  echo 'mvn install failed. Exited with non-zero value'; exit 42
 fi
 cp lib/*.jar target/zenvisage/WEB-INF/lib/.
