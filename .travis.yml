@@ -1,9 +1,0 @@
-branches:
-  only:
-  - frontend_test
-
-language: node_js
-
-sudo: required
-
-script: sh build.sh
