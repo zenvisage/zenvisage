@@ -247,7 +247,15 @@ svg#treesvg {
   width: 600px; /* respsonsive width */
 }
 
-#submitButton {
+#submitButton{
+  display: block;
+  margin: auto;
+}
+#pattern-submit{
+  display: block;
+  margin: auto;
+} 
+#dataset-upload-submit{
   display: block;
   margin: auto;
 }

@@ -1523,7 +1523,7 @@ function parseCSV(data) {
    $('#uploaderModal').modal('toggle');
    $('#define-attributes').modal('toggle');
    document.getElementById("uploadingProgressMessage").style.display = "none";
-   document.getElementById("submitButton").style.display = "block";
+   document.getElementById("dataset-upload-submit").style.display = "block";
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');
    $('#z-autoselect').trigger('click');

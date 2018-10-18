@@ -23,7 +23,7 @@ app.controller('fileuploadController', [
       log.info("dataset upload: ",$("#datasetNameInput").val())
       // $('#uploaderModal').modal('toggle');
       document.getElementById("uploadingProgressMessage").style.display = "block";
-      document.getElementById("submitButton").style.display = "none";
+      document.getElementById("dataset-upload-submit").style.display = "none";
     }else{
       alert("Please log in first to upload dataset.")
     }
@@ -117,7 +117,7 @@ app.controller('fileuploadController', [
                               .attr("value", formData.get("datasetName"))
                               .text( formData.get("datasetName")));
                               document.getElementById("uploadingProgressMessage").style.display = "block";
-                              document.getElementById("submitButton").style.display = "none";
+                              document.getElementById("dataset-upload-submit").style.display = "none";
                 alert("Upload successful");
                 location.reload();
             },
@@ -125,7 +125,7 @@ app.controller('fileuploadController', [
               $("#errorModalText").html("Server error. Have you tried the dataset upload instructions in the following link? <a href='https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets'>here?</a>");
               $("#errorModal").modal()
                 document.getElementById("uploadingProgressMessage").style.display = "block";
-                document.getElementById("submitButton").style.display = "none";
+                document.getElementById("dataset-upload-submit").style.display = "none";
             }
         });
 
@@ -134,7 +134,7 @@ app.controller('fileuploadController', [
           $("#errorModalText").html("Server error. Have you tried the dataset upload instructions in the following link? <a href='https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets'>here?</a>");
           $("#errorModal").modal()
           document.getElementById("uploadingProgressMessage").style.display = "block";
-          document.getElementById("submitButton").style.display = "none";
+          document.getElementById("dataset-upload-submit").style.display = "none";
 
         }
     });

@@ -1,13 +1,18 @@
 describe('Zenvisage', function() {
+ //  it("Data Smoothing",function(){
+ //  	initializeTest()
+	// var sliderBar = element.all(by.css("#slider-range-max"));
+ //    browser.actions().dragAndDrop(sliderBar,{x:100,y:0}).perform(); 
+ //    browser.sleep(10000);
+ //    console.log(sliderBar.getAttribute('value'))
+ //    // expect(sliderBar.getAttribute('value')).toEqual('7');
+ //  });
+  
   ////////////////////////////////////////////////////////////
   //// Test Oracle as Self (Visual Examination Hard Coded)////
   ////////////////////////////////////////////////////////////
   it('Title Equality Test', function() {
-    // implicit and page load timeouts
-    browser.manage().timeouts().pageLoadTimeout(400000);
-    browser.manage().timeouts().implicitlyWait(250000);
-
-    browser.get('http://127.0.01:80/');
+    initializeTest()
     expect(browser.getTitle()).toEqual('Zenvisage');
   });
   // // Testing a basic interaction-independent function (TODO: Trouble with importing package)
@@ -18,7 +23,33 @@ describe('Zenvisage', function() {
   //   expect(arr).toEqual([[[1,2],[2,2]],[[1,3],[2,3]]]);
   //   // expect(arr).toEqual([1,2,3]);
   // });
-
+  it("Upload Pattern Same as Parkville",function(){
+  	initializeTest()
+	// element(by.id('filter')).sendKeys("city='Parkville'");
+ //    element(by.id('filter-submit')).click();
+ //    // browser.sleep(100000)
+    
+ //    browser.executeScript(function(res){
+ //    	var arr  = userQueryDygraphsNew['result-0']['data']
+ //    	var xArr = arr.map(function(x){
+	// 	    return x[Object.keys(x)[0]];
+	// 	});
+ //    	var yArr = arr.map(function(x){
+	// 	    return x[Object.keys(x)[1]];
+	// 	});
+ //    	console.log(arr)
+ //    	console.log(xArr)
+ //    })
+     var x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+     var y = [142.52276611328125, 138.49191284179688, 139.62371826171875, 143.51437377929688, 144.98410034179688, 145.68357849121094, 147.85366821289062, 148.42364501953125, 148.06085205078125, 146.40948486328125, 144.39166259765625, 146.13348388671875]
+	 element(by.css("#sidebar > div:nth-child(4) > h5 > button")).click()
+     element(by.id('x-pattern')).sendKeys("1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12");
+     element(by.id('y-pattern')).sendKeys("142.52276611328125, 138.49191284179688, 139.62371826171875, 143.51437377929688, 144.98410034179688, 145.68357849121094, 147.85366821289062, 148.42364501953125, 148.06085205078125, 146.40948486328125, 144.39166259765625, 146.13348388671875");
+     // Need to click upload button
+     element(by.id('pattern-submit')).click();
+     checkNthResultEquals(0,'city: Parkville (1.0)');
+    // expect(sliderBar.getAttribute('value')).toEqual('7');
+  });	
   it('Input equation first rank should be Plymouth.', function() {
     // implicit and page load timeouts
     initializeTest(); 
@@ -54,7 +85,9 @@ describe('Zenvisage', function() {
     }); 
   });
 
-  
+  /////////////////////////////////////////////////////
+  ////Potentially tests to be ran every single time////
+  /////////////////////////////////////////////////////
   it('Check last similarity above cutoff', function() {
     // TODO: Vary similarity cutoff, check that the last ranked item is larger or equal to the similarity cutoff
     expect(1).toEqual(1)
@@ -129,18 +162,3 @@ describe('Zenvisage', function() {
     browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
   }
 });
-
-
-
-// var origFn = browser.driver.controlFlow().execute;
-//
-// browser.driver.controlFlow().execute = function() {
-//   var args = arguments;
-//
-//   // queue 100ms wait
-//   origFn.call(browser.driver.controlFlow(), function() {
-//     return protractor.promise.delayed(100);
-//   });
-//
-//   return origFn.apply(browser.driver.controlFlow(), args);
-// };

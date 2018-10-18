@@ -109,7 +109,7 @@
                 </div>
               </div>
                 <div class="modal-footer">
-                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                <input id="dataset-upload-submit" type="submit" class="btn btn-primary" value="Upload">
                 <!-- <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;"> -->
                 <p id = 'uploadingProgressMessage' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">Uploading...</p>
                 </div>
@@ -207,7 +207,7 @@
                 <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
                 <br>
                 <div class="modal-footer">
-                  <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                  <input id="pattern-submit" type="submit" class="btn btn-primary" value="Upload">
                 </div>
               </form>
             </div>
@@ -730,7 +730,7 @@
                       <div class="input-group" style="width: 165px;">
                         <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
                         <div class="input-group-btn">
-                          <button class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">Submit </button>
+                          <button id="filter-submit" class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">Submit</button>
                         </div>
                       </div>
                 </div>
