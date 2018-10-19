@@ -3,9 +3,15 @@ package edu.uiuc.zenvisage.server;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List; 
+
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
+import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
+import javax.servlet.ServletException;
+
 
 import edu.uiuc.zenvisage.api.Readconfig;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
@@ -52,6 +58,14 @@ public class DatabaseAutoLoader {
 			reload = true;
 		}
 
+		// //XuMo: create join_key_table automatically
+		if(!sqlQueryExecutor.isTableExists("join_key_table")){
+			String createJoinKeyTable = "CREATE TABLE join_key_table "+
+					"(username TEXT, tablename TEXT, joinKeyName TEXT);";
+			sqlQueryExecutor.createTable(createJoinKeyTable);
+			reload = true;
+		}
+
 		if(!sqlQueryExecutor.isTableExists("zenvisage_dynamic_classes")){
 			String createDynamicClassesSQL ="CREATE TABLE zenvisage_dynamic_classes "
 					+ "(tablename TEXT, attribute TEXT, ranges TEXT);";
@@ -83,39 +97,39 @@ public class DatabaseAutoLoader {
 		dataset1.add("real_estate");
 		File file = new File(zvServer.getClass().getClassLoader().
 				getResource(("real_estate.csv")).getFile());
-		dataset1.add(file.getAbsolutePath());
+		dataset1.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
-		dataset1.add(file.getAbsolutePath());
+		dataset1.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 
 		List<String> dataset2 = new ArrayList<String>(); //weather
 		dataset2.add("weather");
 		file = new File(zvServer.getClass().getClassLoader().getResource(("weather.csv")).getFile());
-		dataset2.add(file.getAbsolutePath());
+		dataset2.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 		file = new File(zvServer.getClass().getClassLoader().getResource(("weather.txt")).getFile());
-		dataset2.add(file.getAbsolutePath());
+		dataset2.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 
 		List<String> dataset3 = new ArrayList<String>(); //flights
 		dataset3.add("flights");
 		file = new File(zvServer.getClass().getClassLoader().getResource(("flights.csv")).getFile());
-		dataset3.add(file.getAbsolutePath());
+		dataset3.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 		file = new File(zvServer.getClass().getClassLoader().getResource(("flights.txt")).getFile());
-		dataset3.add(file.getAbsolutePath());
+		dataset3.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 
 		List<String> dataset4 = new ArrayList<String>(); //cmu
 		dataset4.add("cmu");
 		file = new File(zvServer.getClass().getClassLoader().getResource(("cmu_clean.csv")).getFile());
-		dataset4.add(file.getAbsolutePath());
+		dataset4.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 		file = new File(zvServer.getClass().getClassLoader().getResource(("cmu_clean.txt")).getFile());
-		dataset4.add(file.getAbsolutePath());
+		dataset4.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 
 
 		List<String> dataset5 = new ArrayList<String>(); //cmu
 		dataset5.add("real_estate_tutorial");
 		file = new File(zvServer.getClass().getClassLoader().
 				getResource(("real_estate_tutorial.csv")).getFile());
-		dataset5.add(file.getAbsolutePath());
+		dataset5.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 		file = new File(zvServer.getClass().getClassLoader().getResource(("real_estate.txt")).getFile());
-		dataset5.add(file.getAbsolutePath());
+		dataset5.add(URLDecoder.decode(file.getAbsolutePath(), "UTF-8"));
 		ZvMain zvMain=new ZvMain();
 		zvMain.uploadDatasettoDB(dataset1,false);
 		zvMain.uploadDatasettoDB(dataset2,false);
@@ -124,9 +138,17 @@ public class DatabaseAutoLoader {
 		zvMain.uploadDatasettoDB(dataset5,false);
 	}
 
-	public void run() throws SQLException, IOException, InterruptedException{
+	public void initializeRootUser() throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
+		ZvMain zvMain=new ZvMain();
+		if(!zvMain.checkRootUser()){ 
+    		zvMain.insertRootUser();
+    	}
+	}
+
+	public void run() throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
 		boolean reload = createMetaTables();
 		if(reload) loadDemoDatasets();
+		initializeRootUser();
 	}
 
 }

@@ -157,7 +157,7 @@
           </div>
           <form id="define-attributes-form">
           <div class="modal-body" style = "max-height: calc(100vh - 100px); overflow-y:auto;">
-              Select the axes and data-types of the attributes <span><input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 50px;"></span>
+              Select the axes and data-types of the attributes 
 
             <div class = "row" >
 
@@ -185,12 +185,58 @@
           </div>
           <div class="modal-footer">
 
+            <!-- CheckBox for split table 
+            <input id="split-table-or-not" type="checkbox" name="vehicle1" value="true">Split database table based on join key 
+            -->
+            <span><input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 50px;"></span>
           </div>
           </div>
           </form>
         </div>
       </div>
     </div>
+
+    <!-- new div for join key selection-->
+    <!-- XuMo -->
+    <div class="modal fade" id="join-key-selection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style = "left: 10%; width: 500px">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Set join key for split data table</h4>
+          </div>
+          <form id="define-join-key-form">
+          <div class="modal-body" style = "max-height: calc(100vh - 100px); overflow-y:auto;">
+              Select the join-key attribute
+
+            <div class = "row" >
+              <br>
+              <div style="margin-left:15%;float: left;text-align: center;">
+              Attribute Names
+              <br>
+              <br>
+              <br>  <table class = "join-key-candidates" ></table>
+              </div>
+            
+              <div style="margin-left:5%;float: left; text-align: center;">
+              Select Area
+              <br>
+              <br>
+              <br>  <table class = "join-key-select-or-not" style="display:inline-block; "></table>
+              </div>
+          </div>
+
+          <div class="modal-footer">
+
+            <span><input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 50px;"></span>
+          </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
 
       <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">

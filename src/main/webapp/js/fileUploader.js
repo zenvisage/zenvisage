@@ -4,45 +4,83 @@ app.controller('fileuploadController', [
 
   var formData;
   var datasetNameInput;
+  var checker = '';
+  var attributes_global;
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
-    
-    if($cookies.getObject('userinfo') || !login_ava){
-      formData = new FormData(this);
-      if (formData.get("csv").name.split(".").pop() != "csv" ){
-        alert("Please select a csv file");
-        return;
-      }
-      else if (formData.get("csv").size > 100000000) {
-        alert("Do not upload files over 100MB");
-        return;
-      }
-      parseCSV(formData);
-      datasetNameInput = $("#datasetNameInput").val();
-      console.log('test:',$(this).attr('action'),$(this).attr('method'));
-      log.info("dataset upload: ",$("#datasetNameInput").val())
-      // $('#uploaderModal').modal('toggle');
-      document.getElementById("uploadingProgressMessage").style.display = "block";
-      document.getElementById("submitButton").style.display = "none";
-    }else{
-      alert("Please log in first to upload dataset.")
-    }
 
+    formData = new FormData(this);
+    if (formData.get("csv").name.split(".").pop() != "csv" ){
+      alert("Please select a csv file");
+      return;
+    }
+    if (!login_ava) {   // if login is not available (configured to be off), allow uploads
+      uploadDataset()
+    } else if ($cookies.getObject('userinfo')) {  // user is logged in
+      var username = $cookies.getObject('userinfo')['username'][0];
+      var file_size = {
+        "size": formData.get("csv").size.toString(),
+      };
+      
+      if (username != 'root') {
+        $.ajax({
+                type: "POST",
+                url: "/zv/file_size_checker",
+                data: file_size,
+                async: false,
+                success: function(response){
+                  callback_for_file_checker(response);
+                },
+                error: function() {
+                  alert("failed!!");
+                } 
+
+        });
+        if(checker == "true"){
+          return;
+        }
+      }
+      // if (formData.get("csv").size > 1 && username != 'root') {
+      //   alert("Do not upload files over 100MB");
+      //   return;
+      // }
+      uploadDataset();
+    } else {
+      alert("Please log in first to upload dataset.");
+    }
   });
 
+  function callback_for_file_checker(response){
+    if(response){
+      alert("Do not upload files over 100MB");
+      checker = "true";
+    }
+  }
+
+  // uploadDataset uploads the global formData variable
+  function uploadDataset() {
+    parseCSV(formData);
+    datasetNameInput = $("#datasetNameInput").val();
+    console.log('test:',$(this).attr('action'),$(this).attr('method'));
+    log.info("dataset upload: ",$("#datasetNameInput").val())
+    // $('#uploaderModal').modal('toggle');
+    document.getElementById("uploadingProgressMessage").style.display = "block";
+    document.getElementById("submitButton").style.display = "none";
+  }
   // function getCheckedAttributes(){
   //   $("input:checkbox[name=type]:checked").each(function(){
   //       console.log($(this).val());
   // }
 
   $("#define-attributes").on('submit', function(e) {
-       var attributeList =  [];
-       var selectedAxis =  [];
+
+    var attributeList =  [];
+    var selectedAxis =  [];
     // var xList = [];
     // var yList = [];
     // var zList = [];
 
-    $(".types").each(function(){
+    $(".types").each(function(){ 
         var selectedXOption = $(this).children("option").filter(":selected").text()
         attributeList.push($(this).val() + " " + selectedXOption);
         selectedAxis.push(["true", "true", "true"])
@@ -52,16 +90,72 @@ app.controller('fileuploadController', [
         // zList.push($(this).val() + " " + selectedZOption);
     });
 
-    var selectedAttributes = filterUncheckAttributes(attributeList,selectedAxis)
-    var selectedAttributesParsed = []
+    var selectedAttributes = filterUncheckAttributes(attributeList,selectedAxis);
+    var selectedAttributesParsed = [];
     for (i = 0; i < selectedAttributes.length; i++) {
         temp = selectedAttributes[i].split(" ");
-                console.log("final selected: ", temp);
-         selectedAttributesParsed.push({name:temp[0],type:temp[1],selectedX:temp[2],selectedY:temp[3],selectedZ:temp[4]})
+        console.log("final selected: ", temp);
+        selectedAttributesParsed.push({name:temp[0],type:temp[1],selectedX:temp[2],selectedY:temp[3],selectedZ:temp[4]})
 
     }
-    $('#define-attributes').modal('toggle');
 
+    window.selectedAttributesParsed = selectedAttributesParsed;
+    //$('#define-attributes').modal('toggle');
+
+    //XuMo: Add a modal for join key selection 
+
+    /** #for split table
+    if(document.getElementById("split-table-or-not").checked == true){
+      //XuMo: Add zattribute variable to store z values here
+      var zAttributesForJoinKey = [];
+      for (i = 0; i < selectedAttributesParsed.length; i++) {
+          if (selectedAttributesParsed[i]["selectedZ"] == "true") {
+            zAttributesForJoinKey.push(selectedAttributesParsed[i]["name"]);
+          }
+      }
+      var zAttrubutesName = "";
+      var joinKeySelect = "";
+      for (i = 0; i < zAttributesForJoinKey.length; i++) {
+        zAttrubutesName += "<tr> <td><div style='margin-bottom: 1px;'>"  + zAttributesForJoinKey[i] +
+        "</div></td> </tr>";
+        joinKeySelect += "<tr> <td>" + "<input type='radio' value = '" + zAttributesForJoinKey[i] + "' id ='join-key-name' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'>" + "</td></tr>";
+      }
+      $('.join-key-candidates').html(zAttrubutesName);
+      $('.join-key-select-or-not').html(joinKeySelect);
+      $('#join-key-selection').modal('toggle');
+      return;
+    }
+    **/
+
+    datatable_creation();
+
+  });
+
+  $("#join-key-selection").on('submit', function(e) {
+    var object_for_join_key = {
+      "username": $cookies.getObject('userinfo')['username'][0],
+      "dataset": datasetNameInput,
+      "join_key": document.getElementById("join-key-name").value.toString(), 
+    };
+
+    $.ajax({
+                type: "POST",
+                url: "/zv/join_key_adder", 
+                data: object_for_join_key,
+                async: false,
+                success: function(response){
+                  
+                },
+                error: function() {
+                  alert("failed to add join key to database");
+                } 
+    });
+
+
+    datatable_creation();   
+  });
+
+  function datatable_creation() {
     var xyzQuery = {datasetName:datasetNameInput, variables:selectedAttributesParsed};
     console.log(xyzQuery);
     var myObject = JSON.stringify(xyzQuery);
@@ -74,12 +168,12 @@ app.controller('fileuploadController', [
     }
     var insertUserTablePair = {'userName':username, 'datasetName':formData.get("datasetName")};
 
-    $.ajax({
+    $.ajax({ 
         type: 'POST',
-        url: '/zv/selectXYZ',
+        url: '/zv/selectXYZ', 
         data: myObject,
         contentType: 'application/json; charset=utf-8',
-      success: function (data) { console.log('called1');
+        success: function (data) { console.log('called1');
         $.ajax({
             url : '/zv/fileUpload',
             type: 'POST',
@@ -138,9 +232,6 @@ app.controller('fileuploadController', [
 
         }
     });
-
-
-  });
-
+  }
 
 }]);

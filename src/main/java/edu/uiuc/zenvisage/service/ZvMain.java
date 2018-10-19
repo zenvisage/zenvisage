@@ -42,7 +42,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashBiMap; 
 
 import edu.uiuc.zenvisage.data.Query;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
@@ -134,8 +134,8 @@ public class ZvMain {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		List<String> names = uploadHandler.upload(request, response);
 		uploadDatasettoDB2(names,true);
-	}
-	
+	} 
+	 
 	public void insertZenvisageMetatable(Variables variables) throws SQLException, IOException, InterruptedException{
 		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
 		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream3(variables);
@@ -144,7 +144,7 @@ public class ZvMain {
 			sqlQueryExecutor.dropCSV(datasetName);
 		}
 		while(sqlQueryExecutor.isTableExists(datasetName)){
-			Thread.sleep(500);
+			Thread.sleep(500); 
 		}
 		if(!sqlQueryExecutor.isTableExists(datasetName)){
 			if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  variables.getDatasetName())){
@@ -156,6 +156,10 @@ public class ZvMain {
 		}else{
 			System.out.println("Table already exists!");
 		}
+	}
+
+	public void insertJoinKey(String username, String datasetname, String join_key) throws SQLException, IOException, InterruptedException{
+		sqlQueryExecutor.insertJoinKeyHelper(username, datasetname, join_key);
 	}
 		
 	/*
@@ -217,11 +221,40 @@ public class ZvMain {
 				}
 				sqlQueryExecutor.insertTable2(names.get(0), names.get(1));
 				System.out.println("Successfully uploaded csv: " + names.get(0));
-			
 			}
 		}
 	}
-	
+
+	/**
+	* Function for checking whether or not use join key to reduce storage
+	*/ 
+	public boolean check_split_table_or_not(String tablename, String username) throws SQLException, IOException, InterruptedException{
+		return sqlQueryExecutor.sql_check_split_table_or_not(tablename, username);
+	}
+
+	/**
+	* Return join key
+	*/
+	public String get_join_key(String tablename, String username) throws SQLException, IOException, InterruptedException{
+		return sqlQueryExecutor.sql_get_join_key(tablename, username);
+	}
+
+	/**
+	* Function to split a table to two split tables.
+	* One includes x,y,join key called tablename
+	* One includes z-attributes called tablename_split 
+	*/
+	public void operations_for_split_table(String tablename, String join_key) throws SQLException, IOException, InterruptedException{
+		String original_tablename = tablename + "_original";
+		String split_tablename = tablename + "_split";
+		System.out.println("original_tablename is " + original_tablename);
+		System.out.println("split_tablename is " + split_tablename);
+		sqlQueryExecutor.create_original_table(original_tablename, tablename, join_key);
+		sqlQueryExecutor.create_split_table(split_tablename, tablename);
+		//sqlQueryExecutor.dropTable(tablename);
+		//sqlQueryExecutor.alter_table_name(original_tablename, tablename);
+	}
+
 //   public String runZQLCompleteQuery(String zqlQuery) throws IOException, InterruptedException, SQLException{
 //		  System.out.println(zqlQuery);
 //	   	  inMemoryDatabase = inMemoryDatabases.get("real_estate");
@@ -433,6 +466,16 @@ public class ZvMain {
 		ArrayList<String> retrieved = sqlQueryExecutor.gettablelist();
 		System.out.println("Retrieved table list in db:"+retrieved);
 		return retrieved;
+	}
+
+	public boolean checkRootUser() throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+		boolean check = sqlQueryExecutor.check_root_user();
+		System.out.println("Has root user or not:" + check);
+		return check;
+	}
+
+	public void insertRootUser() throws IOException, SQLException, CannotPerformOperationException, InvalidHashException{
+		sqlQueryExecutor.insert_root_user();
 	}
 	
 	public Map<String, ArrayList<String>> userinfo(String username) throws IOException, SQLException{

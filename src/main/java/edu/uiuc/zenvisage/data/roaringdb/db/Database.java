@@ -329,7 +329,7 @@ public class Database {
 		        		if(curValue > oldValue[1]){
 		        			oldValue[1] = curValue;
 		        		}
-		        		intValueMap.put(curHeader,  oldValue);
+		        		intValueMap.put(curHeader, oldValue);
 		        	}else{
 		        		Integer[] newValue = new Integer[]{curValue, curValue};
 		        		intValueMap.put(curHeader, newValue);
@@ -342,8 +342,7 @@ public class Database {
 		        	String curHeader = (String) pair.getKey();
 		        	Integer curIndex= (Integer) pair.getValue();
 		        	Float curValue = Float.parseFloat(rs.getString(curIndex));
-		        	Iterator itIntValueMap = intValueMap.entrySet().iterator();
-		        	if(intValueMap.containsKey(curHeader)){
+		        	if(floatValueMap.containsKey(curHeader)){
 		        		Float[] oldValue = floatValueMap.get(curHeader);
 		        		if(curValue < oldValue[0]){
 		        			oldValue[0] = curValue;
@@ -351,7 +350,7 @@ public class Database {
 		        		if(curValue > oldValue[1]){
 		        			oldValue[1] = curValue;
 		        		}
-		        		floatValueMap.put(curHeader,  oldValue);
+		        		floatValueMap.put(curHeader, oldValue);
 		        	}else{
 		        		Float[] newValue = new Float[]{curValue, curValue};
 		        		floatValueMap.put(curHeader, newValue);
