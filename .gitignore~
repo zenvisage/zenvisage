@@ -14,8 +14,6 @@ hs_err_pid*
 
 # Intellij
 /.idea/
-.idea/
-*.iml
 
 # Mac
 .DS_Store

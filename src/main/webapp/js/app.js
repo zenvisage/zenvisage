@@ -470,7 +470,6 @@ app.controller('datasetController', [
     $scope.selectedSmoothing = "none";
     $scope.minDisplayThresh =0.0;
     // $scope.filter= '';
-
     $scope.changeZQLTableState = function() {
         // activate zqltable, and deactivate zqlscript
         if (!$scope.zqltable) {
@@ -1525,7 +1524,7 @@ $scope.inittablelist = function () {
     var init = function () {
        $scope.onDatasetChange('initialize');
     };
-      //  init();
+    init();
     // and fire it after definition
     $scope.$on("updateAxes", function(event, xAxis, yAxis, category) {
         $scope.selectedXAxis = xAxis;

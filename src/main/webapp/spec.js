@@ -159,6 +159,6 @@ describe('Zenvisage', function() {
 
     browser.get('http://localhost:80/');
     // Initialize angular webapp and trigger rendering via onDatasetChange
-    browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
+    // browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
   }
 });
