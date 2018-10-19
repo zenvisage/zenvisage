@@ -30,3 +30,7 @@ hs_err_pid*
 src/main/resources/uploaded_data/*.csv
 src/main/resources/uploaded_data/*.txt
 *.log
+
+# webstorm
+src/main/webapp/.idea/*.xml
+src/main/webapp/.idea/*.iml
