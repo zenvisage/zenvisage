@@ -996,7 +996,7 @@ public class SQLQueryExecutor {
 		rs.close();
 		// create temporary table to store initial permutations 
 		
-		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations_temp")){
+		if(!sqlQueryExecutor.isTableExists("dynamic_class_aggregations_temp")){
 				createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
 	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
@@ -1022,25 +1022,25 @@ public class SQLQueryExecutor {
 		st_ranges.close();
 		
 		// create the final table to hold the aggregations 
-	if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations")){
-		createTable("CREATE TABLE dynamic_class_aggregations  " +
-                " (Table_Name           TEXT    NOT NULL, " +
-                " Tag            TEXT     NOT NULL, " +
-                " Attributes            TEXT     NOT NULL, " +
-                " Ranges            TEXT     NOT NULL, " +
-                " Count           INT     NOT NULL) " );
-            
-	}
-	else{
-		sqlQueryExecutor.dropTable("dynamic_class_aggregations");
-		createTable("CREATE TABLE dynamic_class_aggregations  " +
-                " (Table_Name           TEXT    NOT NULL, " +
-                " Tag            TEXT     NOT NULL, " +
-                " Attributes            TEXT     NOT NULL, " +
-                " Ranges            TEXT     NOT NULL, " +
-                " Count           INT     NOT NULL) " );
-		
-	}
+		if(!sqlQueryExecutor.isTableExists("dynamic_class_aggregations")){
+			createTable("CREATE TABLE dynamic_class_aggregations  " +
+	                " (Table_Name           TEXT    NOT NULL, " +
+	                " Tag            TEXT     NOT NULL, " +
+	                " Attributes            TEXT     NOT NULL, " +
+	                " Ranges            TEXT     NOT NULL, " +
+	                " Count           INT     NOT NULL) " );
+	            
+		}
+		else{
+			sqlQueryExecutor.dropTable("dynamic_class_aggregations");
+			createTable("CREATE TABLE dynamic_class_aggregations  " +
+	                " (Table_Name           TEXT    NOT NULL, " +
+	                " Tag            TEXT     NOT NULL, " +
+	                " Attributes            TEXT     NOT NULL, " +
+	                " Ranges            TEXT     NOT NULL, " +
+	                " Count           INT     NOT NULL) " );
+			
+		}
 		
 		//insert tuples that are a left join between the data table and the temporary table on the tags. 
 	
