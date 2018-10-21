@@ -42,8 +42,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap; 
+import com.google.common.collect.HashBiMap;
 
+import edu.uiuc.zenvisage.api.CustomException;
 import edu.uiuc.zenvisage.data.Query;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.remotedb.SchemeToMetatable;
@@ -613,7 +614,7 @@ public class ZvMain {
 		 
 		
 	}
-	public Analysis buildAnalysisDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+	public Analysis buildAnalysisDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException, CustomException{
 	//public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
 		// get data from database
 		 System.out.println("runDragnDropInterfaceQuery");
@@ -798,12 +799,12 @@ public class ZvMain {
 	}
 	
 	
-	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+	public Result runDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException, CustomException{
 		 Analysis analysis = buildAnalysisDragnDropInterfaceQuery(query,method);
 		 return analysis.getChartOutput().finalOutput;
 	}
 	
-	public String saveRepresentativeDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException{
+	public String saveRepresentativeDragnDropInterfaceQuery(String query, String method) throws InterruptedException, IOException, SQLException, CustomException{
 		 Analysis analysis = buildAnalysisDragnDropInterfaceQuery(query,method);
 		 return analysis.downloadData;
 	}
@@ -818,7 +819,7 @@ public class ZvMain {
 //	 }
 
 
-	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException, CustomException{
 		 System.out.println("runDragnDropInterfaceQuerySeparated:");
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 if (args.getDownload() && method.equals("RepresentativeTrends")){
@@ -844,7 +845,7 @@ public class ZvMain {
 		 return res;
 	}
 	
-	public synchronized String saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException{
+	public synchronized String saveDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException, CustomException{
 		// Save Results Query to a csv file
 		 ZvQuery args = new ObjectMapper().readValue(query, ZvQuery.class);
 		 System.out.println(args.databasename);

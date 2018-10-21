@@ -11,6 +11,7 @@ import edu.uiuc.zenvisage.service.utility.Normalization;
 
 import org.apache.commons.math3.stat.descriptive.rank.Median;
 
+import edu.uiuc.zenvisage.api.CustomException;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.distance.Distance;
 /**
@@ -72,9 +73,10 @@ public abstract class Clustering {
 	 * @param k
 	 * @param normalizedgroups
 	 * @return list of clusters
+	 * @throws CustomException 
 	 */
 	@SuppressWarnings("rawtypes")
-	public abstract DummyCluster calculateClusters(double eps, int k, double[][] normalizedgroups);
+	public abstract DummyCluster calculateClusters(double eps, int k, double[][] normalizedgroups) throws CustomException;
 	
 	/**
 	 * @param clusters

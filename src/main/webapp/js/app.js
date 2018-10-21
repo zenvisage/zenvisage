@@ -1046,8 +1046,8 @@ $scope.inittablelist = function () {
       var data = q;
       console.log("calling getUserQueryResults");
       console.log(data);
-      $http.post('/zv/postSimilarity', data).
-      success(function(response) {
+      $http.post('/zv/postSimilarity', data)
+      .success(function(response) {
         console.log("getUserQueryResults: success");
         if (response.length == 0){console.log("empty response")}
         if(data.error != null)
@@ -1069,17 +1069,17 @@ $scope.inittablelist = function () {
           });
 
         }
-        else{plotResults.displayUserQueryResults(response.outputCharts,true);
+        else{
+        	plotResults.displayUserQueryResults(response.outputCharts,true);
             $scope.getRepresentativeTrendsWithoutCallback();}
-
-        }).
-        error(function(response) {
+        })
+      .error(function(response) {
           console.log("getUserQueryResults: fail");
           document.getElementById("loadingEclipse").style.display = "none";
           document.getElementById("loadingEclipse2").style.display = "none";
           $("#errorModalText").html(response);
           $("#errorModal").modal();
-        });
+       });
     }
 
     // for all other normal queries

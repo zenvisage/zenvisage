@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import edu.uiuc.zenvisage.service.utility.*;
-
+import edu.uiuc.zenvisage.api.CustomException;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 
@@ -48,8 +48,9 @@ public abstract class Analysis {
 	 * @param output TODO
 	 * @param normalizedgroups TODO
 	 * @throws JsonProcessingException 
+	 * @throws CustomException 
 	 */
-	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException;
+	public abstract void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException, CustomException;
 
 	/**
 	 * @return the chartOutput
@@ -94,7 +95,7 @@ public abstract class Analysis {
 	}
 
 	public void download(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups,
-			ZvQuery args) throws JsonProcessingException, IOException {
+			ZvQuery args) throws JsonProcessingException, IOException, CustomException {
 		// TODO Auto-generated method stub
 	}
 }

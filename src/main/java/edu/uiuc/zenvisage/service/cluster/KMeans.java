@@ -14,6 +14,7 @@ import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import edu.uiuc.zenvisage.service.utility.Normalization;
+import edu.uiuc.zenvisage.api.CustomException;
 import edu.uiuc.zenvisage.model.ZvQuery;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.distance.Euclidean;
@@ -42,7 +43,7 @@ public class KMeans extends Clustering {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public DummyCluster calculateClusters(double eps, int k, double[][] normalizedgroups) {
+	public DummyCluster calculateClusters(double eps, int k, double[][] normalizedgroups) throws CustomException {
 		// TODO Auto-generated method stub
 		// eps and k are not used. eps is not required for kmeans and a separate logic is used to derive k
 //		KMeansPlusPlusClusterer<DoublePoint> kmeans = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.getOutlierCount()+1, normalizedgroups.length), 15);
@@ -53,6 +54,9 @@ public class KMeans extends Clustering {
 		for(int i = 0; i < normalizedgroups.length; i++) {
 			dataset1.add(new DoublePoint(normalizedgroups[i]));
 		}		
+		if(dataset1.size() == 0) {
+			throw new CustomException("No resulting visualizations matches this filter. Please change the filter to relax the constraints.");
+		}
 		List<CentroidCluster<DoublePoint>> clusters1 = kmeans1.cluster(dataset1);
 		
 		KMeansPlusPlusClusterer<DoublePoint> kmeans2 = new KMeansPlusPlusClusterer<DoublePoint>(Math.min(this.args.kmeansClusterSize, clusters1.size()), 15,new Euclidean(),new KmeansRandomGenerator());

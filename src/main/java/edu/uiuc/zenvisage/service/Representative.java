@@ -18,6 +18,7 @@ import org.apache.commons.math3.ml.clustering.DoublePoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import edu.uiuc.zenvisage.api.CustomException;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.model.ZvQuery;
@@ -80,7 +81,7 @@ public class Representative extends Analysis {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException {
+	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException, CustomException {
 		// TODO Auto-generated method stub
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {
@@ -134,7 +135,7 @@ public class Representative extends Analysis {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public void download(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException {
+	public void download(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, java.io.IOException, CustomException {
 		// TODO Auto-generated method stub
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {

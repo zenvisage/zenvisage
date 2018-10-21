@@ -18,6 +18,7 @@ import org.apache.commons.math3.ml.clustering.DoublePoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import edu.uiuc.zenvisage.api.CustomException;
 import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.executor.Executor;
 import edu.uiuc.zenvisage.model.ZvQuery;
@@ -77,7 +78,7 @@ public class Outlier extends Analysis {
 	 * @see analysis.Analysis#generateAnalysis(java.util.LinkedHashMap, double[][])
 	 */
 	@Override
-	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException {
+	public void compute(LinkedHashMap<String, LinkedHashMap<Float, Float>> output, double[][] normalizedgroups, ZvQuery args) throws JsonProcessingException, CustomException {
 		// TODO Auto-generated method stub
 		ArrayList<String> mappings = new ArrayList<String>();
 		for(String key : output.keySet()) {
