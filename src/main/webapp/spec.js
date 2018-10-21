@@ -1,32 +1,18 @@
 describe('Zenvisage', function() {
   var OTHERTESTS = false
-  it("Switch to different datasets and ensuring basic checks satisfied",function(){
+  it("Testing Dynamic Class",function(){
     initializeTest();
-    
-    // console.log(element.all(by.css('#dataset-form-control option')).count());
-    var allOptions = element.all(by.css('#dataset-form-control option'))
-    var totalOptionsCount = allOptions.count()
-    expect(allOptions.count()).toEqual(5)
-    for (i = 1; i <= 5; i++) {
-      // Click open the drop down menu
-      element(by.id('dataset-form-control')).click();
-      //Select the second item on the drop down menu
-      element(by.css('#dataset-form-control > option:nth-child('+i+')')).click();
-      // Click on the side to close the drop down menu
-      browser.actions().mouseMove({x: 100, y: 0}).click().perform(); 
-      // trigger on dataset change
-      browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
-      // .then(function(){
-      //   basicChecks()  
-      // });
-      // Perform all the basic checks after outlier is rendered (rendering order is result --> representative --> outliers)
-      var outlier = element(by.id("outlier-result-0"))
-      outlier.isPresent().then(function(){
-        basicChecks()
-      })
-    }
-    
-  });
+    // Click + to open the DCC modal
+    element(by.id("classCreationButton")).click();
+    element(by.css("#class-row-1 > div.col-md-5 > div > select")).click();
+    var foreclosureratioSelection = element(by.css("#class-row-1 > div.col-md-5 > div > select > option:nth-child(8)"));
+    expect(foreclosureratioSelection.getText()).toEqual("foreclosuresratio");
+    foreclosureratioSelection.click();
+    element(by.css("#class-row-1 > div.col-md-7 > input")).sendKeys("[min,5],[5,max]");
+    // browser.sleep(50000);
+    element(by.id("class-creation-submit-button")).click();
+  })
+  
  //  it("Data Smoothing",function(){
  //   initializeTest()
   // var sliderBar = element.all(by.css("#slider-range-max"));
@@ -36,6 +22,31 @@ describe('Zenvisage', function() {
  //    // expect(sliderBar.getAttribute('value')).toEqual('7');
  //  });
   if (OTHERTESTS){
+     it("Switch to different datasets and ensuring basic checks satisfied",function(){
+      initializeTest();
+      // console.log(element.all(by.css('#dataset-form-control option')).count());
+      var allOptions = element.all(by.css('#dataset-form-control option'))
+      var totalOptionsCount = allOptions.count()
+      expect(allOptions.count()).toEqual(5)
+      for (i = 1; i <= 5; i++) {
+        // Click open the drop down menu
+        element(by.id('dataset-form-control')).click();
+        //Select the second item on the drop down menu
+        element(by.css('#dataset-form-control > option:nth-child('+i+')')).click();
+        // Click on the side to close the drop down menu
+        browser.actions().mouseMove({x: 100, y: 0}).click().perform(); 
+        // trigger on dataset change
+        browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
+        // .then(function(){
+        //   basicChecks()  
+        // });
+        // Perform all the basic checks after outlier is rendered (rendering order is result --> representative --> outliers)
+        var outlier = element(by.id("outlier-result-0"))
+        outlier.isPresent().then(function(){
+          basicChecks()
+        })
+      }
+    });
     ////////////////////////////////////////////////////////////
     //// Test Oracle as Self (Visual Examination Hard Coded)////
     ////////////////////////////////////////////////////////////
