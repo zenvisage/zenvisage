@@ -1114,6 +1114,63 @@ function clearUserQueryResultsTable()
   $("#results-table").empty();
 }
 
+function initSettingPanel()
+{
+  scope = angular.element($("#showBar")).scope(); 
+  
+  scope.similarityToggle();
+  scope.similarity = "Euclidean"; 
+  scope.similarityToggle();
+  
+  scope.aggregationToggle();
+  scope.aggregation = "avg"; 
+  scope.aggregationToggle();
+  
+  scope.clusterSizeToggle();
+  scope.clusterSize = 3; 
+  scope.clusterSizeToggle();
+  
+  scope.numResultsToggle();
+  scope.numResults = 50; 
+  scope.numResultsToggle();
+  
+  scope.minDisplayThreshToggle();
+  scope.minDisplayThresh = 0.0; 
+  scope.minDisplayThreshToggle();
+  
+  scope.selectedSmoothingToggle();
+  scope.selectedSmoothing = "none";
+  scope.selectedSmoothingToggle();
+   
+  $("#slider-range-max").slider({value:0.5});
+  $("#amount").val("0.5");
+  $("#filter").attr("placeholder", "e.g. mag>20");
+  $("#filter").val("");
+  $("#input_equation").attr("placeholder", "e.g. y=x^2");
+  $("#input_equation").val("");
+  
+  scope.considerRangeToggle();
+  scope.considerRange = true; 
+  scope.considerRangeToggle();
+  
+  scope.showOriginalSketchToggle();
+  scope.showOriginalSketch = true; 
+  scope.showOriginalSketchToggle();
+  
+  scope.showScatterplotToggle();
+  scope.showScatterplot = false; 
+  scope.showScatterplotToggle();
+  
+  scope.showBarToggle();
+  scope.showBar = false; 
+  scope.showBarToggle();
+  
+  scope.flipYToggle();
+  scope.flipY = false; 
+  scope.flipYToggle();
+  
+  console.log("initSettingPanel");
+}
 
 // custom event handler which triggers when zoom range is adjusted
 var global_xrange;

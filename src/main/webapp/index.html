@@ -746,7 +746,7 @@
                   </div>
 
                     <p></p>
-                    <select class="form-control" id="smoothing-form-control" ng-change="onSmoothingChange()" ng-model="selectedSmoothing">
+                    <select class="form-control" id="smoothing-form-control" ng-model="selectedSmoothing">
                       <option value="none">None</option>
                       <option value="movingaverage">Moving Average</option>
                       <option value="exponentialmovingaverage">Exponential</option>
@@ -795,7 +795,8 @@
                       <form data-intro = "If unchecked, then the similarity search ignores matches on the x axis and measure only shape-based (y axis) similarity." data-position = "left" data-step ="19" >
                         <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
                       </form>
-                      <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" ><input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
+                      <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" >
+                        <input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
                       </form>
                       <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">
                         <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
@@ -818,7 +819,7 @@
                     </div>
                     <p></p>
                     <div class="input-group">
-                      <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
+                      <input ng-model="equation" type="text" class="form-control" id="input_equation" placeholder="e.g. y=x^2">
                       <div class="input-group-btn">
                         <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
                       </div>
