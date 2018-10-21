@@ -366,7 +366,8 @@ function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category
   // intialize to 100 points
   var data = [];
   for (var d = 0; d < 100; d += 1 ) {
-    data.push( { "xval": xmin + (xmax-xmin)/100 * d, "yval": (ymin+ymax)*d/100 } );
+    // data.push( { "xval": xmin + (xmax-xmin)/100 * d, "yval": (ymin+ymax)*d/100 } );
+    data.push( { "xval": xmin + (xmax-xmin)*d/100, "yval": ymin + (ymax-ymin)*d/100 } );
   }
   // sketchpad = getSketchpadDygraphObject( data, valueRange );
   // getSketchpadDygraphObjectNew( data, valueRange );
