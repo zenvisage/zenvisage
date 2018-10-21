@@ -1023,7 +1023,7 @@ $scope.inittablelist = function () {
           default: // Line
               initializeSketchpadNew(
                 xdata["min"],xdata["max"],ydata["min"],ydata["max"],
-                xdata["name"],ydata["name"],zdata["name"]
+                xdata["name"],ydata["name"], (zdata==null) ? null : zdata["name"]
                );
               break;
       }
