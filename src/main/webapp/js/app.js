@@ -1467,7 +1467,7 @@ $scope.inittablelist = function () {
     var init = function () {
        $scope.onDatasetChange('initialize');
     };
-      //  init();
+    init();
     // and fire it after definition
     $scope.$on("updateAxes", function(event, xAxis, yAxis, category) {
         $scope.selectedXAxis = xAxis;

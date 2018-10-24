@@ -108,7 +108,7 @@
                 </div>
               </div>
                 <div class="modal-footer">
-                <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                <input id="dataset-upload-submit" type="submit" class="btn btn-primary" value="Upload">
                 <!-- <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;"> -->
                 <p id = 'uploadingProgressMessage' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">Uploading...</p>
                 </div>
@@ -144,9 +144,9 @@
         </div>
     </div>
 
-    <div id="mobilePopup">
+    <!-- <div id="mobilePopup">
       <span class="popuptext" id="myPopup">Zenvisage is not inteded for mobile screen resolutions.</span>
-    </div>
+    </div> -->
 
     <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
       <div class="modal-dialog" role="document">
@@ -252,7 +252,7 @@
                 <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
                 <br>
                 <div class="modal-footer">
-                  <input id="submitButton" type="submit" class="btn btn-primary" value="Upload">
+                  <input id="pattern-submit" type="submit" class="btn btn-primary" value="Upload">
                 </div>
               </form>
             </div>
@@ -338,7 +338,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" id="class-creation-close-button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" ng-click="createClasses()"class="btn btn-primary">Create classes</button>
+              <button type="button" id="class-creation-submit-button" ng-click="createClasses()"class="btn btn-primary">Create classes</button>
             </div>
           </div>
         </div>
@@ -450,7 +450,7 @@
           </div> -->
 
           <h5><b>Category</b>
-          <button  type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" ><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+          <button  type="button" id="classCreationButton" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" ><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
 
           <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button> </h5>
 
@@ -776,7 +776,7 @@
                       <div class="input-group" style="width: 165px;">
                         <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
                         <div class="input-group-btn">
-                          <button class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">Submit </button>
+                          <button id="filter-submit" class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">Submit</button>
                         </div>
                       </div>
                 </div>
@@ -1002,12 +1002,15 @@
            var w = window.innerWidth;
            var h = window.innerHeight;
            var x = document.getElementById("container");
-           if(w < 1000 || h < 300){
-             x.style.display = "none";
-             alert("Sorry — Zenvisage is not currently supported on small screen devices. Please enlarge your browser window widths or check back in later for mobile version!");
-           }else{
-             x.style.display = "block";
-           }
+           // if(w < 1000 || h < 300){
+            // TODO: Fixed for testing
+           //  if(false){
+           //   x.style.display = "none";
+           //   alert("Sorry — Zenvisage is not currently supported on small screen devices. Please enlarge your browser window widths or check back in later for mobile version!");
+           // }else{
+           //   x.style.display = "block";
+           // }
+           x.style.display = "block";
         });
         var id;
         function doneResizing(){
@@ -1056,8 +1059,8 @@
         $('[data-toggle="tooltip"]').tooltip({html: true});
         $("#dataset-form-control option").val("real_estate");
         var scope = angular.element("#dataset-form-control").scope();
-        scope.onDatasetChange();
-
+        scope.onDatasetChange(); 
+        // scope.onDatasetChange(); //TODO: Commented out for testing purposes
       });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
