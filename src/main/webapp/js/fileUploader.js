@@ -65,7 +65,7 @@ app.controller('fileuploadController', [
     log.info("dataset upload: ",$("#datasetNameInput").val())
     // $('#uploaderModal').modal('toggle');
     document.getElementById("uploadingProgressMessage").style.display = "block";
-    document.getElementById("submitButton").style.display = "none";
+    document.getElementById("close-intro-button").style.display = "none";
   }
   // function getCheckedAttributes(){
   //   $("input:checkbox[name=type]:checked").each(function(){

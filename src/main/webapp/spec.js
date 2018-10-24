@@ -1,17 +1,6 @@
 describe('Zenvisage', function() {
-  var OTHERTESTS = false
-  it("Testing Dynamic Class",function(){
-    initializeTest();
-    // Click + to open the DCC modal
-    element(by.id("classCreationButton")).click();
-    element(by.css("#class-row-1 > div.col-md-5 > div > select")).click();
-    var foreclosureratioSelection = element(by.css("#class-row-1 > div.col-md-5 > div > select > option:nth-child(8)"));
-    expect(foreclosureratioSelection.getText()).toEqual("foreclosuresratio");
-    foreclosureratioSelection.click();
-    element(by.css("#class-row-1 > div.col-md-7 > input")).sendKeys("[min,5],[5,max]");
-    // browser.sleep(50000);
-    element(by.id("class-creation-submit-button")).click();
-  })
+  var OTHERTESTS = true
+
   
  //  it("Data Smoothing",function(){
  //   initializeTest()
@@ -138,7 +127,44 @@ describe('Zenvisage', function() {
     });    
   }
 
+  it("Testing Dynamic Class",function(){
+    initializeTest();
+    // Click + to open the DCC modal
+    element(by.id("classCreationButton")).click();
+    element(by.css("#class-row-1 > div.col-md-5 > div > select")).click();
+    var monthSelection = element(by.css("#class-row-1 > div.col-md-5 > div > select > option:nth-child(2)"));
+    expect(monthSelection.getText()).toEqual("month");
+    monthSelection.click();
+    element(by.css("#class-row-1 > div.col-md-7 > input")).sendKeys("[min,6],[6,max]");
+    // browser.sleep(50000);
+    element(by.id("class-creation-submit-button")).click();
 
+    // Click to change Category axis dropdown (to select dynamic_class)
+    var elem = element(by.id("zAxisSelection"))
+    browser.actions().mouseMove(elem).click().perform();
+    
+    var DCSelection = element(by.css("#zAxisSelection > option:nth-child(1)"))
+    expect(DCSelection.getText()).toEqual("dynamic_class");
+    DCSelection.click();
+
+    var xArr = browser.executeScript(function(res){
+       var arr  = userQueryDygraphsNew['result-0']['data']
+       var xArr = arr.map(function(x){
+          return x[Object.keys(x)[0]];
+       });
+       return res
+    })
+    expect(xArr).toBeLessThan(6);
+
+    // var xArr = browser.executeScript(function(res){
+    //    var arr  = userQueryDygraphsNew['result-1']['data']
+    //    var xArr = arr.map(function(x){
+    //       return x[Object.keys(x)[0]];
+    //    });
+    //    return res
+    // })
+    // expect(xArr).toBeGreaterThan(6);
+  })
   function basicChecks(){
     console.log("basic checked")
     checkDescendingResultScore();
@@ -206,7 +232,9 @@ describe('Zenvisage', function() {
     browser.manage().timeouts().pageLoadTimeout(4000000);
     browser.manage().timeouts().implicitlyWait(2500000);
 
-    browser.get('http://localhost:80/');
+    browser.get('http://localhost:8080/');
+    // Click on the "Do not show this message again" button
+    element(by.id("close-intro-button")).click();
     // Initialize angular webapp and trigger rendering via onDatasetChange
     browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
   }

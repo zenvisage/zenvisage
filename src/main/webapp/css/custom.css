@@ -247,7 +247,7 @@ svg#treesvg {
   width: 600px; /* respsonsive width */
 }
 
-#submitButton{
+#close-intro-button{
   display: block;
   margin: auto;
 }

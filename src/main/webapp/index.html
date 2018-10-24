@@ -137,7 +137,7 @@
             <br>
             <div class="modal-footer">
             <form id="popup-form">
-            <input id="submitButton" type="submit" class="btn btn-primary" value="Do not show this message again.">
+            <input id="close-intro-button" type="submit" class="btn btn-primary" value="Do not show this message again.">
             </form>
           </div>
           </div>
@@ -454,7 +454,7 @@
 
           <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button> </h5>
 
-          <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory">
+          <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory" id="zAxisSelection">
             <option class="ng-binding ng-scope" value="dynamic_class">dynamic_class</option>
             <option ng-repeat="category in categories">{{category}}</option>
           </select>
