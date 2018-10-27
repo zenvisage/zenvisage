@@ -1,6 +1,6 @@
 branches:
   only:
-  - v3.0
+  - frontend_test
 
 language: node_js
 
