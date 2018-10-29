@@ -925,7 +925,7 @@ public class SQLQueryExecutor {
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
 		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-		String sql = "SELECT tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
+		String sql = "SELECT class_id, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
 		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
@@ -1028,7 +1028,8 @@ public class SQLQueryExecutor {
 	                " Tag            TEXT     NOT NULL, " +
 	                " Attributes            TEXT     NOT NULL, " +
 	                " Ranges            TEXT     NOT NULL, " +
-	                " Count           INT     NOT NULL) " );
+	                " Count           INT     NOT NULL, "+
+	                " Class_Id            SMALLSERIAL     PRIMARY KEY) " );
 	            
 		}
 		else{
@@ -1038,13 +1039,14 @@ public class SQLQueryExecutor {
 	                " Tag            TEXT     NOT NULL, " +
 	                " Attributes            TEXT     NOT NULL, " +
 	                " Ranges            TEXT     NOT NULL, " +
-	                " Count           INT     NOT NULL) " );
+	                " Count           INT     NOT NULL, "+
+	                " Class_Id            SMALLSERIAL     PRIMARY KEY) " );
 			
 		}
 		
 		//insert tuples that are a left join between the data table and the temporary table on the tags. 
 	
-		Statement st= c.createStatement();
+		Statement st = c.createStatement();
 		
 		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)"
 				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.dynamic_class)\n"
