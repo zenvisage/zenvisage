@@ -6,6 +6,16 @@ app.controller('fileuploadController', [
   var datasetNameInput;
   var checker = '';
   var attributes_global;
+  $("#upload_dataset_btn").on("click",function(e){
+    // check if signout button displayed, if so then already signed in
+    var not_logged_in = document.getElementById("signoutbutton").style.display=="none" 
+    if (not_logged_in){
+       alert("Please log in first to upload dataset.");
+       $('#uploaderModal').modal('toggle'); // close uploader
+       $("#loginmodaltrigger").click() // open up login screen
+    }
+  })
+    
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
 
