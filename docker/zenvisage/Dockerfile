@@ -1,6 +1,6 @@
 ## DOCKER Image 
 FROM openjdk:10.0
-LABEL maintainer="ABeltramo <beltramo.ale@gmail.com>, Renxuanwang <renxuanwang@gmail.com>"
+LABEL maintainer="ABeltramo <beltramo.ale@gmail.com>, Matias Carrasco Kind <mgckind@gmail.com>"
 # Install maven, supervisor and vi
 RUN  apt-get update && apt-get install -y maven supervisor git
 
