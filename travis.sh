@@ -9,7 +9,7 @@ fi
 cp lib/*.jar target/zenvisage/WEB-INF/lib/.
 
 # run junit tests
-
+sleep 30
 
 sudo sh run.sh
  # give zenvisage some time to start
