@@ -8,8 +8,15 @@ if [[ "$?" -ne 0 ]] ; then
 fi
 cp lib/*.jar target/zenvisage/WEB-INF/lib/.
 
+# run junit tests
+sh scripts/run-test.sh
+
 sudo sh run.sh
-sleep 10 # give zenvisage some time to start
+ # give zenvisage some time to start
+sleep 10
+
+#start selenium and protractor 
 cd src/main/webapp
 webdriver-manager start
 protractor conf.js
+
