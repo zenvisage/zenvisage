@@ -356,11 +356,14 @@
               <div class="col-md-2 text-left">
                 <b>Class</b>
               </div>
-              <div class="col-md-8 text-left">
+              <div class="col-md-6 text-left">
                 <b>Ranges {{classes[0].attributes}}</b>
               </div>
               <div class="col-md-2 text-left">
                 <b>Count</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Delete</b>
               </div>
             </div>
             <hr>
@@ -369,13 +372,16 @@
                   <div class="col-md-2 text-left">
                     {{class.tag}}
                   </div>
-                  <div class="col-md-8 text-left">
+                  <div class="col-md-6 text-left">
                     <div ng-repeat="range in class.formattedRanges">
                       {{range}}
                     </div>
                   </div>
                   <div class="col-md-2 text-left">
                     {{class.count}}
+                  </div>
+                  <div class="col-md-2">
+                    <button type="button" class="btn btn-default" aria-label="Delete" ng-click="deleteClass(classes, $index)">&times;</button>
                   </div>
                 </div>
                 <hr ng-if="!$last">

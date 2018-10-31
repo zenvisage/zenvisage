@@ -948,6 +948,25 @@ public class SQLQueryExecutor {
 		rs.close();
 		return dc;
 	}
+
+	public void deleteDynamicClassInDB(String query) throws SQLException{
+		/*
+		 * /zv/deleteClass
+		 */
+		// "name:real_estate, tag:2
+		String[] attributes = query.replaceAll(" ","").split(",");
+		String tableName = "", classId = "";
+		for(String attribute : attributes) {
+			String[] att = attribute.split(":");
+			if(att[0].equals("tableName")) tableName = att[1];
+			if(att[0].equals("classId")) classId = att[1];
+		}
+
+		String sql = "DELETE FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' and class_id = " + classId;		
+		Statement st = c.createStatement();
+		st.executeUpdate(sql);
+		st.close();
+	}
 	
 	/**
 	 * Generating powerset of dynamic_classes 

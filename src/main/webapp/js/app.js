@@ -94,6 +94,27 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
     }
   };
 
+  $scope.deleteClass = function deleteClass(classes, index) {
+    var classToDelete = classes[index]
+    classes.splice(index, 1)
+
+    $http.post('/zv/deleteClass', "tableName: " + classToDelete.name + ", classId: " + classToDelete.tag
+    ).then(
+        function (response) {
+          globalDatasetInfo["classes"] = response.data
+          var formattedRanges = formatRanges(response.data["classes"])
+          for (var i = 0; i < response.data["classes"].length; i++){
+            response.data["classes"][i].formattedRanges = formattedRanges[i]
+            $scope.classes = response.data["classes"]
+          }
+        },
+        function (response) {
+          console.log("failed to get class info: ", response.data);
+          $("#errorModalText").html(response.data);
+          $("#errorModal").modal();
+        }
+    );
+  }
 }]);
 
 app.controller('zqlScriptController', ['$scope', '$rootScope', '$http', 'plotResults', function($scope, $rootScope, $http, plotResults) {

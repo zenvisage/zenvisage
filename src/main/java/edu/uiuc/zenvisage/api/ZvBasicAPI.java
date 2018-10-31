@@ -200,6 +200,32 @@ public class ZvBasicAPI {
 		}
 		return null;
 	}
+
+	/*
+	 * /zv/deleteClass
+	 */
+	@RequestMapping(value = "/deleteClass", method = RequestMethod.POST)
+	@ResponseBody
+	public void deleteClass(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+			Scanner scanner = new Scanner(request.getInputStream());
+			while (scanner.hasNextLine()) {
+				stringBuilder.append(scanner.nextLine());
+			}
+			String body = stringBuilder.toString();
+			scanner.close();
+			zvMain.runDeleteDynamicClass(body);
+			System.out.println("deleted!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 	
 	@RequestMapping(value = "/gettablelist", method = RequestMethod.GET)
 	@ResponseBody

@@ -462,6 +462,10 @@ public class ZvMain {
 		System.out.println("Retrieved Dynamic Classes Configuration Query:"+retrieved);
 		return retrieved;
 	}
+
+	public void runDeleteDynamicClass(String query) throws IOException, SQLException{
+		sqlQueryExecutor.deleteDynamicClassInDB(query);
+	}
 	
 	public ArrayList<String> getTablelist() throws IOException, SQLException{
 		ArrayList<String> retrieved = sqlQueryExecutor.gettablelist();
