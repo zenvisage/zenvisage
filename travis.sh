@@ -1,3 +1,4 @@
+sh scripts/run-test.sh
 mvn clean
 if [[ "$?" -ne 0 ]] ; then
   echo 'mvn clean failed. Exited with non-zero value';exit 42
@@ -13,12 +14,8 @@ cp lib/*.jar target/zenvisage/WEB-INF/lib/.
 
 echo 'test2'
 
-# run junit tests
-sh scripts/run-test.sh
-
-echo 'test3'
 sudo sh run.sh
-echo 'test4'
+echo 'test3'
  # give zenvisage some time to start
 sleep 10
 
