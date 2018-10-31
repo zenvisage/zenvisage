@@ -994,20 +994,19 @@ $scope.inittablelist = function () {
               document.getElementById("loginmodaltrigger").style.display = "none";
               document.getElementById("signoutbutton").style.display = "block";
               datasetInfo.storetablelist(userinfo['tablelist'])
-              $scope.tablelist = datasetInfo.getTablelist().reverse();
             }else{
               document.getElementById("signoutbutton").style.display = "none";
               document.getElementById("loginmodaltrigger").style.display = "block";
               datasetInfo.storetablelist(response.data);
-              $scope.tablelist = datasetInfo.getTablelist().reverse();
+
             }
           }
           else{
             document.getElementById("signoutbutton").style.display = "none";
             document.getElementById("loginmodaltrigger").style.display = "none";
             datasetInfo.storetablelist(response.data);
-            $scope.tablelist = datasetInfo.getTablelist().reverse();
           }
+          $scope.tablelist = Array.from(new Set(datasetInfo.getTablelist().reverse()));
         }
       )
 
