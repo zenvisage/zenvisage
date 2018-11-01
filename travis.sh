@@ -16,7 +16,7 @@ sudo sh run.sh
 sleep 10
 
 #start selenium and protractor 
-cd src/main/webapp
+cd src/main/webapp/test
 webdriver-manager start
 protractor conf.js
 
