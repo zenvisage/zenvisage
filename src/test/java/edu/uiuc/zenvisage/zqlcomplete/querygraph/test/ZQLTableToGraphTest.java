@@ -84,7 +84,7 @@ public class ZQLTableToGraphTest {
 		rows.add(row2);
 		
 		table.setZqlRows(rows);
-		
+		table.setDb("real_estate");
 		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
@@ -188,12 +188,13 @@ public class ZQLTableToGraphTest {
 		rows.add(row3);
 		
 		table.setZqlRows(rows);
+		table.setDb("real_estate");
 		ZQLTableToGraph parser = new ZQLTableToGraph();
 		QueryGraph graph;
 		try {
 			graph = parser.processZQLTable(table, null);
 			//System.out.println(graph.toString());
-			 graph.printString();
+			//graph.printString(); // if this is print it will take a long time to run, only turn on for debugging
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

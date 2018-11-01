@@ -13,15 +13,14 @@ public class ZQLParserTest {
 
 	@Test
 	public void testAxis() {
-		ZQLParser.parseScript("az y1 = *");
-
-		ZQLParser.parseScript("ax z1 = [state.*]");
-		ZQLParser.parseScript("ax z1 = [year, month]");
-		ZQLParser.parseScript("ax z1 = year");
-		ZQLParser.parseScript("ax z1 = temp, month");
+		ZQLParser.parseScript("db = weather\n az y1 = *");
+		ZQLParser.parseScript("db = real_estate\n ax z1 = [state.*]");
+		ZQLParser.parseScript("db = real_estate\n ax z1 = [year, month]");
+		ZQLParser.parseScript("db = weather\n ax z1 = year");
+		ZQLParser.parseScript("db = weather\n ax z1 = temp, month");
 		// These two * ones not working for now
-		ZQLParser.parseScript("az y1 = [*]");
-		ZQLParser.parseScript("az y1 = *");
+		ZQLParser.parseScript("db = real_estate\n az y1 = [*]");
+		ZQLParser.parseScript("db = real_estate\n az y1 = *");
 		
 	}
 	
