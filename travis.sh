@@ -14,7 +14,9 @@ cp lib/*.jar target/zenvisage/WEB-INF/lib/.
 
 echo 'test2'
 
-chmod 666 /target/classes/data
+mv target/classes/data target/classes/data_cpy
+cp target/classes/data_cpy target/classes/data
+chmod 666 target/classes/data
 
 sh run.sh
 echo 'test3'
