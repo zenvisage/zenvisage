@@ -17,6 +17,7 @@ echo 'test2'
 mv target/classes/data target/classes/data_cpy
 cp -r target/classes/data_cpy target/classes/data
 #chmod 666 target/classes/data
+find target/classes/data -type f -exec chmod 666 {} \;
 ls target/classes/
  
 echo 'test3'
