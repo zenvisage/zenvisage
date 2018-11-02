@@ -160,13 +160,21 @@ public class VisualComponentNode extends QueryNode{
 		
 		// Replace zvalues [*] with actual values like [CA,NY,...]
 		ZColumn z = row.getZ();
+//		System.out.println("z:"+z);
+//		System.out.println("zvar:"+z.getVariable());
+//		System.out.println("zAttr:"+z.getAttribute());
+//		System.out.println("zVals:"+z.getValues());
+//		System.out.println("lookuptable:"+lookuptable.get(z.getAttribute()));
 		AxisVariable zAxisVariable = (AxisVariable) lookuptable.get(z.getVariable());
 		if (z.getValues().get(0).equals("*")) {
 			List<String> zValues = new ArrayList<>();
 			for (VisualComponent vc : sqlQueryExecutor.getVisualComponentList().visualComponentList) {
 				zValues.add(vc.getZValue().toString());
 			}
-			zAxisVariable.setValues(zValues);
+			if (zAxisVariable!=null) {
+				zAxisVariable.setValues(zValues);
+			}
+			
 		}
 		return sqlQueryExecutor.getVisualComponentList();
 	}
@@ -205,8 +213,10 @@ public class VisualComponentNode extends QueryNode{
 			// second iteration would be [5, 10)
 			lists.add(new ArrayList<VisualComponent>());
 			for(int i = index; i < scores.length + index; i++) {
-				VisualComponent vc = inputList.get(i);
-				mapping.put(vc.getZValue().getStrValue(), vc);		// NOTE: if we have multiple of same zvalue (within the same {x,y} pair), this keeps latest one
+				if (i<inputList.size()) {
+					VisualComponent vc = inputList.get(i);
+					mapping.put(vc.getZValue().getStrValue(), vc);		// NOTE: if we have multiple of same zvalue (within the same {x,y} pair), this keeps latest one
+				}
 			}
 			for(int i = 0; i < scores.length; i++) {
 				VisualComponent vc = mapping.get(values.get(i));

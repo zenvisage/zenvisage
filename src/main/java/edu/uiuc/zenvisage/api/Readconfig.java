@@ -10,7 +10,6 @@ public class Readconfig {
 	static String configloc = "/src/main/resources/config.properties";
 	static File f = new File("");
 	static String path = f.getAbsoluteFile().getParent()+configloc;
-	
 //	ClassLoader classLoader = getClass().getClassLoader();
 //	File fi = new File(classLoader.getResource("config.properties").getFile());
 	
