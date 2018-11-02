@@ -14,6 +14,8 @@ cp lib/*.jar target/zenvisage/WEB-INF/lib/.
 
 echo 'test2'
 
+chmod 666 /target/classes/data
+
 sh run.sh
 echo 'test3'
  # give zenvisage some time to start
