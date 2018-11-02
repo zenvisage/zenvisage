@@ -8,7 +8,6 @@
       //maximize browser screen 
       var width = 1500;
       var height = 900;
-      browser.ignoreSynchronization = true;
       browser.driver.manage().window().setSize(width, height);
       //browser.driver.manage().window().maximize();
 
