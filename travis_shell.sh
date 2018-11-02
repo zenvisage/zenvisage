@@ -27,6 +27,7 @@ sleep 10
 
 #start selenium and protractor 
 cd src/main/webapp/test
+webdriver-manager update
 webdriver-manager start
 protractor conf.js
 
