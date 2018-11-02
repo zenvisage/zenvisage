@@ -14,7 +14,7 @@ cp lib/*.jar target/zenvisage/WEB-INF/lib/.
 
 echo 'test2'
 
-sudo sh run.sh
+sh run.sh
 echo 'test3'
  # give zenvisage some time to start
 sleep 10
