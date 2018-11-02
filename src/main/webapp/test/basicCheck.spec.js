@@ -5,8 +5,13 @@ describe('Basic Checks', function() {
   describe('Title Equality Test', function() {
     utils.initialize()
     expect(browser.getTitle()).toEqual('Zenvisage');
+  });
+  describe('Test Filters', function() {
+    utils.initialize()
+    expect(browser.getTitle()).toEqual('Zenvisage');
+    // city="Champaign"
   });  
-
+  
   describe("Switch to different datasets and ensuring basic checks satisfied",function(){
     utils.initialize();
     // console.log(element.all(by.css('#dataset-form-control option')).count());
