@@ -2,7 +2,7 @@
 cd docker
 docker-compose up &
  # give zenvisage some time to start
-sleep 10
+sleep 50
 
 cd .. 
 
