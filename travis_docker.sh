@@ -1,4 +1,4 @@
-#sh scripts/run-test.sh
+sh scripts/run-test.sh
 cd docker
 docker-compose up &
  # give zenvisage some time to start
