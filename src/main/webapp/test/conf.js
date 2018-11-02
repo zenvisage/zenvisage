@@ -4,6 +4,6 @@ exports.config = {
   specs: ['query.spec.js','basicCheck.spec.js','dynamicClass.spec.js'],
   capabilities: {'browserName': 'chrome', 'acceptInsecureCerts': true}
 	//capabilities: {'acceptInsecureCerts': 'true'}
-
+  getPageTimeout: 30000
 
 }
