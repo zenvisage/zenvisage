@@ -17,9 +17,10 @@ echo 'test2'
 mv target/classes/data target/classes/data_cpy
 cp target/classes/data_cpy target/classes/data
 chmod 666 target/classes/data
-
-sh run.sh
+ls target/classes/
+ls target/clases/data 
 echo 'test3'
+sh run.sh
  # give zenvisage some time to start
 sleep 10
 
