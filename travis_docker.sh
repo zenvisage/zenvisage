@@ -8,6 +8,6 @@ cd ..
 
 #start selenium and protractor 
 cd src/main/webapp/test
-webdriver-manager start &
+webdriver-manager start --standalone &
 protractor conf.js
 
