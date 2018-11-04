@@ -2,11 +2,11 @@ var Utils = require('./testUtils.js');
 var utils = new Utils();
 
 describe('Dynamic Class', function() {
-  describe("Testing Basic Two DCC creation",function(){
+  it("Testing Basic Two DCC creation",function(){
     utils.initialize();
     // Click + to open the DCC modal
     element(by.id("classCreationButton")).click();
-    
+    browser.sleep(500)
     element(by.css("#class-row-1 > div.col-md-5 > div > select")).click();
     var monthSelection = element(by.css("#class-row-1 > div.col-md-5 > div > select > option:nth-child(2)"));
     expect(monthSelection.getText()).toEqual("month");

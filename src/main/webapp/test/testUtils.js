@@ -18,7 +18,11 @@
       // Click on the "Do not show this message again" button
       element(by.id("close-intro-button")).click();
       // Initialize angular webapp and trigger rendering via onDatasetChange
-      browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")
+      browser.executeScript("var scope = angular.element('#dataset-form-control').scope();scope.onDatasetChange();")  
+      
+    };
+    utils.close = function() {
+      browser.close()
     };
     utils.extractScoreFromResults= function (text){
       // 'city: Plymouth (0.383)'

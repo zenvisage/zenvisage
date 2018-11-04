@@ -13,6 +13,8 @@ describe('Data Smoothing', function() {
   afterEach(function() {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
+
+  
   it("Vary all Option + Sliders",function(){
     utils.initialize();
     var valLst  = ["movingaverage","exponentialmovingaverage","gaussian"]//"leossInterpolation",
@@ -29,8 +31,6 @@ describe('Data Smoothing', function() {
         expect(element(by.id("outlier-result-0")).isPresent()).toBe(true);
       }
     }
-
-    
     // TODO: Not working drag and drop slider
     // browser.actions().dragAndDrop(sliderBar,{x:0.9,y:0}).perform(); 
     // "#slider-range-max > span"
