@@ -11,8 +11,8 @@
       browser.driver.manage().window().setSize(width, height);
       //browser.driver.manage().window().maximize();
 
-      browser.manage().timeouts().pageLoadTimeout(4000000);
-      browser.manage().timeouts().implicitlyWait(2500000);
+      // browser.manage().timeouts().pageLoadTimeout(4000000);
+      // browser.manage().timeouts().implicitlyWait(2500000);
 
       browser.get('http://localhost:8080/');
       // Click on the "Do not show this message again" button
@@ -41,8 +41,21 @@
         expect(text).toEqual(equalToText);
       });
     }
+    utils.selectDropdownItem = function (selectorCSS,selectedOptionVal){
+      var select = element(by.css(selectorCSS));
+      select.$('[value="'+selectedOptionVal+'"]').click();
+    }
   }
-  
+    // function LoopThroughDropdownThenDoStuff(menuCSSselector,doStuff){
+    //   element(by.id(menuCSSselector)).click();
+    //   var Noptions = $(menuCSSselector).children().length; 
+    //   for (var i = Noptions.length - 1; i >= 0; i--) {
+    //     var optionText = $(menuCSSselector + " > option:nth-child("+i+")").html()
+    //     var selection = element(by.css($(menuCSSselector + " > option:nth-child("+i+")")));  
+    //     selection.click();
+    //     doStuff()
+    //   }
+    // }
  module.exports = function() {
     return new Utils();
   };
