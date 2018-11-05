@@ -2,7 +2,7 @@ var Utils = require('./testUtils.js');
 var utils = new Utils();
 
 describe('Basic Checks', function() {
-  
+
   it('Title Equality Test', function() {
     utils.initialize();
     expect(browser.getTitle()).toEqual('Zenvisage');
@@ -12,12 +12,6 @@ describe('Basic Checks', function() {
     checkDescendingResultScore();
   });    
 
-  it('Test Filters', function() {
-    utils.initialize()
-    expect(browser.getTitle()).toEqual('Zenvisage');
-    // city="Champaign"
-  });  
-  
   it("Switch to different datasets and ensuring basic checks satisfied",function(){
     utils.initialize()
     // console.log(element.all(by.css('#dataset-form-control option')).count());
