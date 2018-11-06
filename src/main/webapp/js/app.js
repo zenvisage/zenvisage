@@ -77,6 +77,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     }
     query["dataset"] = getSelectedDataset();
     query["classes"] = classList;
+    document.getElementById("loadingEclipse3").style.display = "inline";
 
     $http.post('/zv/createClasses', query
     ).then(
@@ -102,11 +103,13 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
                 $("#errorModal").modal();
               }
           );
+          document.getElementById("loadingEclipse3").style.display = "none";
         },
         function (response) {
           console.log("failed to create classes", response.data);
           $("#errorModalText").html(response.data);
           $("#errorModal").modal();
+          document.getElementById("loadingEclipse3").style.display = "none";
         }
     );
     log.info("Dynamic Class created",JSON.stringify(classList))
