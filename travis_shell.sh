@@ -25,9 +25,11 @@ bash run.sh
  # give zenvisage some time to start
 sleep 10
 
+echo 'run JUnit test'
+bash scripts/run-test.sh 
 #start selenium and protractor 
-cd src/main/webapp/test
-webdriver-manager update
-webdriver-manager start
-protractor conf.js
+# cd src/main/webapp/test
+# webdriver-manager update
+# webdriver-manager start
+# protractor conf.js
 

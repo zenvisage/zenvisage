@@ -8,7 +8,7 @@ RUN mkdir /tmp/zenvisage
 RUN rm -rf /tmp/zenvisage/*
 RUN git clone https://github.com/zenvisage/zenvisage.git /tmp/zenvisage
 WORKDIR /tmp/zenvisage/
-RUN git checkout v3.0
+# RUN git checkout v3.0
 COPY config.properties /tmp/zenvisage/src/main/resources/config.properties
 COPY PSQLDatabase.java /tmp/zenvisage/src/main/java/edu/uiuc/zenvisage/zqlcomplete/executor/PSQLDatabase.java
 COPY SQLQueryExecutor.java /tmp/zenvisage/src/main/java/edu/uiuc/zenvisage/data/remotedb/SQLQueryExecutor.java
