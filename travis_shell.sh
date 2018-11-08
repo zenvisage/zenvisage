@@ -1,4 +1,4 @@
-sh scripts/run-test.sh
+bash scripts/run-test.sh
 mvn clean
 if [[ "$?" -ne -1 ]] ; then
   echo 'mvn clean failed. Exited with non-zero value';exit 42
@@ -21,7 +21,7 @@ find target/classes/data -type f -exec chmod 666 {} \;
 ls target/classes/
  
 echo 'test3'
-sh run.sh
+bash run.sh
  # give zenvisage some time to start
 sleep 10
 
