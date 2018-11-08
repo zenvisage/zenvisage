@@ -1,8 +1,4 @@
 echo "started travis_shell.sh"
-cp lib/*.jar target/zenvisage/WEB-INF/lib/.
-
-echo 'test2'
-
 mv target/classes/data target/classes/data_cpy
 cp -r target/classes/data_cpy target/classes/data
 #chmod 666 target/classes/data
