@@ -3,7 +3,7 @@ cd docker
 docker-compose up &
  # give zenvisage some time to start
 sleep 50
-bash scripts/run-test.sh
+bash /tmp/zenvisage/scripts/run-test.sh 
 cd .. 
 
 #start selenium and protractor 
