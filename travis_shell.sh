@@ -1,9 +1,9 @@
 echo "started travis_shell.sh"
-mv target/classes/data target/classes/data_cpy
-cp -r target/classes/data_cpy target/classes/data
+# mv target/classes/data target/classes/data_cpy
+# cp -r target/classes/data_cpy target/classes/data
 #chmod 666 target/classes/data
 find target/classes/data -type f -exec chmod 666 {} \;
-ls target/classes/
+ls -l target/classes/
  
 echo 'test3'
 bash run.sh
