@@ -7,10 +7,10 @@ describe('Basic Checks', function() {
     utils.initialize();
     expect(browser.getTitle()).toEqual('Zenvisage');
   });
-  // it('Check that score@rank n > score@rank m, where n<m.', function() {
-  //   utils.initialize()
-  //   checkDescendingResultScore();
-  // });    
+  it('Check that score@rank n > score@rank m, where n<m.', function() {
+    utils.initialize()
+    checkDescendingResultScore();
+  });    
 
   // it("Switch to different datasets and ensuring basic checks satisfied",function(){
   //   utils.initialize()
@@ -38,26 +38,26 @@ describe('Basic Checks', function() {
   //   }
   // });
 
-  // function basicChecks(){
-  //   console.log("basic checked")
-  //   checkDescendingResultScore();
-  // }
-  // function checkDescendingResultScore(){
-  //   // By default there is max 50 number of results, so we set 0<n<40 and create m by adding an integer 1<x<10
-  //   var n = Math.floor(Math.random() * Math.floor(20));
-  //   var x = Math.floor((Math.random() * ((19 + 1) - 1)) + 1);
-  //   var m = n +x;
-  //   // console.log(n,m)
-  //   expect(n).toBeLessThan(m);
-  //   element.all(by.css("#undraggable-result-"+n+">text")).get(0).getText().then(function(text){
-  //     var rankN = utils.extractScoreFromResults(text);
-  //     element.all(by.css("#undraggable-result-"+m+">text")).get(0).getText().then(function(text){
-  //       var rankM = utils.extractScoreFromResults(text);
-  //       // console.log(rankN["score"],rankM["score"])
-  //       expect(rankM["score"]).toBeLessThanOrEqual(rankN["score"]);
-  //     });
-  //   });  
-  // }
+  function basicChecks(){
+    console.log("basic checked")
+    checkDescendingResultScore();
+  }
+  function checkDescendingResultScore(){
+    // By default there is max 50 number of results, so we set 0<n<40 and create m by adding an integer 1<x<10
+    var n = Math.floor(Math.random() * Math.floor(20));
+    var x = Math.floor((Math.random() * ((19 + 1) - 1)) + 1);
+    var m = n +x;
+    // console.log(n,m)
+    expect(n).toBeLessThan(m);
+    element.all(by.css("#undraggable-result-"+n+">text")).get(0).getText().then(function(text){
+      var rankN = utils.extractScoreFromResults(text);
+      element.all(by.css("#undraggable-result-"+m+">text")).get(0).getText().then(function(text){
+        var rankM = utils.extractScoreFromResults(text);
+        // console.log(rankN["score"],rankM["score"])
+        expect(rankM["score"]).toBeLessThanOrEqual(rankN["score"]);
+      });
+    });  
+  }
 
 
   // When set filter as city='Bristol', drag and drop first ranked item
