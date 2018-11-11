@@ -3,10 +3,7 @@ branches:
   - v3.0
 # os: osx
 
-matrix:
-  include:
-    - language: node_js
-    - language: java
+language: java
 node_js:
   - "8"
 dist: precise
@@ -18,8 +15,8 @@ before_install:
    - export DISPLAY=:99.0
    - bash -e /etc/init.d/xvfb start
    - sleep 3 # give xvfb some time to start
-   - npm install -g protractor
-   - webdriver-manager update
+   
+   
 
 addons:
   chrome: stable
