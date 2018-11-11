@@ -36,7 +36,9 @@ describe('Filter Constraint Checks', function() {
 
   function checkFilterEqualTo(filterStr, result){
     element(by.id('filter')).sendKeys(filterStr);
+    browser.sleep(500)
     element(by.id('filter-submit')).click();
+    browser.sleep(1000)
     utils.checkNthResultEquals(0,result);
   }
 });
