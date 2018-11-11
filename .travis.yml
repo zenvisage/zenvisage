@@ -31,6 +31,10 @@ before_script:
    - psql -c "CREATE TABLE users (id TEXT, password TEXT);" -U postgres
    - psql -c "CREATE TABLE users_tables (users TEXT, tables TEXT);" -U postgres
    - psql -c "INSERT INTO users_tables (users, tables) VALUES ('public', 'cmu'), ('public', 'flights'),('public', 'real_estate'),('public', 'weather'),('public', 'real_estate_tutorial');" -U postgres
+   - psql -d postgres -U postgres
+   - \connect postgres;
+   - \du
+   - \q
    - bash travis_build.sh
 script: bash travis_shell.sh
   #bash travis_docker.sh
