@@ -4,7 +4,7 @@ exports.config = {
   specs: ['query.spec.js','basicCheck.spec.js'],
   capabilities: {'browserName': 'chrome', 'acceptInsecureCerts': true,
   chromeOptions: {
-     args: [ "--headless,"--silent","--log-level=3"]
+     args: [ "--headless","--silent","--log-level=3"]
    }
 },
 	//capabilities: {'acceptInsecureCerts': 'true'}
