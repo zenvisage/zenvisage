@@ -3,11 +3,10 @@ branches:
   - v3.0
 # os: osx
 
-language: java
+language: node_js
 node_js:
   - "8"
-dist: precise
-sudo: required
+dist: trusty
 services:
   - postgresql
   - docker
@@ -15,8 +14,8 @@ before_install:
    - export DISPLAY=:99.0
    - bash -e /etc/init.d/xvfb start
    - sleep 3 # give xvfb some time to start
-   
-   
+   - npm install -g protractor
+   - webdriver-manager update
 
 addons:
   chrome: stable
@@ -36,6 +35,7 @@ before_script:
    - psql -c "INSERT INTO users_tables (users, tables) VALUES ('public', 'cmu'), ('public', 'flights'),('public', 'real_estate'),('public', 'weather'),('public', 'real_estate_tutorial');" -U postgres
    - psql -l
    - psql -c "\du"
+   - psql -c "\dt"
    - bash travis_build.sh
 script: bash travis_shell.sh
   #bash travis_docker.sh
