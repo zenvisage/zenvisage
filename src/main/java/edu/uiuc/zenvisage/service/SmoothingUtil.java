@@ -132,7 +132,7 @@ public class SmoothingUtil {
 	// Take the average of window/2 elements on both sides. For elements near the boundaries, on one side, we look at fewer elements. 
 	// TODO: Fix: Currently I assume that yvals size will always be more than window size.
 	private static double[] movingAverage(double [] yvals, int window){
-		System.out.println("Moving avergae smoothing function called: # values= "+yvals.length+", window size="+window);
+		// System.out.println("Moving average smoothing function called: # values= "+yvals.length+", window size="+window);
 	    double [] ySmoothedVals = new double[yvals.length];
 	    double sum=yvals[0];
 	    int pos = 0;
@@ -160,7 +160,7 @@ public class SmoothingUtil {
 	    	ySmoothedVals[i]=sum/sumsize;
 	    }
 	    
-	    System.out.println("Moving average smoothing finished : "+yvals.length+", window size: "+window);
+	    // System.out.println("Moving average smoothing finished : "+yvals.length+", window size: "+window);
 	    return ySmoothedVals;
 	
    	}
@@ -179,7 +179,7 @@ public class SmoothingUtil {
 	
 	
 	private static double[] leossInterpolation(double [] xvals,double [] yvals, double window,int robustness){
-		System.out.println("Loess"+xvals.length+":"+yvals.length);
+		// System.out.println("Loess"+xvals.length+":"+yvals.length);
 		
 		LoessInterpolator loess = new LoessInterpolator(window, robustness);
 		
