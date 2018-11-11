@@ -36,7 +36,7 @@ before_script:
    - psql -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;"
    - psql -l
    - psql -c "\du"
-   - psql -c "\dt"
+   - psql -c "\dt" -U postgres
    - bash travis_build.sh
 script: bash travis_shell.sh
   #bash travis_docker.sh
