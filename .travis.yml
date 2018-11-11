@@ -37,7 +37,8 @@ before_script:
    - psql -l
    - psql -c "\du"
    - psql -c "\dt" -U postgres
-   - chmod a+rX /target /target/classes /target/classes/data/real_estate.csv
+/home/travis/build/zenvisage/zenvisage/target/classes/data/real_estate.csv
+   - chmod a+rX /home/travis/build/zenvisage /home/travis/build/zenvisage/zenvisage /home/travis/build/zenvisage/zenvisage/target /home/travis/build/zenvisage/zenvisage/target/classes /home/travis/build/zenvisage/zenvisage/target/classes/data /home/travis/build/zenvisage/zenvisage/target/classes/data/real_estate.csv
    - psql -c "Create table real_estate(id SERIAL PRIMARY KEY, soldpricepersqft REAL, pctforeclosured REAL, pctincreasing REAL, metro TEXT, county TEXT, turnover REAL, month INT, pctdecreasing REAL, listingpricepersqft REAL, pctpricereductions REAL, foreclosuresratio REAL, state TEXT, pricetorentratio REAL, saletolistratio REAL, listingprice REAL, numberforrent REAL, soldprice REAL, city TEXT, year INT, quarter INT, dynamic_class TEXT);" -U postgres
    - psql -c "COPY real_estate(soldpricepersqft,pctforeclosured,pctincreasing,metro,county,turnover,month,pctdecreasing,listingpricepersqft,pctpricereductions,foreclosuresratio,state,pricetorentratio,saletolistratio,listingprice,numberforrent,soldprice,city,year,quarter) FROM '/home/travis/build/zenvisage/zenvisage/target/classes/data/real_estate.csv' DELIMITER ',' CSV HEADER;" -U postgres
    - bash travis_build.sh
