@@ -2,10 +2,11 @@ branches:
   only:
   - v3.0
 # os: osx
-language: node_js
+language: java
 node_js:
   - "8"
 dist: precise
+sudo: required
 services:
   - postgresql
   - docker
