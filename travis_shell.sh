@@ -16,7 +16,7 @@ echo 'Run JUnit Test'
 bash scripts/run-test.sh 
 #start selenium and protractor 
  cd src/main/webapp/test
- # webdriver-manager update
+ webdriver-manager update
  webdriver-manager start &
  echo 'Selenium Webdriver Started'
  sleep 10
