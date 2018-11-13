@@ -58,21 +58,4 @@ describe('Basic Checks', function() {
       });
     });  
   }
-
-
-  // When set filter as city='Bristol', drag and drop first ranked item
-  // Several TODOs : 
-  // 0) Figure out how to do dataset changing before scope call? This doesn't seem to work: 
-  //  $('#dataset-form-control option').val('real_estate');
-  //  element(by.css('dataset-form-control option'))
-  // 1) Why is the Cluster results for real_estate tutorial different in Selenium compared to the actual interface (Expected 'Barnegat Township (877 more like this)' to equal 'Catonsville (56 more like this)')
-  // 2) Initialize with different dataset, check representative and outlier corresponds to the "correct visualizations"
-  // 3) Write high level functions for checking equality for Rank 1, Rank 1 Cluster, Rank j Outlier, etc
-  // 4) Check that scores are always between 0 and 1 
-  // 5) Testing querying input modalities: 
-  //    - Pattern Query 
-  // 6) Smoothing: 
-  //    - change algorithm --> vary smoothing constant
-  // Done: 
-  // 1) Clean up required initialization to function call , called everytime
 });
