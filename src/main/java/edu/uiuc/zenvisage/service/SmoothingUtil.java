@@ -3,9 +3,10 @@ package edu.uiuc.zenvisage.service;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
 import edu.uiuc.zenvisage.model.ZvQuery;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author tarique
@@ -179,10 +180,44 @@ public class SmoothingUtil {
 	
 	
 	private static double[] leossInterpolation(double [] xvals,double [] yvals, double window,int robustness){
-		// System.out.println("Loess"+xvals.length+":"+yvals.length);
-		
+		System.out.println("Loess lengths: "+xvals.length+":"+yvals.length);
+		System.out.println("Loess xvals: "+Arrays.toString(xvals));
+		System.out.println("Loess yvals: "+Arrays.toString(yvals));
+		System.out.println("Loess bandwidth: "+window);
+
+		// cut off all NaN values
+//        int idx = yvals.length-1;
+//        if(Double.isNaN(yvals[idx])){
+//            while(Double.isNaN(yvals[idx])) {
+//                idx--;
+//            }
+//            yvals = Arrays.copyOfRange(yvals, 0, idx);
+//            xvals = Arrays.copyOfRange(xvals, 0, idx);
+//        }
+
+        int i, j;
+        for (i = j = 0; j < yvals.length; ++j){
+            if (!(Double.isNaN(yvals[j]))){
+                yvals[i] = yvals[j];
+                xvals[i] = xvals[j];
+                i += 1;
+            }
+            else{
+                System.out.println("foudn NaN");
+            }}
+        yvals = Arrays.copyOf(yvals, i);
+        xvals = Arrays.copyOf(xvals, i);
+        // make sure bandwidth has minimum value possible
+        if (yvals.length == 0) {
+            System.out.println("returning empty array");
+            return yvals;
+        }
+
+        double minimumWindow = 2.1/xvals.length;
+        if(window <= minimumWindow){
+            window = minimumWindow;
+        }
 		LoessInterpolator loess = new LoessInterpolator(window, robustness);
-		
 		double [] ySmoothedVals = loess.smooth(xvals,yvals);
 		return ySmoothedVals;
 	}
