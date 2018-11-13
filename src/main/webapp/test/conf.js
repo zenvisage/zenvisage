@@ -1,7 +1,7 @@
 exports.config = {
   framework: 'jasmine',
   // seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['basicCheck.spec.js','query.spec.js','dynamicClass.spec.js','dataSmoothing.spec.js','filter.spec.js'],
+  specs: ['basicCheck.spec.js','controls.spec.js','query.spec.js','dynamicClass.spec.js','dataSmoothing.spec.js','filter.spec.js'],
   capabilities: {'browserName': 'chrome', 'acceptInsecureCerts': true,
   chromeOptions: {
      args: [ "--headless","--silent","--log-level=3"]

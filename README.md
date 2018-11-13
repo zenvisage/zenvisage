@@ -1,4 +1,7 @@
 # Zenvisage: An Interactive and Expressive Visual Analytics System 
+
+[![Build Status](https://travis-ci.org/zenvisage/zenvisage.svg?branch=v3.0)](https://travis-ci.org/zenvisage/zenvisage)
+
 Zenvisage is a visual data exploration system that can automatically identify and recommend visualizations that match desired user patterns. The user can specify at a high level what they are looking for either via interactions or via a query language (ZQL), and the system will perform the necessary computation to identify these visualizations.
 
 ### Version

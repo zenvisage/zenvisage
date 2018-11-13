@@ -3,7 +3,7 @@
 (function() {
    var Utils = function() {
     var utils = this;
-
+    var RENDER_TIME = 2000
     utils.initialize = function() {
       //maximize browser screen 
       var width = 1500;
@@ -49,6 +49,18 @@
       var select = element(by.css(selectorCSS));
       select.$('[value="'+selectedOptionVal+'"]').click();
     }
+    utils.checkFirstsPresent = function (){
+        // Check that at least the first result, representative, outlier is rendered
+        expect(element(by.id("result-0")).isPresent()).toBe(true);
+        expect(element(by.id("representative-result-0")).isPresent()).toBe(true);
+        expect(element(by.id("outlier-result-0")).isPresent()).toBe(true);
+    }
+    utils.selectCheckByID = function (ID){
+      element(by.id(ID)).click();
+      browser.sleep(RENDER_TIME)
+      utils.checkFirstsPresent();
+    }
+    
   }
     // function LoopThroughDropdownThenDoStuff(menuCSSselector,doStuff){
     //   element(by.id(menuCSSselector)).click();

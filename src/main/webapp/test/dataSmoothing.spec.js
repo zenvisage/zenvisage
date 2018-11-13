@@ -25,10 +25,7 @@ describe('Data Smoothing', function() {
       for (var svar = 0 ; svar <=1; svar +=0.1){
         browser.executeScript("$('#slider-range-max').slider({value:"+svar +"}); $('#amount').val('"+svar +"') ; scope.callGetUserQueryResultsWithCallBack()");  
         browser.sleep(3000);
-        // Check that at least the first result, representative, outlier is rendered
-        expect(element(by.id("result-0")).isPresent()).toBe(true);
-        expect(element(by.id("representative-result-0")).isPresent()).toBe(true);
-        expect(element(by.id("outlier-result-0")).isPresent()).toBe(true);
+        utils.checkFirstsPresent();
       }
     }
     // TODO: Not working drag and drop slider
