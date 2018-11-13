@@ -5,5 +5,5 @@ exports.config = {
     browserName: 'chrome'
   },
   restartBrowserBetweenTests:true,
-  specs: ['basicCheck.spec.js','filter.spec.js','query.spec.js','dynamicClass.spec.js','dataSmoothing.spec.js']
+  specs: ['basicCheck.spec.js','controls.spec.js','filter.spec.js','query.spec.js','dynamicClass.spec.js','dataSmoothing.spec.js']
 }
