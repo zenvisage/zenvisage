@@ -1,0 +1,23 @@
+version: '3'
+services:
+  zenvisage:
+    build: zenvisage/.
+    ports:
+      - "8080:8080"
+    volumes:
+      - zenvisage:/tmp/zenvisage
+    depends_on:
+      - postgres
+
+  postgres:
+    build: postgres/.
+    environment:
+      - POSTGRES_PASSWORD=zenvisage
+      - POSTGRES_USER=postgres
+    volumes:
+      - postgres_db:/var/lib/postgresql
+      - zenvisage:/tmp/zenvisage              # Needed because it will try to upload datasets to db from zenvisage using local folders
+
+volumes:
+  postgres_db:
+  zenvisage:

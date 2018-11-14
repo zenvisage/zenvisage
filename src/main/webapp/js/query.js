@@ -72,7 +72,13 @@ function getDownloadThresh(){
   return $("#min-thresh-download").val();
 }
 function getFilter(){
-  return $("#filter.form-control").val();
+  var filter = $("#filter.form-control").val();
+  var eqIdx = filter.indexOf("=");
+  var dquoteIdx = filter.indexOf("\"");
+  if (eqIdx!=-1 && dquoteIdx!=-1){
+    filter = filter.replace(/"/g, '\'') //replace all double with single quotes
+  }
+  return filter
 }
 // function getParsePredicate(){
 //   var constraint = $("#filter.form-control").val();

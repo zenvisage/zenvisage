@@ -46,7 +46,7 @@ public class SQLQueryExecutor {
 	 */
 	private String database = "postgres";
 //	private String host = "jdbc:postgresql://localhost:" + Readconfig.getPostgresport() + "/"+database;
-	private String host = "jdbc:postgresql://localhost:5432/"+database;
+	private String host = "jdbc:postgresql://postgres:5432/"+database;
 	private String username;
 	private String password;
 	Connection c = null;
@@ -104,7 +104,6 @@ public class SQLQueryExecutor {
 	public void dropTable(String tableName) throws SQLException {
 		Statement stmt = c.createStatement();
 		String sql = "DROP TABLE " + tableName;
-		System.out.println(sql);
 	    stmt.executeUpdate(sql);
 //	    System.out.println("Table " + tableName + " deleted in given database...");
 	    stmt.close();
@@ -197,30 +196,20 @@ public class SQLQueryExecutor {
             System.out.println("Register successfully");
             stmt.close();
             rs.close();
-            return true; 
+            return true;
     		}
     }
     
 	public boolean insertusertablepair(String username, String tablename) throws SQLException {
     	Statement stmt = c.createStatement();
-    	String sql = "INSERT INTO users_tables (users,tables) VALUES ('"+username+"','"+tablename+"')";
+    		String sql = "INSERT INTO users_tables (users,tables) VALUES ('"+username+"','"+tablename+"')";
         stmt.execute(sql);
         System.out.println(sql);
         System.out.println("Insert user table pair successfully");
         stmt.close();
 		return true;
     }
-
-    public void insertJoinKeyHelper(String username, String databasename, String join_key) throws SQLException {
-    	Statement stmt = c.createStatement();
-    	String sql = "INSERT INTO join_key_table (username, tablename, joinKeyName) VALUES ('"+username+"','"+databasename+"','"+join_key.toLowerCase().replaceAll("-", "")+"');";
-    	stmt.execute(sql);
-    	System.out.println(sql);
-    	System.out.println("Insert join key successfully");
-    	stmt.close();
-    }
     
-
 
 	public void ZQLQuery(String Z, String X, String Y, String table, String whereCondition) throws SQLException{
 		Statement st = c.createStatement();
@@ -558,37 +547,6 @@ public class SQLQueryExecutor {
 		return false;
 	}
 	
-	public boolean check_root_user() throws SQLException{
-		Statement st0 = c.createStatement();
-		String sql0 = "SELECT COUNT(*) FROM users where id = 'root'";
-		ResultSet rs0;
-		try{
-			rs0 = st0.executeQuery(sql0);
-		}
-		catch(Exception PSQLException){
-			st0.close();
-			return false;
-		}
-		rs0.next();
-		if(rs0.getInt("count") == 1){
-			st0.close();
-			rs0.close();
-			return true;
-		}
-		st0.close();
-		rs0.close();
-		return false;
-	}
-
-	public void insert_root_user() throws SQLException, CannotPerformOperationException{
-		Statement st = c.createStatement();
-		String hashedpass = PasswordStorage.createHash("root");
-		String sql = "INSERT INTO users (id, password) VALUES ('"+"root"+"','"+hashedpass+"')";
-		st.execute(sql);
-		System.out.println("Add user root successfully");
-		st.close();
-	}
-
 	public void dropCSV(String tableName) throws SQLException{
 		String sqlDropMeta = "DELETE FROM zenvisage_metatable where tablename = '"+tableName+"'";
 		String sqlDropTable = "DROP TABLE "+ tableName;
@@ -627,148 +585,8 @@ public class SQLQueryExecutor {
 	  stmt.executeUpdate(sql.toString());
 	  stmt.close();
 	}
-
-	/**
-	* Check whether exist join key(z-attribute)
-	* @Param tablename
-	*/
-	public boolean sql_check_split_table_or_not(String tablename, String username) throws SQLException{
-		StringBuilder sql = new StringBuilder();
-		Statement stmt = c.createStatement();
-		sql.append("SELECT * FROM join_key_table " + "WHERE username='" + username + "' and tablename='" + tablename + "';");
-		ResultSet results = stmt.executeQuery(sql.toString());
-		if (results.next()){
-			stmt.close();
-			return true;
-		}
-		stmt.close();
-		return false;
-	}
 	
-	/**
-	* return join key for a dataset
-	*/
-	public String sql_get_join_key(String tablename, String username) throws SQLException{
-		StringBuilder sql = new StringBuilder();
-		Statement stmt = c.createStatement();
-		sql.append("SELECT joinkeyname FROM join_key_table " + "WHERE username='" + username + "' and tablename='" + tablename + "';");
-		ResultSet results = stmt.executeQuery(sql.toString());
-		String join_key = new String();
-		while (results.next()){
-			join_key = results.getString("joinkeyname");
-		}
-		stmt.close();
-		return join_key;
-	}
 	
-	/**
-	* Return list of x,y and join key attribute name and type
-	*/
-	public ArrayList<ArrayList<String>> get_x_y_joinkey_attributes(String tablename, String join_key) throws SQLException{
-		ArrayList<ArrayList<String>> xyjoinkey = new ArrayList<ArrayList<String>>();
-		ArrayList<VariableMeta> variables= getVariableMetaInfo(tablename);
-		HashMap<String, String> checker = new HashMap<String, String>();
-		for (int i = 0; i < variables.size(); i++) {
-			if ((variables.get(i).isSelectedX() == true) || (variables.get(i).isSelectedY() == true) || (variables.get(i).getAttribute() == join_key)) {
-				if (!checker.containsKey(variables.get(i).getAttribute())){
-					checker.put(variables.get(i).getAttribute(), "");
-					ArrayList<String> inner = new ArrayList<String>();
-					inner.add(variables.get(i).getAttribute());
-					inner.add(variables.get(i).getType());
-					xyjoinkey.add(inner);
-				}
-			}
-		}
-		return xyjoinkey;
-	}
-
-	/**
-	* Return list of z attribute name and type
-	*/
-	public ArrayList<ArrayList<String>> get_z_attributes(String tablename) throws SQLException{
-		ArrayList<ArrayList<String>> z = new ArrayList<ArrayList<String>>();
-		ArrayList<VariableMeta> variables= getVariableMetaInfo(tablename);
-		HashMap<String, String> checker = new HashMap<String, String>();
-		for (int i = 0; i < variables.size(); i++) {
-			if (variables.get(i).isSelectedZ() == true) {
-				if (!checker.containsKey(variables.get(i).getAttribute())){
-					checker.put(variables.get(i).getAttribute(), "");
-					ArrayList<String> inner = new ArrayList<String>();
-					inner.add(variables.get(i).getAttribute());
-					inner.add(variables.get(i).getType());
-					z.add(inner);
-				}
-			}
-		}
-		return z;
-	}
-
-	/**
-	* Function to create data table consists of x, y and join_key
-	* @Param new_tablename: create table name
-	* @Param dataset_name: the data table consists of all axis 
-	*/
-	public void create_original_table(String new_tablename, String dataset_name, String join_key) throws SQLException{
-		ArrayList<ArrayList<String>> xyjoinkey = get_x_y_joinkey_attributes(dataset_name, join_key);
-		StringBuilder sql = new StringBuilder("CREATE TABLE "+new_tablename+"(");
-		sql.append("id SERIAL PRIMARY KEY, ");
-		for(int i = 0; i < xyjoinkey.size(); i++) {
-			ArrayList<String> inner = xyjoinkey.get(i);
-			String attribute = inner.get(0);
-			String type = inner.get(1);
-			sql.append(attribute.toLowerCase().replaceAll("-", "")+" "+typeToPostgresType(type)+", ");
-		}
-		sql.replace(sql.length()-2,sql.length(), ");");
-		System.out.println("create_original_table sql is: " + sql.toString());
-		createTable(sql.toString());
-	}
-
-	/**
-	* Function to create data table consists of z attributes
-	* @Param new_tablename: create table name
-	* @Param dataset_name: the data table consists of all axis 
-	*/
-	public void create_split_table(String new_tablename, String dataset_name) throws SQLException{
-		ArrayList<ArrayList<String>> z = get_z_attributes(dataset_name);
-		StringBuilder sql = new StringBuilder("CREATE TABLE " + new_tablename + "(");
-		sql.append("id SERIAL PRIMARY KEY, ");
-		for(int i = 0; i < z.size(); i++) {
-			ArrayList<String> inner = z.get(i);
-			String attribute = inner.get(0);
-			String type = inner.get(1);
-			sql.append(attribute.toLowerCase().replaceAll("-", "")+" "+typeToPostgresType(type)+", ");
-		}
-		sql.replace(sql.length()-2,sql.length(), ");");
-		System.out.println("create_split_table sql is: " + sql.toString());
-		createTable(sql.toString());
-	}
-
-	/**
-	* Function for tranfer data type for postgresql
-	*/
-	public String typeToPostgresType(String type){
-		switch (type){
-			case "float": return "REAL";
-			case "int": return "INT";
-			case "string": return "TEXT";
-			case "timestamp": return "timestamp";
-			case "date": return "timestamp";
-		}
-		return null;
-	}
-
-	/** 
-	* Function: Alter the table's name who includes x,y and join_key to 
-	* the name that the user assigned.
-	*/
-	public void alter_table_name(String old_tablename, String target_tablename) throws SQLException{
-		StringBuilder sql = new StringBuilder("ALTER TABLE " + old_tablename + " RENAME TO " + target_tablename + ";");
-		Statement stmt = c.createStatement();
-		stmt.executeUpdate(sql.toString());
-		System.out.println(sql.toString());
-		stmt.close();
-	}
-
     public void loadData1(String datafilename) throws IOException, SQLException{
 	   	BufferedReader bufferedReader = new BufferedReader(new FileReader(datafilename));
 		String line;
@@ -855,7 +673,7 @@ public class SQLQueryExecutor {
 				" SET min = " + min + ", max = " + max +
 				" WHERE tablename = '" + tableName + "' AND attribute = '" + attribute+"'";
 		System.out.println(sql);
-		Statement stmt = c.createStatement(); 
+		Statement stmt = c.createStatement();
 		stmt.executeUpdate(sql);
 	    stmt.close();
 	}
@@ -925,7 +743,7 @@ public class SQLQueryExecutor {
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
 		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-		String sql = "SELECT class_id, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
+		String sql = "SELECT tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
 		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
@@ -947,25 +765,6 @@ public class SQLQueryExecutor {
 		st.close();
 		rs.close();
 		return dc;
-	}
-
-	public void deleteDynamicClassInDB(String query) throws SQLException{
-		/*
-		 * /zv/deleteClass
-		 */
-		// "name:real_estate, tag:2
-		String[] attributes = query.replaceAll(" ","").split(",");
-		String tableName = "", classId = "";
-		for(String attribute : attributes) {
-			String[] att = attribute.split(":");
-			if(att[0].equals("tableName")) tableName = att[1];
-			if(att[0].equals("classId")) classId = att[1];
-		}
-
-		String sql = "DELETE FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' and class_id = " + classId;		
-		Statement st = c.createStatement();
-		st.executeUpdate(sql);
-		st.close();
 	}
 	
 	/**
@@ -1015,7 +814,7 @@ public class SQLQueryExecutor {
 		rs.close();
 		// create temporary table to store initial permutations 
 		
-		if(!sqlQueryExecutor.isTableExists("dynamic_class_aggregations_temp")){
+		if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations_temp")){
 				createTable("CREATE TABLE dynamic_class_aggregations_temp  " +
 	                "(Table_Name           TEXT    NOT NULL, " +
 	                " Tag            TEXT     NOT NULL, " +
@@ -1041,31 +840,29 @@ public class SQLQueryExecutor {
 		st_ranges.close();
 		
 		// create the final table to hold the aggregations 
-		if(!sqlQueryExecutor.isTableExists("dynamic_class_aggregations")){
-			createTable("CREATE TABLE dynamic_class_aggregations  " +
-	                " (Table_Name           TEXT    NOT NULL, " +
-	                " Tag            TEXT     NOT NULL, " +
-	                " Attributes            TEXT     NOT NULL, " +
-	                " Ranges            TEXT     NOT NULL, " +
-	                " Count           INT     NOT NULL, "+
-	                " Class_Id            SMALLSERIAL     PRIMARY KEY) " );
-	            
-		}
-		else{
-			sqlQueryExecutor.dropTable("dynamic_class_aggregations");
-			createTable("CREATE TABLE dynamic_class_aggregations  " +
-	                " (Table_Name           TEXT    NOT NULL, " +
-	                " Tag            TEXT     NOT NULL, " +
-	                " Attributes            TEXT     NOT NULL, " +
-	                " Ranges            TEXT     NOT NULL, " +
-	                " Count           INT     NOT NULL, "+
-	                " Class_Id            SMALLSERIAL     PRIMARY KEY) " );
-			
-		}
+	if(!sqlQueryExecutor.gettablelist().contains("dynamic_class_aggregations")){
+		createTable("CREATE TABLE dynamic_class_aggregations  " +
+                " (Table_Name           TEXT    NOT NULL, " +
+                " Tag            TEXT     NOT NULL, " +
+                " Attributes            TEXT     NOT NULL, " +
+                " Ranges            TEXT     NOT NULL, " +
+                " Count           INT     NOT NULL) " );
+            
+	}
+	else{
+		sqlQueryExecutor.dropTable("dynamic_class_aggregations");
+		createTable("CREATE TABLE dynamic_class_aggregations  " +
+                " (Table_Name           TEXT    NOT NULL, " +
+                " Tag            TEXT     NOT NULL, " +
+                " Attributes            TEXT     NOT NULL, " +
+                " Ranges            TEXT     NOT NULL, " +
+                " Count           INT     NOT NULL) " );
+		
+	}
 		
 		//insert tuples that are a left join between the data table and the temporary table on the tags. 
 	
-		Statement st = c.createStatement();
+		Statement st= c.createStatement();
 		
 		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)"
 				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.dynamic_class)\n"

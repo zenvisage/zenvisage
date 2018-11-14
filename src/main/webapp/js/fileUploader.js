@@ -6,6 +6,16 @@ app.controller('fileuploadController', [
   var datasetNameInput;
   var checker = '';
   var attributes_global;
+  $("#upload_dataset_btn").on("click",function(e){
+    // check if signout button displayed, if so then already signed in
+    var not_logged_in = document.getElementById("signoutbutton").style.display=="none" 
+    if (not_logged_in){
+       alert("Please log in first to upload dataset.");
+       $('#uploaderModal').modal('toggle'); // close uploader
+       $("#loginmodaltrigger").click() // open up login screen
+    }
+  })
+    
   $('#uploaderForm').on('submit', function(e) {
     e.preventDefault();
 
@@ -65,7 +75,7 @@ app.controller('fileuploadController', [
     log.info("dataset upload: ",$("#datasetNameInput").val())
     // $('#uploaderModal').modal('toggle');
     document.getElementById("uploadingProgressMessage").style.display = "block";
-    document.getElementById("submitButton").style.display = "none";
+    document.getElementById("close-intro-button").style.display = "none";
   }
   // function getCheckedAttributes(){
   //   $("input:checkbox[name=type]:checked").each(function(){
@@ -211,7 +221,7 @@ app.controller('fileuploadController', [
                               .attr("value", formData.get("datasetName"))
                               .text( formData.get("datasetName")));
                               document.getElementById("uploadingProgressMessage").style.display = "block";
-                              document.getElementById("submitButton").style.display = "none";
+                              document.getElementById("dataset-upload-submit").style.display = "none";
                 alert("Upload successful");
                 location.reload();
             },
@@ -219,7 +229,7 @@ app.controller('fileuploadController', [
               $("#errorModalText").html("Server error. Have you tried the dataset upload instructions in the following link? <a href='https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets'>here?</a>");
               $("#errorModal").modal()
                 document.getElementById("uploadingProgressMessage").style.display = "block";
-                document.getElementById("submitButton").style.display = "none";
+                document.getElementById("dataset-upload-submit").style.display = "none";
             }
         });
 
@@ -228,7 +238,7 @@ app.controller('fileuploadController', [
           $("#errorModalText").html("Server error. Have you tried the dataset upload instructions in the following link? <a href='https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets'>here?</a>");
           $("#errorModal").modal()
           document.getElementById("uploadingProgressMessage").style.display = "block";
-          document.getElementById("submitButton").style.display = "none";
+          document.getElementById("dataset-upload-submit").style.display = "none";
 
         }
     });

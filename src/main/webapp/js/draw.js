@@ -446,6 +446,7 @@ function patternLoad(){
   log.info("patternLoad : ",xvals,yvals)
   createSketchpad( data );
   refreshZoomEventHandler();
+  $("#pattern-upload").modal('toggle'); // close the pattern-upload modal
   finishDraw();
 }
 

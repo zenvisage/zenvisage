@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.api;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -10,17 +11,26 @@ public class Readconfig {
 	static String configloc = "/src/main/resources/config.properties";
 	static File f = new File("");
 	static String path = f.getAbsoluteFile().getParent()+configloc;
-	
 //	ClassLoader classLoader = getClass().getClassLoader();
 //	File fi = new File(classLoader.getResource("config.properties").getFile());
 	
 	static{
 			try {
+				System.out.println(path);
 				FileInputStream in = new FileInputStream(path);
 				props.load(in);
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				path = f.getAbsoluteFile()+configloc;
+				FileInputStream in;
+				try {
+					in = new FileInputStream(path);
+					props.load(in);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+//				e.printStackTrace();
 			}
 	}
 	

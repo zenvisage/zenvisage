@@ -4,7 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
-
+src/main/webapp/node_modules/
 *.war
 *.ear
 .settings
@@ -14,6 +14,8 @@ hs_err_pid*
 
 # Intellij
 /.idea/
+.idea/
+*.iml
 
 # Mac
 .DS_Store
@@ -32,3 +34,4 @@ src/main/resources/uploaded_data/*.txt
 # webstorm
 src/main/webapp/.idea/*.xml
 src/main/webapp/.idea/*.iml
+*~

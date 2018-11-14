@@ -55,6 +55,87 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     );
     log.info("Dynamic Class created",JSON.stringify(classList))
   }
+
+  // TODO(Renxuan): merge dynamic class creation and info 
+  $scope.createOrModifyClasses = function() {
+    var query = {};
+    var classList = [];
+    for (i = 1; i < 5; i++) {
+      key = $("#dynamic-class-row-" + i + "\ > div").find(":selected").text();
+      val = $("#dynamic-class-row-" + i + "\ > div > input")[0].value
+      if (val && key)
+      {
+        var keyval = {};
+        var min = allAxisColumns[key]["min"]
+        var max = allAxisColumns[key]["max"]
+        var replacedMin = val.replace("min", min);
+        var replacedMinMax = replacedMin.replace("max", max);
+        keyval["name"] = key
+        keyval["values"] = JSON.parse("[" + replacedMinMax + "]");
+        classList.push(keyval);
+      }
+    }
+    query["dataset"] = getSelectedDataset();
+    query["classes"] = classList;
+    document.getElementById("loadingEclipse3").style.display = "inline";
+
+    $http.post('/zv/createClasses', query
+    ).then(
+        function (response) {
+          console.log("success: ", response);
+          globalDatasetInfo["classes"] = JSON.parse(response.data);
+          query = {};
+          query["dataset"] = getSelectedDataset();
+          $http.post('/zv/getClassInfo', query
+          ).then(
+              function (response) {
+                console.log("success: ", response.data);
+                globalDatasetInfo["classes"] = response.data
+                var formattedRanges = formatRanges(response.data["classes"])
+                for (var i = 0; i < response.data["classes"].length; i++){
+                  response.data["classes"][i].formattedRanges = formattedRanges[i]
+                  $scope.classes = response.data["classes"]
+                }
+              },
+              function (response) {
+                console.log("failed to get class info: ", response.data);
+                $("#errorModalText").html(response.data);
+                $("#errorModal").modal();
+              }
+          );
+          document.getElementById("loadingEclipse3").style.display = "none";
+        },
+        function (response) {
+          console.log("failed to create classes", response.data);
+          $("#errorModalText").html(response.data);
+          $("#errorModal").modal();
+          document.getElementById("loadingEclipse3").style.display = "none";
+        }
+    );
+    log.info("Dynamic Class created",JSON.stringify(classList))
+  }
+
+  $scope.deleteClass = function deleteClass(classes, index) {
+    var classToDelete = classes[index]
+    classes.splice(index, 1)
+
+    $http.post('/zv/deleteClass', "tableName: " + classToDelete.name + ", classId: " + classToDelete.tag
+    ).then(
+        function (response) {
+          globalDatasetInfo["classes"] = response.data
+          var formattedRanges = formatRanges(response.data["classes"])
+          for (var i = 0; i < response.data["classes"].length; i++){
+            response.data["classes"][i].formattedRanges = formattedRanges[i]
+            $scope.classes = response.data["classes"]
+          }
+        },
+        function (response) {
+          console.log("failed to get class info: ", response.data);
+          $("#errorModalText").html(response.data);
+          $("#errorModal").modal();
+        }
+    );
+  }
 }]);
 
 app.controller('classInfoController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
@@ -93,7 +174,6 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
       $scope.AxisInfo.push(key);
     }
   };
-
 }]);
 
 app.controller('zqlScriptController', ['$scope', '$rootScope', '$http', 'plotResults', function($scope, $rootScope, $http, plotResults) {
@@ -973,20 +1053,19 @@ $scope.inittablelist = function () {
               document.getElementById("loginmodaltrigger").style.display = "none";
               document.getElementById("signoutbutton").style.display = "block";
               datasetInfo.storetablelist(userinfo['tablelist'])
-              $scope.tablelist = datasetInfo.getTablelist().reverse();
             }else{
               document.getElementById("signoutbutton").style.display = "none";
               document.getElementById("loginmodaltrigger").style.display = "block";
               datasetInfo.storetablelist(response.data);
-              $scope.tablelist = datasetInfo.getTablelist().reverse();
+
             }
           }
           else{
             document.getElementById("signoutbutton").style.display = "none";
             document.getElementById("loginmodaltrigger").style.display = "none";
             datasetInfo.storetablelist(response.data);
-            $scope.tablelist = datasetInfo.getTablelist().reverse();
           }
+          $scope.tablelist = Array.from(new Set(datasetInfo.getTablelist().reverse()));
         }
       )
 
@@ -1467,7 +1546,7 @@ $scope.inittablelist = function () {
     var init = function () {
        $scope.onDatasetChange('initialize');
     };
-      //  init();
+    // init();
     // and fire it after definition
     $scope.$on("updateAxes", function(event, xAxis, yAxis, category) {
         $scope.selectedXAxis = xAxis;

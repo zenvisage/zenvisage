@@ -1075,6 +1075,7 @@ function uploadToSketchpadNew( draggableId, graphType )
   angular.element($("#sidebar")).scope().selectedXAxis = xType;
   angular.element($("#sidebar")).scope().selectedYAxis = yType;
   plotSketchpadNew( draggedGraph )//, xType, yType, zType);
+  return draggedGraph
 }
 
 // function addRow() {
@@ -1094,6 +1095,7 @@ $(document).ready(function(){
     drop: function( event, ui )
     {
       log.info("dropped successfully to canvas")
+      console.log("drop",$(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'))
       uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
     }
   });
@@ -1401,7 +1403,7 @@ function parseCSV(data) {
    //$('#uploaderModal').modal('toggle');
    $('#define-attributes').modal('toggle');
    document.getElementById("uploadingProgressMessage").style.display = "none";
-   document.getElementById("submitButton").style.display = "block";
+   document.getElementById("dataset-upload-submit").style.display = "block";
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');
    $('#z-autoselect').trigger('click');

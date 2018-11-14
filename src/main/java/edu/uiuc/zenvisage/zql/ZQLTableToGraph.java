@@ -50,9 +50,10 @@ public class ZQLTableToGraph {
 			lookUpTable = new LookUpTable();
 		}
 		String db = table.getDb();
-		
+		System.out.println("db:"+db);
 		// get the possible axis attributes (like year, month for x)
 		String locations[] = new SQLQueryExecutor().getMetaFileLocation(db);
+		System.out.println("locations:"+locations);
 		DatabaseMetaData dbMetaData = readSchema(locations[0]);
 		List<String> xAttributes = new ArrayList<String>();
 		for (String xAttribute : dbMetaData.xAxisColumns.keySet()) {
@@ -83,10 +84,13 @@ public class ZQLTableToGraph {
 			Processe process = row.getProcesse();
 			ProcessNode processNode = new ProcessNode(process, lookUpTable);
 			
-			if(vc.getViz().getMap().containsKey(VizColumn.type) && vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
-				vcNode = new ScatterVCNode(vc, lookUpTable, sqlQueryExecutor);
-				processNode = new ScatterProcessNode(process, lookUpTable);
+			if (vc.getViz()!=null) {
+				if(vc.getViz().getMap().containsKey(VizColumn.type) && vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
+					vcNode = new ScatterVCNode(vc, lookUpTable, sqlQueryExecutor);
+					processNode = new ScatterProcessNode(process, lookUpTable);
+				}
 			}
+			
 			vcNode.setDb(db);
 
 			
