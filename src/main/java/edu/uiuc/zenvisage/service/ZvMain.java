@@ -980,6 +980,11 @@ public class ZvMain {
 		return readFile();
 	}
 	
+	/**
+	 * Clean any instance in a category that has all the y values to be 0 along the x-axis.
+	 * @param output
+	 * @return
+	 */
 	LinkedHashMap<String, LinkedHashMap<Float, Float>> cleanUpDataWithAllZeros(LinkedHashMap<String, LinkedHashMap<Float, Float>> output) {
 		List<String> toRemove = new ArrayList<String>();
 		for (String s : output.keySet()) {
