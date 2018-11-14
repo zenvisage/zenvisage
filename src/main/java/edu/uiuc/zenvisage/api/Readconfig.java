@@ -59,6 +59,5 @@ public class Readconfig {
 	static public boolean getLoginAvaliable() {
 		return Boolean.valueOf(props.getProperty("loginavailable"));
 	}
-
 	
 }
