@@ -16,7 +16,7 @@ function formatRanges( classData ){
     var ranges = classData[i].ranges.split(",")
     for (var j = 0; j < attributes.length; j++){
       var vals = ranges[j].replace('[', '').replace(']', '').split(" ")
-      formattedRange.push(vals[0].trim() + " < " + attributes[j].trim() + " <= " + vals[1].trim())
+      formattedRange.push(vals[0].trim() + " <= " + attributes[j].trim() + " < " + vals[1].trim())
     }
     formattedRanges.push(formattedRange)
   }
@@ -77,9 +77,17 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var zValueFull = userQueryResults[count]["title"]
     var zValue = replaceAll(zValueFull.substring(0, 25), "'", ""); // the actual city value, like NY
 
-    if (zAttribute=="dynamic_class" && zValue[0]=="-"){
-      skipped+=1;
+    var maybeSkip = false;
+    var partsOfTitle = zValue.split('.');
+    for (var i = 0; i < partsOfTitle.length; i++) {
+      if (partsOfTitle[i][0] == '-') {
+        maybeSkip = true;
+        break;
+      }
+    }
 
+    if (zAttribute=="dynamic_class" && maybeSkip){
+      skipped+=1;
     }
     else{
 

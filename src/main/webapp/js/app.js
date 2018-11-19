@@ -119,7 +119,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     var classToDelete = classes[index]
     classes.splice(index, 1)
 
-    $http.post('/zv/deleteClass', "tableName: " + classToDelete.name + ", classId: " + classToDelete.tag
+    $http.post('/zv/deleteClass', "tableName: " + classToDelete.name + ", classId: " + classToDelete.class_id + ", tag: " + classToDelete.tag
     ).then(
         function (response) {
           globalDatasetInfo["classes"] = response.data
@@ -130,7 +130,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
           }
         },
         function (response) {
-          console.log("failed to get class info: ", response.data);
+          console.log("failed to get delete class: ", response.data);
           $("#errorModalText").html(response.data);
           $("#errorModal").modal();
         }

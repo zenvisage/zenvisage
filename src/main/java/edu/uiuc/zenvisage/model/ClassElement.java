@@ -12,6 +12,7 @@ public class ClassElement {
 	 * its [n][2], intervals e.g. [0-100] [101-200]... and such
 	 */
 	public float[][] values;
+	public String class_id;
 	public String tag;
 	public String attributes;
 	public String ranges;
@@ -23,9 +24,10 @@ public class ClassElement {
 		this.values = values;
 	}
 	
-	public ClassElement(String name, float[][] values, String tag, String attributes, String ranges, int count) {
+	public ClassElement(String name, float[][] values, String class_id, String tag, String attributes, String ranges, int count) {
 		this.name = name;
 		this.values = values;
+		this.class_id = class_id;
 		this.tag = tag;
 		this.attributes = attributes;
 		this.ranges = ranges;
