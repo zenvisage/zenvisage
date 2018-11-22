@@ -4,57 +4,30 @@ var allAxisColumns;
 var login_ava;
 
 app.controller('classCreationController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
+  $scope.data = {
+    option1: "default",
+    option2: "default",
+    option3: "default",
+    option4: "default"
+  };
 
   $scope.AxisInfo = [];
-
-  $scope.$on("callLoadAxisInfo", function(){
-    $scope.loadAxisInfo();
+  $scope.$on("clearDynamicClassOptions", function() {
+      $scope.data.option1 = '';
+      $scope.data.option2 = '';
+      $scope.data.option3 = '';
+      $scope.data.option4 = '';
   });
 
-  $scope.loadAxisInfo = function loadAxisInfo() {
+  $scope.$on("loadAxisInfo", function() {
     $scope.AxisInfo = [];
+    $scope.AxisInfo.push('');
     allAxisColumns = $.extend(true,globalDatasetInfo["xAxisColumns"],globalDatasetInfo["yAxisColumns"],globalDatasetInfo["zAxisColumns"]);
     for (var key in allAxisColumns) {
       $scope.AxisInfo.push(key);
     }
-  };
-
-  $scope.createClasses = function() {
-    var query = {};
-    var classList = [];
-    for (i = 1; i < 5; i++) {
-      key = $("#class-row-" + i + "\ > div").find(":selected").text();
-      val = $("#class-row-" + i + "\ > div > input")[0].value
-      if (val && key)
-      {
-        var keyval = {};
-        var min = allAxisColumns[key]["min"]
-        var max = allAxisColumns[key]["max"]
-        var replacedMin = val.replace("min", min);
-        var replacedMinMax = replacedMin.replace("max", max);
-        keyval["name"] = key
-        keyval["values"] = JSON.parse("[" + replacedMinMax + "]");
-        classList.push(keyval);
-      }
-    }
-    query["dataset"] = getSelectedDataset();
-    query["classes"] = classList;
-
-    $http.post('/zv/createClasses', query
-    ).then(
-        function (response) {
-          console.log("success: ", response);
-          globalDatasetInfo["classes"] = JSON.parse(response.data)
-          $('#class-creation-close-button')[0].click();
-        },
-        function (response) {
-          console.log("failed to create classes", response.data);
-          $("#errorModalText").html(response.data);
-          $("#errorModal").modal();
-        }
-    );
-    log.info("Dynamic Class created",JSON.stringify(classList))
-  }
+    $scope.classes = [];
+  });
 
   // TODO(Renxuan): merge dynamic class creation and info 
   $scope.createOrModifyClasses = function() {
@@ -93,9 +66,10 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
                 globalDatasetInfo["classes"] = response.data
                 var formattedRanges = formatRanges(response.data["classes"])
                 for (var i = 0; i < response.data["classes"].length; i++){
-                  response.data["classes"][i].formattedRanges = formattedRanges[i]
-                  $scope.classes = response.data["classes"]
+                  response.data["classes"][i].formattedRanges = formattedRanges[i];
+                  $scope.classes = response.data["classes"];
                 }
+                document.getElementById("load-dynamic-class-button").style.display = "inline";
               },
               function (response) {
                 console.log("failed to get class info: ", response.data);
@@ -136,44 +110,6 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         }
     );
   }
-}]);
-
-app.controller('classInfoController', ['$scope', '$rootScope','$http', function ($scope, $rootScope, $http) {
-
-  $scope.classes = ["test1", "test2"];
-  $scope.$on("callGetClassInfo", function(){
-    $scope.getClassInfo();
-  });
-
-  //var testQ = "{\"dataset\":\"real_estate\",\"classes\":[{\"name\":\"soldpricepersqft\",\"values\":[[0,90],[90,25144.643]]},{\"name\":\"listingpricepersqft\",\"values\":[[0,100],[100,1457.0552]]}]}"
-  $scope.getClassInfo = function getClassInfo() {
-    var query = {};
-    query["dataset"] = getSelectedDataset();
-    $http.post('/zv/getClassInfo', query
-    ).then(
-        function (response) {
-          console.log("success: ", response.data);
-          globalDatasetInfo["classes"] = response.data
-          var formattedRanges = formatRanges(response.data["classes"])
-          for (var i = 0; i < response.data["classes"].length; i++){
-            response.data["classes"][i].formattedRanges = formattedRanges[i]
-            $scope.classes = response.data["classes"]
-          }
-        },
-        function (response) {
-          console.log("failed to get class info: ", response.data);
-          $("#errorModalText").html(response.data);
-          $("#errorModal").modal();
-        }
-    );
-  }
-
-  $scope.populateClassInfo = function() {
-    $scope.AxisInfo = [];
-    for (var key in allAxisColumns) {
-      $scope.AxisInfo.push(key);
-    }
-  };
 }]);
 
 app.controller('zqlScriptController', ['$scope', '$rootScope', '$http', 'plotResults', function($scope, $rootScope, $http, plotResults) {
@@ -1109,7 +1045,10 @@ $scope.inittablelist = function () {
     }
 
     $scope.callLoadAxisInfo = function() {
-      $rootScope.$broadcast("callLoadAxisInfo", {});
+      $rootScope.$broadcast("loadAxisInfo");
+    }
+    $scope.callClearDynamicClassOptions = function() {
+      $rootScope.$broadcast("clearDynamicClassOptions");
     }
 
     $scope.callGetClassInfo = function() {
@@ -1395,9 +1334,19 @@ $scope.inittablelist = function () {
     var config = {
       params: params,
     };
-    
+
+    function clearDynamicClassModal(form) {
+      $(':input', form).each(function () {
+          var type = this.type;
+          if (type == 'text') {
+            this.value = "";
+          }
+      });
+    };
+
    $scope.onDatasetChange = function(input) {
       console.log("on change,",getSelectedDataset());
+      clearDynamicClassModal($('#dynamic-class'));
       document.getElementById("loadingEclipse").style.display = "inline";
       document.getElementById("loadingEclipse2").style.display = "inline";
       log.info("dataset selected",$('#dataset-form-control').val());
@@ -1485,6 +1434,8 @@ $scope.inittablelist = function () {
               );
           $scope.getUserQueryResultsWithCallBack();
 
+          $scope.callLoadAxisInfo();
+          $scope.callClearDynamicClassOptions();
         }).
 
         error(function(response) {
