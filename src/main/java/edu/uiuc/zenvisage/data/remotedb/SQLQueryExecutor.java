@@ -967,8 +967,8 @@ public class SQLQueryExecutor {
 		Statement st = c.createStatement();
 		st.executeUpdate(sql);
 
-		// delete the dynamic classes in original table
-		sql = "DELETE FROM " + tableName + " WHERE dynamic_class = '" + tag + "'";
+		// mask the dynamic classes in original table
+		sql = "UPDATE " + tableName + " SET dynamic_class = '-1' WHERE dynamic_class = '" + tag + "'";
 		st.executeUpdate(sql);
 
 		st.close();
