@@ -110,6 +110,10 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         }
     );
   }
+
+  $scope.loadDynamicClass = function() {
+    angular.element($("#sidebar")).scope().setDataAttributeToDynamicClass();
+  }
 }]);
 
 app.controller('zqlScriptController', ['$scope', '$rootScope', '$http', 'plotResults', function($scope, $rootScope, $http, plotResults) {
@@ -1048,6 +1052,7 @@ $scope.inittablelist = function () {
       $rootScope.$broadcast("loadAxisInfo");
     }
     $scope.callClearDynamicClassOptions = function() {
+      clearDynamicClassModal($('#dynamic-class'));
       $rootScope.$broadcast("clearDynamicClassOptions");
     }
 
@@ -1088,8 +1093,8 @@ $scope.inittablelist = function () {
 
         }
         else{
-        	plotResults.displayUserQueryResults(response.outputCharts,true);
-            $scope.getRepresentativeTrendsWithoutCallback();}
+          plotResults.displayUserQueryResults(response.outputCharts,true);
+          $scope.getRepresentativeTrendsWithoutCallback();}
         })
       .error(function(response) {
           console.log("getUserQueryResults: fail");
@@ -1342,11 +1347,11 @@ $scope.inittablelist = function () {
             this.value = "";
           }
       });
+      document.getElementById("load-dynamic-class-button").style.display = "none";
     };
 
    $scope.onDatasetChange = function(input) {
       console.log("on change,",getSelectedDataset());
-      clearDynamicClassModal($('#dynamic-class'));
       document.getElementById("loadingEclipse").style.display = "inline";
       document.getElementById("loadingEclipse2").style.display = "inline";
       log.info("dataset selected",$('#dataset-form-control').val());
@@ -1448,9 +1453,18 @@ $scope.inittablelist = function () {
 
     // when the data selection is changed, the graphs needs to be re-initialized
     // and the rest of the graphs have to be fetched
+    $scope.setDataAttributeToDynamicClass = function() {
+      if($scope.categories && !$scope.categories.includes("dynamic_class")) {
+        $scope.categories.push("dynamic_class");
+      }
+      $scope.selectedCategory = "dynamic_class";
+      $scope.onDataAttributeChange();
+    }
+
     $scope.onDataAttributeChange = function() {
       document.getElementById("loadingEclipse").style.display = "inline";
       document.getElementById("loadingEclipse2").style.display = "inline";
+
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
@@ -1464,8 +1478,8 @@ $scope.inittablelist = function () {
     };
 
     $scope.onErrorAttributeChange = function() {
-     document.getElementById("loadingEclipse").style.display = "inline";
-    document.getElementById("loadingEclipse2").style.display = "inline";
+      document.getElementById("loadingEclipse").style.display = "inline";
+      document.getElementById("loadingEclipse2").style.display = "inline";
       var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
       var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
       var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]

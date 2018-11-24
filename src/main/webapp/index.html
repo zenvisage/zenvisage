@@ -374,7 +374,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button id="load-dynamic-class-button" class="btn btn-primary" style="display:none;" ng-click="loadDynamicClass()" data-dismiss="modal">Load Dynamic Class</button>
+              <button class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -444,9 +445,7 @@
           <h5 style = 'width:150px'><b>Category</b>
           <button type="button" id="dynamicClassButton" class="textButton" data-toggle="modal" data-target="#dynamic-class"><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
 
-          <select class="form-control" ng-change="onDataAttributeChange()" value={{category}} ng-model="selectedCategory" id="zAxisSelection">
-            <option class="ng-binding ng-scope" value="dynamic_class">dynamic_class</option>
-            <option ng-repeat="category in categories">{{category}}</option>
+          <select class="form-control" ng-change="onDataAttributeChange()" ng-model="selectedCategory" ng-options="category for category in categories" id="zAxisSelection">
           </select>
 
           <!-- <div>
