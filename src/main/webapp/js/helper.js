@@ -1430,6 +1430,9 @@ function getType(previewRow){
     // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
     // console.log(previewRow.length);
     for (var i = 1; i < previewRow.length-3; i++) {
+      if (previewRow[i][0] == "-"){
+        previewRow[i] = previewRow[i].slice(1,previewRow[i].length)
+      }
         if(isNaN(Number(previewRow[i]))){
             return "string"
         }
