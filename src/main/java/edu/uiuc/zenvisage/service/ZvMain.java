@@ -675,11 +675,16 @@ public class ZvMain {
 	
 		 System.out.println("After To HashMap");
 		 output = cleanUpDataWithAllZeros(output);
-		 
-		 
+
+//		DataReformation dataReformatter1 = new DataReformation(new LinearNormalization());
+//		System.out.println("TestNew1");
+//		System.out.println(Arrays.deepToString(dataReformatter1.reformatData(output)));
 		 //
 		output= SmoothingUtil.applySmoothing(output,args);
-		 
+//
+//		System.out.println("TestNew2");
+//		System.out.println(Arrays.deepToString(dataReformatter1.reformatData(output)));
+
 		 // setup result format
 		 Result finalOutput = new Result();
 		 finalOutput.method = method;
@@ -734,13 +739,19 @@ public class ZvMain {
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
+//			 System.out.println("Test1");
+//			 System.out.println(Arrays.deepToString(normalizedgroups));
 			 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 			 Clustering cluster = new KMeans(distance, normalization, args);
 			 analysis = new Outlier(chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
 		 else if (method.equals("RepresentativeTrends")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
+//			 System.out.println("Test2");
+//			 System.out.println(Arrays.deepToString(normalizedgroups));
 			 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
+//			 System.out.println("Test2");
+//			 System.out.println(Arrays.deepToString(normalizedgroups));
 			 Clustering cluster = new KMeans(distance, normalization, args);
 			 analysis = new Representative(chartOutput,new Euclidean(),normalization,cluster,args);
 		 }
@@ -750,6 +761,8 @@ public class ZvMain {
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args); // O(V*P)
 				 normalizedgroups = overlappedDataAndQueries[0];
+//				 System.out.println("Test3");
+//				 System.out.println(Arrays.deepToString(normalizedgroups));
 				 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 				 double[][] overlappedQuery = overlappedDataAndQueries[1];
 				 overlappedQuery= SmoothingUtil.applySmoothing(overlappedQuery,args);
@@ -757,6 +770,8 @@ public class ZvMain {
 			 }
 			 else {
 				 normalizedgroups = dataReformatter.reformatData(output);
+//				 System.out.println("Test4");
+//				 System.out.println(Arrays.deepToString(normalizedgroups));
 				 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 				 double[] interpolatedQuery = dataReformatter.getInterpolatedData(args.dataX, args.dataY, args.xRange, normalizedgroups[0].length); // O(P)
 				 interpolatedQuery= SmoothingUtil.applySmoothing(interpolatedQuery,args);
