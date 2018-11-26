@@ -342,7 +342,9 @@
               <div class="col-md-2 text-left">
                 <b>Class</b>
               </div>
-              <div class="col-md-6 text-left">
+              <div class="col-md-2 text-left">
+              </div>
+              <div class="col-md-4 text-left">
                 <b>Ranges {{classes[0].attributes}}</b>
               </div>
               <div class="col-md-2 text-left">
@@ -356,9 +358,12 @@
               <div ng-repeat="class in classes" >
                 <div class="row">
                   <div class="col-md-2 text-left">
-                    {{class.class_id}}
+                    <input class="form-control" type="text" ng-model="class.class_id">
                   </div>
-                  <div class="col-md-6 text-left">
+                  <div class="col-md-2 text-left">
+                    <button class="btn btn-info btn-xs" ng-click="renameDynamicClass(class)">rename</button>
+                  </div>
+                  <div class="col-md-4 text-left">
                     <div ng-repeat="range in class.formattedRanges">
                       {{range}}
                     </div>
@@ -367,7 +372,7 @@
                     {{class.count}}
                   </div>
                   <div class="col-md-2">
-                    <button type="button" class="btn btn-default" aria-label="Delete" ng-click="deleteClass(classes, $index)">&times;</button>
+                    <button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="deleteClass(classes, $index)">&times;</button>
                   </div>
                 </div>
                 <hr ng-if="!$last">

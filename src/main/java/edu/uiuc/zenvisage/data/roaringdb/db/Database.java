@@ -290,8 +290,8 @@ public class Database {
 		
 		Map<String, Integer> intHeadersIndexMap = new HashMap<>();
 		Map<String, Integer> floatHeadersIndexMap = new HashMap<>();
-		//minus away dynamic class, start from 1, and +1 for id
-		for(int i=1;i<header.length-1;i++){
+		//minus away tag and dynamic class, start from 1, and +1 for id
+		for(int i=1;i<header.length-2;i++){
 			String curHeader = header[i].trim();
 			String type = typeMap.get(curHeader);
 			

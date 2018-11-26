@@ -89,6 +89,20 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     log.info("Dynamic Class created",JSON.stringify(classList))
   }
 
+  $scope.renameDynamicClass = function(classToRename) {
+    $http.post('/zv/renameDynamicClass', "tableName: " + classToRename.name + ", classId: " + classToRename.class_id + ", tag: " + classToRename.tag
+    ).then(
+        function (response) {
+          console.log("rename class success");
+        },
+        function (response) {
+          console.log("failed to rename class: ", response.data);
+          $("#errorModalText").html(response.data);
+          $("#errorModal").modal();
+        }
+    );
+  }
+
   $scope.deleteClass = function deleteClass(classes, index) {
     var classToDelete = classes[index]
     classes.splice(index, 1)
@@ -96,12 +110,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     $http.post('/zv/deleteClass', "tableName: " + classToDelete.name + ", classId: " + classToDelete.class_id + ", tag: " + classToDelete.tag
     ).then(
         function (response) {
-          globalDatasetInfo["classes"] = response.data
-          var formattedRanges = formatRanges(response.data["classes"])
-          for (var i = 0; i < response.data["classes"].length; i++){
-            response.data["classes"][i].formattedRanges = formattedRanges[i]
-            $scope.classes = response.data["classes"]
-          }
+          console.log("delete class success");
         },
         function (response) {
           console.log("failed to get delete class: ", response.data);
@@ -1139,9 +1148,9 @@ $scope.inittablelist = function () {
         }
 
         else{
-        plotResults.displayUserQueryResults(response.outputCharts,true);
-        //$scope.getRepresentativeTrendsWithoutCallback(); dont recompute representative
-      }
+          plotResults.displayUserQueryResults(response.outputCharts,true);
+          //$scope.getRepresentativeTrendsWithoutCallback(); dont recompute representative
+        }
 
       }).
       error(function(response) {

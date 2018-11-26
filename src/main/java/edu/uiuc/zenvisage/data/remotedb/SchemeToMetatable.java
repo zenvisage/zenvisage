@@ -62,7 +62,8 @@ public class SchemeToMetatable {
 			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
 		
-		//Adding dynamic_class column
+		//Adding tag and dynamic_class column
+		createTableSQLBuilder.append("tag"+ " " + "TEXT" + ", ");
 		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
 		
 		br.close();
@@ -96,7 +97,8 @@ public class SchemeToMetatable {
 			this.columns.add(split1[0].toLowerCase().toLowerCase().replaceAll("-", ""));
 		}
 		
-		//Adding dynamic_class column
+		//Adding tag and dynamic_class column
+		createTableSQLBuilder.append("tag"+ " " + "TEXT" + ", ");
 		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
 				
 		br.close();

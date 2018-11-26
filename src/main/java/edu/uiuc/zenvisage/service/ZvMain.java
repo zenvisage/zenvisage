@@ -463,6 +463,10 @@ public class ZvMain {
 		return retrieved;
 	}
 
+	public void runRenameDynamicClass(String query) throws IOException, SQLException{
+		sqlQueryExecutor.renameDynamicClassInDB(query);
+	}
+
 	public void runDeleteDynamicClass(String query) throws IOException, SQLException{
 		sqlQueryExecutor.deleteDynamicClassInDB(query);
 	}
