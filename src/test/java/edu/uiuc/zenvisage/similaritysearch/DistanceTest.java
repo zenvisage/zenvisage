@@ -22,30 +22,30 @@ public class DistanceTest {
 		assertTrue(res == truth);
 	}
 	
-	@Test
-	public void testSegmentation() {
-		Distance distance = new SegmentationDistance();
-		double res = distance.calculateDistance(src, tar);
-		double truth = -1;
-		assertTrue(res == truth);
-	}
-	
-	@Test
-	public void testMVIP() {
-		Distance distance = new MVIP();
-		double res = distance.calculateDistance(src, tar);
-		double truth = -1;
-		assertTrue(res == truth);
-	}
-	
-	@Test
-	public void testDTW() {
-		Distance distance = new DTWDistance();
-		double res = distance.calculateDistance(src, tar);
-		double truth = -1;
-		assertTrue(res == truth);
-	}
-	
+//	@Test
+//	public void testSegmentation() {
+//		Distance distance = new SegmentationDistance();
+//		double res = distance.calculateDistance(src, tar);
+//		double truth = -1;
+//		assertTrue(res == truth);
+//	}
+//	
+//	@Test
+//	public void testMVIP() {
+//		Distance distance = new MVIP();
+//		double res = distance.calculateDistance(src, tar);
+//		double truth = -1;
+//		assertTrue(res == truth);
+//	}
+//	
+//	@Test
+//	public void testDTW() {
+//		Distance distance = new DTWDistance();
+//		double res = distance.calculateDistance(src, tar);
+//		double truth = -1;
+//		assertTrue(res == truth);
+//	}
+//	
 	@Test
 	public void testSameVector() {
 		Distance distance = new DTWDistance();
