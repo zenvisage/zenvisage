@@ -1072,7 +1072,6 @@ $scope.inittablelist = function () {
 
     $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()
     {
-
       clearUserQueryResultsTable();
       var q = constructUserQuery(); //goes to query.js
       var data = q;
@@ -1103,7 +1102,16 @@ $scope.inittablelist = function () {
         }
         else{
           plotResults.displayUserQueryResults(response.outputCharts,true);
-          $scope.getRepresentativeTrendsWithoutCallback();}
+          if(data.groupBy == 'dynamic_class') {
+            document.getElementById("loadingEclipse2").style.display = "none";
+            document.getElementById("representative-table").style.display = "none";
+            document.getElementById("outlier-table").style.display = "none";
+          }
+          else {
+            document.getElementById("representative-table").style.display = "inline";
+            document.getElementById("outlier-table").style.display = "inline";
+            $scope.getRepresentativeTrendsWithoutCallback();}
+          }
         })
       .error(function(response) {
           console.log("getUserQueryResults: fail");
