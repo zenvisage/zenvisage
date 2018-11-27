@@ -133,7 +133,11 @@ public class ZvMain {
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
+		System.out.println("Inside file upload");
+//		System.out.println(request,response);
 		List<String> names = uploadHandler.upload(request, response);
+		System.out.println(names.get(0));
+		System.out.println(names.get(1));
 		uploadDatasettoDB2(names,true);
 	} 
 	 
