@@ -56,7 +56,6 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     ).then(
         function (response) {
           console.log("success: ", response);
-          globalDatasetInfo["classes"] = JSON.parse(response.data);
           query = {};
           query["dataset"] = getSelectedDataset();
           $http.post('/zv/getClassInfo', query

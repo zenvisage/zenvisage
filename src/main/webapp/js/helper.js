@@ -201,8 +201,8 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
       var trans = height-20
       
-    if(getSelectedXAxis()==="timestep")
-    {
+      if(getSelectedXAxis()==="timestep")
+      {
         graph.append("g")
           .attr("class", "axis axis--x")
           .attr("transform", "translate(0," + trans + ")")
@@ -222,25 +222,25 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
               }
               return mapper[ d.toString() ]
             }));
-    }
-    else if(getSelectedXAxis()==="quarter"){
-      graph.append("g")
+      }
+      else if(getSelectedXAxis()==="quarter"){
+        graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(3, "s"));
-    }
-    else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+      }
+      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
         graph.append("g")
           .attr("class", "axis axis--x")
           .attr("transform", "translate(0," + trans + ")")
           .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-    } // for formatting all year x axis ticks except hardcoded real estate dataset
-    else{
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5, "s"));
-    }
+      } // for formatting all year x axis ticks except hardcoded real estate dataset
+      else{
+        graph.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + trans + ")")
+          .call(d3.axisBottom(x).ticks(5, "s"));
+      }
 
       if (deltaSimilarityDistance!=0){
         fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")
@@ -256,8 +256,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       // if (Math.log10(similarityDistance)==0){
       //   fmtSimScore=d3.format(".3");
       // }
-      if  (!isNaN(similarityDistance)){
-
+      if(!isNaN(similarityDistance)) {
         // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zValue + " (" + similarityDistance.toFixed(2) + ")" );
         d3.select("#undraggable-result-"+newCount.toString()).append("g")
 
@@ -397,18 +396,21 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .style("display", "none");
 
         var tooltipLength = 0;
+        var tooltipHeight = 0;
         var tooltipTexts = [];
-        for (var i = 0; i < zValue.split(".").length; i++) {
-          var tooltipText = ""
-          for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
+
+        for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
+        {
+          if (globalDatasetInfo["classes"]["classes"][j].class_id === zValue)
           {
-            if (globalDatasetInfo["classes"]["classes"][j].tag === zValue)
+            for (var i = 0; i < globalDatasetInfo["classes"]["classes"][j].formattedRanges.length; i++)
             {
-              var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i]
-              tooltipTexts.push(tooltipText)
+              tooltipHeight++;
+              var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i];
+              tooltipTexts.push(tooltipText);
               if (tooltipText.length > tooltipLength)
               {
-                tooltipLength = tooltipText.length
+                tooltipLength = tooltipText.length;
               }
             }
           }
@@ -416,7 +418,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
         tooltip.append("rect")
           .attr("width", tooltipLength * 7)
-          .attr("height", 18*zValue.split(".").length)
+          .attr("height", 18 * tooltipHeight)
           .attr("fill", "black")
           .style("opacity", 0.65);
 
