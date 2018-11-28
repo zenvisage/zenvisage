@@ -6,13 +6,16 @@ app.controller('fileuploadController', [
   var datasetNameInput;
   var checker = '';
   var attributes_global;
+  var no_login_required= document.getElementById("loginmodaltrigger").style.display=="none"
   $("#upload_dataset_btn").on("click",function(e){
     // check if signout button displayed, if so then already signed in
     var not_logged_in = document.getElementById("signoutbutton").style.display=="none" 
-    if (not_logged_in){
-       alert("Please log in first to upload dataset.");
-       $('#uploaderModal').modal('toggle'); // close uploader
-       $("#loginmodaltrigger").click() // open up login screen
+    if (!no_login_required){
+      if (not_logged_in){
+         alert("Please log in first to upload dataset.");
+         $('#uploaderModal').modal('toggle'); // close uploader
+         $("#loginmodaltrigger").click() // open up login screen
+      }  
     }
   })
     
@@ -20,11 +23,14 @@ app.controller('fileuploadController', [
     e.preventDefault();
 
     formData = new FormData(this);
-    if (formData.get("csv").name.split(".").pop() != "csv" ){
-      alert("Please select a csv file");
-      return;
+    if ($("#dataInputTextbox").val()==null){
+      if (formData.get("csv").name.split(".").pop() != "csv" ){
+        alert("Please select a csv file or copy and paste data in the textbox below");
+        return;
+      }
     }
-    if (!login_ava) {   // if login is not available (configured to be off), allow uploads
+    
+    if (no_login_required) {   // if login is not available (configured to be off), allow uploads
       uploadDataset()
     } else if ($cookies.getObject('userinfo')) {  // user is logged in
       var username = $cookies.getObject('userinfo')['username'][0];
@@ -69,7 +75,15 @@ app.controller('fileuploadController', [
 
   // uploadDataset uploads the global formData variable
   function uploadDataset() {
-    parseCSV(formData);
+    var textBoxVal = $("#dataInputTextbox").val();
+    var uploadedData = formData.get("csv"); 
+    if (textBoxVal!=""){
+      uploadedData = textBoxVal
+    } 
+    Papa.parse(uploadedData, {
+      complete: inferDtype
+    });
+    
     datasetNameInput = $("#datasetNameInput").val();
     console.log('test:',$(this).attr('action'),$(this).attr('method'));
     log.info("dataset upload: ",$("#datasetNameInput").val())

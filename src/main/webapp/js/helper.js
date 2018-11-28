@@ -474,12 +474,12 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     }
   });
 
-// Set double click handlers for exporting results graphs
-for(let i = 0; i < getNumResults(); i++) {
-  $('#resultsvg-' + i).dblclick(function() {
-    createcanvas("#resultsvg-",i);
-  });
-}
+  // Set double click handlers for exporting results graphs
+  for(let i = 0; i < getNumResults(); i++) {
+    $('#resultsvg-' + i).dblclick(function() {
+      createcanvas("#resultsvg-",i);
+    });
+  }
 
   document.getElementById("loadingEclipse").style.display = "none";
 }
@@ -1393,33 +1393,32 @@ function autoSelect(source,type) {
   }
 }
  
-function parseCSV(data) {
- Papa.parse(data.get("csv"), {
- // preview: 7000,
- complete: function(results){
+function inferDtype(results) {
+
+   console.log(results)
    var textAttributeName = "<tr> <td> (De)select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
    var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
    +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
    var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
    for (i = 0; i < results["data"][0].length; i++) {
-   previewRow = results["data"].map(function(value,index) { return value[i]; })
-   type = getType(previewRow)
-   textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + results["data"][0][i] +
-   "</div></td> </tr>";
-   textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
-   +"</select> </td></tr>";
-   textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
-   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
-   if(type === "float"){
-        textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
-   }
+     previewRow = results["data"].map(function(value,index) { return value[i]; })
+     type = getType(previewRow)
+     textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + results["data"][0][i] +
+     "</div></td> </tr>";
+     textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
+     +"</select> </td></tr>";
+     textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
+     +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+     if(type === "float"){
+          textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
+     }
 
-   else if(type === "int"){
-     textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
-     textDataType += "<option value=" + results["data"][0][i] + " float'>float</option>"
+     else if(type === "int"){
+       textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
+       textDataType += "<option value=" + results["data"][0][i] + " float'>float</option>"
+     }
+     textDataType += "</select> </td></tr>";
    }
-   textDataType += "</select> </td></tr>";
- }
 
    $('.x-attributes').html(textAttributeName);
    $('.y-attributes').html(textAttributeSelection);
@@ -1431,38 +1430,36 @@ function parseCSV(data) {
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');
    $('#z-autoselect').trigger('click');
- }
-});
+   
+  
 
-function getType(previewRow){
-    var results = [];
-      // console.log("length!: ",previewRow);
-    var nan = isNaN(Number(previewRow[1]));
-    var isfloat = /^\d*(\.|,)\d*$/;
-    var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
-    var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
-    // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
-    // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
-    // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
-    // console.log(previewRow.length);
-    for (var i = 1; i < previewRow.length-3; i++) {
-      if (previewRow[i][0] == "-"){
-        previewRow[i] = previewRow[i].slice(1,previewRow[i].length)
+  function getType(previewRow){
+      var results = [];
+        // console.log("length!: ",previewRow);
+      var nan = isNaN(Number(previewRow[1]));
+      var isfloat = /^\d*(\.|,)\d*$/;
+      var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
+      var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
+      // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
+      // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
+      // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
+      // console.log(previewRow.length);
+      for (var i = 1; i < previewRow.length-3; i++) {
+        if (previewRow[i][0] == "-"){
+          previewRow[i] = previewRow[i].slice(1,previewRow[i].length)
+        }
+          if(isNaN(Number(previewRow[i]))){
+              return "string"
+          }
+          else if (isfloat.test(previewRow[i]) || commaFloat.test(previewRow[i]) || dotFloat.test(previewRow[i])){
+              return "float"
+          }
       }
-        if(isNaN(Number(previewRow[i]))){
-            return "string"
-        }
-        else if (isfloat.test(previewRow[i]) || commaFloat.test(previewRow[i]) || dotFloat.test(previewRow[i])){
-            return "float"
-        }
-    }
-    return "int";
+      return "int";
 
-      // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
-      // // else if (date.test(str)) return "date";
-
-
-}
+        // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
+        // // else if (date.test(str)) return "date";
+  }
 }
 function filterUncheckAttributes(attributeList,selectedAxis){
 
