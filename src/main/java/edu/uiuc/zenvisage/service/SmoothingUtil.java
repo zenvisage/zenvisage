@@ -135,7 +135,7 @@ public class SmoothingUtil {
 	private static double[] movingAverage(double [] yvals, int window){
 		// System.out.println("Moving average smoothing function called: # values= "+yvals.length+", window size="+window);
 	    double [] ySmoothedVals = new double[yvals.length];
-	    double sum=yvals[0];
+	    double sum=0;
 	    int pos = 0;
 	    int sumsize=0;
 	    int updatePos=-window/2;
@@ -180,10 +180,10 @@ public class SmoothingUtil {
 	
 	
 	private static double[] leossInterpolation(double [] xvals,double [] yvals, double window,int robustness){
-		System.out.println("Loess lengths: "+xvals.length+":"+yvals.length);
-		System.out.println("Loess xvals: "+Arrays.toString(xvals));
-		System.out.println("Loess yvals: "+Arrays.toString(yvals));
-		System.out.println("Loess bandwidth: "+window);
+		//System.out.println("Loess lengths: "+xvals.length+":"+yvals.length);
+		//System.out.println("Loess xvals: "+Arrays.toString(xvals));
+		//System.out.println("Loess yvals: "+Arrays.toString(yvals));
+		//System.out.println("Loess bandwidth: "+window);
 
 		// cut off all NaN values
 //        int idx = yvals.length-1;
@@ -203,7 +203,7 @@ public class SmoothingUtil {
                 i += 1;
             }
             else{
-                System.out.println("foudn NaN");
+                System.out.println("found NaN");
             }}
         yvals = Arrays.copyOf(yvals, i);
         xvals = Arrays.copyOf(xvals, i);
@@ -219,12 +219,14 @@ public class SmoothingUtil {
         }
 		LoessInterpolator loess = new LoessInterpolator(window, robustness);
 		double [] ySmoothedVals = loess.smooth(xvals,yvals);
+		
 		return ySmoothedVals;
 	}
 
 	
 	//currently assuming that Y values are equi-distant, so we look at previous and next windowsize/2 elements. However, in reality Y values might be far away. 
 	private static double[] gaussianConvolution(double [] xvals,double [] yvals, int windowsize){
+		//calculate mean and std of the array
 		double sum = 0;
 		for (int i = 0; i < yvals.length; i++)
 			sum+=yvals[i];
@@ -236,22 +238,28 @@ public class SmoothingUtil {
 			}
 	 	std = Math.sqrt(std); 
 	 				 			
+	 	//calculate weight for each position
 		double[] gkernel=createGaussianfilter(windowsize,std);
-		 double [] ySmoothedVals = new double[yvals.length];
-		 ySmoothedVals[0]=yvals[0];
-		 int halfwindowsize=(int) Math.floor(windowsize/2);
-		 for(int i=0;i<yvals.length;i++){
-			 ySmoothedVals[i]=yvals[i];
-			 int j=i-halfwindowsize;
-			 int pos=0;
-			 while(j<i+halfwindowsize){
-				 if(j>0 && j<yvals.length){
-				 ySmoothedVals[i]=ySmoothedVals[i]+gkernel[pos]*yvals[j]; 
-				 }
-				 pos++;
-				 j++;
-			 }
-		 }
+		
+		//smoothing
+		double [] ySmoothedVals = new double[yvals.length];
+	 	int halfwindowsize=(int) Math.floor(windowsize/2);
+	 	for(int i=0;i<yvals.length;i++){
+			int j=i-halfwindowsize;
+			int pos=0;
+			double weightcount = 0;		
+			while(j<=i+halfwindowsize){
+				if(j>=0 && j<yvals.length){
+					ySmoothedVals[i]=ySmoothedVals[i]+gkernel[pos]*yvals[j]; 
+					weightcount += gkernel[pos];
+				}
+				pos++;
+				j++;
+			}
+			//compensate bounding elements by adding itself
+			//ySmoothedVals[i] = yvals[i] * (1 - weightcount) + ySmoothedVals[i];
+			ySmoothedVals[i] /= weightcount;
+	 	}
 		return ySmoothedVals;	 
 		
 	}

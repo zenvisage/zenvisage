@@ -1,6 +1,7 @@
 package edu.uiuc.zenvisage.similaritysearch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -14,11 +15,17 @@ import edu.uiuc.zenvisage.service.SmoothingUtil;
 public class SmoothingTest {
 
 	private LinkedHashMap<String,LinkedHashMap<Float,Float>> data;
+	private double data_mean = 0;
 	
 	@Before
 	public void init() {
 		String valueStr = "1.0=158, 2.0=156, 3.0=157, 4.0=156, 5.0=158, 6.0=159, 7.0=163, 8.0=164, 9.0=164, 10.0=162, 11.0=161, 12.0=160";
 		data = stringToMap(valueStr, "Owings Mills");
+		LinkedHashMap<Float,Float> map = data.get("Owings Mills");
+		for(float key : map.keySet()) {
+			data_mean += map.get(key);
+		}
+		data_mean /= map.size();
 	}
 	
 	private LinkedHashMap<String,LinkedHashMap<Float,Float>> stringToMap(String value, String key) {
@@ -43,40 +50,58 @@ public class SmoothingTest {
 		return res.substring(0, res.length() - 2);
 	}
 	
+	private double getMean(LinkedHashMap<String,LinkedHashMap<Float,Float>> res, String key) {
+		LinkedHashMap<Float,Float> map = res.get(key);
+		double mean = 0;
+		for(float k : map.keySet()) {
+			mean += map.get(k);
+		}
+		mean /= map.size();
+		return mean;
+	}
+	
 	@Test
 	public void testMovingAverage() {
 		LinkedHashMap<String,LinkedHashMap<Float,Float>> res = SmoothingUtil.applySmoothing(data, "movingaverage", 0.5);
 		String calcValue = mapToString(res, "Owings Mills");
-		String trueValue = "";
 		System.out.println(calcValue);
-		assertEquals(calcValue, trueValue);
+		double mean = getMean(res, "Owings Mills");
+		System.out.println(mean);
+		assertTrue(mean / data_mean >= 0.95);
+		assertTrue(mean / data_mean <= 1.05);
 	}
 	
 	@Test
 	public void testExponential() {
 		LinkedHashMap<String,LinkedHashMap<Float,Float>> res = SmoothingUtil.applySmoothing(data, "exponentialmovingaverage", 0.5);
 		String calcValue = mapToString(res, "Owings Mills");
-		String trueValue = "";
 		System.out.println(calcValue);
-		assertEquals(calcValue, trueValue);
+		double mean = getMean(res, "Owings Mills");
+		System.out.println(mean);
+		assertTrue(mean / data_mean >= 0.95);
+		assertTrue(mean / data_mean <= 1.05);
 	}
 	
 	@Test
 	public void testLeoss() {
 		LinkedHashMap<String,LinkedHashMap<Float,Float>> res = SmoothingUtil.applySmoothing(data, "leossInterpolation", 0.5);
 		String calcValue = mapToString(res, "Owings Mills");
-		String trueValue = "";
 		System.out.println(calcValue);
-		assertEquals(calcValue, trueValue);
+		double mean = getMean(res, "Owings Mills");
+		System.out.println(mean);
+		assertTrue(mean / data_mean >= 0.95);
+		assertTrue(mean / data_mean <= 1.05);
 	}
 	
 	@Test
 	public void testGaussian() {
 		LinkedHashMap<String,LinkedHashMap<Float,Float>> res = SmoothingUtil.applySmoothing(data, "gaussian", 0.5);
 		String calcValue = mapToString(res, "Owings Mills");
-		String trueValue = "";
 		System.out.println(calcValue);
-		assertEquals(calcValue, trueValue);
+		double mean = getMean(res, "Owings Mills");
+		System.out.println(mean);
+		assertTrue(mean / data_mean >= 0.95);
+		assertTrue(mean / data_mean <= 1.05);
 	}
 	
 	@Test
