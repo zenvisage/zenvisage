@@ -736,12 +736,6 @@ public class ZvMain {
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
-<<<<<<< HEAD
-			 
-=======
-//			 System.out.println("Test1");
-//			 System.out.println(Arrays.deepToString(normalizedgroups));
->>>>>>> 384c4610718a39b4af2a51a8d5016865231ab2e4
 			 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 			 Clustering cluster = new KMeans(distance, normalization, args);
 			 analysis = new Outlier(chartOutput,new Euclidean(),normalization,cluster,args);
