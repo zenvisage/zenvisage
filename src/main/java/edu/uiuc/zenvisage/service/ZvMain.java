@@ -673,8 +673,27 @@ public class ZvMain {
 		 output = cleanUpDataWithAllZeros(output);
 		 
 		 
-		 //
+		 /**
+		 for(String key : output.keySet()) {
+			 LinkedHashMap<Float, Float> data = output.get(key);
+			 for(float x : data.keySet()) {
+				 if(Double.isNaN(data.get(x))) {
+					 System.out.println("before smoothing");
+				 }
+			 }
+		 }*/
+		 
 		output= SmoothingUtil.applySmoothing(output,args);
+		
+		/*
+		for(String key : output.keySet()) {
+			 LinkedHashMap<Float, Float> data = output.get(key);
+			 for(float x : data.keySet()) {
+				 if(Double.isNaN(data.get(x))) {
+					 System.out.println("after smoothing");
+				 }
+			 }
+		 }*/
 		 
 		 // setup result format
 		 Result finalOutput = new Result();
@@ -730,6 +749,7 @@ public class ZvMain {
 		 // generate the corresponding analysis method
 		 if (method.equals("Outlier")) {
 			 normalizedgroups = dataReformatter.reformatData(output);
+			 
 			 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 			 Clustering cluster = new KMeans(distance, normalization, args);
 			 analysis = new Outlier(chartOutput,new Euclidean(),normalization,cluster,args);
