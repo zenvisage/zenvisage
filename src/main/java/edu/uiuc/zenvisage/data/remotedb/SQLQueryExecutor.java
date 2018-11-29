@@ -925,7 +925,7 @@ public class SQLQueryExecutor {
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
 		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-		String sql = "SELECT class_id, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "'";
+		String sql = "SELECT class_id, tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' ORDER BY class_id";
 		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
@@ -936,35 +936,63 @@ public class SQLQueryExecutor {
 		float[][] testArray = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f}};
 		
 		while(rs.next()){
-			System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
-			l.add(new String[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)});
+			System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));
+			l.add(new String[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
 		}
 		dc.classes = new ClassElement[l.size()];
 		for(int i = 0; i < l.size(); i++){
 			String[] cur = l.get(i);
-			dc.classes[i] = new ClassElement(dc.dataset,testArray, cur[0], cur[1], cur[2], Integer.parseInt(cur[3]));
+			dc.classes[i] = new ClassElement(dc.dataset,testArray, cur[0], cur[1], cur[2], cur[3], Integer.parseInt(cur[4]));
 		}
 		st.close();
 		rs.close();
 		return dc;
 	}
 
+	public void renameDynamicClassInDB(String query) throws SQLException{
+		/*
+		 * /zv/renameDynamicClass
+		 */
+		String[] attributes = query.replaceAll(" ","").split(",");
+		String tableName = "", tag = "", dynamic_class = "";
+		for(String attribute : attributes) {
+			String[] att = attribute.split(":");
+			if(att[0].equals("tableName")) tableName = att[1];
+			if(att[0].equals("classId")) dynamic_class = att[1];
+			if(att[0].equals("tag")) tag = att[1];
+		}
+
+		String sql = "UPDATE dynamic_class_aggregations SET class_id = '" + dynamic_class + "' WHERE tag = '" + tag + "'";
+		Statement st = c.createStatement();
+		st.executeUpdate(sql);
+
+		sql = "UPDATE " + tableName + " SET dynamic_class = '" + dynamic_class + "' WHERE tag = '" + tag + "'";
+		st.executeUpdate(sql);
+
+		st.close();
+	}
+
 	public void deleteDynamicClassInDB(String query) throws SQLException{
 		/*
 		 * /zv/deleteClass
 		 */
-		// "name:real_estate, tag:2
 		String[] attributes = query.replaceAll(" ","").split(",");
-		String tableName = "", classId = "";
+		String tableName = "", classId = "", tag = "";
 		for(String attribute : attributes) {
 			String[] att = attribute.split(":");
 			if(att[0].equals("tableName")) tableName = att[1];
 			if(att[0].equals("classId")) classId = att[1];
+			if(att[0].equals("tag")) tag = att[1];
 		}
 
-		String sql = "DELETE FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' and class_id = " + classId;		
+		String sql = "DELETE FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' and tag = '" + tag + "'";
 		Statement st = c.createStatement();
 		st.executeUpdate(sql);
+
+		// mask the dynamic classes in original table
+		sql = "UPDATE " + tableName + " SET dynamic_class = '-1' WHERE tag = '" + tag + "'";
+		st.executeUpdate(sql);
+
 		st.close();
 	}
 	
@@ -1048,7 +1076,7 @@ public class SQLQueryExecutor {
 	                " Attributes            TEXT     NOT NULL, " +
 	                " Ranges            TEXT     NOT NULL, " +
 	                " Count           INT     NOT NULL, "+
-	                " Class_Id            SMALLSERIAL     PRIMARY KEY) " );
+	                " Class_Id       TEXT) " );
 	            
 		}
 		else{
@@ -1059,7 +1087,7 @@ public class SQLQueryExecutor {
 	                " Attributes            TEXT     NOT NULL, " +
 	                " Ranges            TEXT     NOT NULL, " +
 	                " Count           INT     NOT NULL, "+
-	                " Class_Id            SMALLSERIAL     PRIMARY KEY) " );
+	                " Class_Id       TEXT) " );
 			
 		}
 		
@@ -1069,19 +1097,44 @@ public class SQLQueryExecutor {
 		
 		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)"
 				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.dynamic_class)\n"
-				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.dynamic_class = d.tag\n"
+				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.tag = d.tag\n"
 				+ "GROUP BY d.table_name, d.tag, d.attributes,d.ranges;");
 		
 		st.execute(sql);
 		//System.out.print(t);
 
-		st.close(); 
+		sql = "SELECT tag FROM dynamic_class_aggregations GROUP BY tag";
+		rs = st.executeQuery(sql);
 		
+		Map<String, Integer> tagMap = new HashMap<>();
+		int i = 1;
+		while(rs.next()){
+			tagMap.put(rs.getString(1), i++);
+		}
 
-		// drop the temporary table 
+		StringBuilder sb = new StringBuilder("Update dynamic_class_aggregations\n SET class_id = CASE \n");
+		for(String key : tagMap.keySet()){
+			sb.append(" When tag = '"+ key + "' THEN '" + tagMap.get(key) +  "'\n");
+		}
+		sb.append("ELSE '-1'\n");
+		sb.append("END;");
+		sql = sb.toString();
+		st.execute(sql);
+
+		sb = new StringBuilder("Update " + dc.dataset + "\n SET dynamic_class = CASE \n");
+		for(String key : tagMap.keySet()){
+			sb.append(" When tag = '"+ key + "' THEN '" + tagMap.get(key) +  "'\n");
+		}
+		sb.append("ELSE '-1'\n");
+		sb.append("END;");
+		sql = sb.toString();
+		st.execute(sql);
 		
+		rs.close();
+		st.close();
+
+		// drop the temporary table
 		sqlQueryExecutor.dropTable("dynamic_class_aggregations_temp");
-		
 	}
 
 	public static void main(String[] args) throws SQLException{

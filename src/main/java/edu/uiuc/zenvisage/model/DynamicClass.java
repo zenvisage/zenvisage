@@ -47,7 +47,7 @@ public class DynamicClass {
 	 */
 
 	public String retrieveSQL(){
-		StringBuilder ret = new StringBuilder("Update " + this.dataset + "\nSET dynamic_class = CASE \n");
+		StringBuilder ret = new StringBuilder("Update " + this.dataset + "\nSET tag = CASE \n");
 		List<String> updateList = new ArrayList<String>();
 		List<String> sqlList = new ArrayList<String>();
 		GeneratePermutations(classes, updateList, sqlList, 0, "", "");

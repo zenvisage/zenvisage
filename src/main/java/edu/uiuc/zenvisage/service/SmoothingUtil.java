@@ -217,6 +217,7 @@ public class SmoothingUtil {
         if(window <= minimumWindow){
             window = minimumWindow;
         }
+
 		LoessInterpolator loess = new LoessInterpolator(window, robustness);
 		double [] ySmoothedVals = loess.smooth(xvals,yvals);
 		

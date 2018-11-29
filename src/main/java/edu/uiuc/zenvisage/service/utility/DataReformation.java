@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.ZvQuery;
 
@@ -49,7 +48,11 @@ public class DataReformation {
 //			}
 			List<Float> overlappedXValues = new ArrayList<Float>(data.get(s).keySet());
 			List<Float> overlappedYValues = new ArrayList<Float>(data.get(s).values());
-			
+			for (int j = 0; j < overlappedYValues.size(); j++){
+				if (Float.isNaN(overlappedYValues.get(j))){
+					System.out.println("is Nan");
+				}
+			}
 			double[] temp = getInterpolatedData(overlappedXValues, overlappedYValues, maxLength); // O(2*P)
 			//normalization.normalize(temp); // We normalize in getInterpolatedData already
 			interpolatedData[i++] = temp;

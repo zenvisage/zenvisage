@@ -202,6 +202,32 @@ public class ZvBasicAPI {
 	}
 
 	/*
+	 * /zv/renameDynamicClass
+	 */
+	@RequestMapping(value = "/renameDynamicClass", method = RequestMethod.POST)
+	@ResponseBody
+	public void renameDynamicClass(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, InterruptedException, IOException, ServletException, SQLException {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+			Scanner scanner = new Scanner(request.getInputStream());
+			while (scanner.hasNextLine()) {
+				stringBuilder.append(scanner.nextLine());
+			}
+			String body = stringBuilder.toString();
+			scanner.close();
+			zvMain.runRenameDynamicClass(body);
+			System.out.println("rename finished!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	/*
 	 * /zv/deleteClass
 	 */
 	@RequestMapping(value = "/deleteClass", method = RequestMethod.POST)
@@ -419,20 +445,20 @@ public class ZvBasicAPI {
 	@RequestMapping(value = "/postSimilarity", method = RequestMethod.POST)
 	@ResponseBody
 	public String postSimilarity(HttpServletRequest request, HttpServletResponse response) {
-	    Scanner scanner;
+		Scanner scanner;
 		String type="postSimilarity";
 		StringBuilder stringBuilder = new StringBuilder();
-	    String bodyforlogging;
+		String bodyforlogging;
 		try {
 			scanner = new Scanner(request.getInputStream());
-		    while (scanner.hasNextLine()) {
-		        stringBuilder.append(scanner.nextLine());
-		    }
+			while (scanner.hasNextLine()) {
+				stringBuilder.append(scanner.nextLine());
+			}
 			String body = stringBuilder.toString();
 			bodyforlogging = removeSketchPoints(body);
-		    logQueries(type,request,bodyforlogging);
-		    scanner.close();
-		    return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
+			logQueries(type,request,bodyforlogging);
+			scanner.close();
+			return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {

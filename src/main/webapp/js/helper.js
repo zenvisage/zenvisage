@@ -16,7 +16,7 @@ function formatRanges( classData ){
     var ranges = classData[i].ranges.split(",")
     for (var j = 0; j < attributes.length; j++){
       var vals = ranges[j].replace('[', '').replace(']', '').split(" ")
-      formattedRange.push(vals[0].trim() + " < " + attributes[j].trim() + " <= " + vals[1].trim())
+      formattedRange.push(vals[0].trim() + " <= " + attributes[j].trim() + " < " + vals[1].trim())
     }
     formattedRanges.push(formattedRange)
   }
@@ -77,9 +77,17 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     var zValueFull = userQueryResults[count]["title"]
     var zValue = replaceAll(zValueFull.substring(0, 25), "'", ""); // the actual city value, like NY
 
-    if (zAttribute=="dynamic_class" && zValue[0]=="-"){
-      skipped+=1;
+    var maybeSkip = false;
+    var partsOfTitle = zValue.split('.');
+    for (var i = 0; i < partsOfTitle.length; i++) {
+      if (partsOfTitle[i][0] == '-') {
+        maybeSkip = true;
+        break;
+      }
+    }
 
+    if (zAttribute=="dynamic_class" && maybeSkip){
+      skipped+=1;
     }
     else{
 
@@ -193,46 +201,46 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
       var trans = height-20
       
-	  if(getSelectedXAxis()==="timestep")
-	  {
-	      graph.append("g")
-	        .attr("class", "axis axis--x")
-	        .attr("transform", "translate(0," + trans + ")")
-	        .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-	            var mapper = {
-	              "0": '0hr',
-	              "1": '6hr',
-	              "2": '12hr',
-	              "3": '18hr',
-	              "4": '24hr',
-	              "5": '36hr',
-	              "6": '48hr',
-	              "7": '4d',
-	              "8": '7d',
-	              "9": '9d',
-	              "10":'14d'
-	            }
-	            return mapper[ d.toString() ]
-	          }));
-	  }
-	  else if(getSelectedXAxis()==="quarter"){
-		  graph.append("g")
+      if(getSelectedXAxis()==="timestep")
+      {
+        graph.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + trans + ")")
+          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+              var mapper = {
+                "0": '0hr',
+                "1": '6hr',
+                "2": '12hr',
+                "3": '18hr',
+                "4": '24hr',
+                "5": '36hr',
+                "6": '48hr',
+                "7": '4d',
+                "8": '7d',
+                "9": '9d',
+                "10":'14d'
+              }
+              return mapper[ d.toString() ]
+            }));
+      }
+      else if(getSelectedXAxis()==="quarter"){
+        graph.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + trans + ")")
             .call(d3.axisBottom(x).ticks(3, "s"));
-	  }
-	  else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
-	      graph.append("g")
-	        .attr("class", "axis axis--x")
-	        .attr("transform", "translate(0," + trans + ")")
-	        .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-	  } // for formatting all year x axis ticks except hardcoded real estate dataset
-	  else{
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5, "s"));
-	  }
+      }
+      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+        graph.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + trans + ")")
+          .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+      } // for formatting all year x axis ticks except hardcoded real estate dataset
+      else{
+        graph.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + trans + ")")
+          .call(d3.axisBottom(x).ticks(5, "s"));
+      }
 
       if (deltaSimilarityDistance!=0){
         fmtSimScore = d3.format("."+(Math.abs(Math.round(Math.log10(deltaSimilarityDistance)))+1)+"f")
@@ -248,8 +256,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
       // if (Math.log10(similarityDistance)==0){
       //   fmtSimScore=d3.format(".3");
       // }
-      if  (!isNaN(similarityDistance)){
-
+      if(!isNaN(similarityDistance)) {
         // $("#undraggable-result-"+count.toString()).text(zAttribute + ": " + zValue + " (" + similarityDistance.toFixed(2) + ")" );
         d3.select("#undraggable-result-"+newCount.toString()).append("g")
 
@@ -389,18 +396,21 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
           .style("display", "none");
 
         var tooltipLength = 0;
+        var tooltipHeight = 0;
         var tooltipTexts = [];
-        for (var i = 0; i < zValue.split(".").length; i++) {
-          var tooltipText = ""
-          for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
+
+        for (var j = 0; j < globalDatasetInfo["classes"]["classes"].length; j++)
+        {
+          if (globalDatasetInfo["classes"]["classes"][j].class_id === zValue)
           {
-            if (globalDatasetInfo["classes"]["classes"][j].tag === zValue)
+            for (var i = 0; i < globalDatasetInfo["classes"]["classes"][j].formattedRanges.length; i++)
             {
-              var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i]
-              tooltipTexts.push(tooltipText)
+              tooltipHeight++;
+              var tooltipText = globalDatasetInfo["classes"]["classes"][j].formattedRanges[i];
+              tooltipTexts.push(tooltipText);
               if (tooltipText.length > tooltipLength)
               {
-                tooltipLength = tooltipText.length
+                tooltipLength = tooltipText.length;
               }
             }
           }
@@ -408,7 +418,7 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
 
         tooltip.append("rect")
           .attr("width", tooltipLength * 7)
-          .attr("height", 18*zValue.split(".").length)
+          .attr("height", 18 * tooltipHeight)
           .attr("fill", "black")
           .style("opacity", 0.65);
 
@@ -464,12 +474,12 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     }
   });
 
-// Set double click handlers for exporting results graphs
-for(let i = 0; i < getNumResults(); i++) {
-  $('#resultsvg-' + i).dblclick(function() {
-    createcanvas("#resultsvg-",i);
-  });
-}
+  // Set double click handlers for exporting results graphs
+  for(let i = 0; i < getNumResults(); i++) {
+    $('#resultsvg-' + i).dblclick(function() {
+      createcanvas("#resultsvg-",i);
+    });
+  }
 
   document.getElementById("loadingEclipse").style.display = "none";
 }
@@ -505,6 +515,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
     varFinalArray.push( representativePatternResults[count] );
   }
 
+  var skipped = 0;
   for (var count = 0; count < varFinalArray.length; count++)
   {
     var xData = varFinalArray[count]["xData"];
@@ -513,212 +524,199 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
-    var title = varFinalArray[count]["title"].substring(0,25);
+    var title = replaceAll(varFinalArray[count]["title"].substring(0,25), "'", "");
 
-    var clusterCount = varFinalArray[count]["count"];
-
-    var xmin = Math.min.apply(Math, xData);
-    var xmax = Math.max.apply(Math, xData);
-    var ymin = Math.min.apply(Math, yData);
-    var ymax = Math.max.apply(Math, yData);
-    var representativeCount = " (" + varFinalArray[count]["count"] + ")";
-
-    var valueRange = [ymin, ymax];
-    var xRange = [xmin, xmax];
-
-    // START HERE
-    var data = [];
-    var arrayLength = xData.length;
-
-    if(errorData != null){
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+    if (title == "-1"){
+      skipped += 1;
     }
-  }
+    else {
+      var newCount = count - skipped;
+      var clusterCount = varFinalArray[count]["count"];
 
-  else{
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
-    }
-  }
-    representativeDygraphsNew["representative-result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
-    //top right bottom left
-    var m = [0, 0, 20, 20]; // margins
-    var width = 250//200// - m[1] - m[3]; // width
-    var height = 105//85// - m[0] - m[2]; // height
+      var xmin = Math.min.apply(Math, xData);
+      var xmax = Math.max.apply(Math, xData);
+      var ymin = Math.min.apply(Math, yData);
+      var ymax = Math.max.apply(Math, yData);
+      var representativeCount = " (" + varFinalArray[count]["count"] + ")";
 
-    // X scale will fit all values from data[] within pixels 0-w
-    var x = d3.scaleLinear().range([20, width-20]);
-    if(getflipY()){
-        var y = d3.scaleLinear().range([20, height-20]);
-    }
-    else{
-        var y = d3.scaleLinear().range([height-20, 20]);
-    }
+      var valueRange = [ymin, ymax];
+      var xRange = [xmin, xmax];
 
-    x.domain([xmin, xmax]);
-    y.domain([ymin, ymax]);
+      // START HERE
+      var data = [];
+      var arrayLength = xData.length;
 
-    var valueline = d3.line()
-    .x(function(d) {
-      return x(d.xval);
-    })
-    .y(function(d) {
-      return y(d.yval);
-    });
+      if(errorData != null){
+        for (var i = 0; i < arrayLength; i++ ) {
+          data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+        }
+      }
 
-    // Add an SVG element with the desired dimensions and margin.
-    var graph = d3.select("#representative-result-" + count.toString())
-          .append("svg")
-          .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
-          .attr("width", width)// + m[1] + m[3])
-          .attr("height", height)// + m[0] + m[2])
-          .attr("id","representativesvg-"+ count.toString())
-          //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+      else{
+        for (var i = 0; i < arrayLength; i++ ) {
+          data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
+        }
+      }
+      representativeDygraphsNew["representative-result-" + newCount.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
+      //top right bottom left
+      var m = [0, 0, 20, 20]; // margins
+      var width = 250//200// - m[1] - m[3]; // width
+      var height = 105//85// - m[0] - m[2]; // height
 
-    var trans = height-20
+      // X scale will fit all values from data[] within pixels 0-w
+      var x = d3.scaleLinear().range([20, width-20]);
+      if(getflipY()){
+          var y = d3.scaleLinear().range([20, height-20]);
+      }
+      else{
+          var y = d3.scaleLinear().range([height-20, 20]);
+      }
 
-    if(getSelectedXAxis()==="timestep")
-    {
+      x.domain([xmin, xmax]);
+      y.domain([ymin, ymax]);
+
+      var valueline = d3.line()
+      .x(function(d) {
+        return x(d.xval);
+      })
+      .y(function(d) {
+        return y(d.yval);
+      });
+
+      // Add an SVG element with the desired dimensions and margin.
+      var graph = d3.select("#representative-result-" + newCount.toString())
+            .append("svg")
+            .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
+            .attr("width", width)// + m[1] + m[3])
+            .attr("height", height)// + m[0] + m[2])
+            .attr("id","representativesvg-"+ newCount.toString())
+            //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+      var trans = height-20
+
+      if(getSelectedXAxis()==="timestep")
+      {
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+                var mapper = {
+                  "0": '0hr',
+                  "1": '6hr',
+                  "2": '12hr',
+                  "3": '18hr',
+                  "4": '24hr',
+                  "5": '36hr',
+                  "6": '48hr',
+                  "7": '4d',
+                  "8": '7d',
+                  "9": '9d',
+                  "10":'14d'
+                }
+                return mapper[ d.toString() ]
+              }));
+      }
+      else if(getSelectedXAxis()==="quarter"){
+  		  graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(3, "s"));
+  	  }
+      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+            graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+      } // for formatting all year x axis ticks except hardcoded real estate dataset
+      else{
+            graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(5, "s"));
+
+      }
+
+      d3.select("#undraggable-representative-result-"+newCount.toString()).append("g")
+
+      d3.select("#undraggable-representative-result-"+newCount.toString()).append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+                             (trans + m[0] + 30) + ")")
+        .attr("id",'ztitle')
+        .attr("type",'representativeResult')
+        .attr('label',title)
+        .style("text-anchor", "middle")
+        .text(title + " (" + clusterCount + " more like this)");
+
+      graph.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+             15 + ")")
+        .attr("font-size", 9)
+        .style("text-anchor", "middle")
+        .text(getSelectedYAxis() + " by " + getSelectedXAxis());
+
+      // Add the Y Axis
+      if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
         graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "0": '0hr',
-                "1": '6hr',
-                "2": '12hr',
-                "3": '18hr',
-                "4": '24hr',
-                "5": '36hr',
-                "6": '48hr',
-                "7": '4d',
-                "8": '7d',
-                "9": '9d',
-                "10":'14d'
-              }
-              return mapper[ d.toString() ]
-            }));
-    }
-    else if(getSelectedXAxis()==="quarter"){
-		  graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(3, "s"));
-	  }
-    else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-    } // for formatting all year x axis ticks except hardcoded real estate dataset
-    else{
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5, "s"));
-
-    }
-
-    d3.select("#undraggable-representative-result-"+count.toString()).append("g")
-
-    d3.select("#undraggable-representative-result-"+count.toString()).append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-                           (trans + m[0] + 30) + ")")
-      .attr("id",'ztitle')
-      .attr("type",'representativeResult')
-      .attr('label',title)
-      .style("text-anchor", "middle")
-      .text(title + " (" + clusterCount + " more like this)");
-
-    graph.append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-           15 + ")")
-      .attr("font-size", 9)
-      .style("text-anchor", "middle")
-      .text(getSelectedYAxis() + " by " + getSelectedXAxis());
-
-    // Add the Y Axis
-    if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
-      graph.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2"));
-    }else{
-      graph.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, "s"));
-    }
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(20,0)")
+          .call(d3.axisLeft(y).ticks(4, ".2"));
+      }else{
+        graph.append("g")
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(20,0)")
+          .call(d3.axisLeft(y).ticks(4, "s"));
+      }
 
 
-    // Add the line by appending an svg:path element with the data line we created above
-    // do this AFTER the axes above so that the line is above the tick-lines
-    if (getScatterplotOption())
-    {
-      graph.selectAll("dot")
-          .data(data)
-          .enter().append("circle")
-          .attr("r", 1)
-          .attr("cx", function(d) { return x(d.xval); })
-          .attr("cy", function(d) { return y(d.yval); })
-          .style("fill", "black");
-    }else if (getBarchartOption()) {
-        graph.selectAll(".bar")
-              .data(data)
-              .enter().append("rect")
-              .attr("class", "bar")
-              .style("fill","steelblue")
-              .attr("x", function(d) { return x(d.xval); })
-              .attr("width", width/data.length)
-              .attr("y", function(d) { return y(d.yval); })
-              .attr("height", function(d) {return height-y(d.yval);});
+      // Add the line by appending an svg:path element with the data line we created above
+      // do this AFTER the axes above so that the line is above the tick-lines
+      if (getScatterplotOption())
+      {
+        graph.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 1)
+            .attr("cx", function(d) { return x(d.xval); })
+            .attr("cy", function(d) { return y(d.yval); })
+            .style("fill", "black");
+      }else if (getBarchartOption()) {
+          graph.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .style("fill","steelblue")
+                .attr("x", function(d) { return x(d.xval); })
+                .attr("width", width/data.length)
+                .attr("y", function(d) { return y(d.yval); })
+                .attr("height", function(d) {return height-y(d.yval);});
 
-    }
-    else
-    {
-      graph.append("path").attr("d", valueline(data))
-          .attr("stroke", "black")
-          .attr("stroke-width", 1)
-          .attr("fill", "none");
-          if(errorData != null){
-            graph.selectAll("dot")
-              .data(data)
-              .enter().append("line")
-              .attr("r", 1)
-              .attr("x1", function(d) {
-                return x(d.xval);
-              })
-              .attr("y1", function(d) {
-                return y(d.yval + (d.errorval / 2));
-              })
-              .attr("x2", function(d) {
-                return x(d.xval);
-              })
-              .attr("y2", function(d) {
-                return y(d.yval - (d.errorval / 2));
-              })
-              .style("stroke", "blue");
-
-            graph.selectAll("dot")
-              .data(data)
-              .enter().append("line")
-              .attr("r", 1)
-              .attr("x1", function(d) {
-                return x(d.xval)-2;
-              })
-              .attr("y1", function(d) {
-                return y(d.yval + (d.errorval / 2));
-              })
-              .attr("x2", function(d) {
-                return x(d.xval)+2;
-              })
-              .attr("y2", function(d) {
-                return y(d.yval + (d.errorval / 2));
-              })
-              .style("stroke", "blue");
+      }
+      else
+      {
+        graph.append("path").attr("d", valueline(data))
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .attr("fill", "none");
+            if(errorData != null){
+              graph.selectAll("dot")
+                .data(data)
+                .enter().append("line")
+                .attr("r", 1)
+                .attr("x1", function(d) {
+                  return x(d.xval);
+                })
+                .attr("y1", function(d) {
+                  return y(d.yval + (d.errorval / 2));
+                })
+                .attr("x2", function(d) {
+                  return x(d.xval);
+                })
+                .attr("y2", function(d) {
+                  return y(d.yval - (d.errorval / 2));
+                })
+                .style("stroke", "blue");
 
               graph.selectAll("dot")
                 .data(data)
@@ -728,17 +726,36 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
                   return x(d.xval)-2;
                 })
                 .attr("y1", function(d) {
-                  return y(d.yval - (d.errorval / 2));
+                  return y(d.yval + (d.errorval / 2));
                 })
                 .attr("x2", function(d) {
                   return x(d.xval)+2;
                 })
                 .attr("y2", function(d) {
-                  return y(d.yval - (d.errorval / 2));
+                  return y(d.yval + (d.errorval / 2));
                 })
                 .style("stroke", "blue");
 
-                  }
+                graph.selectAll("dot")
+                  .data(data)
+                  .enter().append("line")
+                  .attr("r", 1)
+                  .attr("x1", function(d) {
+                    return x(d.xval)-2;
+                  })
+                  .attr("y1", function(d) {
+                    return y(d.yval - (d.errorval / 2));
+                  })
+                  .attr("x2", function(d) {
+                    return x(d.xval)+2;
+                  })
+                  .attr("y2", function(d) {
+                    return y(d.yval - (d.errorval / 2));
+                  })
+                  .style("stroke", "blue");
+
+                    }
+      }
     }
   }
   d3.select('#representativesvg-0')
@@ -751,7 +768,7 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
       createcanvas('#representativesvg-',i);
     });
   }
-    document.getElementById("loadingEclipse2").style.display = "none";
+  document.getElementById("loadingEclipse2").style.display = "none";
 }
 
 function displayOutlierResultsHelper( outlierResults )
@@ -767,6 +784,7 @@ function displayOutlierResultsHelper( outlierResults )
     varFinalArray.push(outlierResults[count]);
   }
 
+  var skipped=0;
   for (var count = 0; count < varFinalArray.length; count++)
   {
     var xData = varFinalArray[count]["xData"];
@@ -775,206 +793,193 @@ function displayOutlierResultsHelper( outlierResults )
     var xlabel = varFinalArray[count]["xType"];
     var ylabel = varFinalArray[count]["yType"];
     var zlabel = varFinalArray[count]["zType"];
-    var title = varFinalArray[count]["title"].substring(0,25);
+    var title = replaceAll(varFinalArray[count]["title"].substring(0,25), "'", "");
 
-    var clusterCount = varFinalArray[count]["count"];
-
-    var xmin = Math.min.apply(Math, xData);
-    var xmax = Math.max.apply(Math, xData);
-    var ymin = Math.min.apply(Math, yData);
-    var ymax = Math.max.apply(Math, yData);
-
-    var data = [];
-    var arrayLength = xData.length;
-
-    if(errorData != null){
-    for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+    if (title == "-1"){
+      skipped += 1;
     }
-  }
-    else{
-      for (var i = 0; i < arrayLength; i++ ) {
-      data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
-    }
-  }
+    else {
+      var newCount = count - skipped;
+      var clusterCount = varFinalArray[count]["count"];
 
-    outlierDygraphsNew["outlier-result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
+      var xmin = Math.min.apply(Math, xData);
+      var xmax = Math.max.apply(Math, xData);
+      var ymin = Math.min.apply(Math, yData);
+      var ymax = Math.max.apply(Math, yData);
 
-    //top right bottom left
-    var m = [0, 0, 20, 20]; // margins
-    var width = 250//200// - m[1] - m[3]; // width
-    var height = 105//85// - m[0] - m[2]; // height
+      var data = [];
+      var arrayLength = xData.length;
 
-    // X scale will fit all values from data[] within pixels 0-w
-    var x = d3.scaleLinear().range([20, width-20]);
-    if(getflipY()){
-        var y = d3.scaleLinear().range([20, height-20]);
-    }
-    else{
-        var y = d3.scaleLinear().range([height-20, 20]);
-    }
+      if(errorData != null){
+        for (var i = 0; i < arrayLength; i++ ) {
+          data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]),"errorval": Number(errorData[i]) } );
+        }
+      }
+      else{
+        for (var i = 0; i < arrayLength; i++ ) {
+          data.push( { "xval": Number(xData[i]), "yval": Number(yData[i]) } );
+        }
+      }
 
-    x.domain([xmin, xmax]);
-    y.domain([ymin, ymax]);
+      outlierDygraphsNew["outlier-result-" + newCount.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zlabel}
 
-    var valueline = d3.line()
-    .x(function(d) {
-      return x(d.xval);
-    })
-    .y(function(d) {
-      return y(d.yval);
-    });
+      //top right bottom left
+      var m = [0, 0, 20, 20]; // margins
+      var width = 250//200// - m[1] - m[3]; // width
+      var height = 105//85// - m[0] - m[2]; // height
 
-    // Add an SVG element with the desired dimensions and margin.
-    var graph = d3.select("#outlier-result-" + count.toString())
-          .append("svg")
-          .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
-          .attr("width", width)// + m[1] + m[3])
-          .attr("height", height)// + m[0] + m[2])
-          .attr("id","outliersvg-" + count.toString());
+      // X scale will fit all values from data[] within pixels 0-w
+      var x = d3.scaleLinear().range([20, width-20]);
+      if(getflipY()){
+          var y = d3.scaleLinear().range([20, height-20]);
+      }
+      else{
+          var y = d3.scaleLinear().range([height-20, 20]);
+      }
 
-          //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+      x.domain([xmin, xmax]);
+      y.domain([ymin, ymax]);
 
-    var trans = height-20
-    // create xAxis
+      var valueline = d3.line()
+      .x(function(d) {
+        return x(d.xval);
+      })
+      .y(function(d) {
+        return y(d.yval);
+      });
 
-    if(getSelectedXAxis()==="timestep")
-    {
+      // Add an SVG element with the desired dimensions and margin.
+      var graph = d3.select("#outlier-result-" + newCount.toString())
+            .append("svg")
+            .attr("viewBox","0 0 "+width.toString()+" "+ (height+15).toString())
+            .attr("width", width)// + m[1] + m[3])
+            .attr("height", height)// + m[0] + m[2])
+            .attr("id","outliersvg-" + newCount.toString());
+
+            //.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+      var trans = height-20
+      // create xAxis
+
+      if(getSelectedXAxis()==="timestep")
+      {
+          graph.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + trans + ")")
+            .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
+                var mapper = {
+                  "0": '0hr',
+                  "1": '6hr',
+                  "2": '12hr',
+                  "3": '18hr',
+                  "4": '24hr',
+                  "5": '36hr',
+                  "6": '48hr',
+                  "7": '4d',
+                  "8": '7d',
+                  "9": '9d',
+                  "10":'14d'
+                }
+                return mapper[ d.toString() ]
+              }));
+      }
+      else if(getSelectedXAxis()==="quarter"){
+            graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(3, "s"));
+      }
+      else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
+            graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
+      } // for formatting all year x axis ticks except hardcoded real estate dataset
+      else{
+            graph.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + trans + ")")
+              .call(d3.axisBottom(x).ticks(5, "s"));
+      }
+
+      //}
+
+
+      // graph.append("g")
+      //   .attr("class", "axis axis--x")
+      //     .attr("transform", "translate(0," + trans + ")")
+      //     .call(d3.axisBottom(x).ticks(5, "s"));
+
+      graph.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+             15 + ")")
+        .attr("font-size", 9)
+        .style("text-anchor", "middle")
+        .text(getSelectedYAxis() + " by " + getSelectedXAxis());
+
+      // Add the Y Axis
+      if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
         graph.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + trans + ")")
-          .call( d3.axisBottom(x).ticks(5).tickFormat(function (d) {
-              var mapper = {
-                "0": '0hr',
-                "1": '6hr',
-                "2": '12hr',
-                "3": '18hr',
-                "4": '24hr',
-                "5": '36hr',
-                "6": '48hr',
-                "7": '4d',
-                "8": '7d',
-                "9": '9d',
-                "10":'14d'
-              }
-              return mapper[ d.toString() ]
-            }));
-    }
-    else if(getSelectedXAxis()==="quarter"){
-		  graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(3, "s"));
-	  }
-    else if(getSelectedXAxis()==="year" || getSelectedXAxis()==="date" || getSelectedXAxis()==="day"){
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
-    } // for formatting all year x axis ticks except hardcoded real estate dataset
-    else{
-          graph.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + trans + ")")
-            .call(d3.axisBottom(x).ticks(5, "s"));
-    }
-
-    //}
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(20,0)")
+          .call(d3.axisLeft(y).ticks(4, ".2"));
+      }else{
+        graph.append("g")
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(20,0)")
+          .call(d3.axisLeft(y).ticks(4, "s"));
+      }
 
 
-    // graph.append("g")
-    //   .attr("class", "axis axis--x")
-    //     .attr("transform", "translate(0," + trans + ")")
-    //     .call(d3.axisBottom(x).ticks(5, "s"));
+      // Add the line by appending an svg:path element with the data line we created above
+      // do this AFTER the axes above so that the line is above the tick-lines
+      if (getScatterplotOption())
+      {
+        graph.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 1)
+            .attr("cx", function(d) { return x(d.xval); })
+            .attr("cy", function(d) { return y(d.yval); })
+            .style("fill", "black");
+      }else if (getBarchartOption()) {
+          graph.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .style("fill","steelblue")
+                .attr("x", function(d) { return x(d.xval); })
+                .attr("width", width/data.length)
+                .attr("y", function(d) { return y(d.yval); })
+                .attr("height", function(d) {return height-y(d.yval);});
 
-    graph.append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-           15 + ")")
-      .attr("font-size", 9)
-      .style("text-anchor", "middle")
-      .text(getSelectedYAxis() + " by " + getSelectedXAxis());
+      }
+      else
+      {
+        graph.append("path").attr("d", valueline(data))
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .attr("fill", "none");
 
-    // Add the Y Axis
-    if ((Math.log10(ymax)<=0)&(Math.log10(ymax)>=-2)){
-      graph.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, ".2"));
-    }else{
-      graph.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(20,0)")
-        .call(d3.axisLeft(y).ticks(4, "s"));
-    }
-
-
-    // Add the line by appending an svg:path element with the data line we created above
-    // do this AFTER the axes above so that the line is above the tick-lines
-    if (getScatterplotOption())
-    {
-      graph.selectAll("dot")
-          .data(data)
-          .enter().append("circle")
-          .attr("r", 1)
-          .attr("cx", function(d) { return x(d.xval); })
-          .attr("cy", function(d) { return y(d.yval); })
-          .style("fill", "black");
-    }else if (getBarchartOption()) {
-        graph.selectAll(".bar")
-              .data(data)
-              .enter().append("rect")
-              .attr("class", "bar")
-              .style("fill","steelblue")
-              .attr("x", function(d) { return x(d.xval); })
-              .attr("width", width/data.length)
-              .attr("y", function(d) { return y(d.yval); })
-              .attr("height", function(d) {return height-y(d.yval);});
-
-    }
-    else
-    {
-      graph.append("path").attr("d", valueline(data))
-          .attr("stroke", "black")
-          .attr("stroke-width", 1)
-          .attr("fill", "none");
-
-          if(errorData != null){
-            graph.selectAll("dot")
-              .data(data)
-              .enter().append("line")
-              .attr("r", 1)
-              .attr("x1", function(d) {
-                return x(d.xval);
-              })
-              .attr("y1", function(d) {
-                return y(d.yval + (d.errorval / 2));
-              })
-              .attr("x2", function(d) {
-                return x(d.xval);
-              })
-              .attr("y2", function(d) {
-                return y(d.yval - (d.errorval / 2));
-              })
-              .style("stroke", "blue");
-
-            graph.selectAll("dot")
-              .data(data)
-              .enter().append("line")
-              .attr("r", 1)
-              .attr("x1", function(d) {
-                return x(d.xval)-2;
-              })
-              .attr("y1", function(d) {
-                return y(d.yval + (d.errorval / 2));
-              })
-              .attr("x2", function(d) {
-                return x(d.xval)+2;
-              })
-              .attr("y2", function(d) {
-                return y(d.yval + (d.errorval / 2));
-              })
-              .style("stroke", "blue");
+            if(errorData != null){
+              graph.selectAll("dot")
+                .data(data)
+                .enter().append("line")
+                .attr("r", 1)
+                .attr("x1", function(d) {
+                  return x(d.xval);
+                })
+                .attr("y1", function(d) {
+                  return y(d.yval + (d.errorval / 2));
+                })
+                .attr("x2", function(d) {
+                  return x(d.xval);
+                })
+                .attr("y2", function(d) {
+                  return y(d.yval - (d.errorval / 2));
+                })
+                .style("stroke", "blue");
 
               graph.selectAll("dot")
                 .data(data)
@@ -984,32 +989,51 @@ function displayOutlierResultsHelper( outlierResults )
                   return x(d.xval)-2;
                 })
                 .attr("y1", function(d) {
-                  return y(d.yval - (d.errorval / 2));
+                  return y(d.yval + (d.errorval / 2));
                 })
                 .attr("x2", function(d) {
                   return x(d.xval)+2;
                 })
                 .attr("y2", function(d) {
-                  return y(d.yval - (d.errorval / 2));
+                  return y(d.yval + (d.errorval / 2));
                 })
                 .style("stroke", "blue");
 
-                  }
+                graph.selectAll("dot")
+                  .data(data)
+                  .enter().append("line")
+                  .attr("r", 1)
+                  .attr("x1", function(d) {
+                    return x(d.xval)-2;
+                  })
+                  .attr("y1", function(d) {
+                    return y(d.yval - (d.errorval / 2));
+                  })
+                  .attr("x2", function(d) {
+                    return x(d.xval)+2;
+                  })
+                  .attr("y2", function(d) {
+                    return y(d.yval - (d.errorval / 2));
+                  })
+                  .style("stroke", "blue");
+
+                    }
+      }
+
+      d3.select("#undraggable-outlier-result-"+newCount.toString()).append("g");
+
+      d3.select("#undraggable-outlier-result-"+newCount.toString()).append("text")
+        .append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+                             (trans + m[0] + 30) + ")")
+        .style("text-anchor", "middle")
+        .attr("id","ztitle")
+        .attr("type","outlierResult")
+        .attr("label",title)
+        .text(title);
+        //.text(xlabel + " (" + clusterCount + ")");
     }
-
-    d3.select("#undraggable-outlier-result-"+count.toString()).append("g");
-
-    d3.select("#undraggable-outlier-result-"+count.toString()).append("text")
-      .append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-                           (trans + m[0] + 30) + ")")
-      .style("text-anchor", "middle")
-      .attr("id","ztitle")
-      .attr("type","outlierResult")
-      .attr("label",title)
-      .text(title);
-      //.text(xlabel + " (" + clusterCount + ")");
   }
   d3.select('#outliersvg-0')
   .attr("data-intro","Outlier results highlight anomalies that look different from most visualizations in the dataset.")
@@ -1369,33 +1393,32 @@ function autoSelect(source,type) {
   }
 }
  
-function parseCSV(data) {
- Papa.parse(data.get("csv"), {
- // preview: 7000,
- complete: function(results){
+function inferDtype(results) {
+
+   console.log(results)
    var textAttributeName = "<tr> <td> (De)select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
    var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
    +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
    var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
    for (i = 0; i < results["data"][0].length; i++) {
-   previewRow = results["data"].map(function(value,index) { return value[i]; })
-   type = getType(previewRow)
-   textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + results["data"][0][i] +
-   "</div></td> </tr>";
-   textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
-   +"</select> </td></tr>";
-   textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
-   +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
-   if(type === "float"){
-        textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
-   }
+     previewRow = results["data"].map(function(value,index) { return value[i]; })
+     type = getType(previewRow)
+     textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + results["data"][0][i] +
+     "</div></td> </tr>";
+     textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + results["data"][0][i] + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + results["data"][0][i] + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
+     +"</select> </td></tr>";
+     textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
+     +"<option value=" + results["data"][0][i] + " selected='selected'>"+type+"</option>"
+     if(type === "float"){
+          textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
+     }
 
-   else if(type === "int"){
-     textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
-     textDataType += "<option value=" + results["data"][0][i] + " float'>float</option>"
+     else if(type === "int"){
+       textDataType += "<option value=" + results["data"][0][i] + " string'>string</option>"
+       textDataType += "<option value=" + results["data"][0][i] + " float'>float</option>"
+     }
+     textDataType += "</select> </td></tr>";
    }
-   textDataType += "</select> </td></tr>";
- }
 
    $('.x-attributes').html(textAttributeName);
    $('.y-attributes').html(textAttributeSelection);
@@ -1407,35 +1430,36 @@ function parseCSV(data) {
    $('#x-autoselect').trigger('click');
    $('#y-autoselect').trigger('click');
    $('#z-autoselect').trigger('click');
- }
-});
+   
+  
 
-function getType(previewRow){
-    var results = [];
-      // console.log("length!: ",previewRow);
-    var nan = isNaN(Number(previewRow[1]));
-    var isfloat = /^\d*(\.|,)\d*$/;
-    var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
-    var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
-    // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
-    // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
-    // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
-    // console.log(previewRow.length);
-    for (var i = 1; i < previewRow.length-3; i++) {
-        if(isNaN(Number(previewRow[i]))){
-            return "string"
+  function getType(previewRow){
+      var results = [];
+        // console.log("length!: ",previewRow);
+      var nan = isNaN(Number(previewRow[1]));
+      var isfloat = /^\d*(\.|,)\d*$/;
+      var commaFloat = /^(\d{0,3}(,)?)+\.\d*$/;
+      var dotFloat = /^(\d{0,3}(\.)?)+,\d*$/;
+      // var date = /^\d{0,4}(\.|\/)\d{0,4}(\.|\/)\d{0,4}$/;
+      // var email = /^[A-za-z0-9._-]*@[A-za-z0-9_-]*\.[A-Za-z0-9.]*$/;
+      // var phone = /^\+\d{2}\/\d{4}\/\d{6}$/g;
+      // console.log(previewRow.length);
+      for (var i = 1; i < previewRow.length-3; i++) {
+        if (previewRow[i][0] == "-"){
+          previewRow[i] = previewRow[i].slice(1,previewRow[i].length)
         }
-        else if (isfloat.test(previewRow[i]) || commaFloat.test(previewRow[i]) || dotFloat.test(previewRow[i])){
-            return "float"
-        }
-    }
-    return "int";
+          if(isNaN(Number(previewRow[i]))){
+              return "string"
+          }
+          else if (isfloat.test(previewRow[i]) || commaFloat.test(previewRow[i]) || dotFloat.test(previewRow[i])){
+              return "float"
+          }
+      }
+      return "int";
 
-      // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
-      // // else if (date.test(str)) return "date";
-
-
-}
+        // else if (isfloat.test(str) || commaFloat.test(str) || dotFloat.test(str)) return "float";
+        // // else if (date.test(str)) return "date";
+  }
 }
 function filterUncheckAttributes(attributeList,selectedAxis){
 
