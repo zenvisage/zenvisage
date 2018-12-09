@@ -37,21 +37,17 @@ public class UploadHandleServlet extends HttpServlet {
                 return;
             }
             this.fileList = upload.parseRequest(request);
-            System.out.println("YES~!");
-            System.out.println(fileList.size());
-            
             for(FileItem item : fileList){
                	if(item.isFormField()){
                   String value = item.getString("UTF-8");
-                    System.out.println("hitest "+value.substring(0,2));
                     //////////// For dataset upload testing purposes only.//////////
                   if(value.substring(0,2).equals("!!")){
-                      System.out.println("entered new code");
-                      File newFile = new File(value.substring(2,value.indexOf(" "))+".csv");
+                      int space_idx = value.indexOf(" ");
+                      File newFile = new File(value.substring(2,space_idx)+".csv");
                       PrintWriter pw = new PrintWriter(newFile);
-                      pw.write(value.substring(value.indexOf(" ")+1));
+                      pw.write(value.substring(space_idx+1));
                       pw.close();
-                      names.add(value.substring(2,value.indexOf(" ")));
+                      names.add(value.substring(2,space_idx));
                       this.names.add(newFile.getAbsolutePath().toString());
                       break;
                   }
