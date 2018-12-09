@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,17 +37,29 @@ public class UploadHandleServlet extends HttpServlet {
                 return;
             }
             this.fileList = upload.parseRequest(request);
+            System.out.println("YES~!");
             System.out.println(fileList.size());
             
             for(FileItem item : fileList){
                	if(item.isFormField()){
-                  String value = item.getString("UTF-8");              
+                  String value = item.getString("UTF-8");
+                    System.out.println("hitest "+value.substring(0,2));
+                  if(value.substring(0,2).equals("!!")){
+                      System.out.println("entered new code");
+                      File newFile = new File(value.substring(2,value.indexOf(" "))+".csv");
+                      PrintWriter pw = new PrintWriter(newFile);
+                      pw.write(value.substring(value.indexOf(" ")+1));
+                      pw.close();
+                      names.add(value.substring(2,value.indexOf(" ")));
+                      this.names.add(newFile.getAbsolutePath().toString());
+                      break;
+                  }
+                    System.out.println("form_field" + value);
                   names.add(value);
                	} else{
             		String filename = item.getName();
             		if(filename==null) continue;
             		//File newFile = new File("../src/main/resources/uploaded_data/"+filename);
-//            		System.out.println(newFile.getCanonicalPath()); 
             		File newFile = new File(filename);
             		item.write(newFile);
                     message = "success";

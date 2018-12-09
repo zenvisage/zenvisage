@@ -191,7 +191,9 @@ app.controller('fileuploadController', [
       username = "public";
     }
     var insertUserTablePair = {'userName':username, 'datasetName':formData.get("datasetName")};
-
+    if(formData.get("dataInputTextbox") != ""){
+        formData.set("datasetName","!!" + formData.get("datasetName") + " "+ formData.get("dataInputTextbox"))
+    }
     $.ajax({ 
         type: 'POST',
         url: '/zv/selectXYZ', 
