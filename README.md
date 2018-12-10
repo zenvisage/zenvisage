@@ -95,6 +95,10 @@ For uploading your datasets, you can follow the instructions explained [here][Da
 
 You can also refer to [wiki][System-Overview] for more details on the system. Some of the Frequently Asked Questions (FAQs) are listed [here][Troubleshooting].
 
+### Testing Instructions
+
+Zenvisage contains a suite of end-to-end test written in Protractor and unit tests written with JUnit for ensuring that the system is working as intended. You can check the latest build status of these test ran using Travis [here](https://travis-ci.org/zenvisage/zenvisage.svg?branch=v3.0)](https://travis-ci.org/zenvisage/zenvisage). Instructions on how to run these tests locally or write your own tests for Zenvisage can be found in [this wiki page](https://github.com/zenvisage/zenvisage/wiki/Testing-in-Zenvisage)
+
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
