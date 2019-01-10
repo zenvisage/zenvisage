@@ -15,6 +15,7 @@
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <link href="css/introjs.css" rel="stylesheet">
+    <link href="css/nouislider.css" rel="stylesheet">
     <!-- <script type="text/javascript" src="secret.json"></script> -->
     </head>
     <div id = "container" style="display:none;">
@@ -262,7 +263,6 @@
         </div>
       </div>
 
-      <!-- TODO(Renxuan): merge dynamic class creation and info -->
       <div class="modal fade" id="dynamic-class" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -335,7 +335,7 @@
 
             </div>
             <div class="modal-footer">
-              <button type="button" id="dynamic-class-submit-button" ng-click="createOrModifyClasses()"class="btn btn-primary">Create classes</button>
+              <button type="button" id="dynamic-class-submit-button" ng-click="createOrModifyClassesOld()"class="btn btn-primary">Create classes</button>
             </div>
 
             <img src="js/lib/Eclipse.svg" id = 'loadingEclipse3' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
@@ -391,7 +391,154 @@
           </div>
         </div>
       </div>
-      
+
+      <!-- TODO(Renxuan): dynamic class slider -->
+      <div class="modal fade" id="dynamic-class-with-slider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" id="dynamic-class-with-slider-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Class creation</h4>
+            </div>
+            <div class="modal-body" id="dynamic-class-creation-with-slider-body">
+              <div class="row">
+                <div class="col-md-3">
+                  classes
+                </div>
+                <div class="col-md-2">
+                  # of class
+                </div>
+                <div class="col-md-7">
+                  slider
+                </div>
+              </div>
+              <div id="class-rows-with-slider">
+                <div class="row" id="dynamic-class-row-with-slider-1">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option1" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[0]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-1">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="dynamic-class-row-with-slider-2">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option2" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[1]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-2">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="dynamic-class-row-with-slider-3">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option3" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[2]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-3">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="dynamic-class-row-with-slider-4">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option4" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[3]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-4">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="dynamic-class-load-slider-button" ng-click="loadSliders()" class="btn">Load Sliders</button>
+
+              <button type="button" id="dynamic-class-with-slider-submit-button" ng-click="createOrModifyClasses()" class="btn btn-primary">Create classes</button>
+            </div>
+
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse4' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
+
+            <div class="modal-header">
+              <h4 class="modal-title">Created classes</h4>
+            </div>
+            <div class="modal-body" id="dynamic-class-with-slider-info-body">
+            <div class="row">
+              <div class="col-md-2 text-left">
+                <b>Class</b>
+              </div>
+              <div class="col-md-2 text-left">
+              </div>
+              <div class="col-md-4 text-left">
+                <b>Ranges {{classes[0].attributes}}</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Count</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Delete</b>
+              </div>
+            </div>
+            <hr>
+              <div ng-repeat="class in classes" >
+                <div class="row">
+                  <div class="col-md-2 text-left">
+                    <input class="form-control" type="text" ng-model="class.class_id">
+                  </div>
+                  <div class="col-md-2 text-left">
+                    <button class="btn btn-info btn-xs" ng-click="renameDynamicClass(class)">rename</button>
+                  </div>
+                  <div class="col-md-4 text-left">
+                    <div ng-repeat="range in class.formattedRanges">
+                      {{range}}
+                    </div>
+                  </div>
+                  <div class="col-md-2 text-left">
+                    {{class.count}}
+                  </div>
+                  <div class="col-md-2">
+                    <button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="deleteClass(classes, $index)">&times;</button>
+                  </div>
+                </div>
+                <hr ng-if="!$last">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="load-dynamic-class-slider-button" class="btn btn-primary" style="display:none;" ng-click="loadDynamicClass()" data-dismiss="modal">Load Dynamic Class</button>
+              <button class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Renxuan TODO ends here -->
 
       <!-- this div contains the left-bar with the data information -->
       <div id="left-bar">
@@ -454,7 +601,9 @@
           </div> -->
 
           <h5 style = 'width:150px'><b>Category</b>
-          <button type="button" id="dynamicClassButton" class="textButton" data-toggle="modal" data-target="#dynamic-class"><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+          <button type="button" id="dynamicClassButton" class="textButton" data-toggle="modal" data-target="#dynamic-class"><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+          <button type="button" id="dynamicClassSliderButton" class="textButton" data-toggle="modal" data-target="#dynamic-class-with-slider"><span data-highlightClass ='leftMargin:300px' data-step="4" class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+          </h5>
 
           <select class="form-control" ng-change="onDataAttributeChange()" ng-model="selectedCategory" ng-options="category for category in categories" id="zAxisSelection">
           </select>
@@ -977,6 +1126,7 @@
     <script src="js/lib/d3-hexbin.v0.2.min.js"></script>
     <script src="js/lib/log4javascript.js"></script>
     <script src="js/lib/jquery-ui.min.js"></script>
+    <script src="js/lib/nouislider.js"></script>
     <script src="js/app.js"></script>
     <script src="js/scatter.js"></script>
     <script src="js/draw.js"></script>

@@ -8,7 +8,9 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     option1: "default",
     option2: "default",
     option3: "default",
-    option4: "default"
+    option4: "default",
+    numOfClass: ['', '', '', ''],
+    startPoints: ['', '', '', '']
   };
 
   $scope.AxisInfo = [];
@@ -17,6 +19,16 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       $scope.data.option2 = '';
       $scope.data.option3 = '';
       $scope.data.option4 = '';
+      $scope.data.numOfClass = ['', '', '', ''];
+      $scope.data.startPoints = ['', '', '', ''];
+      document.getElementById("load-dynamic-class-button").style.display = "none";
+      document.getElementById("load-dynamic-class-slider-button").style.display = "none";
+      for(i = 1; i <= 4; i++) {
+        handlesSlider = document.getElementById("dynamic-class-slider-" + i);
+        if(handlesSlider.noUiSlider) {
+          handlesSlider.noUiSlider.destroy();
+        }
+      }
   });
 
   $scope.$on("loadAxisInfo", function() {
@@ -30,7 +42,127 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
   });
 
   // TODO(Renxuan): merge dynamic class creation and info 
+  $scope.loadSliders = function() {
+    for (i = 1; i <= 4; i++) {
+      key = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
+      numOfClass = $scope.data.numOfClass[i-1]
+      if (numOfClass && key)
+      {
+        $scope.data.numOfClass[i-1] = Math.min(Math.max(2, $scope.data.numOfClass[i-1]), 5);
+        var min = allAxisColumns[key]["min"];
+        var max = allAxisColumns[key]["max"] + 1;
+        gap = (max - min)/numOfClass;
+        startPoints = [];
+        startPoint = min;
+        for (j = 0; j < numOfClass - 1; j++) {
+          startPoint += gap;
+          startPoints.push(startPoint);
+        }
+        $scope.data.startPoints[i - 1] = startPoints;
+
+        id = 'dynamic-class-slider-' + i;
+        handlesSlider = document.getElementById(id);
+        if(handlesSlider.noUiSlider) {
+          handlesSlider.noUiSlider.destroy();
+        }
+
+        noUiSlider.create(handlesSlider, {
+          range: {
+              'min': min,
+              'max': max
+          },
+          // Handles start at ...
+          start: startPoints,
+          connect: false,
+          behaviour: 'tap-drag',
+          tooltips: true
+        });
+      }
+    }
+  }
+
   $scope.createOrModifyClasses = function() {
+    var query = {};
+    var classList = [];
+    for (i = 1; i <= 4; i++) {
+      key = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
+      console.log(key);
+      handlesSlider = document.getElementById("dynamic-class-slider-" + i).noUiSlider;
+
+      if (key && handlesSlider)
+      {
+        var startPoints = [];
+        tmp = handlesSlider.get()
+        if(Array.isArray(tmp)) {
+          for(j = 0; j < tmp.length; j++) {
+            startPoints.push(Number(tmp[j]));
+          }
+        } else {
+          startPoints.push(Number(tmp));
+        }
+        // console.log(startPoints);
+
+        var val = '';
+        var keyval = {};
+        var min = allAxisColumns[key]["min"];
+        var max = allAxisColumns[key]["max"] + 1;
+        if(startPoints[0] != min) {
+          startPoints.unshift(min);
+        }
+        if(startPoints[startPoints.length - 1] != max) {
+          startPoints.push(max);
+        }
+        for(j = 0; j < startPoints.length - 1; j++) {
+          val += '[' + startPoints[j] + ',' + startPoints[j+1] + ']' + ','
+        }
+        // remove last ','
+        val = val.substring(0, val.length - 1);
+        keyval["name"] = key;
+        keyval["values"] = JSON.parse("[" + val + "]");
+        classList.push(keyval);
+      }
+    }
+    query["dataset"] = getSelectedDataset();
+    query["classes"] = classList;
+    document.getElementById("loadingEclipse4").style.display = "inline";
+
+    $http.post('/zv/createClasses', query
+    ).then(
+        function (response) {
+          console.log("success: ", response);
+          query = {};
+          query["dataset"] = getSelectedDataset();
+          $http.post('/zv/getClassInfo', query
+          ).then(
+              function (response) {
+                console.log("success: ", response.data);
+                globalDatasetInfo["classes"] = response.data
+                var formattedRanges = formatRanges(response.data["classes"])
+                for (var i = 0; i < response.data["classes"].length; i++){
+                  response.data["classes"][i].formattedRanges = formattedRanges[i];
+                  $scope.classes = response.data["classes"];
+                }
+                document.getElementById("load-dynamic-class-slider-button").style.display = "inline";
+              },
+              function (response) {
+                console.log("failed to get class info: ", response.data);
+                $("#errorModalText").html(response.data);
+                $("#errorModal").modal();
+              }
+          );
+          document.getElementById("loadingEclipse4").style.display = "none";
+        },
+        function (response) {
+          console.log("failed to create classes", response.data);
+          $("#errorModalText").html(response.data);
+          $("#errorModal").modal();
+          document.getElementById("loadingEclipse4").style.display = "none";
+        }
+    );
+    log.info("Dynamic Class created",JSON.stringify(classList))
+  }
+
+  $scope.createOrModifyClassesOld = function() {
     var query = {};
     var classList = [];
     for (i = 1; i < 5; i++) {
