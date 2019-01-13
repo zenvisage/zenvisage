@@ -264,7 +264,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
   }
 
   $scope.$watch('classes', function(newValue, oldValue) {
-    if(newValue && oldValue && newValue.length > 0 && oldValue.length > 0) {
+    if(newValue && oldValue && newValue.length > 0 && newValue.length == oldValue.length) {
       for(i = 0; i < newValue.length; i++) {
           if (newValue[i] !== oldValue[i]) {
             renameDynamicClass(newValue[i]);
