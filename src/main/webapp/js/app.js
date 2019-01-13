@@ -19,17 +19,64 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       $scope.data.option2 = '';
       $scope.data.option3 = '';
       $scope.data.option4 = '';
-      $scope.data.numOfClass = ['', '', '', ''];
       $scope.data.startPoints = ['', '', '', ''];
       document.getElementById("load-dynamic-class-button").style.display = "none";
       document.getElementById("load-dynamic-class-slider-button").style.display = "none";
-      for(i = 1; i <= 4; i++) {
-        handlesSlider = document.getElementById("dynamic-class-slider-" + i);
-        if(handlesSlider.noUiSlider) {
-          handlesSlider.noUiSlider.destroy();
+  });
+
+  $scope.$watch('data', function(newValue, oldValue) {
+    if (newValue.option1 !== oldValue.option1) {
+      if (newValue.option1 !== 'default' && newValue.option1 !== '') {
+        $scope.data.numOfClass[0] = 2;
+      }
+      else {
+        $scope.data.numOfClass[0] = '';
+        removeSlider(1);
+      }
+    }
+    else if (newValue.option2 !== oldValue.option2) {
+      if (newValue.option2 !== 'default' && newValue.option2 !== '') {
+        $scope.data.numOfClass[1] = 2;
+      }
+      else {
+        $scope.data.numOfClass[1] = '';
+        removeSlider(2);
+      }
+    }
+    else if (newValue.option3 !== oldValue.option3) {
+      if (newValue.option3 !== 'default' && newValue.option3 !== '') {
+        $scope.data.numOfClass[2] = 2;
+      }
+      else {
+        $scope.data.numOfClass[2] = '';
+        removeSlider(3);
+      }
+    }
+    else if (newValue.option4 !== oldValue.option4) {
+      if (newValue.option4 !== 'default' && newValue.option4 !== '') {
+        $scope.data.numOfClass[3] = 2;
+      }
+      else {
+        $scope.data.numOfClass[3] = '';
+        removeSlider(3);
+      }
+    }
+    else if (newValue.numOfClass !== oldValue.numOfClass) {
+      for(i = 0; i < 4; i++) {
+        if (newValue.numOfClass[i] !== oldValue.numOfClass[i]) {
+          loadSlider(i + 1);
+          break;
         }
       }
-  });
+    }
+  }, true);
+
+  function removeSlider(i) {
+    handlesSlider = document.getElementById("dynamic-class-slider-" + i);
+    if(handlesSlider.noUiSlider) {
+      handlesSlider.noUiSlider.destroy();
+    }
+  }
 
   $scope.$on("loadAxisInfo", function() {
     $scope.AxisInfo = [];
@@ -42,42 +89,40 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
   });
 
   // TODO(Renxuan): merge dynamic class creation and info 
-  $scope.loadSliders = function() {
-    for (i = 1; i <= 4; i++) {
-      key = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
-      numOfClass = $scope.data.numOfClass[i-1]
-      if (numOfClass && key)
-      {
-        $scope.data.numOfClass[i-1] = Math.min(Math.max(2, $scope.data.numOfClass[i-1]), 5);
-        var min = allAxisColumns[key]["min"];
-        var max = allAxisColumns[key]["max"] + 1;
-        gap = (max - min)/numOfClass;
-        startPoints = [];
-        startPoint = min;
-        for (j = 0; j < numOfClass - 1; j++) {
-          startPoint += gap;
-          startPoints.push(startPoint);
-        }
-        $scope.data.startPoints[i - 1] = startPoints;
-
-        id = 'dynamic-class-slider-' + i;
-        handlesSlider = document.getElementById(id);
-        if(handlesSlider.noUiSlider) {
-          handlesSlider.noUiSlider.destroy();
-        }
-
-        noUiSlider.create(handlesSlider, {
-          range: {
-              'min': min,
-              'max': max
-          },
-          // Handles start at ...
-          start: startPoints,
-          connect: false,
-          behaviour: 'tap-drag',
-          tooltips: true
-        });
+  function loadSlider(i) {
+    key = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
+    numOfClass = $scope.data.numOfClass[i-1]
+    if (numOfClass && key)
+    {
+      $scope.data.numOfClass[i-1] = Math.min(Math.max(2, $scope.data.numOfClass[i-1]), 5);
+      var min = allAxisColumns[key]["min"];
+      var max = allAxisColumns[key]["max"] + 1;
+      gap = (max - min)/numOfClass;
+      startPoints = [];
+      startPoint = min;
+      for (j = 0; j < numOfClass - 1; j++) {
+        startPoint += gap;
+        startPoints.push(startPoint);
       }
+      $scope.data.startPoints[i - 1] = startPoints;
+
+      id = 'dynamic-class-slider-' + i;
+      handlesSlider = document.getElementById(id);
+      if(handlesSlider.noUiSlider) {
+        handlesSlider.noUiSlider.destroy();
+      }
+
+      noUiSlider.create(handlesSlider, {
+        range: {
+            'min': min,
+            'max': max
+        },
+        // Handles start at ...
+        start: startPoints,
+        connect: false,
+        behaviour: 'tap-drag',
+        tooltips: true
+      });
     }
   }
 
@@ -100,7 +145,6 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         } else {
           startPoints.push(Number(tmp));
         }
-        // console.log(startPoints);
 
         var val = '';
         var keyval = {};
