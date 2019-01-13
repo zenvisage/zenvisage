@@ -131,7 +131,6 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     var classList = [];
     for (i = 1; i <= 4; i++) {
       key = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
-      console.log(key);
       handlesSlider = document.getElementById("dynamic-class-slider-" + i).noUiSlider;
 
       if (key && handlesSlider)
@@ -264,7 +263,18 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     log.info("Dynamic Class created",JSON.stringify(classList))
   }
 
-  $scope.renameDynamicClass = function(classToRename) {
+  $scope.$watch('classes', function(newValue, oldValue) {
+    if(newValue && oldValue && newValue.length > 0 && oldValue.length > 0) {
+      for(i = 0; i < newValue.length; i++) {
+          if (newValue[i] !== oldValue[i]) {
+            renameDynamicClass(newValue[i]);
+            break;
+        }
+      }
+    }
+  }, true);
+
+  function renameDynamicClass(classToRename) {
     $http.post('/zv/renameDynamicClass', "tableName: " + classToRename.name + ", classId: " + classToRename.class_id + ", tag: " + classToRename.tag
     ).then(
         function (response) {
