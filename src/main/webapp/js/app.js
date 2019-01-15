@@ -94,16 +94,18 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     numOfClass = $scope.data.numOfClass[i-1]
     if (numOfClass && key)
     {
-      $scope.data.numOfClass[i-1] = Math.min(Math.max(2, $scope.data.numOfClass[i-1]), 5);
+      numOfClass = Math.min(Math.max(1, $scope.data.numOfClass[i-1]), 5);
+      $scope.data.numOfClass[i-1] = numOfClass;
       var min = allAxisColumns[key]["min"];
       var max = allAxisColumns[key]["max"] + 1;
       gap = (max - min)/numOfClass;
       startPoints = [];
       startPoint = min;
-      for (j = 0; j < numOfClass - 1; j++) {
-        startPoint += gap;
+      for (j = 0; j < numOfClass; j++) {
         startPoints.push(startPoint);
+        startPoint += gap;
       }
+      startPoints.push(max);
       $scope.data.startPoints[i - 1] = startPoints;
 
       id = 'dynamic-class-slider-' + i;
@@ -123,6 +125,11 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         behaviour: 'tap-drag',
         tooltips: true
       });
+
+      origins = handlesSlider.getElementsByClassName('noUi-handle');
+      // change the color of min, max
+      origins[0].classList.add("minmax");
+      origins[origins.length-1].classList.add("minmax");
     }
   }
 
@@ -147,14 +154,6 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
 
         var val = '';
         var keyval = {};
-        var min = allAxisColumns[key]["min"];
-        var max = allAxisColumns[key]["max"] + 1;
-        if(startPoints[0] != min) {
-          startPoints.unshift(min);
-        }
-        if(startPoints[startPoints.length - 1] != max) {
-          startPoints.push(max);
-        }
         for(j = 0; j < startPoints.length - 1; j++) {
           val += '[' + startPoints[j] + ',' + startPoints[j+1] + ']' + ','
         }
@@ -266,7 +265,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
   $scope.$watch('classes', function(newValue, oldValue) {
     if(newValue && oldValue && newValue.length > 0 && newValue.length == oldValue.length) {
       for(i = 0; i < newValue.length; i++) {
-          if (newValue[i] !== oldValue[i]) {
+          if (newValue[i].class_id !== oldValue[i].class_id) {
             renameDynamicClass(newValue[i]);
             break;
         }
