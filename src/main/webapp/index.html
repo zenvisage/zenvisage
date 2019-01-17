@@ -267,8 +267,13 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" id="dynamic-class-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Class creation</h4>
+              <div class="col-md-7">
+                <h4 class="modal-title">Class creation</h4>
+              </div>
+              <div class="col-md-5">
+                <button type="button" class="btn btn-default" ng-click="switchView('slider')" >Switch to Slider View</button>
+                <button type="button" id="dynamic-class-with-slider-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
             </div>
             <div class="modal-body" id="dynamic-class-creation-body">
               <div class="row">
@@ -396,8 +401,13 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" id="dynamic-class-with-slider-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Class creation</h4>
+              <div class="col-md-7">
+                <h4 class="modal-title">Class creation</h4>
+              </div>
+              <div class="col-md-5">
+                <button type="button" class="btn btn-default" ng-click="switchView('text')" >Switch to Text View</button>
+                <button type="button" id="dynamic-class-with-slider-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
             </div>
             <div class="modal-body" id="dynamic-class-creation-with-slider-body">
               <div class="row">
@@ -597,8 +607,7 @@
           </div> -->
 
           <h5 style = 'width:150px'><b>Category</b>
-          <button type="button" id="dynamicClassButton" class="textButton" data-toggle="modal" data-target="#dynamic-class"><span data-highlightClass =' leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
-          <button type="button" id="dynamicClassSliderButton" class="textButton" data-toggle="modal" data-target="#dynamic-class-with-slider"><span data-highlightClass ='leftMargin:300px' data-step="4" class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+          <button type="button" id="dynamicClassSliderButton" class="textButton" data-toggle="modal" data-target="#dynamic-class-with-slider"><span data-highlightClass ='leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
           </h5>
 
           <select class="form-control" ng-change="onDataAttributeChange()" ng-model="selectedCategory" ng-options="category for category in categories" id="zAxisSelection">

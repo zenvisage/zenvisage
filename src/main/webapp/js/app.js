@@ -71,6 +71,17 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     }
   }, true);
 
+  $scope.switchView = function(view) {
+    if(view === "slider") {
+      $('#dynamic-class').modal('hide');
+      $('#dynamic-class-with-slider').modal('show');
+    }
+    else {
+      $('#dynamic-class-with-slider').modal('hide');
+      $('#dynamic-class').modal('show');
+    }
+  }
+
   function removeSlider(i) {
     handlesSlider = document.getElementById("dynamic-class-slider-" + i);
     if(handlesSlider.noUiSlider) {
