@@ -264,8 +264,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .noUi-marker-vertical.noUi-marker-large {
   width: 15px;
 }
+.noUi-row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .noUi-tooltip {
-  display: block;
+  display: none;
   position: absolute;
   border-radius: 1px;
   background: #fff;
@@ -274,6 +278,15 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   text-align: center;
   white-space: nowrap;
 }
+
+.noUi-handle:hover .noUi-tooltip{
+  display:block;
+}
+
+.noUi-handle not(:hover) .noUi-tooltip{
+  display: none;
+}
+
 .noUi-horizontal .noUi-tooltip {
   -webkit-transform: translate(-50%, 0);
   transform: translate(-50%, 0);
