@@ -279,8 +279,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   white-space: nowrap;
 }
 
+.noUi-tooltip-minmax {
+  display: block;
+}
+
 .noUi-handle:hover .noUi-tooltip{
-  display:block;
+  display: block;
 }
 
 .noUi-handle not(:hover) .noUi-tooltip{

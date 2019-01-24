@@ -34,7 +34,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         removeSlider(1);
       }
     }
-    else if (newValue.option2 !== oldValue.option2) {
+    if (newValue.option2 !== oldValue.option2) {
       if (newValue.option2 !== 'default' && newValue.option2 !== '') {
         $scope.data.numOfClass[1] = 2;
       }
@@ -43,7 +43,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         removeSlider(2);
       }
     }
-    else if (newValue.option3 !== oldValue.option3) {
+    if (newValue.option3 !== oldValue.option3) {
       if (newValue.option3 !== 'default' && newValue.option3 !== '') {
         $scope.data.numOfClass[2] = 2;
       }
@@ -52,16 +52,16 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         removeSlider(3);
       }
     }
-    else if (newValue.option4 !== oldValue.option4) {
+    if (newValue.option4 !== oldValue.option4) {
       if (newValue.option4 !== 'default' && newValue.option4 !== '') {
         $scope.data.numOfClass[3] = 2;
       }
       else {
         $scope.data.numOfClass[3] = '';
-        removeSlider(3);
+        removeSlider(4);
       }
     }
-    else if (newValue.numOfClass !== oldValue.numOfClass) {
+    if (newValue.numOfClass !== oldValue.numOfClass && newValue.numOfClass !== '') {
       for(i = 0; i < 4; i++) {
         if (newValue.numOfClass[i] !== oldValue.numOfClass[i]) {
           loadSlider(i + 1);
@@ -141,6 +141,10 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       // change the color of min, max
       origins[0].classList.add("minmax");
       origins[origins.length-1].classList.add("minmax");
+
+      tooltips = handlesSlider.getElementsByClassName('noUi-tooltip');
+      tooltips[0].classList.add("noUi-tooltip-minmax");
+      tooltips[tooltips.length-1].classList.add("noUi-tooltip-minmax");
     }
   }
 
