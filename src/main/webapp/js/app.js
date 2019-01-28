@@ -28,6 +28,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option1 !== oldValue.option1) {
       if (newValue.option1 !== 'default' && newValue.option1 !== '') {
         $scope.data.numOfClass[0] = 2;
+        loadAttributeInfo(newValue.option1);
       }
       else {
         $scope.data.numOfClass[0] = '';
@@ -37,6 +38,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option2 !== oldValue.option2) {
       if (newValue.option2 !== 'default' && newValue.option2 !== '') {
         $scope.data.numOfClass[1] = 2;
+        loadAttributeInfo(newValue.option2);
       }
       else {
         $scope.data.numOfClass[1] = '';
@@ -46,6 +48,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option3 !== oldValue.option3) {
       if (newValue.option3 !== 'default' && newValue.option3 !== '') {
         $scope.data.numOfClass[2] = 2;
+        loadAttributeInfo(newValue.option3);
       }
       else {
         $scope.data.numOfClass[2] = '';
@@ -55,6 +58,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option4 !== oldValue.option4) {
       if (newValue.option4 !== 'default' && newValue.option4 !== '') {
         $scope.data.numOfClass[3] = 2;
+        loadAttributeInfo(newValue.option4);
       }
       else {
         $scope.data.numOfClass[3] = '';
@@ -107,6 +111,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     {
       numOfClass = Math.min(Math.max(1, $scope.data.numOfClass[i-1]), 5);
       $scope.data.numOfClass[i-1] = numOfClass;
+
       var min = allAxisColumns[key]["min"];
       var max = allAxisColumns[key]["max"] + 1;
       gap = (max - min)/numOfClass;
@@ -134,7 +139,12 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         start: startPoints,
         connect: false,
         behaviour: 'tap-drag',
-        tooltips: true
+        tooltips: true/*,
+        format: {
+          to: function (x) {
+            return d3.format(".2g")(x);
+          }, from: Number
+        }*/
       });
 
       origins = handlesSlider.getElementsByClassName('noUi-handle');
@@ -146,6 +156,22 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
       tooltips[0].classList.add("noUi-tooltip-minmax");
       tooltips[tooltips.length-1].classList.add("noUi-tooltip-minmax");
     }
+  }
+
+  // TODO(RENXUAN)
+  function loadAttributeInfo(attr) {
+    dataset = getSelectedDataset();
+    $http.post('/zv/getAttributeInfo', dataset + "," + attr
+    ).then(
+      function (response) {
+        console.log("success: ", response);
+      },
+      function (response) {
+        console.log("failed to load attribute info", response.data);
+        $("#errorModalText").html(response.data);
+        $("#errorModal").modal();
+      }
+    );
   }
 
   $scope.createOrModifyClasses = function() {

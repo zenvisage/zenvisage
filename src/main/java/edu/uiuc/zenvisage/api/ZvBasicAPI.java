@@ -147,7 +147,35 @@ public class ZvBasicAPI {
     		}
     	}
 
+    /*
+	 * /zv/getAttributeInfo
+	 */
+	@RequestMapping(value = "/getAttributeInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<Float> getAttributeInfo(HttpServletRequest request, HttpServletResponse response) {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+			Scanner scanner = new Scanner(request.getInputStream());
+			while (scanner.hasNextLine()) {
+				stringBuilder.append(scanner.nextLine());
+			}
+			String body = stringBuilder.toString();
+			scanner.close();
+			return zvMain.runGetAttributeInfo(body);
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return null;
+	}
 
+	/*
+	 * /zv/createClasses
+	 */
 	@RequestMapping(value = "/createClasses", method = RequestMethod.POST)
 	@ResponseBody
 	public String createClasses(HttpServletRequest request, HttpServletResponse response) {

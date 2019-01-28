@@ -916,6 +916,28 @@ public class SQLQueryExecutor {
 		}
 		st0.close();
 	}
+
+
+	public ArrayList<Float> getAttributeInfo(String query) throws SQLException{
+		/*
+		 * /zv/getAttributeInfo
+		 */
+		String[] tableAndAttr = query.split(",");
+		String table = tableAndAttr[0], attr = tableAndAttr[1];
+
+		String sql = "SELECT " + attr + " FROM " + table + " ORDER BY " + attr;
+		Statement st = c.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+
+		ArrayList<Float> resultList = new ArrayList<Float>();
+		while(rs.next()){
+			resultList.add(rs.getFloat(1));
+		}
+
+		st.close();
+		rs.close();
+		return resultList;
+	}
 	
 	public DynamicClass retrieveDynamicClassDetails(String query) throws SQLException{
 		/*

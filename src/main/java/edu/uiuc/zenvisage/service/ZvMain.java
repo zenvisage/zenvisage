@@ -452,6 +452,11 @@ public class ZvMain {
 		return null;
 	}
 
+	public ArrayList<Float> runGetAttributeInfo(String query) throws IOException, SQLException{
+		ArrayList<Float> retrieved = sqlQueryExecutor.getAttributeInfo(query);
+		return retrieved;
+	}
+
 	public void runCreateClasses(String query) throws IOException, SQLException{
 		System.out.println("Create Dynamic Classes Configuration Query:" + query);
 	    DynamicClass dc = new ObjectMapper().readValue(query, DynamicClass.class);
