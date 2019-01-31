@@ -95,6 +95,9 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if(handlesSlider.noUiSlider) {
       handlesSlider.noUiSlider.destroy();
     }
+    var id = "#legend" + i;
+    // remove the old svg
+    d3.select(id).select("svg").remove();
   }
 
   $scope.$on("loadAxisInfo", function() {
