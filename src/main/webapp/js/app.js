@@ -28,6 +28,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option1 !== oldValue.option1) {
       if (newValue.option1 !== 'default' && newValue.option1 !== '') {
         $scope.data.numOfClass[0] = 2;
+        loadAttributeInfo(1, newValue.option1);
+        loadSlider(1);
       }
       else {
         $scope.data.numOfClass[0] = '';
@@ -37,6 +39,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option2 !== oldValue.option2) {
       if (newValue.option2 !== 'default' && newValue.option2 !== '') {
         $scope.data.numOfClass[1] = 2;
+        loadAttributeInfo(2, newValue.option2);
+        loadSlider(2);
       }
       else {
         $scope.data.numOfClass[1] = '';
@@ -46,6 +50,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option3 !== oldValue.option3) {
       if (newValue.option3 !== 'default' && newValue.option3 !== '') {
         $scope.data.numOfClass[2] = 2;
+        loadAttributeInfo(3, newValue.option3);
+        loadSlider(3);
       }
       else {
         $scope.data.numOfClass[2] = '';
@@ -55,6 +61,8 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if (newValue.option4 !== oldValue.option4) {
       if (newValue.option4 !== 'default' && newValue.option4 !== '') {
         $scope.data.numOfClass[3] = 2;
+        loadAttributeInfo(4, newValue.option4);
+        loadSlider(4);
       }
       else {
         $scope.data.numOfClass[3] = '';
@@ -87,6 +95,9 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     if(handlesSlider.noUiSlider) {
       handlesSlider.noUiSlider.destroy();
     }
+    var id = "#legend" + i;
+    // remove the old svg
+    d3.select(id).select("svg").remove();
   }
 
   $scope.$on("loadAxisInfo", function() {
@@ -99,14 +110,102 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     $scope.classes = [];
   });
 
+  // TODO(RENXUAN)
+  function valueToColor(val) {
+      if(val < 0.1) return "#e6f2ff";
+      if(val < 0.2) return "#b3d9ff";
+      if(val < 0.3) return "#80bfff";
+      if(val < 0.4) return "#4da6ff";
+      if(val < 0.5) return "#1a8cff";
+      if(val < 0.6) return "#0073e6";
+      if(val < 0.7) return "#0059b3";
+      if(val < 0.8) return "#004080";
+      if(val < 0.9) return "#00264d";
+      return "#000d1a";
+    }
+
+  function loadAttributeInfo(i, attr) {
+    dataset = getSelectedDataset();
+    $http.post('/zv/getAttributeInfo', dataset + "," + attr
+    ).then(
+      function (response) {
+        console.log("success: getAttributeInfo");
+        k = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
+        var min = allAxisColumns[k]["min"];
+        var max = allAxisColumns[k]["max"] + 1;
+
+        var w = 315, h = 20;
+        var id = "#legend" + i;
+        // remove the old svg
+        d3.select(id).select("svg").remove();
+        var key = d3.select(id)
+          .append("svg")
+          .attr("width", w)
+          .attr("height", h);
+
+        var legend = key.append("defs")
+          .append("svg:linearGradient")
+          .attr("id", "gradient" + i)
+          .attr("x1", "0%")
+          .attr("y1", "100%")
+          .attr("x2", "100%")
+          .attr("y2", "100%")
+          .attr("spreadMethod", "pad");
+
+        numOfItvs = 12;
+        gap = (max - min) / numOfItvs;
+        startPoints = [], counts = [];
+        curr_max = min + gap;
+        cnt = 0, total = response.data.length;
+
+        for(var j = 0; j < response.data.length; ) {
+          if(response.data[j] < curr_max) {
+            cnt++;
+            j++;
+          } else {
+            startPoints.push(curr_max);
+            counts.push(cnt);
+            curr_max += gap;
+            cnt = 0;
+          }
+        }
+
+        while(startPoints.length < numOfItvs) {
+          startPoints.push(curr_max);
+          counts.push(cnt);
+          curr_max += gap;
+          cnt = 0;
+        }
+
+        for(var j = 0; j < startPoints.length; j++) {
+          legend.append("stop")
+          .attr("offset", (j + 1) / startPoints.length)
+          .attr("stop-color", valueToColor(counts[j]/total))
+          .attr("stop-opacity", 1);
+        }
+
+        key.append("rect")
+          .attr("width", w)
+          .attr("height", h)
+          .style("fill", "url(#gradient" + i + ")");
+      },
+      function (response) {
+        console.log("failed to load attribute info", response.data);
+        $("#errorModalText").html(response.data);
+        $("#errorModal").modal();
+      }
+    );
+  }
+
   // TODO(Renxuan): merge dynamic class creation and info 
   function loadSlider(i) {
     key = $("#dynamic-class-row-with-slider-" + i + "\ > div").find(":selected").text();
     numOfClass = $scope.data.numOfClass[i-1]
     if (numOfClass && key)
     {
-      numOfClass = Math.min(Math.max(1, $scope.data.numOfClass[i-1]), 5);
+      numOfClass = Math.max(1, $scope.data.numOfClass[i-1]);
       $scope.data.numOfClass[i-1] = numOfClass;
+
       var min = allAxisColumns[key]["min"];
       var max = allAxisColumns[key]["max"] + 1;
       gap = (max - min)/numOfClass;
@@ -134,7 +233,12 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         start: startPoints,
         connect: false,
         behaviour: 'tap-drag',
-        tooltips: true
+        tooltips: true/*,
+        format: {
+          to: function (x) {
+            return d3.format(".2g")(x);
+          }, from: Number
+        }*/
       });
 
       origins = handlesSlider.getElementsByClassName('noUi-handle');
