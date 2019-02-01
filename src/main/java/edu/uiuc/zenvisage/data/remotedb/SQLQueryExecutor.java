@@ -838,6 +838,13 @@ public class SQLQueryExecutor {
 		return rs;
 	}
 	
+	public ResultSet getMinMax(String tablename, String header) throws SQLException{
+		this.st = c.createStatement();
+		ResultSet rs = st.executeQuery("select min(" + header + "), max(" + header + ") from "+tablename);
+		return rs;
+	}
+	
+	
 	public long getRowCount(String tablename) throws SQLException{
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery("select count(*) AS exact_count FROM "+tablename);
