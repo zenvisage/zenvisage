@@ -36,6 +36,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.codehaus.jackson.JsonNode;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -679,7 +680,7 @@ public class ZvMain {
 	
 		 System.out.println("After To HashMap");
 		 output = cleanUpDataWithAllZeros(output);
-
+		 
 		 output= SmoothingUtil.applySmoothing(output,args);
 		
 		 // setup result format
@@ -756,8 +757,6 @@ public class ZvMain {
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args); // O(V*P)
 				 normalizedgroups = overlappedDataAndQueries[0];
-//				 System.out.println("Test3");
-//				 System.out.println(Arrays.deepToString(normalizedgroups));
 				 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 				 double[][] overlappedQuery = overlappedDataAndQueries[1];
 				 overlappedQuery= SmoothingUtil.applySmoothing(overlappedQuery,args);
@@ -780,6 +779,8 @@ public class ZvMain {
 
 			 if (args.considerRange) {
 				 double[][][] overlappedDataAndQueries = dataReformatter.getOverlappedData(output, args);
+//				 System.out.println("Test3");
+//				 System.out.println(Arrays.deepToString(normalizedgroups));
 				 normalizedgroups = overlappedDataAndQueries[0];
 				 normalizedgroups= SmoothingUtil.applySmoothing(normalizedgroups,args);
 				 double[][] overlappedQuery = overlappedDataAndQueries[1];
