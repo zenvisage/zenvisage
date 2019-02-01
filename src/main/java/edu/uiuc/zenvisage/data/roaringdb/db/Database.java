@@ -268,13 +268,15 @@ public class Database {
     }
     
     /**
-     * for loading from the postgres database
+     * Load from the postgres database. Update min and max value for each column.
      * @param datafilename
      * @throws IOException
      * @throws SQLException
      * @throws InterruptedException 
      */
     public void loadData3(String tablename) throws IOException, SQLException, InterruptedException{
+    	final long startTime = System.currentTimeMillis();
+
     	readSchemaFromMetaTable(tablename);
     	SQLQueryExecutor sqlQueryExecutor = new SQLQueryExecutor();
 		String[] header=sqlQueryExecutor.getTableAttributesInArray(tablename);
@@ -301,13 +303,28 @@ public class Database {
 			}
 		}
 		
-		/**
-		 * Header map to min, max value
-		 */
+		for(String key : intHeadersIndexMap.keySet()) {
+			rs = sqlQueryExecutor.getMinMax(tablename, key);
+			if(rs.next()){
+				Integer min = Integer.parseInt(rs.getString(1));
+				Integer max = Integer.parseInt(rs.getString(2));
+				sqlQueryExecutor.updateMinMax(name, key, min, max);
+				updataInMemoryMetaDataMinMax(key, min, max);
+			}	
+		}
+		for(String key : floatHeadersIndexMap.keySet()) {
+			rs = sqlQueryExecutor.getMinMax(tablename, key);
+			if(rs.next()){
+				Float min = Float.parseFloat(rs.getString(1));
+				Float max = Float.parseFloat(rs.getString(2));
+				sqlQueryExecutor.updateMinMax(name, key, min, max);
+				updataInMemoryMetaDataMinMax(key, min, max);
+			}	
+		}
+		
+		/*
 		Map<String, Integer[]> intValueMap = new HashMap<>();
 		Map<String, Float[]> floatValueMap = new HashMap<>();
-		
-		
 		
 		while(num>offset){
 			int limit = 20000;
@@ -379,7 +396,7 @@ public class Database {
 			sqlQueryExecutor.updateMinMax(name, curHeader, curValue[0], curValue[1]);
 			updataInMemoryMetaDataMinMax(curHeader, curValue[0], curValue[1]);
 		}
-		
+		*/
 	
     }
     public void updataInMemoryMetaDataMinMax(String curHeader, float min, float max){
