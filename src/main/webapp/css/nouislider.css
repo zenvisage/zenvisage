@@ -281,6 +281,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 
 .noUi-tooltip-minmax {
   display: block;
+  background:rgba(0, 0, 0, 0);
 }
 
 .noUi-handle:hover .noUi-tooltip{
