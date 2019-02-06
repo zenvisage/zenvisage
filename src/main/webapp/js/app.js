@@ -110,19 +110,18 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     $scope.classes = [];
   });
 
-  // TODO(RENXUAN)
   function valueToColor(val) {
-      if(val < 0.1) return "#e6f2ff";
-      if(val < 0.2) return "#b3d9ff";
-      if(val < 0.3) return "#80bfff";
-      if(val < 0.4) return "#4da6ff";
-      if(val < 0.5) return "#1a8cff";
-      if(val < 0.6) return "#0073e6";
-      if(val < 0.7) return "#0059b3";
-      if(val < 0.8) return "#004080";
-      if(val < 0.9) return "#00264d";
-      return "#000d1a";
-    }
+    if(val < 0.1) return "#e6f0ff";
+    if(val < 0.2) return "#b3d1ff";
+    if(val < 0.3) return "#80b3ff";
+    if(val < 0.4) return "#4d94ff";
+    if(val < 0.5) return "#3385ff";
+    if(val < 0.6) return "#1a75ff";
+    if(val < 0.7) return "#0066ff";
+    if(val < 0.8) return "#005ce6";
+    if(val < 0.9) return "#0052cc";
+    return "#0047b3";
+  }
 
   function loadAttributeInfo(i, attr) {
     dataset = getSelectedDataset();
