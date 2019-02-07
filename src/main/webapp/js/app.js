@@ -105,7 +105,9 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
     $scope.AxisInfo.push('');
     allAxisColumns = $.extend(true,globalDatasetInfo["xAxisColumns"],globalDatasetInfo["yAxisColumns"],globalDatasetInfo["zAxisColumns"]);
     for (var key in allAxisColumns) {
-      $scope.AxisInfo.push(key);
+      if (allAxisColumns[key]["dataType"] == "float" || allAxisColumns[key]["dataType"] == "int") {
+        $scope.AxisInfo.push(key);
+      }
     }
     $scope.classes = [];
   });
@@ -297,10 +299,10 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
               function (response) {
                 console.log("success: ", response.data);
                 globalDatasetInfo["classes"] = response.data
-                var formattedRanges = formatRanges(response.data["classes"])
+                var formattedRanges = formatRanges(response.data["classes"]);
+                $scope.classes = response.data["classes"];
                 for (var i = 0; i < response.data["classes"].length; i++){
                   response.data["classes"][i].formattedRanges = formattedRanges[i];
-                  $scope.classes = response.data["classes"];
                 }
                 document.getElementById("load-dynamic-class-slider-button").style.display = "inline";
               },
@@ -355,10 +357,10 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
               function (response) {
                 console.log("success: ", response.data);
                 globalDatasetInfo["classes"] = response.data
-                var formattedRanges = formatRanges(response.data["classes"])
+                var formattedRanges = formatRanges(response.data["classes"]);
+                $scope.classes = response.data["classes"];
                 for (var i = 0; i < response.data["classes"].length; i++){
                   response.data["classes"][i].formattedRanges = formattedRanges[i];
-                  $scope.classes = response.data["classes"];
                 }
                 document.getElementById("load-dynamic-class-button").style.display = "inline";
               },
@@ -1481,9 +1483,9 @@ $scope.inittablelist = function () {
             console.log("success: ", response);
             globalDatasetInfo["classes"] = response.data
             var formattedRanges = formatRanges(response.data["classes"])
+            $scope.classes = response.data["classes"]
             for (var i = 0; i < response.data["classes"].length; i++){
               response.data["classes"][i].formattedRanges = formattedRanges[i]
-              $scope.classes = response.data["classes"]
             }
           },
           function (response) {
