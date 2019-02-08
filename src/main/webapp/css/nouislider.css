@@ -266,7 +266,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .noUi-row {
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-right: 0px;
 }
 .noUi-tooltip {
   display: none;
@@ -281,6 +281,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 
 .noUi-tooltip-minmax {
   display: block;
+  background:rgba(0, 0, 0, 0);
 }
 
 .noUi-handle:hover .noUi-tooltip{
