@@ -52,6 +52,7 @@ public class SQLQueryExecutor {
 	Connection c = null;
 	public VisualComponentList visualComponentList;
 	public Statement st = null;
+	public String lastQuery = "";
 
 	// Initialize connection
 	public SQLQueryExecutor() {
@@ -298,9 +299,6 @@ public class SQLQueryExecutor {
 		
 		//support list of x, y values, general all possible x,y combinations, generate sql
 
-		this.visualComponentList = new VisualComponentList();
-		this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
-
 		//clean Y attributes to use for query
 		//if we have y1<-{'soldprice','listingprice'
 		//this would build agg(soldprice),agg(listingprice),
@@ -341,9 +339,17 @@ public class SQLQueryExecutor {
 				+ " ORDER BY " + x;
 			}
 			
-			System.out.println("Running ZQL Query :"+sql);
-			//excecute sql and put into VisualComponentList
-			executeSQL(sql, z, databaseName, x, yAttributes);
+			// Cache the query. If query equals the last one, then no need to create VisualComponents.
+			if(sql.equals(this.lastQuery)) {
+				System.out.println("Same as Last ZQL Query :"+sql);
+			}else {
+				this.lastQuery = sql;
+				this.visualComponentList = new VisualComponentList();
+				this.visualComponentList.setVisualComponentList(new ArrayList<VisualComponent>());
+				System.out.println("Running ZQL Query :"+sql);
+				executeSQL(sql, z, databaseName, x, yAttributes); //excecute sql and put into VisualComponentList
+			}
+			
 		}
 
 
@@ -352,8 +358,13 @@ public class SQLQueryExecutor {
 	}
 
 	public void executeSQL(String sql, String z, String databaseName, String x, List<String> yAttributes) throws SQLException{
+		final long startTime = System.currentTimeMillis();
+		
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
+		
+		final long sqlTime = System.currentTimeMillis();
+		System.out.println("SQLTIME: " + (sqlTime - startTime) + "ms");
 		
 		System.out.println("Finished SQL Execution");
 
@@ -430,6 +441,9 @@ public class SQLQueryExecutor {
 		rs.close();
 		st.close();
 		System.out.println(this.visualComponentList.getVisualComponentList().size() + " Visual Components Created");
+		
+		final long endTime = System.currentTimeMillis();
+		System.out.println("SQLENHANCEDTIME: " + (endTime - startTime) + "ms");
 	}
 
 
