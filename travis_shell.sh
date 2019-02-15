@@ -18,7 +18,7 @@ bash scripts/run-test.sh
 echo 'goto test dir'
 cd src/main/webapp/test
 echo 'webdriver update'
-webdriver-manager update
+
 echo 'webdriver start'
 webdriver-manager start &
 echo 'Selenium Webdriver Started'
