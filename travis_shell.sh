@@ -19,7 +19,7 @@ bash scripts/run-test.sh
 echo 'goto test dir'
 cd src/main/webapp/test
 echo 'webdriver update'
-##
+###
 #./node_modules/protractor/bin/webdriver-manager update
 echo 'webdriver start'
 webdriver-manager start &
