@@ -6,6 +6,7 @@ package edu.uiuc.zenvisage.service;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 
 import javax.servlet.ServletContext;
@@ -130,6 +132,108 @@ public class ZvMain {
 		sqlQueryExecutor.st.close();
 		ret.close();
 		return size;
+	}
+
+	private List<String> getRecordFromLine(String line) {
+		List<String> values = new ArrayList<String>();
+		try(Scanner rowScanner = new Scanner(line)) {
+			rowScanner.useDelimiter(",");
+			while(rowScanner.hasNext()) {
+				values.add(rowScanner.next());
+			}
+		}
+		return values;
+	}
+
+	private List<List<String>> readCSV(String absoluteFilePath) {
+		List<List<String>> records = new ArrayList<>();
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new File(absoluteFilePath));
+			scanner.useDelimiter(",");
+			while(scanner.hasNext()) {
+				records.add(getRecordFromLine(scanner.nextLine()));
+			}
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		finally {
+			scanner.close();
+		}
+		return records;
+	}
+
+	private Variables parseAttributeType(String datasetName, List<List<String>> records) {
+		List<String> attributes = new ArrayList<>();
+		Map<String, String> attributeType = new HashMap<>();
+		for(int i = 0; i < records.get(0).size(); ++i) {
+			String type = "int";
+			for(int j = 1; j < records.size(); ++j) {
+				String cur = records.get(j).get(i);
+				try {
+					Integer.parseInt(cur);
+				} catch(NumberFormatException e) {
+					try {
+						Float.parseFloat(cur);
+					} catch(NumberFormatException ex) {
+						type = "string";
+						break;
+					}
+					type = "float";
+				}
+			}
+			attributes.add(records.get(0).get(i));
+			attributeType.put(records.get(0).get(i), type);
+		}
+
+		Variables variables = new Variables();
+		variables.setDatasetName(datasetName);
+		List<Variable> vars = new ArrayList();
+		for(String attr : attributes) {
+			Variable v = new Variable();
+			v.setName(attr);
+			String type = attributeType.get(attr);
+			v.setType(type);
+			if(type.equals("int") || type.equals("float")) {
+				v.setSelectedX(true);
+				v.setSelectedY(true);
+				v.setSelectedZ(false);
+			} else {
+				v.setSelectedX(false);
+				v.setSelectedY(false);
+				v.setSelectedZ(true);
+			}
+			vars.add(v);
+		}
+		variables.setList(vars);
+		return variables;
+	}
+
+	public Map<String, ArrayList<String>> datasetUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, CannotPerformOperationException, SQLException, InvalidHashException {
+		UploadHandleServlet uploadHandler = new UploadHandleServlet();
+		System.out.println("Inside file upload");
+		List<String> names = uploadHandler.upload(request, response);
+		String datasetName = names.get(0), absoluteFilePath = names.get(1);
+
+		// read csv, parse and get metadata
+		List<List<String>> records = readCSV(absoluteFilePath);
+		Variables variables = parseAttributeType(datasetName, records);
+
+		insertZenvisageMetatable(variables);
+		uploadDatasettoDB2(names,true);
+
+		if(insertUserTablePair("public",datasetName)) {
+			if(check_split_table_or_not(datasetName, "public")) {
+				System.out.println("Need to split data table");
+				String join_key = get_join_key(datasetName, "public");
+				System.out.println("join key is "+join_key);
+				operations_for_split_table(datasetName, join_key);
+			}
+			return userinfo("public");
+		} else {
+			return null;
+		}
 	}
 
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, SQLException {

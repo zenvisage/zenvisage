@@ -108,6 +108,23 @@ public class ZvBasicAPI {
     		}
     	}
 
+	@RequestMapping(value = "/datasetUpload", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, ArrayList<String>> datasetUpload(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, ArrayList<String>> ret = null;
+		try {
+			ret = zvMain.datasetUpload(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return ret;
+	}
+
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public void fileUpload(HttpServletRequest request, HttpServletResponse response) {
@@ -698,11 +715,11 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException, InterruptedException {
 		if( variables != null) {
-	      zvMain.insertZenvisageMetatable(variables);
-          System.out.println("Variables:"+variables.toString());
-        } else {
-          System.out.println("Variables are null");
-        }
+			zvMain.insertZenvisageMetatable(variables);
+			System.out.println("Variables:"+variables.toString());
+		} else {
+			System.out.println("Variables are null");
+		}
 		return null;
 	}
 
