@@ -423,6 +423,7 @@ app.controller('options-controller', [
     $scope.showOriginalSketch = true;
     $scope.equation =  '';
     $scope.zqltable = false;
+    $scope.scattertable = false;
     $scope.chartSettings = ChartSettings;
     $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
     $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
@@ -1464,6 +1465,26 @@ app.controller('datasetController', [
     })
 
     });
+
+    $( function() {
+        $( "#binning-slider" ).slider({
+            range: "max",
+            min: 0,
+            max: 10,
+            step:0.5,
+            value: 1.0,
+            slide: function( event, ui ) {
+                $( "#binning-amount" ).val( ui.value );
+            }
+        } );
+        $( "#binning-amount" ).val( $( "#binning-slider" ).slider( "value" ) )
+        $( "#binning-slider"  ).slider({
+            change: function( event, ui ) {
+                var binningcoefficient=$( "#binning-slider" ).slider( "value" )
+                $scope.getScatterData("initialize")
+            }
+        })
+    } );
 
     // this init is just for tutorial purpose
     var init = function () {

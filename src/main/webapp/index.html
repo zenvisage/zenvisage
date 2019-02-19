@@ -340,6 +340,18 @@
                   <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
                 </div>
               </div>
+
+              <div class="btn-group">
+                <button type="button" name="options" ng-click="scattertable = !scattertable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Scatter Table</button>
+                <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
+                <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
+                <div ng-show="zqltable">
+                  <div class="btn-group">
+                  </div>
+                </div>
+              </div>
+
+
             </div>
 
             <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
@@ -434,7 +446,26 @@
                 </tfoot>
               </table>
             </div>
-            <div ng-show="!zqltable" class="row" >
+
+
+            <div ng-show="scattertable" ng-controller="zqlTableController">
+              <div class="col-md-3" style="width: 180px;">
+                <div>
+                  <div class="info-text">
+                    <p><nobr>
+                      <label for="amount">Binning Constant:</label>
+                      <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
+                    </nobr></p>
+                    <div id="binning-slider" align = "right" style="width:165px;"></div>
+                  </div>
+                </div>
+              </div>
+              <table id="scatter-table" class="table scatter-table">
+              </table>
+            </div>
+
+
+            <div ng-show="!zqltable && !scattertable" class="row" >
               <div class="col-md-3" style="width: 170px;">
                 <div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">
                 <div class="info-text">

@@ -37,7 +37,7 @@ function formatRanges( classData ){
 //   return formattedRanges
 // }
 
-function displayUserQueryResultsScatterHelper( userQueryResults)
+function displayUserQueryResultsScatterHelper(userQueryResults)
 {
   console.log("test!",userQueryResults);
   clearUserQueryResultsTable();
@@ -125,7 +125,7 @@ function displayUserQueryResultsScatterHelper( userQueryResults)
 
     var hexbin = d3_hexbin.hexbin()
         //.size([width, height])
-        .radius(5);
+        .radius(getBinningCoefficient());
 
     var xAxis = d3.axisBottom(xScale).tickSize(3, -height);
     // var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
@@ -1500,3 +1500,8 @@ canvas.style.display="none";
 
 
 });
+
+function getBinningCoefficient()
+{
+    return $( "#binning-slider" ).slider( "value" );
+}

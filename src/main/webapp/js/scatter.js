@@ -164,7 +164,7 @@ app.factory('ScatterService', function () {
 
             var hexbin = d3_hexbin.hexbin()
                 //.size([width, height])
-                .radius(5);
+                .radius(getBinningCoefficient());
 
 
             var binLengths = hexbin( points ).map(function (elem) {
@@ -493,3 +493,8 @@ $scope.data;
             $rootScope.$digest();
         }, 3000);
     }]);
+
+function getBinningCoefficient()
+{
+    return $( "#binning-slider" ).slider( "value" );
+}
