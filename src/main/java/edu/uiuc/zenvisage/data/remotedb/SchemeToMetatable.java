@@ -191,7 +191,8 @@ public class SchemeToMetatable {
 			createTableSQLBuilder.append(attribute.toLowerCase().replaceAll("-", "")+ " " + typeToPostgresType(type) + ", ");
 		}
 		
-		//Adding dynamic_class column
+		//Adding tag and dynamic_class column
+		createTableSQLBuilder.append("tag"+ " " + "TEXT" + ", ");
 		createTableSQLBuilder.append("dynamic_class"+ " " + "TEXT" + ", ");
 				
 		sql.replace(sql.length()-2, sql.length(), ";");

@@ -168,6 +168,7 @@ public class ZvMain {
 		List<String> attributes = new ArrayList<>();
 		Map<String, String> attributeType = new HashMap<>();
 		for(int i = 0; i < records.get(0).size(); ++i) {
+			String attrName = records.get(0).get(i);
 			String type = "int";
 			for(int j = 1; j < records.size(); ++j) {
 				String cur = records.get(j).get(i);
@@ -183,8 +184,8 @@ public class ZvMain {
 					type = "float";
 				}
 			}
-			attributes.add(records.get(0).get(i));
-			attributeType.put(records.get(0).get(i), type);
+			attributes.add(attrName);
+			attributeType.put(attrName, type);
 		}
 
 		Variables variables = new Variables();

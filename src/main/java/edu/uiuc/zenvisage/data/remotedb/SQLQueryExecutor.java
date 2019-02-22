@@ -817,7 +817,7 @@ public class SQLQueryExecutor {
 		while(rs.next()){
 			ret.append(rs.getString(1)+",");
 		}
-		ret = new StringBuilder(ret.substring(0, ret.length()-("dynamic_class".length()+2)));
+		ret = new StringBuilder(ret.substring(0, ret.length()-("tag".length() + "dynamic_class".length() + 3)));
 		ret.append(")");
 		st.close();
 		rs.close();
