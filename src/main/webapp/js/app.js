@@ -135,7 +135,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         var min = allAxisColumns[k]["min"];
         var max = allAxisColumns[k]["max"] + 1;
 
-        var w = 315, h = 20;
+        var w = 310, h = 20;
         var id = "#legend" + i;
         // remove the old svg
         d3.select(id).select("svg").remove();

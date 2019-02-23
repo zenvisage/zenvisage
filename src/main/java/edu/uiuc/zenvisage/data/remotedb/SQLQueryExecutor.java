@@ -968,8 +968,8 @@ public class SQLQueryExecutor {
 		//get cmu
 		String tableName = query.replaceAll("\"", "").replaceAll("}", "").replaceAll(" ","").split(":")[1];
 		//String sql = "SELECT attribute, ranges FROM zenvisage_dynamic_classes WHERE tablename = " + "'" + tableName + "'";
-		String sql = "SELECT class_id, tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' ORDER BY class_id";
-		
+		String sql = "SELECT class_id, tag, attributes, ranges, count FROM dynamic_class_aggregations WHERE table_name = " + "'" + tableName + "' ORDER BY class_id;";
+
 		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		DynamicClass dc = new DynamicClass();
@@ -1138,11 +1138,11 @@ public class SQLQueryExecutor {
 	
 		Statement st = c.createStatement();
 		
-		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)"
-				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.dynamic_class)\n"
+		String sql = String.format("INSERT INTO dynamic_class_aggregations (table_name,tag,attributes,ranges,count)\n"
+				+ "SELECT d.table_name, d.tag,d.attributes, d.ranges, COUNT(r.tag)\n"
 				+ "FROM dynamic_class_aggregations_temp d LEFT JOIN " + dc.dataset +" r ON r.tag = d.tag\n"
 				+ "GROUP BY d.table_name, d.tag, d.attributes,d.ranges;");
-		
+
 		st.execute(sql);
 		//System.out.print(t);
 
