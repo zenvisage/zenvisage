@@ -443,6 +443,13 @@ app.factory('ScatterService', function () {
             return result;
         };
 
+        factory.getZLabel = function () {
+            var result = [];
+            var polygons = $('.userPolygon');
+
+            return result;
+        };
+
         return factory;
     });
 

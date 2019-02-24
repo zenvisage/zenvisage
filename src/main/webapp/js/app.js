@@ -386,7 +386,6 @@ app.factory('datasetInfo', function() {
 });
 
 app.factory('plotResults', function() {
-
     var plottingService = {};
     plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults,  includeSketch = true )
     {
@@ -973,9 +972,7 @@ app.controller('datasetController', [
     };
 
 
-    $scope.getScatterResultQuery = function getScatterResultQuery(){
-      var polygons = [];
-      var polygon = [];
+    $scope.getScatterResultQuery = function getScatterResultQuery(mode){
       $scope.queries["db"] = getSelectedDataset();
       this.xAxis = getSelectedXAxis();
       this.yAxis = getSelectedYAxis();
@@ -983,19 +980,28 @@ app.controller('datasetController', [
       var name = $(this).find(".name").val()
       var x = $(this).find(".x-val").val()
       var y = $(this).find(".y-val").val()
-      var z = $(this).find(".z-val").val()
-      var constraints = $(this).find(".constraints").val()
-
-      var polypoints = ScatterService.getPolygons()[0]["points"];
-      console.log("get polygons:",ScatterService.getPolygons());
-      for(var i = 0; i < polypoints.length-1; i++){
-        polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
-        // this.dataX.push( xp );
-        // this.dataY.push( yp );
+      var z = $(this).find(".z-val").val();
+      var constraints = $(this).find(".constraints").val();
+      var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+      if (mode == "DragAndDrop"){
+        var zlabel = getCurrentZlabel();
+        input["zlabel"] = zlabel;
       }
-      polygons.push({"points": polygon})
-      console.log("polygon:",polygon);
-      console.log("polygons:",polygons);
+      else{
+          var polygons = [];
+          var polygon = [];
+          var polypoints = ScatterService.getPolygons()[0]["points"];
+          for(var i = 0; i < polypoints.length-1; i++){
+              polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
+              polygons.push({"points": polygon})
+          }
+          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
+      }
+
+      // console.log("get polygons:",ScatterService.getPolygons());
+      //
+      // console.log("polygon:",polygon);
+      // console.log("polygons:",polygons);
       // var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
       //     input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
       //     input["name"] = {"output": true,"sketch": true,"name": "f1"};
@@ -1006,9 +1012,6 @@ app.controller('datasetController', [
       //     input["processe"] = {"variables":["v2"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":[],"axisList2":[]};
       //     $scope.queries['zqlRows'].push(input);
 
-
-      var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
           input["name"] = {"output": false,"sketch": false,"name": "f1"};
           input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
           input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
@@ -1024,15 +1027,9 @@ app.controller('datasetController', [
           input2["viz"] = {"map":{"type":"scatter"}};
           $scope.queries['zqlRows'].push(input2);
 
-
     }
 
-    // $scope.submit = function (){
-    //   console.log("hi!");
-    //     var polygons = ScatterService.getPolygons();
-    //     $rootScope.polygons = polygons;
-    //     $rootScope.$digest();
-    // };
+
 
     $scope.getScatterData = function getScatterData(mode){
       // get datasetchange query
@@ -1040,13 +1037,21 @@ app.controller('datasetController', [
         console.log("initialize");
         $scope.scatterDatasetChangeQuery();
       }
+      else if(mode == "DragAndDrop"){
+          console.log("getsScatterResults");
+          $scope.getScatterResultQuery("DragAndDrop");
+      }
       else{
         console.log("getsScatterResults");
-        $scope.getScatterResultQuery();
+        $scope.getScatterResultQuery("Polygon");
       }
         console.log(JSON.stringify( $scope.queries ));
       //$http.get('/zv/executeScatter', {params: {'query': {"db":"real_estate", "zqlRows":[{"name":{"output":true,"sketch":true,"name":"f1"},"x":{"variable":"x1","attributes":["'year'"]},"y":{"variable":"y1","attributes":["'listingprice'"]},"z":{"variable":"z1","aggregate":true,"attribute":"'state'","values":["*"]}, "viz":{"map": {"type":"scatter"}} }]}}}
-      $http.get('/zv/executeScatter', {params: {'query': JSON.stringify( $scope.queries )}}
+      var apiCall = '/zv/executeScatter';
+      if (mode == "DragAndDrop"){
+          apiCall = '/zv/dragAndDropScatter'
+      }
+        $http.get(apiCall, {params: {'query': JSON.stringify( $scope.queries )}}
       ).then(
           function (response) {
               $scope.data = response.data.outputCharts[0].points;

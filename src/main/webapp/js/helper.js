@@ -6,6 +6,7 @@ var outlierDygraphs = {};
 var userQueryDygraphsNew = {};
 var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
+var currentZLabel = "undefined";
 var globCount = 0;
 
 function formatRanges( classData ){
@@ -87,6 +88,8 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
     var ylabel = userQueryResults[count]["yAttribute"]
     var zAttribute = userQueryResults[count]["zval"]
 
+    userQueryDygraphsNew["result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zAttribute}
+
 
     var hexColorRed = d3.scaleLinear()
         .domain([0, data.length])
@@ -128,7 +131,6 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
         .radius(getBinningCoefficient());
 
     var xAxis = d3.axisBottom(xScale).tickSize(3, -height);
-    // var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
     var yAxis = d3.axisLeft(yScale).ticks(3,"s");
     graph.append("g")
         .attr("class", "y axis")
@@ -174,6 +176,26 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
                 //.ease('sin');
 
               }
+
+    $(".draggable-graph").draggable({
+        opacity: 0.5,
+        appendTo: 'body',
+        start : function(){
+            try{
+                if (typeof($(this)[0].parentElement.querySelector("#ztitle").getAttribute("label"))=='string'){
+                    var textObj = $(this)[0].parentElement.querySelector("#ztitle")
+                    log.info("dragging",textObj.getAttribute('type'), textObj.getAttribute('label'))
+                }
+            }catch(err){;}
+        },
+        helper: function() {
+            return $(this).clone().css({
+                width: $(event.target).width(),
+                'border-style': "solid",
+                'border-width': 1
+            });
+        }
+    });
   }
 
 
@@ -1338,6 +1360,18 @@ $(document).ready(function(){
       uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
     }
   });
+
+  $("#scatter-div").droppable({
+      accept: ".draggable-graph",
+      drop: function( event, ui )
+      {
+          log.info("dropped successfully to canvas")
+          currentZLabel = $(ui.draggable).siblings('text').attr('label')
+          console.log("yesyesyes",$(ui.draggable).siblings('text').attr('label'));
+          uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
+
+      }
+  });
 });
 
 function clearRepresentativeTable()
@@ -1504,4 +1538,9 @@ canvas.style.display="none";
 function getBinningCoefficient()
 {
     return $( "#binning-slider" ).slider( "value" );
+}
+
+function getCurrentZlabel()
+{
+    return currentZLabel;
 }
