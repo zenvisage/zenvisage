@@ -6,7 +6,7 @@ var outlierDygraphs = {};
 var userQueryDygraphsNew = {};
 var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
-var currentZLabel = "undefined";
+var scatterPoints = [];
 var globCount = 0;
 
 function formatRanges( classData ){
@@ -1540,7 +1540,12 @@ function getBinningCoefficient()
     return $( "#binning-slider" ).slider( "value" );
 }
 
-function getCurrentZlabel()
+function setScatterPoints(points)
 {
-    return currentZLabel;
+    scatterPoints = points
+}
+
+function getScatterPoints()
+{
+    return scatterPoints;
 }

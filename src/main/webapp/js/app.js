@@ -984,8 +984,8 @@ app.controller('datasetController', [
       var constraints = $(this).find(".constraints").val();
       var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
       if (mode == "DragAndDrop"){
-        var zlabel = getCurrentZlabel();
-        input["zlabel"] = zlabel;
+        var dragAndDropPoints = getScatterPoints();
+        input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, dragAndDropPoints);
       }
       else{
           var polygons = [];
