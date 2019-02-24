@@ -985,6 +985,12 @@ app.controller('datasetController', [
       var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
       if (mode == "DragAndDrop"){
         var dragAndDropPoints = getScatterPoints();
+        var points = [];
+        for(var i = 0; i < dragAndDropPoints.length; i++){
+            var xp = dragAndDropPoints["xval"];
+            var yp = dragAndDropPoints["yval"];
+            points.push(new Point( xp, yp ));
+        }
         input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, dragAndDropPoints);
       }
       else{
