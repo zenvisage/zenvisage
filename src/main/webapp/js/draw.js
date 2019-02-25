@@ -333,17 +333,13 @@ function plotSketchpadNew( data )//, xType, yType, zType)
 {
     document.getElementById("loadingEclipse").style.display = "inline";
     $("#draw-div").children().remove();
-    $("#scatter-div").children().remove();
     // console.log("test!!!!!!",data);
-    setScatterPoints(data);
     sketchpad = createSketchpad( data )
-
     // angular.element($("#sidebar")).scope().selectedCategory = zType;
     // angular.element($("#sidebar")).scope().selectedXAxis = xType;
     // angular.element($("#sidebar")).scope().selectedYAxis = yType;
 
-    //angular.element($("#sidebar")).scope().getUserQueryResults();
-    angular.element($("#sidebar")).scope().getScatterData("DragAndDrop");
+    angular.element($("#sidebar")).scope().getUserQueryResults();
     refreshZoomEventHandler();
 }
 

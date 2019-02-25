@@ -900,8 +900,8 @@ app.controller('options-controller', [
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
-  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults', 'ScatterService', 'ChartSettings',
-  function($scope, $rootScope, $http, datasetInfo, plotResults, ScatterService, ChartSettings){
+  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults',  'ChartSettings',
+  function($scope, $rootScope, $http, datasetInfo, plotResults,  ChartSettings){
   $scope.queries = {};
 
     $scope.inittablelist = function () {
@@ -931,7 +931,7 @@ app.controller('datasetController', [
           case 'Bar':
               break;
           case 'Scatter':
-              $scope.getScatterData("initialize");
+              $scope.getPolygonQueryResults("initialize");
               // ScatterService.initializeScatterPlot(
               //   $scope.data
               // );
@@ -972,7 +972,7 @@ app.controller('datasetController', [
     };
 
 
-    $scope.getScatterResultQuery = function getScatterResultQuery(mode){
+    $scope.getPolygonQuery = function getPolygonQuery(){
       $scope.queries["db"] = getSelectedDataset();
       this.xAxis = getSelectedXAxis();
       this.yAxis = getSelectedYAxis();
@@ -983,26 +983,15 @@ app.controller('datasetController', [
       var z = $(this).find(".z-val").val();
       var constraints = $(this).find(".constraints").val();
       var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-      if (mode == "DragAndDrop"){
-        var dragAndDropPoints = getScatterPoints();
-        var points = [];
-        for(var i = 0; i < dragAndDropPoints.length; i++){
-            var xp = dragAndDropPoints["xval"];
-            var yp = dragAndDropPoints["yval"];
-            points.push(new Point( xp, yp ));
-        }
-        input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, dragAndDropPoints);
+
+      var polygons = [];
+      var polygon = [];
+      var polypoints = getPolygons()[0]["points"];
+      for(var i = 0; i < polypoints.length-1; i++){
+          polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
+          polygons.push({"points": polygon})
       }
-      else{
-          var polygons = [];
-          var polygon = [];
-          var polypoints = ScatterService.getPolygons()[0]["points"];
-          for(var i = 0; i < polypoints.length-1; i++){
-              polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
-              polygons.push({"points": polygon})
-          }
-          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
-      }
+      input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
 
       // console.log("get polygons:",ScatterService.getPolygons());
       //
@@ -1035,46 +1024,47 @@ app.controller('datasetController', [
 
     }
 
+      $scope.getScatterSimilarity = function getScatterSimilarity()
+      {
 
+          var q = constructScatterQuery(); //goes to query.js
+          var data = q;
+          console.log("calling getScatterSimilarity");
+          $http.post('/zv/scatterSimilarity', data).
+          success(function(response) {
+              console.log("getScatterSimilarity: success");
+              if (response.length == 0){console.log("empty response")}
+              else{plotResults.displayUserQueryResultsScatter(response.data.outputCharts);}
 
-    $scope.getScatterData = function getScatterData(mode){
+          }).
+          error(function(response) {
+              console.log("scatterSimilarity: fail");
+          });
+      }
+
+    $scope.getPolygonQueryResults = function getPolygonQueryResults(mode){
       // get datasetchange query
       if(mode == "initialize"){
-        console.log("initialize");
         $scope.scatterDatasetChangeQuery();
-      }
-      else if(mode == "DragAndDrop"){
-          console.log("getsScatterResults");
-          $scope.getScatterResultQuery("DragAndDrop");
       }
       else{
         console.log("getsScatterResults");
-        $scope.getScatterResultQuery("Polygon");
+        $scope.getPolygonQuery();
       }
         console.log(JSON.stringify( $scope.queries ));
       //$http.get('/zv/executeScatter', {params: {'query': {"db":"real_estate", "zqlRows":[{"name":{"output":true,"sketch":true,"name":"f1"},"x":{"variable":"x1","attributes":["'year'"]},"y":{"variable":"y1","attributes":["'listingprice'"]},"z":{"variable":"z1","aggregate":true,"attribute":"'state'","values":["*"]}, "viz":{"map": {"type":"scatter"}} }]}}}
       var apiCall = '/zv/executeScatter';
-      if (mode == "DragAndDrop"){
-          apiCall = '/zv/dragAndDropScatter'
-      }
-        $http.get(apiCall, {params: {'query': JSON.stringify( $scope.queries )}}
-      ).then(
+      var data = {params: {'query': JSON.stringify( $scope.queries )}}
+        $http.get(apiCall,data).then(
           function (response) {
               $scope.data = response.data.outputCharts[0].points;
-              //$scope.scatterService = ScatterService.drawScatter( $scope.data );
-              //$scope.scatterService = ScatterService.drawScatter( data2 );
               console.log("first element of outputcharts: ", response.data.outputCharts[0].points);
               console.log("all output charts: ", response.data.outputCharts);
-              $scope.scatterService = ScatterService.initializeScatterPlot( $scope.data );
-              $scope.submit;
-              // setTimeout(function () {
-              //     $rootScope.shared = {value:"The input controller just changed this"};
-              //     $rootScope.$digest();
-              // }, 3000);
+              initializeScatterPlot( $scope.data );
               plotResults.displayUserQueryResultsScatter(response.data.outputCharts);
           },
           function (response) {
-          //    console.log("failed: ", escape(response));
+             console.log("failed: ", escape(response));
           }
       );
 
@@ -1492,7 +1482,7 @@ app.controller('datasetController', [
         $( "#binning-slider"  ).slider({
             change: function( event, ui ) {
                 var binningcoefficient=$( "#binning-slider" ).slider( "value" )
-                $scope.getScatterData("initialize")
+                $scope.getPolygonQueryResults("initialize")
             }
         })
     } );

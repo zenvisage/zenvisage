@@ -368,6 +368,28 @@ public class ZvBasicAPI {
 		return outputGraphExecutor;
 	}
 
+
+	@RequestMapping(value = "/scatterSimilarity", method = RequestMethod.POST)
+	@ResponseBody
+	public String scatterSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
+		String type="scatterSimilarity";
+
+		zvMain = new ZvMain();
+		StringBuilder stringBuilder = new StringBuilder();
+		Scanner scanner = new Scanner(request.getInputStream());
+		while (scanner.hasNextLine()) {
+			stringBuilder.append(scanner.nextLine());
+		}
+
+		String body = stringBuilder.toString();
+		System.out.println("realtestestestest"+body);
+		return body;
+
+//		String bodyforlogging=removeSketchPoints(body);
+//		logQueries(type,request,bodyforlogging);
+//		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
+	}
+
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseBody
 	public String test(@RequestParam(value="query") String arg) throws InterruptedException, IOException, SQLException {
