@@ -22,9 +22,11 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class UploadHandleServlet extends HttpServlet {
 	public List<String> names;
 	public List<FileItem> fileList;
+  public String overwrite;
 	
 	public UploadHandleServlet() {
 		this.names = new ArrayList<String> ();
+    this.overwrite = "true";
 	}
 	
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,7 +53,14 @@ public class UploadHandleServlet extends HttpServlet {
                       this.names.add(newFile.getAbsolutePath().toString());
                       break;
                   }
-                    System.out.println("form_field" + value);
+                  String fieldName = item.getFieldName();
+                  if(fieldName.equals("overwrite") || fieldName.equals("Overwrite")) {
+                    if(value.substring(0,1).equals("f") || value.substring(0,1).equals("F")) {
+                      this.overwrite = "false";
+                    }
+                    continue;
+                  }
+                  System.out.println("form_field" + value);
                   names.add(value);
                	} else{
             		String filename = item.getName();
@@ -63,6 +72,7 @@ public class UploadHandleServlet extends HttpServlet {
                     this.names.add(newFile.getAbsolutePath().toString());
                 }
             }
+            this.names.add(this.overwrite);
             System.out.println("names: " + names);
         }catch (Exception e) {
             message= "fail";

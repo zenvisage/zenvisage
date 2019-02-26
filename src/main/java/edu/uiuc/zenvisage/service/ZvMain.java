@@ -213,16 +213,17 @@ public class ZvMain {
 
 	public Map<String, ArrayList<String>> datasetUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InterruptedException, CannotPerformOperationException, SQLException, InvalidHashException {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
-		System.out.println("Inside file upload");
-		List<String> names = uploadHandler.upload(request, response);
+		List<String> namesAndOverwrite = uploadHandler.upload(request, response);
+		List<String> names = namesAndOverwrite.subList(0, 2);
+		boolean overwrite = namesAndOverwrite.get(2).equals("true") ? true : false;
 		String datasetName = names.get(0), absoluteFilePath = names.get(1);
 
 		// read csv, parse and get metadata
 		List<List<String>> records = readCSV(absoluteFilePath);
 		Variables variables = parseAttributeType(datasetName, records);
 
-		insertZenvisageMetatable(variables);
-		uploadDatasettoDB2(names,true);
+		insertZenvisageMetatable(variables, overwrite);
+		uploadDatasettoDB2(names);
 
 		if(insertUserTablePair("public",datasetName)) {
 			if(check_split_table_or_not(datasetName, "public")) {
@@ -241,31 +242,35 @@ public class ZvMain {
 		UploadHandleServlet uploadHandler = new UploadHandleServlet();
 		System.out.println("Inside file upload");
 //		System.out.println(request,response);
-		List<String> names = uploadHandler.upload(request, response);
+		List<String> names = uploadHandler.upload(request, response).subList(0, 2);
+
 		System.out.println(names.get(0));
 		System.out.println(names.get(1));
-		uploadDatasettoDB2(names,true);
-	} 
-	 
-	public void insertZenvisageMetatable(Variables variables) throws SQLException, IOException, InterruptedException{
-		SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
-		String[] ret = schemeToMetatable.schemeFileToMetaSQLStream3(variables);
+		uploadDatasettoDB2(names);
+	}
+
+	public void insertZenvisageMetatable(Variables variables, boolean overwrite) throws SQLException, IOException, InterruptedException{
 		String datasetName = variables.getDatasetName();
-		if(sqlQueryExecutor.isTableExists(datasetName)){
-			sqlQueryExecutor.dropCSV(datasetName);
-		}
-		while(sqlQueryExecutor.isTableExists(datasetName)){
-			Thread.sleep(500); 
-		}
-		if(!sqlQueryExecutor.isTableExists(datasetName)){
-			if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  variables.getDatasetName())){
-				System.out.println("MetaType Data successfully inserted into Postgres");
-			} else {
-				System.out.println("MetaType already exists!");
+		if (overwrite || !sqlQueryExecutor.isTableExists(datasetName)) {
+			SchemeToMetatable schemeToMetatable = new SchemeToMetatable();
+			String[] ret = schemeToMetatable.schemeFileToMetaSQLStream3(variables);
+
+			if(sqlQueryExecutor.isTableExists(datasetName)){
+				sqlQueryExecutor.dropCSV(datasetName);
 			}
-			sqlQueryExecutor.createTable(ret[1]);
-		}else{
-			System.out.println("Table already exists!");
+			while(sqlQueryExecutor.isTableExists(datasetName)){
+				Thread.sleep(500);
+			}
+			if(!sqlQueryExecutor.isTableExists(datasetName)){
+				if(sqlQueryExecutor.insert(ret[0], "zenvisage_metatable", "tablename",  variables.getDatasetName())){
+					System.out.println("MetaType Data successfully inserted into Postgres");
+				} else {
+					System.out.println("MetaType already exists!");
+				}
+				sqlQueryExecutor.createTable(ret[1]);
+			}else{
+				System.out.println("Table already exists!");
+			}
 		}
 	}
 
@@ -323,16 +328,16 @@ public class ZvMain {
 	}
    
    
-   public void uploadDatasettoDB2(List<String> names, boolean overwrite) throws SQLException, IOException, InterruptedException{
+   public void uploadDatasettoDB2(List<String> names) throws SQLException, IOException, InterruptedException{
 		if (names.size() == 2) {
-			/*create csv table*/	
-			if(overwrite){
-				while(!sqlQueryExecutor.isTableExists(names.get(0))){
-					 Thread.sleep(1000); 
-				}
-				sqlQueryExecutor.insertTable2(names.get(0), names.get(1));
-				System.out.println("Successfully uploaded csv: " + names.get(0));
+			/*create csv table*/
+			while(!sqlQueryExecutor.isTableExists(names.get(0))){
+				Thread.sleep(1000);
 			}
+			sqlQueryExecutor.insertTable2(names.get(0), names.get(1));
+			System.out.println("Successfully uploaded csv: " + names.get(0));
+		} else {
+			System.out.println("Failed to uploaded csv: " + names.get(0));
 		}
 	}
 

@@ -715,7 +715,7 @@ public class ZvBasicAPI {
 	@ResponseBody
 	public ResponseEntity<Variables> executeSelectXYZ(@RequestBody Variables variables) throws SQLException, IOException, InterruptedException {
 		if( variables != null) {
-			zvMain.insertZenvisageMetatable(variables);
+			zvMain.insertZenvisageMetatable(variables, true);
 			System.out.println("Variables:"+variables.toString());
 		} else {
 			System.out.println("Variables are null");
