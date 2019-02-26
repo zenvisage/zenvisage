@@ -42,6 +42,7 @@ function formatRanges( classData ){
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
 {
+  // console.log(userQueryResults)
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
@@ -65,6 +66,11 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
     }
     $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
   }
+
+  var tip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
   var skipped=0;
   for (var count = 0; count < userQueryResults.length; count++)
   {
@@ -303,7 +309,25 @@ function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch =
             .attr("r", 1)
             .attr("cx", function(d) { return x(d.xval); })
             .attr("cy", function(d) { return y(d.yval); })
-            .style("fill", "black");
+            .style("fill", "black")
+            .on("mouseover", function(d) {
+              /*
+              console.log(d);
+
+              tip.style("height", "60px");
+              tip.transition().style("opacity", .9);
+              tip.html("test:" + "<br/>" + d.yval)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+                */
+              })
+            .on("mouseout", function(d) {
+              /*
+              tip.transition()
+                .duration(500)
+                .style("opacity", 0);
+                */
+              });
       } else if (getBarchartOption()) {
           graph.selectAll(".bar")
                 .data(data)
