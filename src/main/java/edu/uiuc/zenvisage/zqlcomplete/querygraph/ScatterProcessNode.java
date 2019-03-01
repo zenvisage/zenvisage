@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.PriorityQueue;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -22,7 +23,10 @@ import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
 import edu.uiuc.zenvisage.service.ScatterRep;
+import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.service.distance.Euclidean;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
+import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
 
 public class ScatterProcessNode extends ProcessNode {
@@ -83,6 +87,22 @@ public class ScatterProcessNode extends ProcessNode {
 			AxisVariable newAxisVar = new AxisVariable(axisVar.getAttributeType(), axisVar.getAttribute(), values, scores);
 			// v1, axisvar
 			lookuptable.put(process.getVariables().get(0), newAxisVar);
+		} else if (process.getMethod().equals("DragAndDrop")) {
+			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
+			ZColumn z = vcNode.getVc().getZ();
+			List<String> values = scatterDragAndDropExecution(z);
+			double[] scores = new double[values.size()];
+			for (int i = 0; i < values.size(); i++) {
+				scores[i] = i;
+			}
+			
+			// z1
+		    String axisName = process.getAxisList1().get(0);
+			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
+			// newAxisVar is a subset of axisVar after processing
+			AxisVariable newAxisVar = new AxisVariable(axisVar.getAttributeType(), axisVar.getAttribute(), values, scores);
+			// v1, axisvar
+			lookuptable.put(process.getVariables().get(0), newAxisVar);
 		}
 
 		this.state = State.FINISHED;
@@ -123,6 +143,77 @@ public class ScatterProcessNode extends ProcessNode {
 	
 	private Result scatterSimilarity() {
 		return null;
+	}
+	
+	private List<String> scatterDragAndDropExecution(ZColumn z) {
+		// lookup table the VCNode we depend on
+		// task processor: (eg find the charts that match the scatter data in these rectangles)
+		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
+		Result output = new Result();
+		return computeScatterDragAndDropRank(vcNode.getVcList(), vcNode.getVc(), output);
+	}
+	
+	public static List<String> computeScatterDragAndDropRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		VisualComponent query = null;
+		//Get the dropped graph
+		for(int i = 0; i < vcList.size(); i++) {
+			VisualComponent vc = vcList.get(i);
+			if(vc.getzAttribute().toString().equals(q.getZ().getAttribute())) { //dubious
+				query = vc;
+				break;
+			}
+		}
+		int len = Math.min(vcList.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
+			len = vcList.size();
+		}
+		//Compute euclidean distance
+		PriorityQueue<Chart> pq = new PriorityQueue<Chart>((o1, o2) -> (o1.getDistance() > o2.getDistance() ? 1 : -1));
+		Distance distance = new Euclidean();
+		for (int vc_index = 0; vc_index < len; vc_index++) {
+			Chart chartOutput = new Chart();
+			VisualComponent vc = vcList.get(vc_index);
+			
+			ArrayList<WrapperType> vcX =  vc.getPoints().getXList();
+			ArrayList<WrapperType> vcY =  vc.getPoints().getYList();
+			ArrayList<WrapperType> queryX =  query.getPoints().getXList();
+			ArrayList<WrapperType> queryY =  query.getPoints().getYList();
+			double[] vcVector = new double[vcX.size() * 2];
+			double[] queryVector = new double[queryX.size() * 2];
+			for(int i = 0; i < vcX.size(); i++) {
+				vcVector[i] = (double) vcX.get(i).getNumberValue();
+				vcVector[i + vcX.size()] = (double) vcY.get(i).getNumberValue();
+			}
+			for(int i = 0; i < queryX.size(); i++) {
+				queryVector[i] = (double) queryX.get(i).getNumberValue();
+				queryVector[i + queryX.size()] = (double) queryY.get(i).getNumberValue();
+			}
+			double d = distance.calculateDistance(vcVector, queryVector);
+			
+			chartOutput.setDistance(d);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
+			chartOutput.setyType(vc.getyAttribute());
+			chartOutput.setzType(vc.getZValue().toString());
+			chartOutput.count = vc.getPoints().getXList().size();			
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();		
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
+			}			
+		}
+		//Sort
+		List<String> res = new ArrayList<>();
+		int rank = 0;
+		while(!pq.isEmpty()) {
+			Chart chartOutput = pq.poll();
+			chartOutput.setRank(++rank);
+			finalOutput.outputCharts.add(chartOutput);
+			res.add(chartOutput.getzType());
+		}
+		int xa = 1;
+		return res;
 	}
 	
 	private List<String> scatterRankExecution(List<Polygon> polygons) {

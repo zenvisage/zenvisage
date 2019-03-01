@@ -272,6 +272,23 @@ public class ZvMain {
 		   return "";
 	   }
    }
+   
+   public String dragAndDropScatter(String zqlQuery) throws IOException, InterruptedException{
+	   System.out.println(zqlQuery);
+	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);	   
+	   ZQLParser parser = new ZQLParser();
+	   QueryGraph graph;
+	   try {
+		   graph = parser.processZQLTable(zqlTable);
+		   VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);
+		   String result = new ObjectMapper().writeValueAsString(convertVCListtoScatterOutput(output));
+		   System.out.println("Drag and drop done");
+		   return result;
+	   } catch (SQLException e) {
+		   e.printStackTrace();
+		   return "";
+	   }
+   }
 
    public ScatterOutput convertVCListtoScatterOutput(VisualComponentList vcList) {
 	   ScatterOutput finalOutput = new ScatterOutput();

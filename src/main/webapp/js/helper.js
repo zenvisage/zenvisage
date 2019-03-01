@@ -1337,7 +1337,10 @@ function uploadToSketchpadNew( draggableId, graphType )
       // zType = userQueryDygraphsNew[draggableId]["zType"];
 
   }
-  plotSketchpadNew( draggedGraph )//, xType, yType, zType);
+  plotSketchpadNew( draggedGraph );//, xType, yType, zType);
+  plotSketchpadNewScatter( draggedGraph );
+
+
 }
 
 // function addRow() {

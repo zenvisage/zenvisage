@@ -21,6 +21,11 @@ function constructOutlierTrendQuery()
   return new Query( "Outlier" );
 }
 
+function constructScatterQuery()
+{
+    return new Query( "Scatter" );
+}
+
 function Query( searchMethod ) {
   this.method = searchMethod; // fix to dynamically fetch
   this.databasename = getSelectedDataset();
@@ -36,14 +41,26 @@ function Query( searchMethod ) {
   this.yMin = null; // fix to dynamically fetch. is this field necessary?
   this.error = getSelectedErrorAxis(); // error column use for errorbars
   //  this.error = 'listingpricepersqft'; // error column use for errorbars
-  var points = []
-
-  for(var i = 0; i < sketchpadData.length; i++){
-    var xp = sketchpadData[i]["xval"];
-    var yp = sketchpadData[i]["yval"];
-    points.push(new Point( xp, yp ));
-    this.dataX.push( xp );
-    this.dataY.push( yp );
+  var points = [];
+  if (searchMethod == "Scatter"){
+      var dragAndDropPoints = getScatterPoints();
+      var points = [];
+      for(var i = 0; i < dragAndDropPoints.length; i++){
+          var xp = dragAndDropPoints[i]["xval"];
+          var yp = dragAndDropPoints[i]["yval"];
+          points.push(new Point( xp, yp ));
+          this.dataX.push( xp );
+          this.dataY.push( yp );
+      }
+  }
+  else{
+    for(var i = 0; i < sketchpadData.length; i++){
+      var xp = sketchpadData[i]["xval"];
+      var yp = sketchpadData[i]["yval"];
+      points.push(new Point( xp, yp ));
+      this.dataX.push( xp );
+      this.dataY.push( yp );
+    }
   }
 
   this.sketchPoints = [new SketchPoints(this.xAxis, this.yAxis, points)];
