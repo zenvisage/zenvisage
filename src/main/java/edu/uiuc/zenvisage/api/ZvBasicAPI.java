@@ -358,12 +358,30 @@ public class ZvBasicAPI {
 		return outputGraphExecutor;
 	}
 
-	@RequestMapping(value = "/executeScatter", method = RequestMethod.GET)
+	@RequestMapping(value = "/executeScatter", method = RequestMethod.POST)
 	@ResponseBody
-	public String executeScatter(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
+	public String executeScatter(HttpServletRequest request, HttpServletResponse response) throws IOException, InterruptedException, SQLException {
 		zvMain = new ZvMain();
-		String outputGraphExecutor = zvMain.runScatterQueryGraph(arg);
-		 logQueries("ZQL-Scatter",null,arg);
+		
+		StringBuilder stringBuilder = new StringBuilder();
+	    Scanner scanner = new Scanner(request.getInputStream());
+	    while (scanner.hasNextLine()) {
+	        stringBuilder.append(scanner.nextLine());
+	    }
+	    String body = stringBuilder.toString();
+		
+		String outputGraphExecutor = zvMain.runScatterQueryGraph(body);
+		 logQueries("ZQL-Scatter",null,body);
+		// TODO change to graph executor
+		return outputGraphExecutor;
+	}
+	
+	@RequestMapping(value = "/dragAndDropScatter", method = RequestMethod.POST)
+	@ResponseBody
+	public String dragAndDropScatter(@RequestParam(value="query")  String arg) throws IOException, InterruptedException, SQLException {
+		zvMain = new ZvMain();
+		String outputGraphExecutor = zvMain.dragAndDropScatter(arg);
+		 logQueries("ZQL-dragAndDropScatter",null,arg);
 		// TODO change to graph executor
 		return outputGraphExecutor;
 	}
