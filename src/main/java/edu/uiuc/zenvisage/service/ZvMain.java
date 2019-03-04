@@ -273,9 +273,15 @@ public class ZvMain {
 	   }
    }
    
-   public String dragAndDropScatter(String zqlQuery) throws IOException, InterruptedException{
+   public String scatterSimilarity(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
-	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);	   
+	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = null;
+	   try {
+		   zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);	   
+	   } catch (Exception e) {
+		   e.printStackTrace();
+	   }
+	  
 	   ZQLParser parser = new ZQLParser();
 	   QueryGraph graph;
 	   try {
