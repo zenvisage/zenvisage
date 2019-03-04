@@ -1037,13 +1037,14 @@ app.controller('datasetController', [
           var constraints = $(this).find(".constraints").val();
           var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
 
-
+          var sketchpointWrapper = [];
           var sketchpoints = [];
           var dragAndDropPoints = getScatterPoints();
           for(var i = 0; i < dragAndDropPoints.length-1; i++){
               sketchpoints.push(new Point( dragAndDropPoints[i]["xval"],dragAndDropPoints[i]["yval"] ));
+              sketchpointWrapper.push({"points":sketchpoints})
           }
-          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, sketchpoints);
+          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, sketchpointWrapper);
           input["name"] = {"output": false,"sketch": false,"name": "f1"};
           input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
           input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
