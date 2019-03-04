@@ -1026,9 +1026,41 @@ app.controller('datasetController', [
 
       $scope.getScatterSimilarity = function getScatterSimilarity()
       {
+          $scope.queries["db"] = getSelectedDataset();
+          this.xAxis = getSelectedXAxis();
+          this.yAxis = getSelectedYAxis();
+          $scope.queries['zqlRows'] = [];
+          var name = $(this).find(".name").val()
+          var x = $(this).find(".x-val").val()
+          var y = $(this).find(".y-val").val()
+          var z = $(this).find(".z-val").val();
+          var constraints = $(this).find(".constraints").val();
+          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
 
-          var q = constructScatterQuery(); //goes to query.js
-          var data = q;
+
+          var sketchpoints = [];
+          var dragAndDropPoints = getScatterPoints();
+          for(var i = 0; i < dragAndDropPoints.length-1; i++){
+              sketchpoints.push(new Point( dragAndDropPoints[i]["xval"],dragAndDropPoints[i]["yval"] ));
+          }
+          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, sketchpoints);
+          input["name"] = {"output": false,"sketch": false,"name": "f1"};
+          input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+          input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
+          input["viz"] = {"map":{"type":"scatter"}};
+          input["processe"] = {"variables":["v1"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":["z1"],"axisList2":[]};
+          $scope.queries['zqlRows'].push(input);
+          var input2 = { "name": name, "x": x, "y": y, "z": z};
+          input2["name"] = {"output": true,"sketch": false,"name": "f2"};
+          input2["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+          input2["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+          input2["z"] = { "values": [], "variable" : "v1", "aggregate" : false};
+          input2["viz"] = {"map":{"type":"scatter"}};
+          $scope.queries['zqlRows'].push(input2);
+
+          console.log(JSON.stringify( $scope.queries ));
+          var data = $scope.queries;
           console.log("calling getScatterSimilarity");
           $http.post('/zv/scatterSimilarity', data).
           success(function(response) {
@@ -1040,6 +1072,22 @@ app.controller('datasetController', [
           error(function(response) {
               console.log("scatterSimilarity: fail");
           });
+
+
+          // similarity workflow
+          // var q = constructScatterQuery(); //goes to query.js
+          // var data = q;
+          // console.log("calling getScatterSimilarity");
+          // $http.post('/zv/scatterSimilarity', data).
+          // success(function(response) {
+          //     console.log("getScatterSimilarity: success");
+          //     if (response.length == 0){console.log("empty response")}
+          //     else{plotResults.displayUserQueryResultsScatter(response.data.outputCharts);}
+          //
+          // }).
+          // error(function(response) {
+          //     console.log("scatterSimilarity: fail");
+          // });
       }
 
     $scope.getPolygonQueryResults = function getPolygonQueryResults(mode){
