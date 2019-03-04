@@ -255,7 +255,6 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
             console.log("success: ", response);
             plotResults.displayUserQueryResults(response.data.outputCharts, false);
         },
-        
         function (response) {
             console.log("failed: ", escape(response));
             document.getElementById("loadingEclipse").style.display = "none";
@@ -1044,14 +1043,14 @@ app.controller('datasetController', [
           for(var i = 0; i < dragAndDropPoints.length-1; i++){
               sketchpoints.push(new Point( dragAndDropPoints[i]["xval"],dragAndDropPoints[i]["yval"] ));
           }
-          sketchpointWrapper.push({"points":sketchpoints});
+          sketchpointWrapper.push({"points":sketchpoints})
           input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, sketchpointWrapper);
           input["name"] = {"output": false,"sketch": false,"name": "f1"};
           input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
           input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
           input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
           input["viz"] = {"map":{"type":"scatter"}};
-          input["processe"] = {"variables":["v1"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":["z1"],"axisList2":[]};
+          input["processe"] = {"variables":["v1"],"method":"Scatter","count":"50","metric":"argmin","arguments":["f1"],"axisList1":["z1"],"axisList2":[]};
           $scope.queries['zqlRows'].push(input);
           var input2 = { "name": name, "x": x, "y": y, "z": z};
           input2["name"] = {"output": true,"sketch": false,"name": "f2"};
