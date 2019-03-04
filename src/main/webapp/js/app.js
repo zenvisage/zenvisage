@@ -983,19 +983,13 @@ app.controller('datasetController', [
       var z = $(this).find(".z-val").val();
       var constraints = $(this).find(".constraints").val();
       var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-      if (mode == "DragAndDrop"){
-        var dragAndDropPoints = getScatterPoints();
-        input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, dragAndDropPoints);
-      }
-      else{
-          var polygons = [];
-          var polygon = [];
-          var polypoints = ScatterService.getPolygons()[0]["points"];
-          for(var i = 0; i < polypoints.length-1; i++){
-              polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
-              polygons.push({"points": polygon})
-          }
-          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
+
+      var polygons = [];
+      var polygon = [];
+      var polypoints = getPolygons()[0]["points"];
+      for(var i = 0; i < polypoints.length-1; i++){
+          polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
+          polygons.push({"points": polygon})
       }
       input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
 
