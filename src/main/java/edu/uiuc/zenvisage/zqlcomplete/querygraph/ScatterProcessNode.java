@@ -14,6 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uiuc.zenvisage.data.remotedb.Points;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponent;
 import edu.uiuc.zenvisage.data.remotedb.VisualComponentList;
 import edu.uiuc.zenvisage.data.remotedb.WrapperType;
@@ -153,6 +154,88 @@ public class ScatterProcessNode extends ProcessNode {
 		return computeScatterDragAndDropRank(vcNode.getVcList(), vcNode.getVc(), output, points);
 	}
 	
+	// todo(renxuan): normalization and binning
+	private List<Point> normalize(List<Point> points, float minX, float maxX, float minY, float maxY) {
+		List<Point> ret = new ArrayList<Point>();
+		float deltaX = maxX - minX, deltaY = maxY - minY;
+		for(Point p : points) {
+			// normalize to 0-1
+			float x = (p.getXval() - minX) / deltaX;
+			float y = (p.getXval() - minX) / deltaY;
+			ret.add(new Point(x, y));
+		}
+		return ret;
+	}
+
+	private Points normalize(Points points) {
+		float minX = Float.MAX_VALUE, maxX = Float.MIN_VALUE, minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+
+		for(WrapperType p : points.getXList()) {
+			float x = p.getNumberValue();
+			if(x > maxX) maxX = x;
+			if(x < minX) minX = x;
+		}
+		for(WrapperType p : points.getYList()) {
+			float y = p.getNumberValue();
+			if(y > maxY) maxY = y;
+			if(y < minY) minY = y;
+		}
+
+		float deltaX = maxX - minX, deltaY = maxY - minY;
+
+		ArrayList<WrapperType> xList = new ArrayList<>(), yList = new ArrayList<>();
+		for(WrapperType p : points.getXList()) {
+			float x = p.getNumberValue();
+			xList.add(new WrapperType((x - minX) / deltaX));
+		}
+		for(WrapperType p : points.getYList()) {
+			float y = p.getNumberValue();
+			yList.add(new WrapperType((y - minY) / deltaY));
+		}
+
+		return new Points(xList, yList);
+	}
+
+	private float[][] binning(List<Point> points, int xBins, int yBins) {
+		if(xBins <= 0 || yBins <= 0) return null;
+
+		float[][] ret = new float[yBins][xBins];
+		int total = 0;
+		for(Point p : points) {
+			++total;
+			int yLoc = Math.min((int)(p.getYval() * yBins), yBins - 1),
+				xLoc = Math.min((int)(p.getXval() * xBins), xBins - 1);
+			ret[yLoc][xLoc] += 1;
+		}
+		for(int i = 0; i < yBins; ++i) {
+			for(int j = 0; j < xBins; ++j) {
+				ret[i][j] /= total;
+			}
+		}
+		return ret;
+	}
+
+	private float[][] binning(Points points, int xBins, int yBins) {
+		if(xBins <= 0 || yBins <= 0) return null;
+		float[][] ret = new float[yBins][xBins];
+
+		ArrayList<WrapperType> xList = points.getXList(), yList = points.getYList();
+		int total = xList.size();
+		for(int i = 0; i < total; ++i) {
+			float x = xList.get(i).getNumberValue(), y = yList.get(i).getNumberValue();
+			int yLoc = Math.min((int)(y * yBins), yBins - 1),
+				xLoc = Math.min((int)(x * xBins), xBins - 1);
+			ret[yLoc][xLoc] += 1;
+		}
+		for(int i = 0; i < yBins; ++i) {
+			for(int j = 0; j < xBins; ++j) {
+				ret[i][j] /= total;
+			}
+		}
+		return ret;
+	}
+
+
 	public static List<String> computeScatterDragAndDropRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Point> points) {
 		List<VisualComponent> vcList = input.getVisualComponentList();
 		int len = Math.min(vcList.size(), q.getNumOfResults());
