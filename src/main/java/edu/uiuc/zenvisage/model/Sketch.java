@@ -17,6 +17,9 @@ public class Sketch {
 	private int minY;	
 	private int maxY;
 	private List<Polygon> polygons = new ArrayList<Polygon>();
+	private List<float[][]> multiLevelGrids = new ArrayList<>();
+	private List<Float> multiLevelWeights = new ArrayList<>();
+	private int power = 1;
 	
 	public ArrayList<Point> getPoints() {
 		return points;
@@ -83,8 +86,29 @@ public class Sketch {
 	}
 	public void setPolygons(List<Polygon> polygons) {
 		this.polygons = polygons;
-	} 
-	
-	
-
+	}
+	public List<float[][]> getMultiLevelGrids() {
+		return multiLevelGrids;
+	}
+	public void insertToMultiLevelGrids(float[][] grids) {
+		multiLevelGrids.add(grids);
+	}
+	public void clearMultiLevelGrids() {
+		multiLevelGrids = new ArrayList<>();
+	}
+	public List<Float> getMultiLevelWeights() {
+		return multiLevelWeights;
+	}
+	public void insertToMultiLevelWeights(float weight) {
+		multiLevelWeights.add(weight);
+	}
+	public void clearMultiLevelWeights() {
+		multiLevelWeights = new ArrayList<>();
+	}
+	public int getPower() {
+		return power;
+	}
+	public void setPower(int p) {
+		power = p;
+	}
 }

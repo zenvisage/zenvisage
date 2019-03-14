@@ -23,6 +23,7 @@ import edu.uiuc.zenvisage.model.Point;
 import edu.uiuc.zenvisage.model.Result;
 import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
+import edu.uiuc.zenvisage.model.Sketch;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.service.distance.Distance;
 import edu.uiuc.zenvisage.service.distance.Euclidean;
@@ -151,10 +152,29 @@ public class ScatterProcessNode extends ProcessNode {
 		// task processor: (eg find the charts that match the scatter data in these rectangles)
 		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 		Result output = new Result();
-		return computeScatterDragAndDropRank(vcNode.getVcList(), vcNode.getVc(), output, points);
+		// TODO(renxuan): do preprocessing here!
+		VisualComponentList input = vcNode.getVcList();
+		VisualComponentQuery q = vcNode.getVc();
+		preprocess(input, q);
+		return computeScatterDragAndDropRank(input, q, output, points);
+	}
+
+	// TODO(renxuan): tune the parameters here!
+	private void preprocess(VisualComponentList input, VisualComponentQuery q) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		Sketch sketch = q.getSketch();
+		List<float[][]> vcqueryGrids = new ArrayList<>();
+		// just use one level, 5*5 grids for now
+		for(int l = 5; l < 10; l *= 2) {
+			sketch.insertToMultiLevelGrids(binning(normalize(
+				sketch.getPoints(), sketch.getMinX(), sketch.getMaxX(), sketch.getMinY(), sketch.getMaxY()), l, l));
+			sketch.insertToMultiLevelWeights(1);
+			for(VisualComponent vc : vcList) {
+				vc.insertToMultiLevelGrids(binning(normalize(vc.getPoints()), l, l));
+			}
+		}
 	}
 	
-	// todo(renxuan): normalization and binning
 	private List<Point> normalize(List<Point> points, float minX, float maxX, float minY, float maxY) {
 		List<Point> ret = new ArrayList<Point>();
 		float deltaX = maxX - minX, deltaY = maxY - minY;
@@ -235,6 +255,66 @@ public class ScatterProcessNode extends ProcessNode {
 		return ret;
 	}
 
+	private static double chartSimilarity(List<float[][]> multiLevelMatrices1, List<float[][]> multiLevelMatrices2, List<Float> multilevelWeights, int power) {
+		if(multiLevelMatrices1.size() != multiLevelMatrices2.size() || multiLevelMatrices1.size() != multilevelWeights.size()) {
+			System.out.println("Matrices level doesn't match!");
+			return Double.MAX_VALUE;
+		}
+		int level = multilevelWeights.size();
+		double distance = 0;
+		for(int l = 0; l < level; ++l) {
+			float[][] matrix1 = multiLevelMatrices1.get(l), matrix2 = multiLevelMatrices2.get(l);
+			float weight = multilevelWeights.get(l);
+			if(matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length) {
+				System.out.println("Matrices size doesn't match!");
+				return Double.MAX_VALUE;
+			}
+			for(int i = 0; i < matrix1.length; ++i) {
+				for(int j = 0; j < matrix1[0].length; ++j) {
+					distance += weight * Math.pow(Math.abs(matrix1[i][j] - matrix2[i][j]), power);
+				}
+			}
+		}
+		return distance;
+	}
+
+	public static List<String> computeScatterDragAndDropRankForGrids(VisualComponentList input, VisualComponentQuery q, Result finalOutput) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		int len = Math.min(vcList.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
+			len = vcList.size();
+		}
+		
+		PriorityQueue<Chart> pq = new PriorityQueue<Chart>((o1, o2) -> (o1.getDistance() > o2.getDistance() ? 1 : -1));
+		for (int vc_index = 0; vc_index < len; vc_index++) {
+			Chart chartOutput = new Chart();
+			VisualComponent vc = vcList.get(vc_index);
+
+			double d = chartSimilarity(q.getSketch().getMultiLevelGrids(), vc.getMultiLevelGrids(), q.getSketch().getMultiLevelWeights(), q.getSketch().getPower());			
+			chartOutput.setDistance(d);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
+			chartOutput.setyType(vc.getyAttribute());
+			chartOutput.setzType(vc.getZValue().toString());
+			chartOutput.count = vc.getPoints().getXList().size();			
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();		
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
+			}			
+		}
+		//Sort
+		List<String> res = new ArrayList<>();
+		int rank = 0;
+		while(!pq.isEmpty()) {
+			Chart chartOutput = pq.poll();
+			chartOutput.setRank(++rank);
+			finalOutput.outputCharts.add(chartOutput);
+			res.add(chartOutput.getzType());
+		}
+		int xa = 1;
+		return res;
+	}
 
 	public static List<String> computeScatterDragAndDropRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Point> points) {
 		List<VisualComponent> vcList = input.getVisualComponentList();
