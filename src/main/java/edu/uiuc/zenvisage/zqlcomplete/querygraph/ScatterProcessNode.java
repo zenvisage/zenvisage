@@ -25,10 +25,12 @@ import edu.uiuc.zenvisage.model.ScatterPlotQuery;
 import edu.uiuc.zenvisage.model.ScatterResult;
 import edu.uiuc.zenvisage.service.ScatterRep;
 import edu.uiuc.zenvisage.service.distance.Distance;
+import edu.uiuc.zenvisage.service.distance.EMD;
 import edu.uiuc.zenvisage.service.distance.Euclidean;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryNode.State;
+import scpsolver.problems.LPWizard;
 
 public class ScatterProcessNode extends ProcessNode {
 	static final Logger logger = LoggerFactory.getLogger(ScatterProcessNode.class);
@@ -90,8 +92,9 @@ public class ScatterProcessNode extends ProcessNode {
 			lookuptable.put(process.getVariables().get(0), newAxisVar);
 		} else if (process.getMethod().equals("Scatter")) {
 			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
-			List<Point> points = vcNode.getVc().getSketch().getPolygons().get(0).getPoints();
-			List<String> values = scatterDragAndDropExecution(points);
+			//List<Point> points = vcNode.getVc().getSketch().getPolygons().get(0).getPoints();
+			//List<String> values = scatterDragAndDropExecution(points);
+			List<String> values = EMDExecution(vcNode);
 			double[] scores = new double[values.size()];
 			for (int i = 0; i < values.size(); i++) {
 				scores[i] = i;
@@ -108,6 +111,62 @@ public class ScatterProcessNode extends ProcessNode {
 
 		this.state = State.FINISHED;
 	}
+	
+	private List<String> EMDExecution(ScatterVCNode vcNode) {
+		Result finalOutput = new Result();
+		List<Point> points = vcNode.getVc().getSketch().getPolygons().get(0).getPoints();
+		List<VisualComponent> vcList = vcNode.getVcList().getVisualComponentList();
+		int len = Math.min(vcList.size(), vcNode.getVc().getNumOfResults());
+		if (vcNode.getVc().getNumOfResults() == 0) {
+			len = vcList.size();
+		}
+		double[][] queryVector = new double[points.size()][2];
+		for(int i = 0; i < queryVector.length; i++) {
+			queryVector[i][0] = points.get(i).getXval();
+			queryVector[i][1] = points.get(i).getYval();
+		}
+		
+		//Compute EMD distance
+		PriorityQueue<Chart> pq = new PriorityQueue<Chart>((o1, o2) -> (o1.getDistance() > o2.getDistance() ? 1 : -1));
+		EMD distance = new EMD();
+		for (int vc_index = 0; vc_index < len; vc_index++) {
+			Chart chartOutput = new Chart();
+			VisualComponent vc = vcList.get(vc_index);
+			
+			ArrayList<WrapperType> vcX =  vc.getPoints().getXList();
+			ArrayList<WrapperType> vcY =  vc.getPoints().getYList();
+			double[][] vcVector = new double[vcX.size()][2];
+			for(int i = 0; i < vcVector.length ; i++) {
+				vcVector[i][0] = (double) vcX.get(i).getNumberValue();
+				vcVector[i][1] = (double) vcY.get(i).getNumberValue();
+			}
+			double d = distance.calculateDistance(vcVector, queryVector);
+			chartOutput.setDistance(d);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
+			chartOutput.setyType(vc.getyAttribute());
+			chartOutput.setzType(vc.getZValue().toString());
+			chartOutput.count = vc.getPoints().getXList().size();			
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();		
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
+			}			
+		}
+		
+		//Sort
+		List<String> res = new ArrayList<>();
+		int rank = 0;
+		while(!pq.isEmpty()) {
+			Chart chartOutput = pq.poll();
+			chartOutput.setRank(++rank);
+			finalOutput.outputCharts.add(chartOutput);
+			res.add(chartOutput.getzType());
+		}
+		return res;
+	}
+
+	
 	
 	// currently data transform + task processing
 	private Result scatterRepExecution() {

@@ -98,6 +98,22 @@
 			<systemPath>${basedir}/lib/javaml-0.1.5.jar</systemPath>
 			<version>0.1.5</version>
 		</dependency>
+		
+		<!-- LP Solver -->
+		<dependency>
+			<artifactId>edu.uiuc.zenvisage.LPSOLVESolverPack</artifactId>
+			<groupId>LPSOLVESolverPack</groupId>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/LPSOLVESolverPack.jar</systemPath>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<artifactId>edu.uiuc.zenvisage.SCPSolver</artifactId>
+			<groupId>SCPSolver</groupId>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/SCPSolver.jar</systemPath>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.googlecode.javaewah</groupId>
