@@ -1,5 +1,8 @@
 package edu.uiuc.zenvisage.data.remotedb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VisualComponent {		
 	
 	private WrapperType zValue; // get the string, that is chart ztype
@@ -7,12 +10,14 @@ public class VisualComponent {
 	private String yAttribute;	
 	private String zAttribute;
 	private Points points;
+	private List<float[][]> multiLevelGrids;
 	private double score = 0.0;
 
 	/*Empty Constructor*/
 	public VisualComponent(WrapperType zValue, Points points){
 		this.zValue = zValue;
 		this.points = points;
+		this.multiLevelGrids = new ArrayList<>();
 	};
 	
 	public VisualComponent(WrapperType zValue, Points points, String xAttribute, String yAttribute){
@@ -20,6 +25,7 @@ public class VisualComponent {
 		this.points = points;
 		this.xAttribute = xAttribute;
 		this.yAttribute = yAttribute;
+		this.multiLevelGrids = new ArrayList<>();
 	};
 	
 	public VisualComponent(WrapperType zValue, Points points, String xAttribute, String yAttribute, double score){
@@ -28,6 +34,7 @@ public class VisualComponent {
 		this.xAttribute = xAttribute;
 		this.yAttribute = yAttribute;
 		this.score = score;
+		this.multiLevelGrids = new ArrayList<>();
 	};	
 	/**
 	 * @return the xAttribute
@@ -105,5 +112,16 @@ public class VisualComponent {
 	public void setScore(double score) {
 		this.score = score;
 	}
-		
+
+	public List<float[][]> getMultiLevelGrids() {
+		return multiLevelGrids;
+	}
+
+	public void insertToMultiLevelGrids(float[][] grids) {
+		multiLevelGrids.add(grids);
+	}
+
+	public void clearMultiLevelGrids() {
+		multiLevelGrids = new ArrayList<>();
+	}
 }
