@@ -95,12 +95,15 @@ public class ScatterProcessNode extends ProcessNode {
 			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 			//List<Point> points = vcNode.getVc().getSketch().getPolygons().get(0).getPoints();
 			//List<String> values = scatterDragAndDropExecution(points);
-			List<String> values = EMDExecution(vcNode);
+			VisualComponentList input = vcNode.getVcList();
+			VisualComponentQuery q = vcNode.getVc();
+			preprocess(input, q);
+			List<String> values = EMDExecution(input, q);
 			double[] scores = new double[values.size()];
 			for (int i = 0; i < values.size(); i++) {
 				scores[i] = i;
 			}
-			
+
 			// z1
 		    String axisName = process.getAxisList1().get(0);
 			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
@@ -113,18 +116,13 @@ public class ScatterProcessNode extends ProcessNode {
 		this.state = State.FINISHED;
 	}
 	
-	private List<String> EMDExecution(ScatterVCNode vcNode) {
+	private List<String> EMDExecution(VisualComponentList input, VisualComponentQuery q) {
 		Result finalOutput = new Result();
-		List<Point> points = vcNode.getVc().getSketch().getPolygons().get(0).getPoints();
-		List<VisualComponent> vcList = vcNode.getVcList().getVisualComponentList();
-		int len = Math.min(vcList.size(), vcNode.getVc().getNumOfResults());
-		if (vcNode.getVc().getNumOfResults() == 0) {
+		List<Point> points = q.getSketch().getPolygons().get(0).getPoints();
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		int len = Math.min(vcList.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
 			len = vcList.size();
-		}
-		double[][] queryVector = new double[points.size()][2];
-		for(int i = 0; i < queryVector.length; i++) {
-			queryVector[i][0] = points.get(i).getXval();
-			queryVector[i][1] = points.get(i).getYval();
 		}
 		
 		//Compute EMD distance
@@ -133,15 +131,14 @@ public class ScatterProcessNode extends ProcessNode {
 		for (int vc_index = 0; vc_index < len; vc_index++) {
 			Chart chartOutput = new Chart();
 			VisualComponent vc = vcList.get(vc_index);
-			
-			ArrayList<WrapperType> vcX =  vc.getPoints().getXList();
-			ArrayList<WrapperType> vcY =  vc.getPoints().getYList();
-			double[][] vcVector = new double[vcX.size()][2];
-			for(int i = 0; i < vcVector.length ; i++) {
-				vcVector[i][0] = (double) vcX.get(i).getNumberValue();
-				vcVector[i][1] = (double) vcY.get(i).getNumberValue();
-			}
-			double d = distance.calculateDistance(vcVector, queryVector);
+			List<float[][]> matricesQ = q.getSketch().getMultiLevelGrids();
+			List<float[][]> matricesList = vc.getMultiLevelGrids();
+			double d = 0;
+			for(int i = 0; i < matricesQ.size(); i++) {
+				System.out.println(vc.getZValue());
+				d += distance.calculateDistance(matricesQ.get(i), matricesList.get(i));
+				
+			}			
 			chartOutput.setDistance(d);
 			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
 			chartOutput.setyType(vc.getyAttribute());
@@ -215,7 +212,7 @@ public class ScatterProcessNode extends ProcessNode {
 		VisualComponentList input = vcNode.getVcList();
 		VisualComponentQuery q = vcNode.getVc();
 		preprocess(input, q);
-		return computeScatterDragAndDropRank(input, q, output, points);
+		return ScatterDragAndDropEuclidean(input, q, output, points);
 	}
 
 	// TODO(renxuan): tune the parameters here!
@@ -224,9 +221,10 @@ public class ScatterProcessNode extends ProcessNode {
 		Sketch sketch = q.getSketch();
 		List<float[][]> vcqueryGrids = new ArrayList<>();
 		// just use one level, 5*5 grids for now
-		for(int l = 5; l < 10; l *= 2) {
+		for(int l = 10; l < 20; l *= 2) {
+			// TODO(jintao): The frontend is sending the points inside the polygons. May need to change it to points at some time?
 			sketch.insertToMultiLevelGrids(binning(normalize(
-				sketch.getPoints(), sketch.getMinX(), sketch.getMaxX(), sketch.getMinY(), sketch.getMaxY()), l, l));
+				sketch.getPolygons().get(0).getPoints(), sketch.getMinX(), sketch.getMaxX(), sketch.getMinY(), sketch.getMaxY()), l, l));
 			sketch.insertToMultiLevelWeights(1);
 			for(VisualComponent vc : vcList) {
 				vc.insertToMultiLevelGrids(binning(normalize(vc.getPoints()), l, l));
@@ -240,7 +238,7 @@ public class ScatterProcessNode extends ProcessNode {
 		for(Point p : points) {
 			// normalize to 0-1
 			float x = (p.getXval() - minX) / deltaX;
-			float y = (p.getXval() - minX) / deltaY;
+			float y = (p.getYval() - minY) / deltaY;
 			ret.add(new Point(x, y));
 		}
 		return ret;
@@ -375,7 +373,8 @@ public class ScatterProcessNode extends ProcessNode {
 		return res;
 	}
 
-	public static List<String> computeScatterDragAndDropRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Point> points) {
+	// This method is depreciated.
+	public static List<String> ScatterDragAndDropEuclidean(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Point> points) {
 		List<VisualComponent> vcList = input.getVisualComponentList();
 		int len = Math.min(vcList.size(), q.getNumOfResults());
 		if (q.getNumOfResults() == 0) {
