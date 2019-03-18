@@ -90,7 +90,7 @@ app.controller('classInfoController', ['$scope', '$rootScope','$http', function 
 }]);
 
 
-app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compile', function ($scope, $http, plotResults, $compile) {
+app.controller('zqlTableController', ['$scope' ,'$http', 'plotResultsService', '$compile', function ($scope, $http, plotResultsService, $compile) {
   $scope.input = {};
   $scope.queries = {};
   $scope.queries['zqlRows'] = [];
@@ -253,7 +253,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
-            plotResults.displayUserQueryResults(response.data.outputCharts, false);
+            plotResultsService.displayUserQueryResults(response.data.outputCharts, false);
         },
         function (response) {
             console.log("failed: ", escape(response));
@@ -294,7 +294,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResults', '$compil
     ).then(
         function (response) {
             console.log("success: ", response);
-            plotResults.displayUserQueryResults(response.data.outputCharts,false);
+            plotResultsService.displayUserQueryResults(response.data.outputCharts,false);
         },
         function (response) {
             console.log("failed: ", escape(response));
@@ -349,70 +349,9 @@ function checkProcessInput(input)
     return processe !== undefined;
 }
 
-app.factory('datasetInfo', function() {
-  var tablelist;
-  var categoryData;
-  var xAxisData;
-  var yAxisData;
-  var datasetService = {};
-
-  datasetService.store = function( response ) {
-    categoryData = response.zAxisColumns;
-    xAxisData = response.xAxisColumns;
-    yAxisData = response.yAxisColumns;
-  };
-
-  datasetService.storetablelist = function( response ) {
-    tablelist = response.data
-  };
-
-  datasetService.getCategoryData = function()
-  {
-    return categoryData;
-  }
-  datasetService.getXAxisData = function()
-  {
-    return xAxisData;
-  }
-  datasetService.getYAxisData = function()
-  {
-    return yAxisData;
-  }
-  datasetService.getTablelist = function()
-  {
-    return tablelist;
-  }
-  return datasetService;
-});
-
-app.factory('plotResults', function() {
-    var plottingService = {};
-    plottingService.displayUserQueryResults = function displayUserQueryResults( userQueryResults,  includeSketch = true )
-    {
-      displayUserQueryResultsHelper( userQueryResults, includeSketch );
-    }
-
-    plottingService.displayRepresentativeResults = function displayRepresentativeResults( representativePatternResults )
-    {
-      displayRepresentativeResultsHelper( representativePatternResults )
-    }
-
-    plottingService.displayOutlierResults = function displayOutlierResults( outlierResults )
-    {
-      displayOutlierResultsHelper( outlierResults )
-    }
-
-    plottingService.displayUserQueryResultsScatter = function displayUserQueryResultsScatter( userQueryResults )
-    {
-      displayUserQueryResultsScatterHelper( userQueryResults )
-    }
-
-    return plottingService;
-});
-
 app.controller('options-controller', [
-  '$scope', '$rootScope', '$http','datasetInfo',  'ChartSettings', '$compile',
-  function($scope, $rootScope, $http,datasetInfo, ChartSettings, $compile){
+  '$scope', '$rootScope', '$http','datasetService',  'ChartSettings', '$compile', 'sketchService',
+  function($scope, $rootScope, $http,datasetService, ChartSettings, $compile , sketchService){
     $scope.similarity = 'Euclidean';
     $scope.representative = 'kmeans';
     $scope.aggregation = 'avg';
@@ -549,7 +488,7 @@ app.controller('options-controller', [
       success(function(response) {
         console.log("getTopK: success");
         if (response.length == 0){console.log("empty response")}
-        plotResults.displayUserQueryResults(response.outputCharts,true);
+        plotResultsService.displayUserQueryResults(response.outputCharts,true);
       }).
       error(function(response) {
         console.log("getUserQueryResults: fail");
@@ -561,10 +500,10 @@ app.controller('options-controller', [
     $scope.onflipYChange = function() {
       document.getElementById("loadingEclipse").style.display = "inline";
       if(usingPattern == true){
-        patternLoad();
+          sketchService.patternLoad();
       }
       else{
-        createSketchpad(sketchpadData);
+          sketchService.createSketchpadLine(sketchpadData);
     };
   }
 
@@ -900,8 +839,8 @@ app.controller('options-controller', [
 // populates and controls the dataset attributes on the left-bar
 // does not dynamically adjust to change in dataset yet
 app.controller('datasetController', [
-  '$scope', '$rootScope', '$http', 'datasetInfo', 'plotResults',  'ChartSettings',
-  function($scope, $rootScope, $http, datasetInfo, plotResults,  ChartSettings){
+  '$scope', '$rootScope', '$http', 'datasetService', 'plotResultsService',  'ChartSettings','sketchService',
+  function($scope, $rootScope, $http, datasetService, plotResultsService,  ChartSettings, sketchService){
   $scope.queries = {};
 
     $scope.inittablelist = function () {
@@ -910,8 +849,8 @@ app.controller('datasetController', [
           function (response) {
             console.log("success: ", response);
             // $scope.tablelist = response.data
-            datasetInfo.storetablelist(response)
-            $scope.tablelist = datasetInfo.getTablelist()
+              datasetService.storetablelist(response)
+            $scope.tablelist = datasetService.getTablelist()
           },
           function (response) {
             console.log("failed: ", response);
@@ -932,12 +871,9 @@ app.controller('datasetController', [
               break;
           case 'Scatter':
               $scope.getPolygonQueryResults("initialize");
-              // ScatterService.initializeScatterPlot(
-              //   $scope.data
-              // );
               break;
           default: // Line
-              initializeSketchpadNew(
+              sketchService.initializeSketchpadNew(
                 xdata["min"],xdata["max"],ydata["min"],ydata["max"],
                 xdata["name"],ydata["name"],zdata["name"]
                );
@@ -957,18 +893,7 @@ app.controller('datasetController', [
     $scope.scatterDatasetChangeQuery = function scatterDatasetChangeQuery(){
       $scope.queries["db"] = getSelectedDataset();
       $scope.queries['zqlRows'] = [];
-      var name = $(this).find(".name").val()
-      var x = $(this).find(".x-val").val()
-      var y = $(this).find(".y-val").val()
-      var z = $(this).find(".z-val").val()
-      var constraints = $(this).find(".constraints").val()
-      var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-          input["name"] = {"output": true,"sketch": true,"name": "f1"};
-          input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
-          input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : true};
-          input["viz"] = {"map":{"type":"scatter"}};
-          $scope.queries['zqlRows'].push(input);
+      scatterDatasetChangeQueryHelper($scope.queries['zqlRows'])
     };
 
 
@@ -977,51 +902,7 @@ app.controller('datasetController', [
       this.xAxis = getSelectedXAxis();
       this.yAxis = getSelectedYAxis();
       $scope.queries['zqlRows'] = [];
-      var name = $(this).find(".name").val()
-      var x = $(this).find(".x-val").val()
-      var y = $(this).find(".y-val").val()
-      var z = $(this).find(".z-val").val();
-      var constraints = $(this).find(".constraints").val();
-      var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-
-      var polygons = [];
-      var polygon = [];
-      var polypoints = getPolygons()[0]["points"];
-      for(var i = 0; i < polypoints.length-1; i++){
-          polygon.push(new Point( polypoints[i][0], polypoints[i][1] ));
-          polygons.push({"points": polygon})
-      }
-      input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
-
-      // console.log("get polygons:",ScatterService.getPolygons());
-      //
-      // console.log("polygon:",polygon);
-      // console.log("polygons:",polygons);
-      // var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-      //     input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, polygons);
-      //     input["name"] = {"output": true,"sketch": true,"name": "f1"};
-      //     input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
-      //     input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-      //     input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
-      //     input["viz"] = {"map":{"type":"scatter"}};
-      //     input["processe"] = {"variables":["v2"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":[],"axisList2":[]};
-      //     $scope.queries['zqlRows'].push(input);
-
-          input["name"] = {"output": false,"sketch": false,"name": "f1"};
-          input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
-          input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
-          input["viz"] = {"map":{"type":"scatter"}};
-          input["processe"] = {"variables":["v1"],"method":"Rank","count":"50","metric":"argmin","arguments":["f1"],"axisList1":["z1"],"axisList2":[]};
-          $scope.queries['zqlRows'].push(input);
-      var input2 = { "name": name, "x": x, "y": y, "z": z};
-          input2["name"] = {"output": true,"sketch": false,"name": "f2"};
-          input2["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
-          input2["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-          input2["z"] = { "values": [], "variable" : "v1", "aggregate" : false};
-          input2["viz"] = {"map":{"type":"scatter"}};
-          $scope.queries['zqlRows'].push(input2);
-
+      getPolygonQueryHelper($scope.queries['zqlRows']);
     }
 
       $scope.getScatterSimilarity = function getScatterSimilarity()
@@ -1030,35 +911,7 @@ app.controller('datasetController', [
           this.xAxis = getSelectedXAxis();
           this.yAxis = getSelectedYAxis();
           $scope.queries['zqlRows'] = [];
-          var name = $(this).find(".name").val()
-          var x = $(this).find(".x-val").val()
-          var y = $(this).find(".y-val").val()
-          var z = $(this).find(".z-val").val();
-          var constraints = $(this).find(".constraints").val();
-          var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
-
-          var sketchpointWrapper = [];
-          var sketchpoints = [];
-          var dragAndDropPoints = getScatterPoints();
-          for(var i = 0; i < dragAndDropPoints.length-1; i++){
-              sketchpoints.push(new Point( dragAndDropPoints[i]["xval"],dragAndDropPoints[i]["yval"] ));
-          }
-          sketchpointWrapper.push({"points":sketchpoints})
-          input["sketchPoints"] = new ScatterSketchPoints(this.xAxis, this.yAxis, sketchpointWrapper);
-          input["name"] = {"output": false,"sketch": false,"name": "f1"};
-          input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
-          input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-          input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
-          input["viz"] = {"map":{"type":"scatter"}};
-          input["processe"] = {"variables":["v1"],"method":"Scatter","count":"50","metric":"argmin","arguments":["f1"],"axisList1":["z1"],"axisList2":[]};
-          $scope.queries['zqlRows'].push(input);
-          var input2 = { "name": name, "x": x, "y": y, "z": z};
-          input2["name"] = {"output": true,"sketch": false,"name": "f2"};
-          input2["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
-          input2["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
-          input2["z"] = { "values": [], "variable" : "v1", "aggregate" : false};
-          input2["viz"] = {"map":{"type":"scatter"}};
-          $scope.queries['zqlRows'].push(input2);
+          getSimilarityQuery($scope.queries['zqlRows']);
 
           console.log(JSON.stringify( $scope.queries ));
           var data = $scope.queries;
@@ -1067,28 +920,13 @@ app.controller('datasetController', [
           success(function(response) {
               console.log("getScatterSimilarity: success");
               if (response.length == 0){console.log("empty response")}
-              else{plotResults.displayUserQueryResultsScatter(response.data.outputCharts);}
+              else{plotResultsService.displayUserQueryResultsScatter(response.data.outputCharts);}
 
           }).
           error(function(response) {
               console.log("scatterSimilarity: fail");
           });
 
-
-          // similarity workflow
-          // var q = constructScatterQuery(); //goes to query.js
-          // var data = q;
-          // console.log("calling getScatterSimilarity");
-          // $http.post('/zv/scatterSimilarity', data).
-          // success(function(response) {
-          //     console.log("getScatterSimilarity: success");
-          //     if (response.length == 0){console.log("empty response")}
-          //     else{plotResults.displayUserQueryResultsScatter(response.data.outputCharts);}
-          //
-          // }).
-          // error(function(response) {
-          //     console.log("scatterSimilarity: fail");
-          // });
       }
 
     $scope.getPolygonQueryResults = function getPolygonQueryResults(mode){
@@ -1106,11 +944,13 @@ app.controller('datasetController', [
       var data = {params: {'query': JSON.stringify( $scope.queries )}}
         $http.get(apiCall,data).then(
           function (response) {
-              $scope.data = response.data.outputCharts[0].points;
+              if(mode == "initialize"){
+                $scope.data = response.data.outputCharts[0].points;
+              }
               console.log("first element of outputcharts: ", response.data.outputCharts[0].points);
               console.log("all output charts: ", response.data.outputCharts);
-              initializeScatterPlot( $scope.data );
-              plotResults.displayUserQueryResultsScatter(response.data.outputCharts);
+              sketchService.createSketchpadScatter( $scope.data );
+              plotResultsService.displayUserQueryResultsScatter(response.data.outputCharts);
           },
           function (response) {
              console.log("failed: ", escape(response));
@@ -1119,8 +959,6 @@ app.controller('datasetController', [
 
 
     }
-
-
 
     $scope.getUserQueryResultsWithCallBack = function getUserQueryResultsWithCallBack()
     {
@@ -1141,7 +979,7 @@ app.controller('datasetController', [
             console.log("getErrorResults: success");
             if (response_error.length == 0){console.log("empty response")}
             console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
-            plotResults.displayUserQueryResults(response.outputCharts,true);
+            plotResultsService.displayUserQueryResults(response.outputCharts,true);
             $scope.getRepresentativeTrendsWithoutCallback();
           }).
           error(function(response_error) {
@@ -1150,7 +988,7 @@ app.controller('datasetController', [
           });
 
         }
-        else{plotResults.displayUserQueryResults(response.outputCharts,true);
+        else{plotResultsService.displayUserQueryResults(response.outputCharts,true);
             $scope.getRepresentativeTrendsWithoutCallback();}
 
         }).
@@ -1179,7 +1017,7 @@ app.controller('datasetController', [
             console.log("getErrorResults: success");
             if (response_error.length == 0){console.log("empty response")}
             console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
-            plotResults.displayUserQueryResults(response.outputCharts,true);
+            plotResultsService.displayUserQueryResults(response.outputCharts,true);
             $scope.getRepresentativeTrendsWithoutCallback();
           }).
           error(function(response_error) {
@@ -1190,7 +1028,7 @@ app.controller('datasetController', [
         }
 
         else{
-        plotResults.displayUserQueryResults(response.outputCharts,true);
+        plotResultsService.displayUserQueryResults(response.outputCharts,true);
         $scope.getRepresentativeTrendsWithoutCallback();}
 
       }).
@@ -1292,7 +1130,7 @@ app.controller('datasetController', [
             console.log("getErrorResults: success");
             if (response_error.length == 0){console.log("empty response")}
             console.log("merged result in representative: ", mergejoin_representative(response.outputCharts,response_error.outputCharts));
-            plotResults.displayRepresentativeResults(response.outputCharts,true);
+            plotResultsService.displayRepresentativeResults(response.outputCharts,true);
             outlierCallback();
           }).
           error(function(response_error) {
@@ -1301,7 +1139,7 @@ app.controller('datasetController', [
           });
 
         }
-        else{plotResults.displayRepresentativeResults( response.outputCharts );
+        else{plotResultsService.displayRepresentativeResults( response.outputCharts );
         outlierCallback();}
       }).
       error(function(response) {
@@ -1350,14 +1188,14 @@ app.controller('datasetController', [
             console.log("getErrorResults: success");
             if (response_error.length == 0){console.log("empty response")}
             console.log("merged result: ", mergejoin(response.outputCharts,response_error.outputCharts));
-            plotResults.displayOutlierResults(response.outputCharts,true);
+            plotResultsService.displayOutlierResults(response.outputCharts,true);
           }).
           error(function(response_error) {
             console.log("getUserQueryResults: fail");
           });
 
         }
-        else{plotResults.displayOutlierResults( response.outputCharts )};
+        else{plotResultsService.displayOutlierResults( response.outputCharts )};
       }).
       error(function(response) {
         console.log("getOutlierTrends: fail");
@@ -1398,7 +1236,7 @@ app.controller('datasetController', [
       $http.get('/zv/getformdata', config).
         success(function(response) {
           globalDatasetInfo = response;
-          datasetInfo.store(response); //saves form data to datasetInfo
+          datasetService.store(response); //saves form data to datasetInfo
           $scope.categories = [];
           $scope.xAxisItems = [];
           $scope.yAxisItems = [];
@@ -1449,9 +1287,9 @@ app.controller('datasetController', [
     $scope.onDataAttributeChange = function() {
       document.getElementById("loadingEclipse").style.display = "inline";
       document.getElementById("loadingEclipse2").style.display = "inline";
-      var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
-      var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
-      var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      var categoryData = datasetService.getCategoryData()[getSelectedCategory()]
+      var xData = datasetService.getXAxisData()[getSelectedXAxis()]
+      var yData = datasetService.getYAxisData()[getSelectedYAxis()]
       log.info("data attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
@@ -1464,9 +1302,9 @@ app.controller('datasetController', [
     $scope.onErrorAttributeChange = function() {
      document.getElementById("loadingEclipse").style.display = "inline";
     document.getElementById("loadingEclipse2").style.display = "inline";
-      var categoryData = datasetInfo.getCategoryData()[getSelectedCategory()]
-      var xData = datasetInfo.getXAxisData()[getSelectedXAxis()]
-      var yData = datasetInfo.getYAxisData()[getSelectedYAxis()]
+      var categoryData = datasetService.getCategoryData()[getSelectedCategory()]
+      var xData = datasetService.getXAxisData()[getSelectedXAxis()]
+      var yData = datasetService.getYAxisData()[getSelectedYAxis()]
       log.info("error attribute changed",getSelectedCategory(), getSelectedXAxis(),getSelectedYAxis())
       // $.when(initializeSketchpadOnDataAttributeChange(xData, yData, categoryData))
       // .done(function(){
@@ -1549,8 +1387,3 @@ app.controller('datasetController', [
 app.service('ChartSettings', function () {
     return {};
 })
-
-  // $('#tree-option').click(function() {
-  //   $(this).toggleClass("active");
-  //   $("#tree-div").toggle("active");
-  // });

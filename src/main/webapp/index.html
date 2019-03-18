@@ -355,13 +355,17 @@
             </div>
 
             <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
-            <div id="scatter-div" ng-controller="scatterController" ng-show="chartSettings.selectedChartOption=='Scatter'">
+            <!--<div id="scatter-div" ng-controller="scatterController" ng-show="chartSettings.selectedChartOption=='Scatter'">-->
+              <div id="scatter-div" ng-show="chartSettings.selectedChartOption=='Scatter'">
               <div class="col-md-12">
                   <svg id="main-chart">
                   </svg>
                   <div class="row col-md-1">
                   <div id="colorbar"></div>
                   </div>
+                <!--<div class="col-md-12">-->
+                  <!--<button class="buttons-for-drawing btn" onclick="removePolygons()">reset</button>-->
+                <!--</div>-->
               </div>
               <!-- <div class="row col-md-1">
               <div id="colorbar"></div>
@@ -737,17 +741,19 @@
     <script src="js/lib/log4javascript.js"></script>
     <script src="js/lib/jquery-ui.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/scatter.js"></script>
-    <script src="js/draw.js"></script>
-    <script src="js/scatterDraw.js"></script>
-    <script src="js/query.js"></script>
+    <script src="js/factory.js"></script>
+    <!--<script src="js/scatter.js"></script>-->
+    <script src="js/line/draw.js"></script>
+    <script src="js/scatter/scatterDraw.js"></script>
+    <script src="js/scatter/scatterQuery.js"></script>
+    <script src="js/sketchPad.js"></script>
+    <script src="js/line/query.js"></script>
     <script src="js/helper.js"></script>
     <script src="js/login.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- <script src="js/graph.js"></script> -->
     <script src="js/fileUploader.js"></script>
-    <script src="js/renderplot.js"></script>
     <script src="js/parsertypes.js"></script>
     <script src="js/zqlparser.js"></script>
     <script src="js/zqlgraph.js"></script>

@@ -8,9 +8,9 @@ var sketchpadData;
 
 var xrangeNew;
 
-function createSketchpad( data , flipY)
+function createSketchpadLineHelper(data , flipY)
 {
-console.log('createSketchpad')
+console.log('createSketchpadLine')
 
   // change these values somewhere. hard coded for now
   var topMargin = 0;
@@ -329,12 +329,12 @@ console.log('createSketchpad')
   }
 }
 
-function plotSketchpadNew( data )//, xType, yType, zType)
+function plotSketchpadNewHelper( data )//, xType, yType, zType)
 {
     document.getElementById("loadingEclipse").style.display = "inline";
     $("#draw-div").children().remove();
     // console.log("test!!!!!!",data);
-    sketchpad = createSketchpad( data )
+    sketchpad = createSketchpadLineHelper( data )
     // angular.element($("#sidebar")).scope().selectedCategory = zType;
     // angular.element($("#sidebar")).scope().selectedXAxis = xType;
     // angular.element($("#sidebar")).scope().selectedYAxis = yType;
@@ -345,7 +345,7 @@ function plotSketchpadNew( data )//, xType, yType, zType)
 
 // initialize scatter?
 
-function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category , flipY)
+function initializeSketchpadNewHelper(xmin, xmax, ymin, ymax, xlabel, ylabel, category , flipY)
 {
   // intialize to 100 points
   var data = [];
@@ -354,7 +354,7 @@ function initializeSketchpadNew(xmin, xmax, ymin, ymax, xlabel, ylabel, category
   }
   // sketchpad = getSketchpadDygraphObject( data, valueRange );
   // getSketchpadDygraphObjectNew( data, valueRange );
-  createSketchpad( data , flipY);
+  createSketchpadLineHelper( data , flipY);
   refreshZoomEventHandler();
 }
 
@@ -411,7 +411,10 @@ function setPoint(event, g, context) {
   }
 }
 
-function patternLoad(){
+
+
+
+function patternLoadHelper(){
   var delimiter=" "
   if ($("#x-pattern").val().indexOf(",")>-1){
     delimiter=","
@@ -428,7 +431,7 @@ function patternLoad(){
   // data = JSON.parse($("#pattern-upload-textarea")[0].value);
   usingPattern = true;
   log.info("patternLoad : ",xvals,yvals)
-  createSketchpad( data );
+  createSketchpadLineHelper( data );
   refreshZoomEventHandler();
 }
 
@@ -437,7 +440,4 @@ function Point(x, y){
   this.yval=y;
 }
 
-function ScatterPoint(x, y){
-  this.x=x;
-  this.y=y;
-}
+

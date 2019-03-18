@@ -128,20 +128,6 @@ function SketchPoints(xAxisName, yAxisName, points){
   this.aggrVar = getSelectedYAxis();
 }
 
-function ScatterSketchPoints(xAxisName, yAxisName, polygons){
-  var xAxisData = globalDatasetInfo.xAxisColumns;
-  var yAxisData = globalDatasetInfo.yAxisColumns;
-  this.polygons = polygons;
-  this.minX = xAxisData[xAxisName]["min"];
-  this.maxX = xAxisData[xAxisName]["max"];
-  this.minY = yAxisData[yAxisName]["min"];
-  this.maxY = yAxisData[yAxisName]["max"];
-  this.yAxis = getSelectedYAxis();
-  this.xAxis = getSelectedXAxis();
-  this.groupBy = getSelectedCategory();
-  this.aggrFunc = getAggregationMethod();
-  this.aggrVar = getSelectedYAxis();
-}
 
 function getSelectedXAxis()
 {
