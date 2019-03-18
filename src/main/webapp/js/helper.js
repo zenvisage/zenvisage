@@ -40,7 +40,6 @@ function formatRanges( classData ){
 
 function displayUserQueryResultsScatterHelper(userQueryResults)
 {
-  console.log("test!",userQueryResults);
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
@@ -64,7 +63,6 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
   for (var count = 0; count < userQueryResults.length; count++)
   {
   var data = userQueryResults[count]['points'];
-          console.log("data!",data);
   var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
   var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
   var ymin = d3.max(data, function(d) {return Math.min(d.yval); })
@@ -114,7 +112,6 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
 
     var trans = height-20
     d3.select("#undraggable-result-"+count.toString()).append("g")
-    console.log("zlabel test: ",zAttribute);
     d3.select("#undraggable-result-"+count.toString()).append("text")
       .attr("transform",
             "translate(" + (width/2) + " ," +
@@ -151,7 +148,6 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
 
 // d3.select("resultsvg-" + count.toString()).append("g")
 
-    console.log("points!", points);
     var hexbinPlot = graph.append("g")
             .attr("clip-path", "url(#clip-" + count.toString() + ")")
             .selectAll(".hexagon")

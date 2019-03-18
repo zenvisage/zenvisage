@@ -220,7 +220,6 @@ function createSketchpadScatterHelper(data) {
 
 
 function drawPolygon() {
-    console.log("yes!")
     drawPolygonFlag = true;
     // enableButton('undo');
     // enableButton('green-polygon');

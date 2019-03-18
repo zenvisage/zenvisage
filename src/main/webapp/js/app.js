@@ -947,8 +947,6 @@ app.controller('datasetController', [
               if(mode == "initialize"){
                 $scope.data = response.data.outputCharts[0].points;
               }
-              console.log("first element of outputcharts: ", response.data.outputCharts[0].points);
-              console.log("all output charts: ", response.data.outputCharts);
               sketchService.createSketchpadScatter( $scope.data );
               plotResultsService.displayUserQueryResultsScatter(response.data.outputCharts);
           },
