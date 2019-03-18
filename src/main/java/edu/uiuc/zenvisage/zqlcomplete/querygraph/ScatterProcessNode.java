@@ -224,7 +224,7 @@ public class ScatterProcessNode extends ProcessNode {
 		for(int l = 10; l < 20; l *= 2) {
 			// TODO(jintao): The frontend is sending the points inside the polygons. May need to change it to points at some time?
 			sketch.insertToMultiLevelGrids(binning(normalize(
-				sketch.getPolygons().get(0).getPoints(), sketch.getMinX(), sketch.getMaxX(), sketch.getMinY(), sketch.getMaxY()), l, l));
+				sketch.getPolygons().get(0).getPoints()), l, l));
 			sketch.insertToMultiLevelWeights(1);
 			for(VisualComponent vc : vcList) {
 				vc.insertToMultiLevelGrids(binning(normalize(vc.getPoints()), l, l));
@@ -232,7 +232,17 @@ public class ScatterProcessNode extends ProcessNode {
 		}
 	}
 	
-	private List<Point> normalize(List<Point> points, float minX, float maxX, float minY, float maxY) {
+	private List<Point> normalize(List<Point> points) {
+		float minX = Float.MAX_VALUE, maxX = Float.MIN_VALUE, minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+		for(Point p : points) {
+			float x = p.getXval();
+			if(x > maxX) maxX = x;
+			if(x < minX) minX = x;
+			float y = p.getYval();
+			if(y > maxY) maxY = y;
+			if(y < minY) minY = y;
+		}
+
 		List<Point> ret = new ArrayList<Point>();
 		float deltaX = maxX - minX, deltaY = maxY - minY;
 		for(Point p : points) {
