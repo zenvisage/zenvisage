@@ -117,8 +117,6 @@ public class ScatterProcessNode extends ProcessNode {
 	}
 	
 	private List<String> EMDExecution(VisualComponentList input, VisualComponentQuery q) {
-		Result finalOutput = new Result();
-		List<Point> points = q.getSketch().getPolygons().get(0).getPoints();
 		List<VisualComponent> vcList = input.getVisualComponentList();
 		int len = Math.min(vcList.size(), q.getNumOfResults());
 		if (q.getNumOfResults() == 0) {
@@ -149,16 +147,14 @@ public class ScatterProcessNode extends ProcessNode {
 			for (int i = 0; i < xList.size(); i++) {
 				chartOutput.xData.add(xList.get(i).toString());
 				chartOutput.yData.add(yList.get(i).toString());
-			}			
+			}	
+			pq.add(chartOutput);
 		}
 		
 		//Sort
 		List<String> res = new ArrayList<>();
-		int rank = 0;
 		while(!pq.isEmpty()) {
 			Chart chartOutput = pq.poll();
-			chartOutput.setRank(++rank);
-			finalOutput.outputCharts.add(chartOutput);
 			res.add(chartOutput.getzType());
 		}
 		return res;
@@ -203,17 +199,6 @@ public class ScatterProcessNode extends ProcessNode {
 		return null;
 	}
 	
-	private List<String> scatterDragAndDropExecution(List<Point> points) {
-		// lookup table the VCNode we depend on
-		// task processor: (eg find the charts that match the scatter data in these rectangles)
-		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
-		Result output = new Result();
-		// TODO(renxuan): do preprocessing here!
-		VisualComponentList input = vcNode.getVcList();
-		VisualComponentQuery q = vcNode.getVc();
-		preprocess(input, q);
-		return ScatterDragAndDropEuclidean(input, q, output, points);
-	}
 
 	// TODO(renxuan): tune the parameters here!
 	private void preprocess(VisualComponentList input, VisualComponentQuery q) {
@@ -383,59 +368,7 @@ public class ScatterProcessNode extends ProcessNode {
 		return res;
 	}
 
-	// This method is depreciated.
-	public static List<String> ScatterDragAndDropEuclidean(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Point> points) {
-		List<VisualComponent> vcList = input.getVisualComponentList();
-		int len = Math.min(vcList.size(), q.getNumOfResults());
-		if (q.getNumOfResults() == 0) {
-			len = vcList.size();
-		}
-		double[] queryVector = new double[points.size() * 2];
-		for(int i = 0; i < points.size(); i++) {
-			queryVector[i] = points.get(i).getXval();
-			queryVector[i + points.size()] = points.get(i).getYval();
-		}
-		
-		//Compute euclidean distance
-		PriorityQueue<Chart> pq = new PriorityQueue<Chart>((o1, o2) -> (o1.getDistance() > o2.getDistance() ? 1 : -1));
-		Distance distance = new Euclidean();
-		for (int vc_index = 0; vc_index < len; vc_index++) {
-			Chart chartOutput = new Chart();
-			VisualComponent vc = vcList.get(vc_index);
-			
-			ArrayList<WrapperType> vcX =  vc.getPoints().getXList();
-			ArrayList<WrapperType> vcY =  vc.getPoints().getYList();
-			double[] vcVector = new double[vcX.size() * 2];
-			for(int i = 0; i < vcX.size(); i++) {
-				vcVector[i] = (double) vcX.get(i).getNumberValue();
-				vcVector[i + vcX.size()] = (double) vcY.get(i).getNumberValue();
-			}
-			double d = distance.calculateDistance(vcVector, queryVector);
-			
-			chartOutput.setDistance(d);
-			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
-			chartOutput.setyType(vc.getyAttribute());
-			chartOutput.setzType(vc.getZValue().toString());
-			chartOutput.count = vc.getPoints().getXList().size();			
-			ArrayList<WrapperType> xList = vc.getPoints().getXList();
-			ArrayList<WrapperType> yList = vc.getPoints().getYList();		
-			for (int i = 0; i < xList.size(); i++) {
-				chartOutput.xData.add(xList.get(i).toString());
-				chartOutput.yData.add(yList.get(i).toString());
-			}			
-		}
-		//Sort
-		List<String> res = new ArrayList<>();
-		int rank = 0;
-		while(!pq.isEmpty()) {
-			Chart chartOutput = pq.poll();
-			chartOutput.setRank(++rank);
-			finalOutput.outputCharts.add(chartOutput);
-			res.add(chartOutput.getzType());
-		}
-		int xa = 1;
-		return res;
-	}
+	
 	
 	private List<String> scatterRankExecution(List<Polygon> polygons) {
 		// lookup table the VCNode we depend on

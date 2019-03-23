@@ -384,8 +384,9 @@ public class ZvBasicAPI {
 		String body = stringBuilder.toString();
 		logQueries("scatter-similarity",null,body);
 		//System.out.println("realtestestestest"+body);
-		zvMain.scatterSimilarity(body);
-		return body;
+		String res = zvMain.scatterSimilarity(body);
+		logQueries("scatter-similarity-result",null,res);
+		return res;
 
 //		String bodyforlogging=removeSketchPoints(body);
 //		logQueries(type,request,bodyforlogging);
