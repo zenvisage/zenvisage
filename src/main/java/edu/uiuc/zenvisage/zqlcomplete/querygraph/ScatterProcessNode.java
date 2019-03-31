@@ -134,6 +134,9 @@ public class ScatterProcessNode extends ProcessNode {
 			double d = 0;
 			for(int i = 0; i < matricesQ.size(); i++) {
 				System.out.println(vc.getZValue());
+				// TODO: this should be changed to
+				// d += k_i * distance.calculateDistance(matricesQ.get(i), matricesList.get(i))
+				// with a decreasing k sequence
 				d += distance.calculateDistance(matricesQ.get(i), matricesList.get(i));
 				
 			}			
