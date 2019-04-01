@@ -920,7 +920,7 @@ app.controller('datasetController', [
           success(function(response) {
               console.log("getScatterSimilarity: success");
               if (response.length == 0){console.log("empty response")}
-              else{plotResultsService.displayUserQueryResultsScatter(response.data.outputCharts);}
+              else{plotResultsService.displayUserQueryResultsScatter(response.outputCharts);}
 
           }).
           error(function(response) {

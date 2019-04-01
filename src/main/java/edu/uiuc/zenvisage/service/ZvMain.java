@@ -281,7 +281,7 @@ public class ZvMain {
 	   } catch (Exception e) {
 		   e.printStackTrace();
 	   }
-	  
+
 	   ZQLParser parser = new ZQLParser();
 	   QueryGraph graph;
 	   try {

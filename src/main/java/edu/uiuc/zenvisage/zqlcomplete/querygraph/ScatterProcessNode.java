@@ -83,7 +83,7 @@ public class ScatterProcessNode extends ProcessNode {
 			for (int i = 0; i < values.size(); i++) {
 				scores[i] = i;
 			}
-			
+			System.out.println("polygon values test " + values);
 			// z1
 		    String axisName = process.getAxisList1().get(0);
 			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
@@ -98,7 +98,10 @@ public class ScatterProcessNode extends ProcessNode {
 			VisualComponentList input = vcNode.getVcList();
 			VisualComponentQuery q = vcNode.getVc();
 			preprocess(input, q);
-			List<String> values = EMDExecution(input, q);
+			output = new Result();
+			List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
+			System.out.println("dragndrop values test " + values);
+//			List<String> values = EMDExecution(input, q);
 			double[] scores = new double[values.size()];
 			for (int i = 0; i < values.size(); i++) {
 				scores[i] = i;
@@ -353,7 +356,8 @@ public class ScatterProcessNode extends ProcessNode {
 			for (int i = 0; i < xList.size(); i++) {
 				chartOutput.xData.add(xList.get(i).toString());
 				chartOutput.yData.add(yList.get(i).toString());
-			}			
+			}
+			pq.add(chartOutput);
 		}
 		//Sort
 		List<String> res = new ArrayList<>();
@@ -364,7 +368,6 @@ public class ScatterProcessNode extends ProcessNode {
 			finalOutput.outputCharts.add(chartOutput);
 			res.add(chartOutput.getzType());
 		}
-		int xa = 1;
 		return res;
 	}
 
@@ -460,7 +463,6 @@ public class ScatterProcessNode extends ProcessNode {
 		for (Chart c : finalOutput.outputCharts) {
 			res.add(c.getzType());
 		}
-		int xa = 1;
 		return res;
 	}
 	
