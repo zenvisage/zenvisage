@@ -592,11 +592,8 @@
 
           <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
             <!-- <h5><b>Category</b>
-
             <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
-
             <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button>
-
             </h5>
             <div>
             <div ng-repeat="category in categories">
@@ -658,17 +655,17 @@
       <div id="middle-bar">
 
         <!-- this div contains the drawng interface and the zql table -->
-        <div class="row" id="top-middle-bar" ng-controller="datasetController">
+        <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
           <!-- drawing interface -->
             <div class="col-md-4">
             <div class="input-group" id="graph-buttons">
 
             <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
-             <!-- <div class="btn-group" id="left-button-group">
+             <div class="btn-group" id="left-button-group">
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
                 </select>
-              </div> -->
+              </div>
 
               <div class="btn-toolbar">
                 <button type="button" name="options" ng-click="changeZQLTableState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
@@ -683,7 +680,7 @@
                     <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
                     <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
                      <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
-                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button> -->
+                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs"> Q2</button> -->
           <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Real Estate</a>
                     <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
                     <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
@@ -693,17 +690,37 @@
                   <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
                 </div>
               </div>
+
+              <div class="btn-group">
+                <button type="button" name="options" ng-click="scattertable = !scattertable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Scatter Table</button>
+                <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
+                <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
+                <div ng-show="zqltable">
+                  <div class="btn-group">
+                  </div>
+                </div>
+              </div>
+
+
             </div>
 
-            <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
-            <div id="scatter-div" ng-controller="scatterController" class="row" ng-show="chartSettings.selectedChartOption=='Scatter'">
-              <div class="col-md-11">
+            <div id="draw-div"  data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
+            <!--<div id="scatter-div" ng-controller="scatterController" ng-show="chartSettings.selectedChartOption=='Scatter'">-->
+              <div id="scatter-div" ng-show="chartSettings.selectedChartOption=='Scatter'">
+              <div class="col-md-12">
                   <svg id="main-chart">
                   </svg>
-
+                  <div class="row col-md-1">
+                  <div id="colorbar"></div>
+                  </div>
+                <!--<div class="col-md-12">-->
+                  <!--<button class="buttons-for-drawing btn" onclick="removePolygons()">reset</button>-->
+                <!--</div>-->
               </div>
+              <!-- <div class="row col-md-1">
               <div id="colorbar"></div>
-              <div class="row col-md-1">
+              </div>  -->
+              <!-- <div class="row col-md-1">
                   <div class="col-md-12">
                       <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                   </div>
@@ -719,7 +736,7 @@
                   <div class="col-md-12">
                       <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
                   </div>
-              </div>
+              </div> -->
 
           </div>
 
@@ -800,6 +817,27 @@
               <button ng-click="submitZQLScript()">Submit</button>
             </div>
             <div ng-show="!zqltable && !zqlscript" class="row" style="overflow-x:hidden;" >
+
+
+
+            <div ng-show="scattertable" ng-controller="zqlTableController">
+              <div class="col-md-3" style="width: 180px;">
+                <div>
+                  <div class="info-text">
+                    <p><nobr>
+                      <label for="amount">Binning Constant:</label>
+                      <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
+                    </nobr></p>
+                    <div id="binning-slider" align = "right" style="width:165px;"></div>
+                  </div>
+                </div>
+              </div>
+              <table id="scatter-table" class="table scatter-table">
+              </table>
+            </div>
+
+
+            <div ng-show="!zqltable && !scattertable" class="row" >
               <div class="col-md-3" style="width: 170px;">
                 <div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">
                 <div class="info-text">
@@ -1133,16 +1171,20 @@
     <script src="js/lib/jquery-ui.min.js"></script>
     <script src="js/lib/nouislider.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/scatter.js"></script>
-    <script src="js/draw.js"></script>
-    <script src="js/query.js"></script>
+    <script src="js/factory.js"></script>
+    <!--<script src="js/scatter.js"></script>-->
+    <script src="js/line/draw.js"></script>
+    <script src="js/scatter/scatterDraw.js"></script>
+    <script src="js/scatter/scatterQuery.js"></script>
+    <script src="js/sketchPad.js"></script>
+    <script src="js/line/query.js"></script>
+    <script src="js/line/slider.js"></script>
     <script src="js/helper.js"></script>
     <script src="js/login.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- <script src="js/graph.js"></script> -->
     <script src="js/fileUploader.js"></script>
-    <script src="js/renderplot.js"></script>
     <script src="js/parsertypes.js"></script>
     <script src="js/zqlparser.js"></script>
     <script src="js/zqlgraph.js"></script>
@@ -1197,6 +1239,7 @@
         $('#popup').modal('hide');
       };
 
+
     // popup to inform tutorial
     $('#popup').modal('toggle');
     if(localStorage.getItem("DontShow")) {
@@ -1210,13 +1253,13 @@
 
       // var tree = tree();
       // tree.initialize();
-      $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip({html: true});
-        $("#dataset-form-control option").val("real_estate");
-        var scope = angular.element("#dataset-form-control").scope();
-        scope.onDatasetChange(); 
-        // scope.onDatasetChange(); //TODO: Commented out for testing purposes
-      });
+      // $(document).ready(function(){
+      //   $('[data-toggle="tooltip"]').tooltip({html: true});
+      //   $("#dataset-form-control option").val("real_estate");
+      //   var scope = angular.element("#dataset-form-control").scope();
+      //   scope.onDatasetChange();
+      //   // scope.onDatasetChange(); //TODO: Commented out for testing purposes
+      // });
       // Logging
       // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
       // var loggerOn=false

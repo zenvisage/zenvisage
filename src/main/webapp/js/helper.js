@@ -6,6 +6,7 @@ var outlierDygraphs = {};
 var userQueryDygraphsNew = {};
 var representativeDygraphsNew = {};
 var outlierDygraphsNew = {};
+var scatterPoints = [];
 var globCount = 0;
 
 function formatRanges( classData ){
@@ -37,12 +38,169 @@ function formatRanges( classData ){
 //   return formattedRanges
 // }
 
+function displayUserQueryResultsScatterHelper(userQueryResults)
+{
+  clearUserQueryResultsTable();
+  var resultsDiv = $("#results-table");
+  var current = 0;
+  var connectSeparatedPoints = true;
+  var m = [0, 0, 20, 20]; // margins
+  var width = 200//200// - m[1] - m[3]; // width
+  var height = 85//85// - m[0] - m[2]; // height
+
+
+  for (var count = 0; count < userQueryResults.length; count++){
+  if (count % 2 == 0)
+  {
+    var newRow = $("#results-table").append("<tr id=\"row-" + count.toString() + "\"></tr>")
+    current = count;
+  }
+  $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
+}
+
+
+
+  for (var count = 0; count < userQueryResults.length; count++)
+  {
+  var data = userQueryResults[count]['points'];
+  var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
+  var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
+  var ymin = d3.max(data, function(d) {return Math.min(d.yval); })
+  var xmin = d3.max(data, function(d) {return Math.min(d.xval); })
+  var yScale = d3.scaleLinear()
+      .domain([0, ymax])
+      .range([height, 0]);
+  var xScale = d3.scaleLinear()
+      .domain([0, xmax])
+      .range([0, width]);
+  // define xscale
+
+  // define yscale
+
+    var points = new Array(data.length)
+    for (var i = 0; i < data.length; i++) {
+        var point = [xScale(data[i]['xval']), yScale(data[i]['yval'])]
+        points[i] = point;
+    }
+    var xlabel = userQueryResults[count]["xAttribute"]
+    var ylabel = userQueryResults[count]["yAttribute"]
+    var zAttribute = userQueryResults[count]["zval"]
+
+    userQueryDygraphsNew["result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zAttribute}
+
+
+    var hexColorRed = d3.scaleLinear()
+        .domain([0, data.length])
+        .range(["white", "maroon"]);
+
+
+    // Add an SVG element with the desired dimensions and margin.
+    var graph = d3.select("#result-" + count.toString())
+          .append("svg")
+          .attr("viewBox","0 0 " + (width-25).toString()+" "+ (height+20).toString())
+          .attr("width", width)// + m[1] + m[3])
+          .attr("height", height)// + m[0] + m[2])
+          .attr('fill', 'none')
+          .attr("id","resultsvg-" + count.toString())
+
+    graph.append("defs").append("clipPath")
+        .attr("id", "clip-" + count.toString())
+        .append("rect")
+        .attr("width", 200)
+        .attr("height", 85)
+
+
+    var trans = height-20
+    d3.select("#undraggable-result-"+count.toString()).append("g")
+    d3.select("#undraggable-result-"+count.toString()).append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+           (trans + m[0] + 30) + ")")
+      .style("text-anchor", "middle")
+      .attr("count", count.toString())
+      .attr("id",'ztitle')
+      .attr("type",'queryResult')
+      .attr('label',zAttribute)
+      .text( zAttribute );
+
+    var hexbin = d3_hexbin.hexbin()
+        //.size([width, height])
+        .radius(getBinningCoefficient());
+
+    var xAxis = d3.axisBottom(xScale).tickSize(3, -height);
+    var yAxis = d3.axisLeft(yScale).ticks(3,"s");
+    graph.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    graph.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    var binLengths = hexbin( points ).map(function (elem) {
+        return elem.length;
+    });
+
+    var hexColor = d3.scaleLinear()
+        .domain([0, d3.max(binLengths)])
+        .range(["lightblue", "darkblue"]);
+
+// d3.select("resultsvg-" + count.toString()).append("g")
+
+    var hexbinPlot = graph.append("g")
+            .attr("clip-path", "url(#clip-" + count.toString() + ")")
+            .selectAll(".hexagon")
+            .data(hexbin(points)) // returns an array of bins
+            .enter().append("path") // enter returns all fictitious elements according to number of data points
+            .attr("class", "hexagon") // the class hexagon is a custom class made to incorporate stroke and fill
+            .attr("d", hexbin.hexagon())
+            .attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ") scale(0.8)"; // Each bin (or d) returned by hexbin(points) is an array containing the bin’s points
+            });
+
+            //load the points animatedly
+            //reference url for ease: https://github.com/mbostock/d3/wiki/Transitions#d3_ease
+
+            hexbinPlot.transition()
+                .style("fill", function (d, i) {
+
+                    return hexColor(d.length);
+                    //return color[i];
+                })
+                .duration(900)
+                //.ease('sin');
+
+              }
+
+    $(".draggable-graph").draggable({
+        opacity: 0.5,
+        appendTo: 'body',
+        start : function(){
+            try{
+                if (typeof($(this)[0].parentElement.querySelector("#ztitle").getAttribute("label"))=='string'){
+                    var textObj = $(this)[0].parentElement.querySelector("#ztitle")
+                    log.info("dragging",textObj.getAttribute('type'), textObj.getAttribute('label'))
+                }
+            }catch(err){;}
+        },
+        helper: function() {
+            return $(this).clone().css({
+                width: $(event.target).width(),
+                'border-style': "solid",
+                'border-width': 1
+            });
+        }
+    });
+  }
+
+
+
 
 //displays user results
 
 function displayUserQueryResultsHelper( userQueryResults, flipY, includeSketch = true )
 {
-  // console.log(userQueryResults)
   clearUserQueryResultsTable();
   var resultsDiv = $("#results-table");
   var current = 0;
@@ -759,7 +917,6 @@ function displayRepresentativeResultsHelper( representativePatternResults , flip
                   return y(d.yval + (d.errorval / 2));
                 })
                 .style("stroke", "blue");
-
                 graph.selectAll("dot")
                   .data(data)
                   .enter().append("line")
@@ -1095,36 +1252,7 @@ function displayOutlierResultsHelper( outlierResults )
   });
 }
 
-function uploadToSketchpadNew( draggableId, graphType )
-{
-  var draggedGraph;
-  var xType, yType, category;
-  switch( graphType ) {
-    case "representativeQuery":
-      draggedGraph = representativeDygraphsNew[draggableId]["data"];
-      xType = representativeDygraphsNew[draggableId]["xType"];
-      yType = representativeDygraphsNew[draggableId]["yType"];
-      category = representativeDygraphsNew[draggableId]["zType"];
-      break;
-    case "outlierQuery":
-      draggedGraph = outlierDygraphsNew[draggableId]["data"];
-      xType = outlierDygraphsNew[draggableId]["xType"];
-      yType = outlierDygraphsNew[draggableId]["yType"];
-      category = outlierDygraphsNew[draggableId]["zType"];
-      break;
-    default: //userQuery
-      draggedGraph = userQueryDygraphsNew[draggableId]["data"];
-      xType = userQueryDygraphsNew[draggableId]["xType"];
-      yType = userQueryDygraphsNew[draggableId]["yType"];
-      category = userQueryDygraphsNew[draggableId]["zType"];
-  }
 
-  angular.element($("#sidebar")).scope().selectedCategory = category;
-  angular.element($("#sidebar")).scope().selectedXAxis = xType;
-  angular.element($("#sidebar")).scope().selectedYAxis = yType;
-  plotSketchpadNew( draggedGraph )//, xType, yType, zType);
-  return draggedGraph
-}
 
 // function addRow() {
 //   var table = $("#zql-table > tbody")[0];
@@ -1133,21 +1261,6 @@ function uploadToSketchpadNew( draggableId, graphType )
 //   $("#zql-table").append("<tr id=\"table-row-" + rowNumber + "\"class=\"tabler\"><td><input class=\"form-control zql-table number\" type=\"text\" size=\"3\" value=\" \"></td><td><input class=\"form-control zql-table x-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table y-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table z-val\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table constraints\" type=\"text\" size=\"10\" value=\" \"></td><td><input class=\"form-control zql-table process\" type=\"text\" id=\"process-" + rowNumber + "\"size=\"25\" value=\" \"></td><td></td></tr>");
 // }
 
-$(document).ready(function(){
-  // $('#add-row').click(function(){
-  //   addRow();
-  // });
-
-  $("#draw-div").droppable({
-    accept: ".draggable-graph",
-    drop: function( event, ui )
-    {
-      log.info("dropped successfully to canvas")
-      console.log("drop",$(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'))
-      uploadToSketchpadNew($(ui.draggable).attr('id'), $(ui.draggable).data('graph-type'));
-    }
-  });
-});
 
 function clearRepresentativeTable()
 {
@@ -1166,7 +1279,7 @@ function clearUserQueryResultsTable()
 
 function initSettingPanel()
 {
-  scope = angular.element($("#showBar")).scope(); 
+  scope = angular.element($("#showBar")).scope();
   
   scope.similarityToggle();
   scope.similarity = "Euclidean"; 
@@ -1191,6 +1304,9 @@ function initSettingPanel()
   scope.selectedSmoothingToggle();
   scope.selectedSmoothing = "none";
   scope.selectedSmoothingToggle();
+  scope.chartSettings = ChartSettings;
+  scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
+  scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
    
   $("#slider-range-max").slider({value:0.5});
   $("#amount").val("0.5");
@@ -1541,3 +1657,18 @@ function filterUncheckAttributes(attributeList,selectedAxis){
 
     return returnList;
 };
+
+function getBinningCoefficient()
+{
+    return $( "#binning-slider" ).slider( "value" );
+}
+
+function setScatterPoints(points)
+{
+    scatterPoints = points
+}
+
+function getScatterPoints()
+{
+    return scatterPoints;
+}

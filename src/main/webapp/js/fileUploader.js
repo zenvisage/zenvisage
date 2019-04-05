@@ -1,6 +1,6 @@
 app.controller('fileuploadController', [
-      '$scope', '$rootScope', '$cookies', 'datasetInfo',
-      function($scope, $rootScope, $cookies, datasetInfo){
+      '$scope', '$rootScope', '$cookies', 'datasetService',
+      function($scope, $rootScope, $cookies, datasetService){
 
   var formData;
   var datasetNameInput;
@@ -222,8 +222,8 @@ app.controller('fileuploadController', [
                       expiresValue.setMinutes(today.getMinutes() + 120);
                       $cookies.putObject("userinfo",response,{'expires': expiresValue})
                       // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
-                      datasetInfo.storetablelist(response['tablelist']);
-                      $scope.tablelist = datasetInfo.getTablelist();
+                      datasetService.storetablelist(response['tablelist']);
+                      $scope.tablelist = datasetService.getTablelist();
                       // console.log("table inserted into your account successfully")
                     // }
 

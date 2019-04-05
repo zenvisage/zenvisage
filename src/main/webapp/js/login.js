@@ -1,8 +1,8 @@
 // var app = angular.module('zenvisage', []);
 
   app.controller('loginModalController', [
-      '$scope', '$rootScope', '$http', '$cookies','datasetInfo',
-      function($scope, $rootScope, $http, $cookies, datasetInfo){
+      '$scope', '$rootScope', '$http', '$cookies','datasetService',
+      function($scope, $rootScope, $http, $cookies, datasetService){
 
     $("#login_cancel").on('click',function(){
       $('#loginModal').modal('hide');
@@ -35,8 +35,8 @@
                     expiresValue.setMinutes(today.getMinutes() + 120);
                     $cookies.putObject("userinfo",response,{'expires': expiresValue})
                     // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
-                    datasetInfo.storetablelist(response['tablelist']);
-                    $scope.tablelist = datasetInfo.getTablelist();
+                    datasetService.storetablelist(response['tablelist']);
+                    $scope.tablelist =   datasetService.getTablelist();
                     location.reload();
                   }else{
                     alert("Failed to log in");
@@ -66,8 +66,8 @@
                     expiresValue.setMinutes(today.getMinutes() + 120);
                     $cookies.putObject("userinfo",response,{'expires': expiresValue})
                     // angular.element($('#sidebar')).scope().updatetablelist(response['tablelist']);
-                    datasetInfo.storetablelist(response['tablelist']);
-                    $scope.tablelist = datasetInfo.getTablelist();
+                    datasetService.storetablelist(response['tablelist']);
+                    $scope.tablelist = datasetService.getTablelist();
                     location.reload();
 
                   }else{
