@@ -139,6 +139,21 @@
 		</dependency>
 
 		<dependency>
+			<artifactId>edu.uiuc.zenvisage.LPSOLVESolverPack</artifactId>
+			<groupId>LPSOLVESolverPack</groupId>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/LPSOLVESolverPack.jar</systemPath>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<artifactId>edu.uiuc.zenvisage.SCPSolver</artifactId>
+			<groupId>SCPSolver</groupId>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/SCPSolver.jar</systemPath>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.googlecode.javaewah</groupId>
 			<artifactId>JavaEWAH</artifactId>
 			<version>0.7.9</version>

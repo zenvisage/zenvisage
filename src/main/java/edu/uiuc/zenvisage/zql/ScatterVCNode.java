@@ -33,11 +33,12 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.YColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZColumn;
 import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLRow;
 
+
 public class ScatterVCNode extends VisualComponentNode {
 	static final Logger logger = LoggerFactory.getLogger(ScatterVCNode.class);
 
 	private VisualComponentList vcList;
-	
+
 	public VisualComponentList getVcList() {
 		return vcList;
 	}
@@ -54,7 +55,7 @@ public class ScatterVCNode extends VisualComponentNode {
 
 	@Override
 	public void execute() {
-		
+
 		// update lookup table with axisvariables
 		XColumn x = this.getVc().getX();
 		YColumn y = this.getVc().getY();
@@ -74,9 +75,9 @@ public class ScatterVCNode extends VisualComponentNode {
 			AxisVariable axisVar = new AxisVariable("Z", z.getAttribute(), z.getValues());
 			lookuptable.put(z.getVariable(), axisVar);
 		}
-		
+
 		// execute scatter
-		
+
 		// data fetcher
 		long startTime = System.currentTimeMillis();
 		this.vcList = getScatterData();
@@ -99,20 +100,20 @@ public class ScatterVCNode extends VisualComponentNode {
 			e.printStackTrace();
 		} */
 		// data transformer
-		
+
 		// After we have executed this scatter vc node, we have fetched the data and performed data transformation.
 		// This allows us to easily move on to the task processor, while keeping the VCNode -> ProcessNode flow, with having to add a specific data transform node
 		this.getLookUpTable().put(this.getVc().getName().getName(), this);
 		this.state = State.FINISHED;
 	}
-	
+
 	private VisualComponentList getScatterData() {
-		
+
 		// old method: grab info from ScatterPlotQuery
 		//String yAxis = query.yAxis; // eg year, yValues = [2001, 2002, ...]
 		//String xAxis = query.xAxis; // eg soldPrice, xValues = [10000, 12330, ...]
 		//String zAxis = query.zAxis; // eg State, zValues = ['CA', 'MN', ...]
-		
+
 		// new method: grab info from the VisualComponentQuery
 		// call SQL backend (for scatter plot, no aggregation method)
 		ZQLRow row = buildRowFromNode();
@@ -127,59 +128,100 @@ public class ScatterVCNode extends VisualComponentNode {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		//update the look table with name variable, e.g, f1)
+		String name = this.getVc().getName().getName();
+
+		//Fills in missing info into vcList for output purposes
+		AxisVariable axisVar = (AxisVariable) lookuptable.get(this.getVc().getZ().getVariable());
 		VisualComponentList vcList = sqlQueryExecutor.getVisualComponentList();
+		// If our Z values are from the output of a process, we need to sort the list using the scores
+		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length > 0) {
+			double[] scores = axisVar.getScores();
+			List<String> values = axisVar.getValues();
+			sortVisualComponentList(vcList, scores, values, axisVar.getAttribute());
+		} else {
+			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {
+				VisualComponent vc = vcList.getVisualComponentList().get(i);;
+				vc.setzAttribute(this.getVc().getZ().getAttribute());
+			}
+		}
 		if (this.getVc().getZ().isAggregate()) {
 			return createAggregatedScatterResults(vcList);
 		}
-		
-		return vcList;
-	}
-	
-/**
- * Aggregates a list of one or moreVisualComponent into a list of one VisualComponent
- * @param vcList
- */
-private VisualComponentList createAggregatedScatterResults(VisualComponentList vcList) {
-	if (vcList.getVisualComponentList().size() <= 1) {
-		return vcList;
-	}
-	
-	ArrayList<WrapperType> aggregateXList = new ArrayList<WrapperType>();
-	ArrayList<WrapperType> aggregateYList = new ArrayList<WrapperType>();
-	for (VisualComponent vc : vcList.getVisualComponentList()) {
-		//String zValue = vc.getZValue().getStrValue();
-		Points points = vc.getPoints();
-		List<WrapperType> xValues = points.getXList();
-		List<WrapperType> yValues = points.getYList();
-		aggregateXList.addAll(xValues);
-		aggregateYList.addAll(yValues);
-	}
-	Points aggregatePoints = new Points(aggregateXList, aggregateYList);
-	String xAttribute = vcList.getVisualComponentList().get(0).getxAttribute();
-	String yAttribute = vcList.getVisualComponentList().get(0).getyAttribute();
-	VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
 
-	VisualComponentList out = new VisualComponentList();
-	out.addVisualComponent(aggregateVisualComponent);
-	
-	return out;
-}
+		this.getLookUpTable().put(name, vcList);
+
+		return vcList;
+	}
+
+	/**
+	 * Aggregates a list of one or moreVisualComponent into a list of one VisualComponent
+	 * @param vcList
+	 */
+	private VisualComponentList createAggregatedScatterResults(VisualComponentList vcList) {
+		if (vcList.getVisualComponentList().size() <= 1) {
+			return vcList;
+		}
+
+//	ArrayList<WrapperType> aggregateXList = new ArrayList<WrapperType>();
+//	ArrayList<WrapperType> aggregateYList = new ArrayList<WrapperType>();
+//	for (VisualComponent vc : vcList.getVisualComponentList()) {
+//		//String zValue = vc.getZValue().getStrValue();
+//		Points points = vc.getPoints();
+//		List<WrapperType> xValues = points.getXList();
+//		List<WrapperType> yValues = points.getYList();
+//		aggregateXList.addAll(xValues);
+//		aggregateYList.addAll(yValues);
+//	}
+//	Points aggregatePoints = new Points(aggregateXList, aggregateYList);
+//	String xAttribute = vcList.getVisualComponentList().get(0).getxAttribute();
+//	String yAttribute = vcList.getVisualComponentList().get(0).getyAttribute();
+//	VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
+//
+//	VisualComponentList out = new VisualComponentList();
+//	out.addVisualComponent(aggregateVisualComponent);
+
+		ArrayList<WrapperType> aggregateXList = new ArrayList<WrapperType>();
+		ArrayList<WrapperType> aggregateYList = new ArrayList<WrapperType>();
+		VisualComponentList out = new VisualComponentList();
+		for (VisualComponent vc : vcList.getVisualComponentList()) {
+			//String zValue = vc.getZValue().getStrValue();
+			Points points = vc.getPoints();
+			List<WrapperType> xValues = points.getXList();
+			List<WrapperType> yValues = points.getYList();
+			aggregateXList.addAll(xValues);
+			aggregateYList.addAll(yValues);
+			Points aggregatePoints = new Points(aggregateXList, aggregateYList);
+			String xAttribute = vc.getxAttribute();
+			String yAttribute = vc.getyAttribute();
+			System.out.println("Adding aggregate scatterplot with x attribute " + vc.getxAttribute() + " and y attribute " + vc.getyAttribute());
+			System.out.println("Num x points is " + vc.getPoints().getXList().size());
+			System.out.println("Num y points is " + vc.getPoints().getYList().size());
+			System.out.println("First point in xlist " + vc.getPoints().getXList().get(0));
+			System.out.println("First point in ylist " + vc.getPoints().getYList().get(0));
+			VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
+			//out = new VisualComponentList();
+			out.addVisualComponent(aggregateVisualComponent);
+		}
+		return out;
+	}
 	//TODO: implement
 	private void simpleBinning(Map<String, ScatterResult> allDataCharts, int bins) {
 		int rows = 100; // height
 		int cols = 200; // width
 		int cells = rows*cols;
-		// grid interval 
+		// grid interval
 		float S = (float) Math.sqrt(cells/bins);
-		
+
 		float x = S/2;
 		float y = S/2;
-		
+
 		// create all grid centers
 		while (y < rows && x < cols) {
-			
+
 			// add grid to array, maybe count points here
-			
+
 			// move right, next grid in this row
 			x = x + S;
 			if (x + S > cols) {
@@ -187,17 +229,17 @@ private VisualComponentList createAggregatedScatterResults(VisualComponentList v
 				y = y + S;
 				x = S/2;
 			}
-			
+
 			Point grid_center = new Point(x,y);
 		}
 		// 2D array for each bin.
 		// look through all tuples, add them to each bin.
-		
+
 		// instead of having X points in a grid, just display the grid center, and the count (or size)
 		// Our ScatterResult object currently supports points as just tuples of (x,y)
-		// to support binning, we probably need (x,y, count)? 
-		
-		// how does front end use the binning? 
-		
+		// to support binning, we probably need (x,y, count)?
+
+		// how does front end use the binning?
+
 	}
 }

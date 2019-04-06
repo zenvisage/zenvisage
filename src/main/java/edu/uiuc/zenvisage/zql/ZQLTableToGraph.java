@@ -43,7 +43,7 @@ public class ZQLTableToGraph {
 	 * @throws IOException 
 	 */
 	public QueryGraph processZQLTable(ZQLTable table, LookUpTable lookUpTable) throws SQLException, IOException {
-		
+
 		List<Node> queryEntryNodes = new ArrayList<Node>();
 		QueryGraph graph = new QueryGraph();
 		if (lookUpTable == null) {
@@ -66,7 +66,7 @@ public class ZQLTableToGraph {
 		System.out.println("metadata");
 		System.out.println(xAttributes);
 		System.out.println(yAttributes);
-		
+
 		Queue<Node> nodeQueue = new ArrayDeque<Node>();
 
 		// first pass, generate nodes
@@ -76,34 +76,34 @@ public class ZQLTableToGraph {
 			YColumn y = row.getY();
 			ZColumn z = row.getZ(); // eg z1 or v1
 			Name name = row.getName();
-			
+
 			// Create the nodes
 			VisualComponentQuery vc = new VisualComponentQuery(row.getName(), x, y, z, row.getConstraint(), row.getViz(), row.getSketchPoints());
 			SQLQueryExecutor sqlQueryExecutor= new SQLQueryExecutor();
 			VisualComponentNode vcNode = new VisualComponentNode(vc, lookUpTable, sqlQueryExecutor);
 			Processe process = row.getProcesse();
 			ProcessNode processNode = new ProcessNode(process, lookUpTable);
-			
+
 			if (vc.getViz()!=null) {
 				if(vc.getViz().getMap().containsKey(VizColumn.type) && vc.getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
 					vcNode = new ScatterVCNode(vc, lookUpTable, sqlQueryExecutor);
 					processNode = new ScatterProcessNode(process, lookUpTable);
 				}
 			}
-			
+
 			vcNode.setDb(db);
 
-			
+
 			// Add to queue
 			nodeQueue.add(vcNode);
 			if(process != null && process.getVariables().size() > 0) {
 				nodeQueue.add(processNode);
 			}
-			
+
 			// Add to nodeMap
 			// assume each var will be written to only in one row, and laters rows only read that var
 			// this assumption is needed because we are creating nodes first, then edges and we don't need to depend on row order
-			nodeMap.put(name.getName(), vcNode); 
+			nodeMap.put(name.getName(), vcNode);
 			if (x.getVariable() != null && !x.getVariable().equals("") && x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 				if(x.getAttributes().get(0).equals("*")) {
 					// replaces x1<-* with x1<-'year','month',...
@@ -134,13 +134,13 @@ public class ZQLTableToGraph {
 				XColumn x = vcNode.getVc().getX();
 				YColumn y = vcNode.getVc().getY();
 				ZColumn z = vcNode.getVc().getZ();
-				
-				// A vcnode is an entry node if it has defined its X,Y,Z (so has no parents) eg X1<-'month', Y1<-'soldprice', Z1<-'state'.* 
+
+				// A vcnode is an entry node if it has defined its X,Y,Z (so has no parents) eg X1<-'month', Y1<-'soldprice', Z1<-'state'.*
 				// New entry node! Add as an entry node for this query, and entry node for the entire graph
 				// Since we are assuming variables are write once, read forever
-				// A vcnode is also an entry node if it has no variables, but defines all its X,Y,Z (so still no parents) Eg X: 'month', Y: 'soldprice', Z: 'state'.* 
+				// A vcnode is also an entry node if it has no variables, but defines all its X,Y,Z (so still no parents) Eg X: 'month', Y: 'soldprice', Z: 'state'.*
 				// so we don't need this check: x.getVariable() != null && !x.getVariable().equals("")
-				
+
 				if (x.getAttributes() != null && !x.getAttributes().isEmpty()) {
 					if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 						// if ZAttribute and ZValues are both null emptyZ case
@@ -149,17 +149,17 @@ public class ZQLTableToGraph {
 							queryEntryNodes.add(vcNode);
 							graph.entryNodes.add(vcNode);
 							continue;
-						}	
-					}					
+						}
+					}
 				}
-				
+
 				// A vcNode is also an entry node if it is a sketch
 				if (vcNode.getVc().getName().getSketch()) {
 					queryEntryNodes.add(vcNode);
 					graph.entryNodes.add(vcNode);
-					continue;					
+					continue;
 				}
-				
+
 				// So if any x,y,or z variable is referenced from table, link that as a parent
 				// we can have multiple parents (say Z from a processNode, X,Y from a vcNode)
 				Node prevParent = null;
@@ -170,7 +170,7 @@ public class ZQLTableToGraph {
 						vcNode.addParent(parent);
 						prevParent = parent;
 					}
-				} 
+				}
 				if (nodeMap.containsKey(y.getVariable())) {
 					Node parent = nodeMap.get(y.getVariable());
 					if (prevParent != parent && parent != vcNode) { // don't add a parent twice
@@ -178,8 +178,8 @@ public class ZQLTableToGraph {
 						vcNode.addParent(parent);
 						prevParent = parent;
 					}
-				} 
-				if (nodeMap.containsKey(z.getVariable())) { 
+				}
+				if (nodeMap.containsKey(z.getVariable())) {
 					Node parent = nodeMap.get(z.getVariable());
 					// / make sure this parent is not ourself! We may not be an entry node, but we may define Z
 					if (prevParent != parent && parent != vcNode) {
@@ -187,9 +187,9 @@ public class ZQLTableToGraph {
 						vcNode.addParent(parent);
 					}
 				}
-				
+
 			}
-			
+
 			if (currNode instanceof ProcessNode) {
 				ProcessNode processNode = (ProcessNode) currNode;
 				Processe process = processNode.getProcess();
@@ -200,7 +200,7 @@ public class ZQLTableToGraph {
 						if (parent != null) {
 							hasParent = true;
 							parent.addChild(processNode);
-							processNode.addParent(parent);					
+							processNode.addParent(parent);
 						}
 					}
 				}
@@ -212,7 +212,7 @@ public class ZQLTableToGraph {
 			}
 		}
 		return graph;
-		
+
 	}
 	
 	private DatabaseMetaData readSchema(String schemafilename) throws IOException {

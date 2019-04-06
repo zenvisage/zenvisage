@@ -704,7 +704,7 @@
 
             </div>
 
-            <div id="draw-div"  data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
+              <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
             <!--<div id="scatter-div" ng-controller="scatterController" ng-show="chartSettings.selectedChartOption=='Scatter'">-->
               <div id="scatter-div" ng-show="chartSettings.selectedChartOption=='Scatter'">
               <div class="col-md-12">
