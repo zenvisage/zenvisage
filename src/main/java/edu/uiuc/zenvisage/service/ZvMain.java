@@ -439,7 +439,29 @@ public class ZvMain {
 		   return "";
 	   }
    }
+	public String scatterSimilarity(String zqlQuery) throws IOException, InterruptedException{
+		System.out.println(zqlQuery);
+		edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = null;
+		try {
+			zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+//		ZQLParser parser = new ZQLParser();
+		ZQLTableToGraph parser = new ZQLTableToGraph();
+		QueryGraph graph;
+		try {
+			graph = parser.processZQLTable(zqlTable, null);
+			VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
+			String result = new ObjectMapper().writeValueAsString(convertVCListtoScatterOutput(output));
+			System.out.println("Drag and drop done");
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
    /**
     * 
     * @param zqlQuery Receives as a string the JSON format of a ZQLTable

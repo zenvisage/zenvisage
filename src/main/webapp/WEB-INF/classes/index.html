@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<noscript>
+  <div>
+    <h1>This site requires JavaScript enabled and only support for laptop/desktop browser display browser size.</h1>
+  </div>
+</noscript>
+<html lang="en" ng-app="zenvisage">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenvisage</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <link href="css/draw.css" rel="stylesheet">
+    <link href="css/graph.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/introjs.css" rel="stylesheet">
+    <link href="css/nouislider.css" rel="stylesheet">
+    <!-- <script type="text/javascript" src="secret.json"></script> -->
+    </head>
+    <div id = "container" style="display:none;">
+  <body class = "intro_after_dataload">
+    <!-- this div contains everything in the body -->
+
+
+<div id="loginModal" class="modal fade in" tabindex="-1" role="dialog" aria-hidden="true" ng-controller="loginModalController">
+     <div id="loginDialog" class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" align="center">
+            <img src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
+          </div>
+          <div class="modal-body">
+
+              <form id="logInForm" action="" method="post">
+
+                <div class="form-group">
+                  <label>Email:</label><input type="text" id="username" class="form-control input-lg" name="uname">
+                </div>
+                <div class="form-group">
+                  <label>Password:</label><input type="password" id="password" class="form-control input-lg" name="pass">
+                </div>
+                <div class="form-group">
+
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="signIn" value="Sign In"> Sign In </button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="register" value="Register"> Register </button>
+
+                </div>
+
+              </form>
+
+              <button class="btn btn-primary btn-lg btn-block" id="login_cancel">Cancel</button>
+
+           </div>
+          <div class="modal-footer"></div>
+        </div>
+     </div>
+  </div>
+
+
+    <div id="everything">
+
+      <div id="errorModal" class="modal fade">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">Zenvisage Error</h4>
+            </div>
+            <div id="errorModalBody" class="modal-body">
+              <p>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#errorModalCollapse" aria-expanded="false" aria-controls="collapseExample">
+                  Click to show error message
+                </button>
+              </p>
+              <div class="collapse" id="errorModalCollapse">
+                <div class="card card-block" id="errorModalText">
+                  Unknown Error <!-- Backend error is filled in here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal -->
+      <!-- <div ng-controller="fileuploadController"> -->
+      <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post" ng-controller="fileuploadController">
+      <!-- <form id="uploaderForm" action="/zv/fileUpload" enctype="multipart/form-data" method="post"> -->
+
+        <div class="modal fade bd-example-modal-sm" id="uploaderModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Upload your own dataset</h4>
+              </div>
+              <div class="modal-body">
+                <a href="https://github.com/zenvisage/zenvisage/wiki/Instructions-for-uploading-new-datasets"> Instructions on how to format and upload your own datasets. </a> <br><br/>
+                Dataset name <input id="datasetNameInput" type="text" name="datasetName"><br/><br/>
+                <div class="row">
+                  <div class="col-md-5" style="left: 33%">
+                    <input type="file" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Choose dataset file" name="csv">
+                  </div>
+                </div>
+                or Upload by Copy and Paste
+                <textarea rows="15" cols="70" id="dataInputTextbox" name="dataInputTextbox"  placeholder="Copy and Paste CSV Data Here"></textarea>
+              </div>
+                <div class="modal-footer">
+                <input id="dataset-upload-submit" type="submit" class="btn btn-primary" value="Upload">
+                <!-- <img src="js/lib/Eclipse.svg" id = 'loadingEclipse_upload' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;"> -->
+                <p id = 'uploadingProgressMessage' style="display: none; position: relative;  left: 45%; z-index: 10; width: 8%; height: 10%;">Uploading...</p>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+    <!-- </div>   -->
+
+
+      <div id="popup" class="modal fade" >
+        <!-- Modal content -->
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="font-size:80;">
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            <br>
+            <br>
+            <br>
+            <div style="text-align:center; font-size:16px;"><p>Please click the play button to start the interactive tutorial</p><p>(also located on the top-left corner) </p> <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 30px; "></i></a></div>
+            <br>
+            <br>
+            <br>
+            <div class="modal-footer">
+            <form id="popup-form">
+            <input id="close-intro-button" type="submit" class="btn btn-primary" value="Do not show this message again.">
+            </form>
+          </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- <div id="mobilePopup">
+      <span class="popuptext" id="myPopup">Zenvisage is not inteded for mobile screen resolutions.</span>
+    </div> -->
+
+    <div class="modal fade" id="define-attributes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style = "left: 10%; width: 500px">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Set attributes</h4>
+          </div>
+          <form id="define-attributes-form">
+          <div class="modal-body" style = "max-height: calc(100vh - 100px); overflow-y:auto;">
+              Select the axes and data-types of the attributes 
+
+            <div class = "row" >
+
+              <br>
+              <div style="margin-left:15%;float: left;text-align: center;">
+              Attribute Names
+              <br>
+              <br>
+              <br>  <table class = "x-attributes" ></table>
+            </div>
+            <div style="margin-left:5%;float: left; text-align: center;">
+              Select Axes
+              <br>
+              <br>
+              X &nbsp;&nbsp; Y &nbsp;&nbsp; Z
+              <br>  <table class = "y-attributes" style="display:inline-block; "></table>
+            </div>
+            <div style="margin-left:5%;float: left">
+              Data Type
+              <br>
+              <br>
+              <br>  <table class = "z-attributes" style="display:inline-block"></table>
+            </div>
+              <br>
+          </div>
+          <div class="modal-footer">
+
+            <!-- CheckBox for split table 
+            <input id="split-table-or-not" type="checkbox" name="vehicle1" value="true">Split database table based on join key 
+            -->
+            <span><input id="attribute-submitButton" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 50px;"></span>
+          </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- new div for join key selection-->
+    <!-- XuMo -->
+    <div class="modal fade" id="join-key-selection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="datasetController">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style = "left: 10%; width: 500px">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Set join key for split data table</h4>
+          </div>
+          <form id="define-join-key-form">
+          <div class="modal-body" style = "max-height: calc(100vh - 100px); overflow-y:auto;">
+              Select the join-key attribute
+
+            <div class = "row" >
+              <br>
+              <div style="margin-left:15%;float: left;text-align: center;">
+              Attribute Names
+              <br>
+              <br>
+              <br>  <table class = "join-key-candidates" ></table>
+              </div>
+            
+              <div style="margin-left:5%;float: left; text-align: center;">
+              Select Area
+              <br>
+              <br>
+              <br>  <table class = "join-key-select-or-not" style="display:inline-block; "></table>
+              </div>
+          </div>
+
+          <div class="modal-footer">
+
+            <span><input id="attribute-submitButton1" type="submit" class="btn btn-primary" value="Submit" style="margin-left: 50px;"></span>
+          </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+      <div class="modal fade" id="pattern-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Upload Query Data Pattern</h4>
+            </div>
+            <div class="modal-body" id="pattern-upload-body">
+                Please select the permissible axes and type for each attribute.
+              <form id="pattern-upload-form" onsubmit="return patternLoad();">
+                <br> x values: <input type="text" id="x-pattern" placeholder="e.g. 27,42,65,53" style="width: 80%;">
+                <br> y values: <input type="text" id="y-pattern" placeholder="e.g. 91,37,63,98" style="width: 80%;">
+                <br>
+                <div class="modal-footer">
+                  <input id="pattern-submit" type="submit" class="btn btn-primary" value="Upload">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="dynamic-class" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="col-md-7">
+                <h4 class="modal-title">Class creation</h4>
+              </div>
+              <div class="col-md-5">
+                <button type="button" class="btn btn-default" ng-click="switchView('slider')" >Switch to Slider View</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
+            </div>
+            <div class="modal-body" id="dynamic-class-creation-body">
+              <div class="row">
+                <div class="col-md-5">
+                  classes
+                </div>
+                <div class="col-md-7">
+                  values
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptext">You can create a group using the following syntax: <b>[x,y]</b>. To create additional groups, you can simply create more brackets, separated by commas: <b>[x,y],[y,z]</b>. The words <b>min</b> and <b>max</b> are hard-coded to represent the minimum and maximum values for the attribute.</span>
+                  </div>
+                </div>
+              </div>
+              <div id="class-rows">
+                <div class="row noUi-row" id="dynamic-class-row-1">
+                  <div class="col-md-5">
+                    <div class="dropdown">
+                      <select ng-model="data.option1" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text">
+                  </div>
+                </div>
+
+                <div class="row noUi-row" id="dynamic-class-row-2">
+                  <div class="col-md-5">
+                    <div class="dropdown">
+                      <select ng-model="data.option2" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text">
+                  </div>
+                </div>
+
+                <div class="row noUi-row" id="dynamic-class-row-3">
+                  <div class="col-md-5">
+                    <div class="dropdown">
+                      <select ng-model="data.option3" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text">
+                  </div>
+                </div>
+
+                <div class="row noUi-row" id="dynamic-class-row-4">
+                  <div class="col-md-5">
+                    <div class="dropdown">
+                      <select ng-model="data.option4" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="dynamic-class-submit-button" ng-click="createOrModifyClassesOld()"class="btn btn-primary">Create classes</button>
+            </div>
+
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse3' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
+
+            <div class="modal-header">
+              <h4 class="modal-title">Created classes</h4>
+            </div>
+            <div class="modal-body" id="dynamic-class-info-body">
+            <div class="row">
+              <div class="col-md-2 text-left">
+                <b>Class</b>
+              </div>
+              <div class="col-md-2 text-left">
+              </div>
+              <div class="col-md-4 text-left">
+                <b>Ranges {{classes[0].attributes}}</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Count</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Delete</b>
+              </div>
+            </div>
+            <hr>
+              <div ng-repeat="class in classes" >
+                <div class="row">
+                  <div class="col-md-2 text-left">
+                    <input class="form-control" type="text" ng-model="class.class_id">
+                  </div>
+                  <div class="col-md-2 text-left">
+                  </div>
+                  <div class="col-md-4 text-left">
+                    <div ng-repeat="range in class.formattedRanges">
+                      {{range}}
+                    </div>
+                  </div>
+                  <div class="col-md-2 text-left">
+                    {{class.count}}
+                  </div>
+                  <div class="col-md-2">
+                    <button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="deleteClass(classes, $index)">&times;</button>
+                  </div>
+                </div>
+                <hr ng-if="!$last">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="load-dynamic-class-button" class="btn btn-primary" style="display:none;" ng-click="loadDynamicClass()" data-dismiss="modal">Load Dynamic Class</button>
+              <button class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODO(Renxuan): dynamic class slider -->
+      <div class="modal fade" id="dynamic-class-with-slider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="classCreationController">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="col-md-7">
+                <h4 class="modal-title">Class creation</h4>
+              </div>
+              <div class="col-md-5">
+                <button type="button" class="btn btn-default" ng-click="switchView('text')" >Switch to Text View</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
+            </div>
+            <div class="modal-body" id="dynamic-class-creation-with-slider-body">
+              <div class="row">
+                <div class="col-md-3">
+                  classes
+                </div>
+                <div class="col-md-2">
+                  # of class
+                </div>
+                <div class="col-md-7">
+                  slider
+                </div>
+              </div>
+              <div id="class-rows-with-slider">
+                <div class="row noUi-row" id="dynamic-class-row-with-slider-1">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option1" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[0]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-1"> </div>
+                    <div id="legend1" style="z-index:-1;"> </div>
+                  </div>
+                </div>
+
+                <div class="row noUi-row" id="dynamic-class-row-with-slider-2">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option2" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[1]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-2"> </div>
+                    <div id="legend2" style="z-index:-1;"> </div>
+                  </div>
+                </div>
+
+                <div class="row noUi-row" id="dynamic-class-row-with-slider-3">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option3" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[2]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-3"> </div>
+                    <div id="legend3" style="z-index:-1;"> </div>
+                  </div>
+                </div>
+
+                <div class="row noUi-row" id="dynamic-class-row-with-slider-4">
+                  <div class="col-md-3">
+                    <div class="dropdown">
+                      <select ng-model="data.option4" ng-options="option for option in AxisInfo">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <input class="form-control" type="text" ng-model="data.numOfClass[3]">
+                  </div>
+                  <div class="col-md-7">
+                    <div id="dynamic-class-slider-4"> </div>
+                    <div id="legend4" style="z-index:-1;"> </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="dynamic-class-with-slider-submit-button" ng-click="createOrModifyClasses()" class="btn btn-primary">Create classes</button>
+            </div>
+
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse4' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
+
+            <div class="modal-header">
+              <h4 class="modal-title">Created classes</h4>
+            </div>
+            <div class="modal-body" id="dynamic-class-with-slider-info-body">
+            <div class="row">
+              <div class="col-md-2 text-left">
+                <b>Class</b>
+              </div>
+              <div class="col-md-2 text-left">
+              </div>
+              <div class="col-md-4 text-left">
+                <b>Ranges {{classes[0].attributes}}</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Count</b>
+              </div>
+              <div class="col-md-2 text-left">
+                <b>Delete</b>
+              </div>
+            </div>
+            <hr>
+              <div ng-repeat="class in classes" >
+                <div class="row">
+                  <div class="col-md-2 text-left">
+                    <input class="form-control" type="text" ng-model="class.class_id">
+                  </div>
+                  <div class="col-md-2 text-left">
+                  </div>
+                  <div class="col-md-4 text-left">
+                    <div ng-repeat="range in class.formattedRanges">
+                      {{range}}
+                    </div>
+                  </div>
+                  <div class="col-md-2 text-left">
+                    {{class.count}}
+                  </div>
+                  <div class="col-md-2">
+                    <button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="deleteClass(classes, $index)">&times;</button>
+                  </div>
+                </div>
+                <hr ng-if="!$last">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="load-dynamic-class-slider-button" class="btn btn-primary" style="display:none;" ng-click="loadDynamicClass()" data-dismiss="modal">Load Dynamic Class</button>
+              <button class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Renxuan TODO ends here -->
+
+      <!-- this div contains the left-bar with the data information -->
+      <div id="left-bar">
+        <div id="sidebar" class="interface" ng-controller="datasetController"  >
+          <h4>
+            <span><img data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"  src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
+            <a href="https://github.com/zenvisage/zenvisage/wiki/Functionalities-and-Options"><i class="glyphicon glyphicon-info-sign" style="font-size: 20px;"></i></a>
+            <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 20px; "></i></a>
+            <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
+            <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
+          </h4>
+
+
+          <div style="margin-right: 7%;margin-right: 7%;" class="btn-group-vertical" role="group" aria-label="...">
+            <hr>
+
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+              <button id="loginmodaltrigger"  type="button" class="btn btn-default" style="display:none;">Sign in / Sign up</button>
+            </div>
+            </div>
+
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+              <button id="signoutbutton" type="button" class="btn btn-default" style="display:none;">Sign out</button>
+            </div>
+            </div>
+            <hr>
+
+          </div>
+
+
+          <div class="dropdown" id="dataset" data-intro= 'New datasets can be uploaded with a .txt schema file and a .csv data file. Uploaded datasets can be selected from the dropdown menu. An existing dataset can also be selected from the dropdown.' data-step="2">
+            <h5><b>Dataset</b><button id="upload_dataset_btn" type="button"  class="textButton" data-toggle="modal"  data-target=".bd-example-modal-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+            <!-- Button trigger modal -->
+
+            <!--<select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()"  ng-model="selectedDataset" id="dataset-form-control">-->
+            <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset='real_estate';"  ng-model="selectedDataset" id="dataset-form-control">
+              <option ng-repeat="table in tablelist">{{table}}</option>
+            </select>
+          </div>
+          <div class = 'side-info-text' data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
+            <h5 style = 'width:130px'><b>Pattern</b><button type="button" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
+          </div>
+
+          <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
+            <!-- <h5><b>Category</b>
+            <button type="button" class="textButton" ng-click="callLoadAxisInfo()" data-toggle="modal" data-target="#class-creation" data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+            <button type="button" class="textButton" ng-click="callGetClassInfo()" data-toggle="modal" data-target="#class-info"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> </button>
+            </h5>
+            <div>
+            <div ng-repeat="category in categories">
+              <label>
+                <input type="radio" ng-change="onDataAttributeChange()" value={{category}} ng-model="$parent.selectedCategory"/><span>{{category}}</span>
+              </label>
+            </div>
+          </div> -->
+
+          <h5 style = 'width:150px'><b>Category</b>
+          <button type="button" id="dynamicClassSliderButton" class="textButton" data-toggle="modal" data-target="#dynamic-class-with-slider"><span data-highlightClass ='leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
+          </h5>
+
+          <select class="form-control" ng-change="onDataAttributeChange()" ng-model="selectedCategory" ng-options="category for category in categories" id="zAxisSelection">
+          </select>
+
+          <!-- <div>
+            <h5><b>X-axis</b></h5>
+            <div ng-repeat="xAxisItem in xAxisItems">
+              <label>
+                    <input type="radio" ng-change="onDataAttributeChange()" value={{xAxisItem}} ng-model="$parent.selectedXAxis"/><span>{{xAxisItem}}</span>
+              </label>
+            </div>
+          </div> -->
+          <!-- <div>
+            <h5><b>Y-axis</b></h5>
+            <div ng-repeat="yAxisItem in yAxisItems">
+              <label>
+                  <input type="radio" ng-change="onDataAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedYAxis"/><span>{{yAxisItem}}</span>
+              </label>
+            </div>
+          </div> -->
+          <h5><b>X-axis</b></h5>
+          <select class="form-control" ng-change="onDataAttributeChange()" id="xAxisSelection" value={{xAxisItem}} ng-model="selectedXAxis">
+            <option ng-repeat="xAxisItem in xAxisItems">{{xAxisItem}}</option>
+          </select>
+
+          <h5><b>Y-axis</b></h5>
+          <select class="form-control" ng-change="onDataAttributeChange()" id="yAxisSelection" value={{yAxisItem}} ng-model="selectedYAxis">
+            <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
+          </select>
+
+        </div>
+
+        <div class="dropdown" id="error" >
+          <h5><b>Error Attribute</b></h5>
+          <!-- Button trigger modal -->
+
+          <select class="form-control" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="selectedErrorAxis">
+            <option>none</option>
+            <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
+          </select>
+        </div>
+
+        </div> <!-- end side bar -->
+      </div> <!-- end left bar -->
+
+      <!-- this div contains the everything in the middle (aside from the left nav bar) -->
+      <div id="middle-bar">
+
+        <!-- this div contains the drawng interface and the zql table -->
+        <div class="row" id="top-middle-bar" ng-controller="options-controller">
+
+          <!-- drawing interface -->
+            <div class="col-md-4">
+            <div class="input-group" id="graph-buttons">
+
+            <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
+             <div class="btn-group" id="left-button-group">
+                <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
+                </select>
+              </div>
+
+              <div class="btn-toolbar">
+                <button type="button" name="options" ng-click="changeZQLTableState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+                <button type="button" name="zql-script" ng-click="changeZQLScriptState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Script</button>
+                <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
+                <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
+                <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
+                <div ng-show="zqltable">
+                  <div class="btn-group">
+          <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Weather</a>
+                    <button type="button" name="query1" ng-click="populateWeatherQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                    <button type="button" name="query2" ng-click="populateWeatherQuery2()" aria-pressed="false" class="btn btn-default btn-xs">Q2</button>
+                    <button type="button" name="query3" ng-click="populateWeatherQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q3</button>
+                     <!-- <button type="button" name="query1" ng-click="populateQuery1()" aria-pressed="false" class="btn btn-default btn-xs">Q1</button>
+                    <button type="button" name="query2" ng-click="populateQuery2()" aria-pressed="false" class="btn btn-default btn-xs"> Q2</button> -->
+          <a href="#" class="btn btn-primary btn-xs disabled" role="button" aria-disabled="true">Real Estate</a>
+                    <button type="button" name="query3" ng-click="populateQuery3()" aria-pressed="false" class="btn btn-default btn-xs">Q4</button>
+                    <button type="button" name="query4" ng-click="populateQuery4()" aria-pressed="false" class="btn btn-default btn-xs">Q5</button>
+                    <button type="button" name="query5" ng-click="populateQuery5()" aria-pressed="false" class="btn btn-default btn-xs">Q6</button>
+                    <button type="button" name="query7" ng-click="populateQuery7()" aria-pressed="false" class="btn btn-default btn-xs">Q7</button>
+                  </div>
+                  <button type="button" name="clearyQuery" ng-click="clearQuery()" aria-pressed="false" class="btn btn-default btn-xs">Clear</button>
+                </div>
+              </div>
+
+              <div class="btn-group">
+                <button type="button" name="options" ng-click="scattertable = !scattertable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Scatter Table</button>
+                <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
+                <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
+                <div ng-show="zqltable">
+                  <div class="btn-group">
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+              <div id="draw-div" ng-show="chartSettings.selectedChartOption=='Line'" data-intro = "You can draw a desired pattern on this sketchpad." data-step="5"></div>
+            <!--<div id="scatter-div" ng-controller="scatterController" ng-show="chartSettings.selectedChartOption=='Scatter'">-->
+              <div id="scatter-div" ng-show="chartSettings.selectedChartOption=='Scatter'">
+              <div class="col-md-12">
+                  <svg id="main-chart">
+                  </svg>
+                  <div class="row col-md-1">
+                  <div id="colorbar"></div>
+                  </div>
+                <!--<div class="col-md-12">-->
+                  <!--<button class="buttons-for-drawing btn" onclick="removePolygons()">reset</button>-->
+                <!--</div>-->
+              </div>
+              <!-- <div class="row col-md-1">
+              <div id="colorbar"></div>
+              </div>  -->
+              <!-- <div class="row col-md-1">
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn" ng-click="scatterService.drawPolygon()"><a ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn undo disabled" ng-click="scatterService.undoPolyPoints()"><a><i class="fa fa-undo" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn green-polygon disabled" ng-click="scatterService.changePolygonColorGreen()"><a style="color: forestgreen"><i class="fa fa-square" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn red-polygon disabled" ng-click="scatterService.changePolygonColorRed()"><a style="color: indianred"><i class="fa fa-square" aria-hidden="true"></i></a></div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="buttons-for-drawing btn  submit disabled" ng-click="submit()"><a><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
+                  </div>
+              </div> -->
+
+          </div>
+
+          </div>
+          <!-- drawing interface END-->
+
+          <div class="col-md-8" id="table-div">
+            <div ng-show="zqltable" ng-controller="zqlTableController">
+              <table id="zql-table" class="table zql-table">
+                <thead>
+                  <tr>
+                    <td><b></b></td>
+                    <td><b></b></td>
+                    <td><b>X</b></td>
+                    <td><b>Y</b></td>
+                    <td><b>Z</b></td>
+                    <td><b>Constraint</b></td>
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr id="table-row-1" class="tabler">
+                    <td>
+
+                    </td>
+                    <td>
+                      <input class="form-control zql-table name" ng-model="input.name" type="text" size="1" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table x-val" ng-model="input.x" type="text" size="12" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table y-val" ng-model="input.y" type="text" size="12" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table z-val" ng-model="input.z" type="text" size="10" value=" ">
+                    </td>
+                    <td>
+                      <input class="form-control zql-table constraints" ng-model="input.constraints" type="text" size="5" value=" ">
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <a ng-click="addRow()" id="add-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span> Add row</a>
+                    </td>
+                    <td>
+                      <a ng-click="addProcessRow()" id="add-process-row"><span class="glyphicon glyphicon glyphicon-plus-sign"></span> Add process</a>
+                    </td>
+                    <td>
+                      <a ng-click="submitZQL()">Submit</a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div ng-show="zqlscript" ng-controller="zqlScriptController">
+              <textarea id = "zqlScriptCode" rows="10" cols="100">
+                db = real_estate
+                ax x1 = [year]
+                ax y1 = soldprice
+                ax z1 = [state.*]
+                vc f1 = {x1, y1, z1}
+                ax y2 = [listingprice]
+                vc f2 = {x1, y2, z1}
+                ax v1 = process(argmin={z1},k=1,DEuclidean(f1,f2))
+                ax y2 = [soldprice, listingprice]
+                vc f3 = {x1, y2, v1}
+                display(f3)
+              </textarea>
+              <button ng-click="submitZQLScript()">Submit</button>
+            </div>
+            <div ng-show="!zqltable && !zqlscript" class="row" style="overflow-x:hidden;" >
+
+
+
+            <div ng-show="scattertable" ng-controller="zqlTableController">
+              <div class="col-md-3" style="width: 180px;">
+                <div>
+                  <div class="info-text">
+                    <p><nobr>
+                      <label for="amount">Binning Constant:</label>
+                      <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
+                    </nobr></p>
+                    <div id="binning-slider" align = "right" style="width:165px;"></div>
+                  </div>
+                </div>
+              </div>
+              <table id="scatter-table" class="table scatter-table">
+              </table>
+            </div>
+
+
+            <div ng-show="!zqltable && !scattertable" class="row" >
+              <div class="col-md-3" style="width: 170px;">
+                <div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">
+                <div class="info-text">
+                <b>Similarity</b>
+                <div class="qtooltip">
+                  <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                  <span class="qtooltiptext">
+                    Euclidean distance compares the straight-line distance between two visualizations whereas the other algorithm tries to take into account shapes or temporal lags by transforming the visualization before calculating the distance, as shown here.
+                    <br><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Dynamic_time_warping.png"  style="text-align:center; width:225px">
+                  </span>
+                </div>
+                <div class="radio">
+                  <form>
+                    <input ng-model="similarity" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
+                    <input ng-model="similarity" id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
+                    <input ng-model="similarity" id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label><br>
+                    <input ng-model="similarity" id="MVIP" type="radio" name="distarnce-method" value="MVIP" ><label for="MVIP">MVIP</label>
+                  </form>
+                </div>
+              </div>
+              </div>
+              <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">
+                <div class="info-text" style="margin-bottom: 0px;">
+                <div ><b>Aggregate</b>
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>
+                  </div>
+                </div>
+
+                <div class="radio">
+                  <form>
+                    <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
+                    <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label><br>
+                    <input ng-model="aggregation" id="none" type="radio" name="aggregation-method" value="" checked><label for="none">None</label>
+                  </form>
+                </div>
+              </div>
+                <!-- <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
+                  <div ><b>Input equation</b></div>
+                  <p></p>
+                  <div class="input-group">
+                    <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
+                    <div class="input-group-btn">
+                      <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+              </div>
+              <div class="col-md-3" style="width: 175px;">
+
+              <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
+                <div><b>Cluster Size</b>
+                  <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptext">KMeans clustering is used for identifying represenatitive trends of the whole dataset. This option specifies the number of clusters to be displayed in the representative trends.</span>
+                  </div>
+                </div>
+                <p></p>
+                <div>
+                  <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
+                </div>
+              </div>
+                <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
+                  <div><b>Number of Results</b>
+                  </div>
+                  <p></p>
+                  <div>
+                    <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
+                  </div>
+                </div>
+
+                <div id="min-thresh-tutorial" class="info-text" data-intro = "Here you can specify the minimum similarity score for the visualizations to be displayed in the Results panel." data-step="15" data-position = "left">
+                  <div><b>Similarity Cutoff</b>
+                    <div class="qtooltip">
+                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                      <span class="qtooltiptext">Specifies the minimum similarity score for a visualization to be displayed in the query results panel.</span>
+                    </div>
+                  </div>
+
+                  <p></p>
+                  <div>
+                    <input ng-model="minDisplayThresh" class="form-control" type="text" id="min-display-thresh"   value="0.0">
+                  </div>
+                </div>
+
+              </div>
+
+
+              <div class="col-md-3" style="width: 180px;">
+                <div style="width:165px;" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
+                  <div class="info-text">
+                  <div><b>Data Smoothing</b>
+                    <div class="qtooltipright">
+                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                      <span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
+                    </div>
+                  </div>
+
+                    <p></p>
+                    <select class="form-control" id="smoothing-form-control" ng-model="selectedSmoothing">
+                      <option value="none">None</option>
+                      <option value="movingaverage">Moving Average</option>
+                      <option value="exponentialmovingaverage">Exponential</option>
+                      <option value="leossInterpolation">Loess</option>
+                      <option value="gaussian">Gaussian</option>
+                    </select>
+                  </div>
+
+                  <div class="info-text">
+                    <p><nobr>
+                      <label for="amount">Smoothing Constant:</label>
+                      <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
+                    </nobr></p>
+                    <div id="slider-range-max" align = "right" style="width:165px;"></div>
+                  </div>
+
+                </div>
+                <div style="width: 170px;" class="info-text" data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="17">
+                    <div><b>Filter Constraint</b>
+                      <div class="qtooltipright">
+                        <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                        <span class="qtooltiptextright">Specify a filter that can be applied globally to a dataset to narrow the search. Multiple conditions can be accepted using AND, OR.</span>
+                      </div>
+                    </div>
+                    <p></p>
+                      <div class="input-group" style="width: 165px;">
+                        <input class="form-control" type="text" id="filter" name="filter"  placeholder="e.g. mag>20">
+                        <div class="input-group-btn">
+                          <button id="filter-submit" class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">Submit</button>
+                        </div>
+                      </div>
+                </div>
+              </div>
+
+              <div class="col-md-3" style="width: 185px;">
+                <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>
+                  <div class="qtooltipright">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                    <span class="qtooltiptextright">1. Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, the location of the pattern along the x-axis will not affect pattern search.
+                    <br>2. Show original sketch: Shows the original query pattern as a pale green line on top of the visualization results, checked by default.
+                    <br>3. Show scatter plot: Showing the raw data points as a scatterplot.
+                    <br>4. Reverse Y axis: Flipping the y-axis of all visualizations.
+                    </span>
+                  </div>
+                    <div class="checkbox">
+                      <form data-intro = "If unchecked, then the similarity search ignores matches on the x axis and measure only shape-based (y axis) similarity." data-position = "left" data-step ="19" >
+                        <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
+                      </form>
+                      <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" >
+                        <input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
+                      </form>
+                      <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">
+                        <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
+                      </form>
+                      <form>
+                        <input ng-model="showBar" id="showBar" type="checkbox" name="show-bar"><label for="showBar">Show Bar Chart</label><br>
+                      </form>
+                      <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="22">
+                        <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
+                    <div ><b>Input Equation</b>
+                      <div class="qtooltipright">
+                        <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
+                        <span class="qtooltiptextright">Relationships in the form of mathematical equations can be used to query for patterns.</span>
+                      </div>
+                    </div>
+                    <p></p>
+                    <div class="input-group">
+                      <input ng-model="equation" type="text" class="form-control" id="input_equation" placeholder="e.g. y=x^2">
+                      <div class="input-group-btn">
+                        <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- <div id="sidebar" class="interface" ng-controller="datasetController"  >
+                    <div>
+                  <h5><b>Error Attribute</b></h5>
+                  <div ng-repeat="yAxisItem in yAxisItems">
+                    <label>
+                        <input type="radio" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="$parent.selectedErrorAxis"/><span>{{yAxisItem}}</span>
+                    </label>
+                  </div>
+                  </div>
+                  </div> -->
+
+              </div>
+
+
+
+            </div>
+          </div>
+          <div class="col-md-12" ng-show="zqlgraph">
+            <div id="graph-div" >
+            </div>
+          </div>
+        </div>
+
+        <!-- drawng interface + zql table END-->
+
+        <hr>
+        <div id="bottom-middle-bar">
+          <div id="middle-left" class="col-md-6">
+            <h5>
+            <b>Results</b>
+            <button type="button" class="textButton" data-toggle="modal" data-target="#download-info" data-intro = "The queried results can be downloaded here." data-step="7" ><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
+            </h5>
+            <div>
+              <table id="results-table"></table>
+            </div>
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
+          </div>
+          <div id="middle-right" class="col-md-6">
+            <div>
+              <table id="representative-table">
+                <tr class="middle-right-headers">
+                  <td><h5><b>Representative patterns </b>
+                  <button type="button" class="textButton" data-toggle="modal" data-target="#cluster-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
+                  </b>
+                  </h5></td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <table id="outlier-table">
+                <tr class="middle-right-headers">
+                  <td><h5><b>Outliers </b>
+                  <button type="button" class="textButton" data-toggle="modal" data-target="#outlier-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
+                  <!-- <div class="qtooltip">
+                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>
+                    <span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>
+                  </div> -->
+                  </h5></td>
+                </tr>
+              </table>
+            </div>
+            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse2' style="display: none; position: relative; top: 8px; left: 35%; z-index: 10; width:  100px; height:  100px; ">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="downloadWrapper" ng-controller="datasetController">
+    <div class="modal fade" id="download-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Download Query Results</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+                <br> Number of results:
+                <input ng-model="numResults" type="text" id="num-results-download">
+                <br> Minimum similarity threshold:
+                <input  type="text" id="min-thresh-download">
+                <br>
+                <input type="checkbox" id="yOnly"> Export y only <br>
+                <input type="checkbox" id="includeQuery"> Include Query Pattern <br>
+                <input type="checkbox" id="downloadAll"> Download all data<br>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('query')">Export as csv file</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="cluster-download-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Download Clustering Results</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+                Number of Clusters:
+                <input ng-model="numResults" type="text" id="num-clusters-download"><br>
+                <!-- <input type="checkbox" id="downloadAllRepresentative"> Download all data<br> -->
+                <!-- <input type="checkbox" id="yOnly"> Export y only <br> -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('representative')">Export as csv file</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="outlier-download-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Download Outlier Results</h4>
+            </div>
+            <div class="modal-body" id="class-info-body">
+                <br> Number of Results:
+                <input ng-model="numResults" type="text" id="num-outlier-download">
+                <br> Minimum dissimilarity threshold:
+                <input type="text" id="min-thresh-download-outlier">
+                <br> <input type="checkbox" id="yOnly"> Export y only <br>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="downloadResults('outlier')" >Export as csv file</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<canvas id="canvas" width="100%" height="600px"></canvas>
+  <img id="result"/>
+
+
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/bootstrap-filestyle.min.js"> </script>
+    <script src="js/lib/math.min.js"> </script>
+    <script src="js/lib/angular.min.js"></script>
+    <!-- <script src="js/lib/angular.js"></script> -->
+    <script src="js/lib/angular-cookies.js"></script>
+    <script src="js/lib/d3.v4.min.js"></script>
+    <script src="js/lib/d3-hexbin.v0.2.min.js"></script>
+    <script src="js/lib/log4javascript.js"></script>
+    <script src="js/lib/jquery-ui.min.js"></script>
+    <script src="js/lib/nouislider.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/factory.js"></script>
+    <!--<script src="js/scatter.js"></script>-->
+    <script src="js/line/draw.js"></script>
+    <script src="js/scatter/scatterDraw.js"></script>
+    <script src="js/scatter/scatterQuery.js"></script>
+    <script src="js/sketchPad.js"></script>
+    <script src="js/line/query.js"></script>
+    <script src="js/line/slider.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/login.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- <script src="js/graph.js"></script> -->
+    <script src="js/fileUploader.js"></script>
+    <script src="js/parsertypes.js"></script>
+    <script src="js/zqlparser.js"></script>
+    <script src="js/zqlgraph.js"></script>
+    <script src="js/lib/FileSaver.js"></script>
+    <script src="js/lib/papaparse.min.js"></script>
+    <script type="text/javascript" src="js/lib/rgbcolor.js"></script>
+    <script type="text/javascript" src="js/lib/StackBlur.js"></script>
+    <script type="text/javascript" src="js/lib/canvg.js"></script>
+    <script src="js/intro.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           var w = window.innerWidth;
+           var h = window.innerHeight;
+           var x = document.getElementById("container");
+           // if(w < 1000 || h < 300){
+            // TODO: Fixed for testing
+           //  if(false){
+           //   x.style.display = "none";
+           //   alert("Sorry — Zenvisage is not currently supported on small screen devices. Please enlarge your browser window widths or check back in later for mobile version!");
+           // }else{
+           //   x.style.display = "block";
+           // }
+           x.style.display = "block";
+        });
+        var id;
+        function doneResizing(){
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var x = document.getElementById("container");
+            if(w < 1000 || h < 300){
+                x.style.display = "none";
+                alert("Sorry — Zenvisage is not currently supported on small screen devices. Please enlarge your browser window widths or check back in later for mobile version!");
+            }else{
+                x.style.display = "block";
+            }
+        }
+        $(window).resize(function() {
+             clearTimeout(id);
+             id = setTimeout(doneResizing, 600);
+        });
+    </script>
+    <script>
+    //code for intro tutorial
+    var callintro = function(){introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();};
+    var starttutorial = function(input){
+        startintro = true;
+        //introJs(".intro_after_dataload").setOption("showStepNumbers", "false").start();
+      //  console.log("hi",$("#dataset-form-control").val());
+        $("#dataset-form-control").val('real_estate_tutorial');
+        angular.element($("#sidebar")).scope().onDatasetChange('initialize');
+        setTimeout(callintro, 2000);
+        $('#popup').modal('hide');
+      };
+
+
+    // popup to inform tutorial
+    $('#popup').modal('toggle');
+    if(localStorage.getItem("DontShow")) {
+    $('#popup').modal('hide');
+    }
+    $('#popup').on('submit', function(e) {
+        localStorage.setItem("DontShow", "true");
+        $('#popup').modal('toggle');
+    });
+
+
+      // var tree = tree();
+      // tree.initialize();
+      // $(document).ready(function(){
+      //   $('[data-toggle="tooltip"]').tooltip({html: true});
+      //   $("#dataset-form-control option").val("real_estate");
+      //   var scope = angular.element("#dataset-form-control").scope();
+      //   scope.onDatasetChange();
+      //   // scope.onDatasetChange(); //TODO: Commented out for testing purposes
+      // });
+      // Logging
+      // Note that for logging, we log additional timestamp using Date.now() to millisecond precision so that we can prune away logs that are subsequent changes to a numerical setting and keep the final log (e.g. Logs of '1','10' when writing '10')
+      // var loggerOn=false
+      var log = log4javascript.getLogger();
+      var ajaxAppender = new log4javascript.AjaxAppender("/zv/logger");
+      // if (!loggerOn){
+      //   console.log("off")
+      //   log.setLevel(log4javascript.Level.OFF)
+      // }
+      ajaxAppender.setTimed(true);
+      ajaxAppender.setTimerInterval(10000); // send every 10 seconds (unit is milliseconds)
+      log.addAppender(ajaxAppender);
+      log.info("Begin Session")
+    </script>
+
+
+
+  </div>
+  </body>
+
+</html>

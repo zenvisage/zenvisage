@@ -662,10 +662,10 @@
             <div class="input-group" id="graph-buttons">
 
             <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
-             <div class="btn-group" id="left-button-group">
+
                 <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
                 </select>
-              </div>
+
 
               <div class="btn-toolbar">
                 <button type="button" name="options" ng-click="changeZQLTableState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>

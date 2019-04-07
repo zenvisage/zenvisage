@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    {"type": "zql", "name": "f1", "xval":"x1<-{'month'}", "yval":"y1<-{'temperature'}", "zval": "z1<-'location'.*", "constraint": "location='BOLAPAZ'"},
+    {"type": "zql", "name": "f2", "xval":"x1", "yval":"y1", "zval": "z1<-'location'.*", "constraint": ""},
+    {"type": "process", "process": "v2<-argmin_{z2}[k=5]DEuclidean(f1,f2)"},
+    {"type": "zql", "name": "f3", "xval":"x1", "yval":"y1", "zval": "v2", "constraint": ""}
+  ],
+  "links": [
+    {"source":  0, "target":  2},
+    {"source":  1, "target":  2},
+    {"source":  2, "target":  3}
+  ]
+}

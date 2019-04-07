@@ -1,0 +1,13 @@
+Case_ID:int,unindexed,T,T,F,F,F,0,Q
+Type:string,indexed,F,F,T,F,F,0,Q
+Description:string,indexed,F,F,T,F,F,0,Q
+Location_Description:string,indexed,F,F,T,F,F,0,Q
+Arrest:string,indexed,F,F,T,F,F,0,Q
+Domestic:string,indexed,F,F,T,F,F,0,Q
+Beat:int,unindexed,T,T,F,F,F,0,Q
+District:int,unindexed,T,T,F,F,F,0,Q
+Ward:int,unindexed,T,T,F,F,F,0,Q
+Community_Area:int,unindexed,T,T,F,F,F,0,Q
+X_Coordinate:int,unindexed,T,T,F,F,F,0,Q
+Y_Coordinate:int,unindexed,T,T,F,F,F,0,Q
+Year:int,unindexed,T,T,F,F,F,0,Q

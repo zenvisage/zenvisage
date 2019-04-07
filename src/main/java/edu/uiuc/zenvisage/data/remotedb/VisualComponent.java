@@ -122,6 +122,6 @@ public class VisualComponent {
 	}
 
 	public void clearMultiLevelGrids() {
-		multiLevelGrids = new ArratayList<>();
+		multiLevelGrids = new ArrayList<>();
 	}
 }
