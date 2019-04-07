@@ -65,13 +65,13 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
   var data = userQueryResults[count]['points'];
   var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
   var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
-  var ymin = d3.max(data, function(d) {return Math.min(d.yval); })
-  var xmin = d3.max(data, function(d) {return Math.min(d.xval); })
+  var ymin = d3.min(data, function(d) {return Math.min(d.yval); })
+  var xmin = d3.min(data, function(d) {return Math.min(d.xval); })
   var yScale = d3.scaleLinear()
-      .domain([0, ymax])
+      .domain([ymin, ymax])
       .range([height, 0]);
   var xScale = d3.scaleLinear()
-      .domain([0, xmax])
+      .domain([xmin, xmax])
       .range([0, width]);
   // define xscale
 

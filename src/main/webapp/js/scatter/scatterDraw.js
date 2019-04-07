@@ -51,15 +51,17 @@ function createSketchpadScatterHelper(data) {
 
     var yMax = d3.max(data, function(d) {return Math.max(d.yval); })
     var xMax = d3.max(data, function(d) {return Math.max(d.xval); })
+    var ymin = d3.min(data, function(d) {return Math.min(d.yval); })
+    var xmin = d3.min(data, function(d) {return Math.min(d.xval); })
 
     //setting y-scale to fit in the svg window
     var yScale = d3.scaleLinear()
-        .domain([0, yMax])
+        .domain([ymin, yMax])
         .range([height, 0]);
 
     //setting x-scale to fit in the svg window
     var xScale = d3.scaleLinear()
-        .domain([0, xMax])
+        .domain([xmin, xMax])
         .range([0, width]);
 
     infoToReturn.yScale = yScale;
