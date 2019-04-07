@@ -99,7 +99,17 @@ public class ScatterProcessNode extends ProcessNode {
 			VisualComponentQuery q = vcNode.getVc();
 			preprocess(input, q);
 			output = new Result();
-			List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
+
+
+			long startTime = System.currentTimeMillis();
+            List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
+            long endTime = System.currentTimeMillis();
+
+            System.out.println("\n\n\n");
+            System.out.println("MLD Time: " + (endTime - startTime));
+            System.out.println("\n\n\n");
+
+
 			System.out.println("dragndrop values test " + values);
 //			List<String> values = EMDExecution(input, q);
 			double[] scores = new double[values.size()];
@@ -212,15 +222,20 @@ public class ScatterProcessNode extends ProcessNode {
 		Sketch sketch = q.getSketch();
 		List<float[][]> vcqueryGrids = new ArrayList<>();
 		// just use one level, 5*5 grids for now
-		for(int l = 10; l < 20; l *= 2) {
-			// TODO(jintao): The frontend is sending the points inside the polygons. May need to change it to points at some time?
-			sketch.insertToMultiLevelGrids(binning(normalize(
-					sketch.getPolygons().get(0).getPoints()), l, l));
-			sketch.insertToMultiLevelWeights(1);
-			for(VisualComponent vc : vcList) {
-				vc.insertToMultiLevelGrids(binning(normalize(vc.getPoints()), l, l));
-			}
-		}
+		for(int l = 2; l <= 1024; l *= 2) {
+            // TODO(jintao): The frontend is sending the points inside the polygons. May need to change it to points at some time?
+            long startTime = System.currentTimeMillis();
+            System.out.println("preprocess size: " + l);
+            System.out.println("preprocess startTime: " + startTime);
+            float[][] tmp1 = binning(normalize(sketch.getPolygons().get(0).getPoints()), l, l);
+            sketch.insertToMultiLevelGrids(tmp1);
+            sketch.insertToMultiLevelWeights((float)1.0/l);
+            for(VisualComponent vc : vcList) {
+                vc.insertToMultiLevelGrids(binning(normalize(vc.getPoints()), l, l));
+            }
+            startTime = System.currentTimeMillis();
+            System.out.println("preprocess endTime: " + startTime);
+        }
 	}
 
 	private List<Point> normalize(List<Point> points) {
