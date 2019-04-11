@@ -1739,6 +1739,13 @@ $scope.inittablelist = function () {
             $scope.selectedCategory = $scope.categories[0];
             $scope.selectedXAxis = $scope.xAxisItems[0];
             $scope.selectedYAxis = $scope.yAxisItems[0];
+
+            for(var idx in $scope.categories) {
+              if($scope.categories[idx] != $scope.selectedXAxis && $scope.categories[idx] != $scope.selectedYAxis) {
+                $scope.selectedCategory = $scope.categories[idx];
+                break;
+              }
+            }
           }
 
           log.info("initialized data attribute",getSelectedCategory(),getSelectedXAxis(),getSelectedYAxis())
