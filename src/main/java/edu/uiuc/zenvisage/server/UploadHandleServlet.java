@@ -43,7 +43,7 @@ public class UploadHandleServlet extends HttpServlet {
                	if(item.isFormField()){
                   String value = item.getString("UTF-8");
                     //////////// For dataset upload testing purposes only.//////////
-                  if(value.substring(0,2).equals("!!")){
+                  if(value.length() >= 2 && value.substring(0,2).equals("!!")){
                       int space_idx = value.indexOf(" ");
                       File newFile = new File(value.substring(2,space_idx)+".csv");
                       PrintWriter pw = new PrintWriter(newFile);
