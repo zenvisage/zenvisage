@@ -404,3 +404,7 @@ svg#treesvg {
     /* show the popup */
     #mobilePopup { display: block; }
 }
+
+.dataUploadModal {
+  height: 22px;
+}

@@ -1419,19 +1419,19 @@ function autoSelect(source,type) {
  
 function inferDtype(results) {
   console.log(results);
-  var textAttributeName = "<tr> <td> (De)select All </td> </tr> <tr> <td> Auto Select </td> </tr><tr> <td>&nbsp</td> </tr>";
-  var textAttributeSelection = "<tr> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
-  +"<tr> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr> <td>&nbsp</td> </tr>";
-  var textDataType  = "<tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr><tr> <td>&nbsp</td> </tr>";
+  var textAttributeName = "<tr class='dataUploadModal'> <td> (De)select All </td> </tr> <tr class='dataUploadModal'> <td> Auto Select </td> </tr><tr class='dataUploadModal'> <td>&nbsp</td> </tr>";
+  var textAttributeSelection = "<tr class='dataUploadModal'> <td>" + "<input type='checkbox' onClick=\"checkAll(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;' ><input type='checkbox' onClick=\"checkAll(this,'y')\" style = 'margin-right: 12px;'><input type='checkbox' onClick=\"checkAll(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr>"
+  +"<tr class='dataUploadModal'> <td>" + "<input id = 'x-autoselect' type='checkbox' onClick=\"autoSelect(this,'x')\" style = 'margin-left: 12px; margin-right: 12px;'><input id = 'y-autoselect' type='checkbox' onClick=\"autoSelect(this,'y')\" style = 'margin-right: 12px;'><input id = 'z-autoselect' type='checkbox' onClick=\"autoSelect(this,'z')\" style = 'margin-right: 12px;'>"+"</td></tr> <tr class='dataUploadModal'> <td>&nbsp</td> </tr>";
+  var textDataType  = "<tr class='dataUploadModal'> <td>&nbsp</td> </tr><tr class='dataUploadModal'> <td>&nbsp</td> </tr><tr class='dataUploadModal'> <td>&nbsp</td> </tr>";
   for (i = 0; i < results["data"][0].length; i++) {
     previewRow = results["data"].map(function(value,index) { return value[i]; })
     type = getType(previewRow);
 
     attributeName = results["data"][0][i].replace(/\s+/g, '_').toLowerCase();
-    textAttributeName += "<tr> <td><div style='margin-bottom: 1px;'>"  + attributeName + "</div></td> </tr>";
-    textAttributeSelection += "<tr> <td>" + "<input type='checkbox' value = '" + attributeName + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + attributeName + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + attributeName + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
+    textAttributeName += "<tr class='dataUploadModal'> <td><div style='margin-bottom: 1px;'>"  + attributeName + "</div></td> </tr>";
+    textAttributeSelection += "<tr class='dataUploadModal'> <td>" + "<input type='checkbox' value = '" + attributeName + "' name ='x-checkbox' style = 'margin-left: 12px; margin-right: 12px;margin-bottom: 4px;'><input type='checkbox' value = '" + attributeName + "' name ='y-checkbox' style = 'margin-right: 12px;'><input type='checkbox' value = '" + attributeName + "' name ='z-checkbox' style = 'margin-right: 12px;'>"
       +"</select> </td></tr>";
-    textDataType += "<tr> <td>" + "<select class='types' style = 'float:right;'>"
+    textDataType += "<tr class='dataUploadModal'> <td>" + "<select class='types' style = 'float:right;'>"
       +"<option value=" + attributeName + " selected='selected'>"+type+"</option>"
     if(type === "float"){
         textDataType += "<option value=" + attributeName + " string'>string</option>"
