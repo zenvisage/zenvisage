@@ -195,11 +195,11 @@ public class ScatterVCNode extends VisualComponentNode {
 			Points aggregatePoints = new Points(aggregateXList, aggregateYList);
 			String xAttribute = vc.getxAttribute();
 			String yAttribute = vc.getyAttribute();
-			System.out.println("Adding aggregate scatterplot with x attribute " + vc.getxAttribute() + " and y attribute " + vc.getyAttribute());
-			System.out.println("Num x points is " + vc.getPoints().getXList().size());
-			System.out.println("Num y points is " + vc.getPoints().getYList().size());
-			System.out.println("First point in xlist " + vc.getPoints().getXList().get(0));
-			System.out.println("First point in ylist " + vc.getPoints().getYList().get(0));
+//			System.out.println("Adding aggregate scatterplot with x attribute " + vc.getxAttribute() + " and y attribute " + vc.getyAttribute());
+//			System.out.println("Num x points is " + vc.getPoints().getXList().size());
+//			System.out.println("Num y points is " + vc.getPoints().getYList().size());
+//			System.out.println("First point in xlist " + vc.getPoints().getXList().get(0));
+//			System.out.println("First point in ylist " + vc.getPoints().getYList().get(0));
 			VisualComponent aggregateVisualComponent = new VisualComponent(new WrapperType("agg"), aggregatePoints, xAttribute, yAttribute);
 			//out = new VisualComponentList();
 			out.addVisualComponent(aggregateVisualComponent);

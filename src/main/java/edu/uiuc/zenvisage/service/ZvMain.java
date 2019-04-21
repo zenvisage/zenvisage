@@ -318,11 +318,9 @@ public class ZvMain {
 				System.out.println(names.get(0) + " exists! Overwrite and create " + names.get(0) + " from "+names.get(1));
 			}
 
-			//new Database(names.get(0), names.get(2), names.get(1), true);
-			//inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
-
-
-//			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
+			Database inMemoryDatabase = new Database(names.get(0), names.get(2), names.get(1), true);
+//			Database inMemoryDatabase = createDatabase(names.get(0), names.get(2), names.get(1));
+			inMemoryDatabases.put(names.get(0), inMemoryDatabase);
 		}
 		
 	}
@@ -394,7 +392,7 @@ public class ZvMain {
    public String runQueryGraph(String zqlQuery) throws IOException, InterruptedException{
 	   System.out.println(zqlQuery);
 	   edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable zqlTable = new ObjectMapper().readValue(zqlQuery, edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable.class);
-	   ZQLTableToGraph parser = new ZQLTableToGraph();
+	   ZQLTableToGraph parser = new ZQLTableToGraph(inMemoryDatabases);
 	   QueryGraph graph;
 	   try {
 		   graph = parser.processZQLTable(zqlTable, null);
@@ -418,7 +416,7 @@ public class ZvMain {
 	   long endTime = System.currentTimeMillis();
 	   logger.info("Mapping json to table took " + (endTime - startTime) + "ms");
 	   
-	   ZQLTableToGraph parser = new ZQLTableToGraph();
+	   ZQLTableToGraph parser = new ZQLTableToGraph(inMemoryDatabases);
 	   QueryGraph graph;
 	   try {
 		   startTime = System.currentTimeMillis();
@@ -449,7 +447,7 @@ public class ZvMain {
 		}
 
 //		ZQLParser parser = new ZQLParser();
-		ZQLTableToGraph parser = new ZQLTableToGraph();
+		ZQLTableToGraph parser = new ZQLTableToGraph(inMemoryDatabases);
 		QueryGraph graph;
 		try {
 			graph = parser.processZQLTable(zqlTable, null);
@@ -568,7 +566,7 @@ public class ZvMain {
 		
 		ZvQuery args = new ObjectMapper().readValue(zvQuery, ZvQuery.class);
 //		this.databaseName=args.databasename;
-	    ZQLTableToGraph parser = new ZQLTableToGraph();
+	    ZQLTableToGraph parser = new ZQLTableToGraph(inMemoryDatabases);
 	   //QueryGraph graph = parser.processZQLTable(zqlTable);
 	   //VisualComponentList output = edu.uiuc.zenvisage.zqlcomplete.querygraph.QueryGraphExecutor.execute(graph);		
 		
@@ -973,7 +971,6 @@ public class ZvMain {
 //	 }else{
 //		 
 //	 }
-
 
 	public synchronized String runDragnDropInterfaceQuerySeparated(String query, String method) throws InterruptedException, IOException, SQLException, CustomException{
 		 System.out.println("runDragnDropInterfaceQuerySeparated:");

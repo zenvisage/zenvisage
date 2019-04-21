@@ -15,6 +15,7 @@ import java.util.Queue;
 import edu.uiuc.zenvisage.data.remotedb.SQLQueryExecutor;
 import edu.uiuc.zenvisage.data.roaringdb.db.Column;
 import edu.uiuc.zenvisage.data.roaringdb.db.ColumnMetadata;
+import edu.uiuc.zenvisage.data.roaringdb.db.Database;
 import edu.uiuc.zenvisage.data.roaringdb.db.DatabaseMetaData;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Name;
 import edu.uiuc.zenvisage.zqlcomplete.executor.Processe;
@@ -30,10 +31,14 @@ import edu.uiuc.zenvisage.zqlcomplete.executor.ZQLTable;
  * Takes in a ZQLTable, and parses it into a query graph
  */
 public class ZQLTableToGraph {
-	
+	public ZQLTableToGraph() {}
+	public ZQLTableToGraph(Map<String,Database> dbMap){
+		inMemoryDatabases = dbMap;
+	}
 	// A query graph needs O(1) access to any node
 	// Here the map is of form key = input var, value = result Node that output this
 	Map<String, Node> nodeMap = new HashMap<String, Node>();
+	Map<String,Database> inMemoryDatabases;
 	
 	
 	/**
@@ -52,9 +57,10 @@ public class ZQLTableToGraph {
 		String db = table.getDb();
 		System.out.println("db:"+db);
 		// get the possible axis attributes (like year, month for x)
-		String locations[] = new SQLQueryExecutor().getMetaFileLocation(db);
-		System.out.println("locations:"+locations);
-		DatabaseMetaData dbMetaData = readSchema(locations[0]);
+//		String locations[] = new SQLQueryExecutor().getMetaFileLocation(db);
+//		System.out.println("locations:"+locations);
+//		DatabaseMetaData dbMetaData = readSchema(locations[0]);
+		DatabaseMetaData dbMetaData = inMemoryDatabases.get(db).getFormMetdaData();
 		List<String> xAttributes = new ArrayList<String>();
 		for (String xAttribute : dbMetaData.xAxisColumns.keySet()) {
 			xAttributes.add(xAttribute);

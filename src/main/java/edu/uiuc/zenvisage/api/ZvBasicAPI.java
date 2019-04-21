@@ -753,7 +753,7 @@ public class ZvBasicAPI {
 	public String scatterSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		String type="scatterSimilarity";
 
-		zvMain = new ZvMain();
+//		zvMain = new ZvMain();
 		StringBuilder stringBuilder = new StringBuilder();
 		Scanner scanner = new Scanner(request.getInputStream());
 		while (scanner.hasNextLine()) {

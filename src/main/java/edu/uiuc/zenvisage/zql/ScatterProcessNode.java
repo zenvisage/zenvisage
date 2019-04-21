@@ -454,7 +454,6 @@ public class ScatterProcessNode extends ProcessNode {
 			VisualComponent vc = vcList.get(vc_index);
 			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
 			chartOutput.setyType(vc.getyAttribute());
-			System.out.println("RANK,ZAXIS,RATIO: " + R[vc_index] + ":" + titleList.get(vc_index));
 			chartOutput.setzType(vc.getZValue().toString());
 //			System.out.println("Testing " + vc.getxAttribute());
 //			System.out.println("Testing " + q.getY().getAttributes().get(1));
