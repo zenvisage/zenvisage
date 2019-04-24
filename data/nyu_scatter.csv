@@ -229,8 +229,6 @@ WHO_Adult_mortality_rate_probability_of_dying_between_15_to_60_years_per_1000_po
 cache_horsepower_citympg_90,0.0,0.0
 car90_GearRatio_Gear2_0.6,0.0,0.0
 car90_GearRatio_Turning_64,0.0,0.0
-,,
-,,
 Cars93_Fueltankcapacity_Weight_90,78.0,287.0
 volcano_V42_V45_34,82.0,217.0
 WHO_Colon_and_Rectum_cancer_deaths_per_100_000_women_Colon_and_Rectum_cancer_deaths_per_100_000_women_0.8,89.0,152.0
@@ -713,8 +711,6 @@ Langren_Year_Longitude_37,1335.0,737.0
 WHO_Fixed_line_and_mobile_phone_subscribers_Health_expenditure_public_pct_of_total_health_expenditure_1,1337.0,790.0
 WHO_Population_median_age_years_Agricultural_land_0.1,1391.0,734.0
 Cigar_state_pop_40,1388.0,793.0
-,,
-,,
 WHO_Colon_and_Rectum_cancer_deaths_per_100_000_women_Colon_and_Rectum_cancer_deaths_per_100_000_women_0.8,699.0,144.0
 incomeInequality_median_quintile4_34,635.0,148.0
 baseball_cs_cs_86_invert,630.0,212.0
@@ -1094,7 +1090,6 @@ neo_E4_C4_97,199.0,610.0
 cpus_chmin_perf_51,293.0,537.0
 WHO_Breast_cancer_new_cases_per_100_000_women_Democracy_score_13,46.0,661.0
 AustralianElections_Seats_DLP_29,285.0,647.0
-,,
 cache_PersPerOwnOccHous_larcPerPop_23,91.0,101.0
 cache_PctWorkMom_nonViolPerPop_11,36.0,99.0
 cache_householdsize_PctSameHouse85_70,142.0,102.0
@@ -1366,7 +1361,6 @@ AustralianElections_Com_Turnout_85,660.0,649.0
 car90_FrontHd_HP_39,724.0,652.0
 Ginzberg_fatalism_adjfatal_0.7,691.0,621.0
 Langren_Year_Longitude_37,547.0,619.0
-,,
 epi_V29_V36_3,974.0,427.0
 Fatality_year_mlda_13,926.0,483.0
 msq_content_strong_1,1010.0,458.0
@@ -1750,8 +1744,6 @@ menarche_Age_Menarche_9,859.0,773.0
 Cigar_state_pop_40,988.0,358.0
 BudgetItaly_year_income_0.2,1382.0,54.0
 Produc_year_util_39,1409.0,66.0
-,,
-,,
 Fishing_ccharter_income_40,1000.0,217.0
 Hedonic_zn_dis_76,1006.0,157.0
 CrohnD_nrAdvE_weight_39,1069.0,215.0
@@ -2070,7 +2062,6 @@ Fatality_year_mlda_13,1306.0,350.0
 biopsy_V8_V9_30,1270.0,295.0
 Hedonic_indus_nox_51,1404.0,536.0
 cache_normalizedlosses_highwaympg_19,1399.0,487.0
-,,
 Hedonic_rm_rad_40,22.0,40.0
 cache_HousVacant_LemasGangUnitDeploy_55,36.0,64.0
 cache_AsianPerCap_MedNumBR_0.9,48.0,63.0
@@ -2387,8 +2378,6 @@ cache_LemasSwFTFieldOps_LemasPctPolicOnPatr_47,740.0,241.0
 sitka89_size_tree_19,1284.0,506.0
 WHO_Ratio_of_nurses_and_midwives_to_physicians_Measles_immunization_23,1283.0,514.0
 GaltonFamilies_midparentHeight_children_39,1305.0,523.0
-,,
-,,
 cache_PctKids2Par_OwnOccLowQuart_18,32.0,190.0
 Forbes2000_rank_sales_5,96.0,196.0
 cache_PctEmploy_PctKids2Par_62,58.0,262.0
@@ -2625,8 +2614,6 @@ car90_GearRatio_Turning_64,679.0,629.0
 votes_X1864_X1920_37,681.0,666.0
 Cars93_MinPrice_EngineSize_25,27.0,826.0
 WHO_Agestandardized_mortality_rate_for_noncommunicable_diseases_per_100_000_population_Infant_mortality_rate_30,79.0,823.0
-,,
-,,
 EfronMorris_r_r_0.9,35.99998474121094,99.0
 baseball_cs_cs_86,62.0,93.0
 Heating_ocgr_ocgr_0.1,54.0,121.0
@@ -2874,7 +2861,6 @@ MedExp_lpi_fmde_40,764.0,459.0
 affect_02_MEQ_37,808.0,448.0
 car90_GearRatio_Gear2_0.6,767.0,493.0
 PSID_educatn_earnings_48,737.0000152587891,467.0
-,,
 epi_V2_V2_27,7.0,134.0
 EfronMorris_r_r_0.9,110.0,143.0
 longley_GNPdeflator_GNPdeflator_0.3,54.0,142.0
@@ -3197,7 +3183,6 @@ WHO_Life_expectancy_at_birth_years_female_Primary_completion_rate_total_12,489.9
 cache_LemasSwFTPerPop_PctPolicMinor_51,454.0,523.0
 gilgais_e00_e30_99,450.0,472.0
 Crime_prbarr_wtuc_8,501.99993896484375,464.0
-,,
 affect_state2_state2_1,223.0,283.0
 EfronMorris_r_r_0.9,289.0,142.0
 BudgetItaly_pfood_phouse_34,21.0,335.0
@@ -3470,8 +3455,6 @@ car90_RearHd_RearShld_4,1123.0,88.0
 DoctorContacts_fmde_age_37,1368.0,135.0
 Pima_skin_ped_96,1378.0,94.0
 votes_X1888_X1976_0.4,1409.0,131.0
-,,
-,,
 epi_V10_V29_0.1,68.0,269.0
 msq_relaxed_sluggish_0.6,64.0,333.0
 epi_V8_V33_0.4,55.0,401.0
@@ -3719,8 +3702,6 @@ Crime_county_wfed_11,1629.0,292.0
 Produc_year_util_39,1635.0,356.0
 cache_PctRecImmig8_LemasPctPolicOnPatr_24,1091.0,506.0
 cache_medIncome_PctFam2Par_0.7,1092.0,539.0
-,,
-,,
 cache_agePct16t24_ViolentCrimesPerPop_77,132.0,64.0
 baseball_sb_gidp_19,150.0,24.0
 cache_RentQrange_PctPolicWhite_78,183.0,73.0
