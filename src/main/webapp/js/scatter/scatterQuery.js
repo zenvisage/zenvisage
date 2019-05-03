@@ -96,6 +96,21 @@ function scatterDatasetChangeQueryHelper(zqlRows){
     input["name"] = {"output": true,"sketch": true,"name": "f1"};
     input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
     input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
+    input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : false};
+    input["viz"] = {"map":{"type":"scatter"}};
+    zqlRows.push(input);
+}
+
+function scatterSketchpadQueryHelper(zqlRows){
+    var name = $(this).find(".name").val()
+    var x = $(this).find(".x-val").val()
+    var y = $(this).find(".y-val").val()
+    var z = $(this).find(".z-val").val()
+    var constraints = $(this).find(".constraints").val()
+    var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
+    input["name"] = {"output": true,"sketch": true,"name": "f1"};
+    input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};
+    input["y"] = {"attributes": ["'"+ getSelectedYAxis() + "'"], "variable" : "y1"};
     input["z"] = {"attribute": "'"+ getSelectedCategory() + "'", "values": ["*"], "variable" : "z1", "aggregate" : true};
     input["viz"] = {"map":{"type":"scatter"}};
     zqlRows.push(input);

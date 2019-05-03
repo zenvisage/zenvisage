@@ -1672,3 +1672,23 @@ function getScatterPoints()
 {
     return scatterPoints;
 }
+function removePolygons()
+{
+    d3.select("#main-chart").selectAll("*").filter(function() {// i is the index
+        return d3.select(this).attr("class") == "userPolygon";}).remove();
+        drawPolygon()
+
+}
+function clearScatterChart()
+{
+    d3.select("#main-chart").selectAll("*").filter(function() {// i is the index
+        return d3.select(this).attr("class") != "userPolygon";}).remove();
+    removePolygons()
+}
+
+function showLoadingEclipse(eclipse){
+    document.getElementById(eclipse).style.display = "inline";
+}
+function hideLoadingEclipse(eclipse){
+    document.getElementById(eclipse).style.display = "none";
+}

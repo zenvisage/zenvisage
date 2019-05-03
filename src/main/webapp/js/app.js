@@ -286,7 +286,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         }
         query["dataset"] = getSelectedDataset();
         query["classes"] = classList;
-        document.getElementById("loadingEclipse4").style.display = "inline";
+        showLoadingEclipse("loadingEclipse4")
 
         $http.post('/zv/createClasses', query
         ).then(
@@ -312,13 +312,13 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
                         $("#errorModal").modal();
                     }
                 );
-                document.getElementById("loadingEclipse4").style.display = "none";
+                hideLoadingEclipse("loadingEclipse4")
             },
             function (response) {
                 console.log("failed to create classes", response.data);
                 $("#errorModalText").html(response.data);
                 $("#errorModal").modal();
-                document.getElementById("loadingEclipse4").style.display = "none";
+                hideLoadingEclipse("loadingEclipse4")
             }
         );
         log.info("Dynamic Class created",JSON.stringify(classList))
@@ -344,7 +344,7 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
         }
         query["dataset"] = getSelectedDataset();
         query["classes"] = classList;
-        document.getElementById("loadingEclipse3").style.display = "inline";
+        showLoadingEclipse("loadingEclipse3")
 
         $http.post('/zv/createClasses', query
         ).then(
@@ -370,13 +370,13 @@ app.controller('classCreationController', ['$scope', '$rootScope','$http', funct
                         $("#errorModal").modal();
                     }
                 );
-                document.getElementById("loadingEclipse3").style.display = "none";
+                hideLoadingEclipse("loadingEclipse3")
             },
             function (response) {
                 console.log("failed to create classes", response.data);
                 $("#errorModalText").html(response.data);
                 $("#errorModal").modal();
-                document.getElementById("loadingEclipse3").style.display = "none";
+                hideLoadingEclipse("loadingEclipse3")
             }
         );
         log.info("Dynamic Class created",JSON.stringify(classList))
@@ -451,7 +451,7 @@ app.controller('zqlScriptController', ['$scope', '$rootScope', '$http', 'plotRes
             },
             function (response) {
                 console.log("failed ZQL Query", escape(response.data));
-                document.getElementById("loadingEclipse").style.display = "none";
+                hideLoadingEclipse("loadingEclipse")
                 $("#errorModalText").html(response.data);
                 $("#errorModal").modal();
             }
@@ -628,7 +628,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResultsService', '
             },
             function (response) {
                 console.log("failed ZQL Query", escape(response.data));
-                document.getElementById("loadingEclipse").style.display = "none";
+                hideLoadingEclipse("loadingEclipse")
                 $("#errorModalText").html(response.data);
                 $("#errorModal").modal();
             }
@@ -671,7 +671,7 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResultsService', '
             },
             function (response) {
                 console.log("failed Node ZQL Query: ", escape(response.data));
-                document.getElementById("loadingEclipse").style.display = "none";
+                hideLoadingEclipse("loadingEclipse")
                 $("#errorModalText").html(response.data);
                 $("#errorModal").modal();
             }
@@ -780,10 +780,10 @@ app.controller('options-controller', [
                 if (newValue !== oldValue) {
                     log.info(varName, var_map[varName]);
                     if (funcIndex == 1) {
-                        document.getElementById("loadingEclipse").style.display = "inline";
+                        showLoadingEclipse("loadingEclipse")
                         $scope.callGetUserQueryResults();
                     } else if (funcIndex == 2) {
-                        document.getElementById("loadingEclipse").style.display = "inline";
+                        showLoadingEclipse("loadingEclipse")
                         $scope.callGetUserQueryResultsWithCallBack();//dont call representative trends
                     } else if (funcIndex == 3) {
                         $scope.callgetRepresentativeTrends();
@@ -839,7 +839,7 @@ app.controller('options-controller', [
         };
 
         $scope.onflipYChange = function () {
-            document.getElementById("loadingEclipse").style.display = "inline";
+            showLoadingEclipse("loadingEclipse")
             if (usingPattern == true) {
                 patternLoad();
             }
@@ -940,13 +940,13 @@ app.controller('options-controller', [
                 plotResultsService.displayUserQueryResults(response.outputCharts, true);
             }).error(function (response) {
                 console.log("getUserQueryResults: fail");
-                document.getElementById("loadingEclipse").style.display = "none";
+                hideLoadingEclipse("loadingEclipse")
                 $("#errorModalText").html(response);
                 $("#errorModal").modal();
             });
         }
         $scope.onflipYChange = function () {
-            document.getElementById("loadingEclipse").style.display = "inline";
+            showLoadingEclipse("loadingEclipse")
             if (usingPattern == true) {
                 sketchService.patternLoad();
             }
@@ -957,7 +957,7 @@ app.controller('options-controller', [
         }
 
         $scope.onSmoothingChange = function () {
-            document.getElementById("loadingEclipse").style.display = "inline";
+            showLoadingEclipse("loadingEclipse")
             log.info("selectedSmoothing", $scope.selectedSmoothing)
             $scope.callGetUserQueryResultsWithCallBack();
             $scope.callgetRepresentativeTrends();
@@ -1366,6 +1366,13 @@ app.controller('datasetController', [
         };
 
 
+        $scope.scatterSketchpadQuery = function scatterSketchpadQuery() {
+            $scope.queries["db"] = getSelectedDataset();
+            $scope.queries['zqlRows'] = [];
+            scatterSketchpadQueryHelper($scope.queries['zqlRows'])
+        };
+
+
         $scope.getPolygonQuery = function getPolygonQuery() {
             $scope.queries["db"] = getSelectedDataset();
             this.xAxis = getSelectedXAxis();
@@ -1401,6 +1408,7 @@ app.controller('datasetController', [
 
         $scope.getPolygonQueryResults = function getPolygonQueryResults(mode) {
             // get datasetchange query
+            showLoadingEclipse("loadingEclipse")
             if (mode == "initialize") {
                 $scope.scatterDatasetChangeQuery();
             }
@@ -1415,10 +1423,21 @@ app.controller('datasetController', [
             $http.get(apiCall, data).then(
                 function (response) {
                     if (mode == "initialize") {
-                        $scope.data = response.data.outputCharts[0].points;
+                        $scope.scatterSketchpadQuery();
+                        data = {params: {'query': JSON.stringify($scope.queries)}}
+                        $http.get(apiCall, data).then(
+                            function (response) {
+                                $scope.data = response.data.outputCharts[0].points;
+                                sketchService.createSketchpadScatter($scope.data);
+                            },
+                            function (response) {
+                                console.log("failed: ", escape(response));
+                            }
+                        );
+
                     }
-                    sketchService.createSketchpadScatter($scope.data);
                     plotResultsService.displayUserQueryResultsScatter(response.data.outputCharts);
+                    hideLoadingEclipse("loadingEclipse")
                 },
                 function (response) {
                     console.log("failed: ", escape(response));
@@ -1452,7 +1471,7 @@ app.controller('datasetController', [
                             $scope.getRepresentativeTrendsWithoutCallback();
                         }).error(function (response_error) {
                             console.log("getUserQueryResults: fail");
-                            document.getElementById("loadingEclipse").style.display = "none";
+                            hideLoadingEclipse("loadingEclipse")
                             $("#errorModalText").html(response);
                             $("#errorModal").modal();
                         });
@@ -1461,7 +1480,7 @@ app.controller('datasetController', [
                     else {
                         plotResultsService.displayUserQueryResults(response.outputCharts, true);
                         if (data.groupBy == 'dynamic_class') {
-                            document.getElementById("loadingEclipse2").style.display = "none";
+                            hideLoadingEclipse("loadingEclipse2")
                             document.getElementById("representative-table").style.display = "none";
                             document.getElementById("outlier-table").style.display = "none";
                         }
@@ -1474,8 +1493,8 @@ app.controller('datasetController', [
                 })
                 .error(function (response) {
                     console.log("getUserQueryResults: fail");
-                    document.getElementById("loadingEclipse").style.display = "none";
-                    document.getElementById("loadingEclipse2").style.display = "none";
+                    hideLoadingEclipse("loadingEclipse")
+                    hideLoadingEclipse("loadingEclipse2")
                     $("#errorModalText").html(response);
                     $("#errorModal").modal();
                 });
@@ -1505,8 +1524,8 @@ app.controller('datasetController', [
                         //$scope.getRepresentativeTrendsWithoutCallback(); dont recompute representative
                     }).error(function (response_error) {
                         console.log("getUserQueryResults: fail");
-                        document.getElementById("loadingEclipse").style.display = "none";
-                        document.getElementById("loadingEclipse2").style.display = "none";
+                        hideLoadingEclipse("loadingEclipse")
+                        hideLoadingEclipse("loadingEclipse2")
                         $("#errorModalText").html(response_error);
                         $("#errorModal").modal();
                     });
@@ -1520,8 +1539,8 @@ app.controller('datasetController', [
 
             }).error(function (response) {
                 console.log("getUserQueryResults: fail");
-                document.getElementById("loadingEclipse").style.display = "none";
-                document.getElementById("loadingEclipse2").style.display = "none";
+                hideLoadingEclipse("loadingEclipse")
+                hideLoadingEclipse("loadingEclipse2")
                 $("#errorModalText").html(response);
                 $("#errorModal").modal();
             });
@@ -1624,7 +1643,7 @@ app.controller('datasetController', [
                         outlierCallback();
                     }).error(function (response_error) {
                         console.log("getRepresentativeTrends: fail");
-                        document.getElementById("loadingEclipse2").style.display = "none";
+                        hideLoadingEclipse("loadingEclipse2")
                         $("#errorModalText").html(response_error);
                         $("#errorModal").modal();
                     });
@@ -1636,7 +1655,7 @@ app.controller('datasetController', [
                 }
             }).error(function (response) {
                 console.log("getRepresentativeTrends: fail");
-                document.getElementById("loadingEclipse2").style.display = "none";
+                hideLoadingEclipse("loadingEclipse2")
                 $("#errorModalText").html(response);
                 $("#errorModal").modal();
             });
@@ -1732,8 +1751,8 @@ app.controller('datasetController', [
 
         $scope.onDatasetChange = function (input) {
             console.log("on change,", getSelectedDataset());
-            document.getElementById("loadingEclipse").style.display = "inline";
-            document.getElementById("loadingEclipse2").style.display = "inline";
+            showLoadingEclipse("loadingEclipse")
+            showLoadingEclipse("loadingEclipse2")
             log.info("dataset selected", $('#dataset-form-control').val());
             // initSettingPanel();
             clearRepresentativeTable();
@@ -1828,10 +1847,11 @@ app.controller('datasetController', [
                 $scope.callClearDynamicClassOptions();
             }).error(function (response) {
                 alert('Request failed: /getformdata');
-                document.getElementById("loadingEclipse").style.display = "none";
-                document.getElementById("loadingEclipse2").style.display = "none";
+                hideLoadingEclipse("loadingEclipse")
+                hideLoadingEclipse("loadingEclipse2")
             });
             resetSelectedErrorAxis();
+
         }
 
         // when the data selection is changed, the graphs needs to be re-initialized
@@ -1845,8 +1865,8 @@ app.controller('datasetController', [
         }
 
         $scope.onDataAttributeChange = function () {
-            document.getElementById("loadingEclipse").style.display = "inline";
-            document.getElementById("loadingEclipse2").style.display = "inline";
+            showLoadingEclipse("loadingEclipse")
+            showLoadingEclipse("loadingEclipse2")
             var categoryData = datasetService.getCategoryData()[getSelectedCategory()]
             var xData = datasetService.getXAxisData()[getSelectedXAxis()]
             var yData = datasetService.getYAxisData()[getSelectedYAxis()]
@@ -1860,8 +1880,8 @@ app.controller('datasetController', [
         };
 
         $scope.onErrorAttributeChange = function () {
-            document.getElementById("loadingEclipse").style.display = "inline";
-            document.getElementById("loadingEclipse2").style.display = "inline";
+            showLoadingEclipse("loadingEclipse")
+            showLoadingEclipse("loadingEclipse2")
             var categoryData = datasetService.getCategoryData()[getSelectedCategory()]
             var xData = datasetService.getXAxisData()[getSelectedXAxis()]
             var yData = datasetService.getYAxisData()[getSelectedYAxis()]

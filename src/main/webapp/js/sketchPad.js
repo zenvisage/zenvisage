@@ -22,8 +22,13 @@ function uploadToSketchpadNew( draggableId, graphType )
         // zType = userQueryDygraphsNew[draggableId]["zType"];
 
     }
-    plotSketchpadNewHelper( draggedGraph );//, xType, yType, zType);
-    plotSketchpadNewScatterHelper( draggedGraph );
+    if($("#graph-type").children("option:selected").val() == "string:Line"){
+        plotSketchpadNewHelper( draggedGraph );//, xType, yType, zType);
+    }
+    else{
+        plotSketchpadNewScatterHelper( draggedGraph );
+    }
+
 }
 
 $(document).ready(function(){

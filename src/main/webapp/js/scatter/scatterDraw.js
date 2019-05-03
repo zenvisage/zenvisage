@@ -1,4 +1,3 @@
-
 const factory = {};
 var currentRepresentativePlot;
 
@@ -85,8 +84,7 @@ function createSketchpadScatterHelper(data) {
     //     .scale(yScale)
     //     .orient("left")
     //     .tickSize(6, -width);
-    d3.select("#main-chart").selectAll("*").filter(function() {// i is the index
-        return d3.select(this).attr("class") != "userPolygon";}).remove();
+    clearScatterChart()
     d3.select("#colorbar").selectAll("*").remove();
     var svg = d3.select("#main-chart")
         .attr("viewBox", "0 0 270 230")
@@ -299,11 +297,12 @@ function clickPolyPoints(svg) {
             console.log("dblclick!");
             if(polypoints.length > 3){
                 angular.element($("#sidebar")).scope().getPolygonQueryResults("getResults");
+                drawPolygon()
             }
             else{
                 d3.select("#main-chart").selectAll("*").filter(function() {// i is the index
                     return d3.select(this).attr("class") == "userPolygon highlightPolygon";}).remove();
-                    drawPolygon()
+                drawPolygon()
             }
         });
 
@@ -394,13 +393,13 @@ function getBinningCoefficient()
 }
 function plotSketchpadNewScatterHelper( data )//, xType, yType, zType)
 {
-    document.getElementById("loadingEclipse").style.display = "inline";
-    // $("#scatter-div").children().remove();
-    // console.log("test!!!!!!",data);
+    showLoadingEclipse("loadingEclipse")
+    removePolygons();
     setScatterPoints(data);
     createSketchpadScatterHelper( data )
     angular.element($("#sidebar")).scope().getScatterSimilarity();
     refreshZoomEventHandler();
+    hideLoadingEclipse("loadingEclipse")
 }
 
 function ScatterPoint(x, y){
