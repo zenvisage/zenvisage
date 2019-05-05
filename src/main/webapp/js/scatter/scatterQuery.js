@@ -12,7 +12,7 @@ function getSimilarityQuery(zqlRows){
     var sketchpointWrapper = [];
     var sketchpoints = [];
     var dragAndDropPoints = getScatterPoints();
-    for(var i = 0; i < dragAndDropPoints.length-1; i++){
+    for(var i = 0; i < dragAndDropPoints.length; i++){
         sketchpoints.push(new Point( dragAndDropPoints[i]["xval"],dragAndDropPoints[i]["yval"] ));
     }
     sketchpointWrapper.push({"points":sketchpoints})
