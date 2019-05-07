@@ -105,9 +105,9 @@ public class ScatterProcessNode extends ProcessNode {
             List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
             long endTime = System.currentTimeMillis();
 
-            System.out.println("\n\n\n");
+            System.out.println("\n");
             System.out.println("MLD Time: " + (endTime - startTime));
-            System.out.println("\n\n\n");
+            System.out.println("\n");
 
 
 			System.out.println("dragndrop values test " + values);
@@ -222,7 +222,7 @@ public class ScatterProcessNode extends ProcessNode {
 		Sketch sketch = q.getSketch();
 		List<float[][]> vcqueryGrids = new ArrayList<>();
 		// just use one level, 5*5 grids for now
-		for(int l = 2; l <= 1024; l *= 2) {
+		for(int l = 2; l <= 32; l *= 2) {
             // TODO(jintao): The frontend is sending the points inside the polygons. May need to change it to points at some time?
             long startTime = System.currentTimeMillis();
             System.out.println("preprocess size: " + l);
@@ -231,7 +231,8 @@ public class ScatterProcessNode extends ProcessNode {
             sketch.insertToMultiLevelGrids(tmp1);
             sketch.insertToMultiLevelWeights((float)1.0/l);
             for(VisualComponent vc : vcList) {
-                vc.insertToMultiLevelGrids(binning(normalize(vc.getPoints()), l, l));
+                tmp1 = binning(normalize(vc.getPoints()), l, l);
+                vc.insertToMultiLevelGrids(tmp1);
             }
             startTime = System.currentTimeMillis();
             System.out.println("preprocess endTime: " + startTime);
