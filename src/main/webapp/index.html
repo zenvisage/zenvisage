@@ -582,7 +582,7 @@
           <!-- Button trigger modal -->
 
           <!--<select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()"  ng-model="selectedDataset" id="dataset-form-control">-->
-          <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset='real_estate';"  ng-model="selectedDataset" id="dataset-form-control">
+          <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset='cmu';onDatasetChange();"  ng-model="selectedDataset" id="dataset-form-control">
             <option ng-repeat="table in tablelist">{{table}}</option>
           </select>
         </div>
@@ -607,7 +607,7 @@
             <button type="button" id="dynamicClassSliderButton" class="textButton" data-toggle="modal" data-target="#dynamic-class-with-slider"><span data-highlightClass ='leftMargin:300px' data-intro='In order to divide the data into additional categories, classes can be created dynamically by specifying a range that data from that class should fall into. The data attribute can be selected with range specified using the syntax [a,b] which denotes that all data points within that class is larger than a and less than b. The `min` and `max` can be used to denote the min and max values of the array. For example, [100,max] denotes all datapoints with values larger than 100.' data-step="4" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button>
           </h5>
 
-          <select class="form-control" ng-change="onDataAttributeChange()" ng-model="selectedCategory" ng-options="category for category in categories" id="zAxisSelection">
+          <select class="form-control" ng-change="onDataAttributeChange()" ng-model="selectedCategory" ng-init="selectedCategory='class'" ng-options="category for category in categories" id="zAxisSelection">
           </select>
 
           <!-- <div>
@@ -627,12 +627,12 @@
             </div>
           </div> -->
           <h5><b>X-axis</b></h5>
-          <select class="form-control" ng-change="onDataAttributeChange()" id="xAxisSelection" value={{xAxisItem}} ng-model="selectedXAxis">
+          <select class="form-control" ng-change="onDataAttributeChange()" id="xAxisSelection" value={{xAxisItem}} ng-init="selectedXAxis='o2'" ng-model="selectedXAxis">
             <option ng-repeat="xAxisItem in xAxisItems">{{xAxisItem}}</option>
           </select>
 
           <h5><b>Y-axis</b></h5>
-          <select class="form-control" ng-change="onDataAttributeChange()" id="yAxisSelection" value={{yAxisItem}} ng-model="selectedYAxis">
+          <select class="form-control" ng-change="onDataAttributeChange()" id="yAxisSelection" value={{yAxisItem}} ng-init="selectedXAxis='ea'" ng-model="selectedYAxis">
             <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
           </select>
 

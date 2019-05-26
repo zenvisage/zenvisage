@@ -43,6 +43,10 @@ import edu.uiuc.zenvisage.service.ZvMain;
 import edu.uiuc.zenvisage.service.utility.PasswordStorage.CannotPerformOperationException;
 import edu.uiuc.zenvisage.service.utility.PasswordStorage.InvalidHashException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Controller
 public class ZvBasicAPI {
 
@@ -60,6 +64,7 @@ public class ZvBasicAPI {
     	public boolean loginAvailable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, InterruptedException, SQLException, CannotPerformOperationException, InvalidHashException{
     		return Readconfig.getLoginAvaliable();
     	}
+	static final Logger logger = LoggerFactory.getLogger(ZvBasicAPI.class);
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
@@ -761,10 +766,10 @@ public class ZvBasicAPI {
 		}
 
 		String body = stringBuilder.toString();
-		logQueries("scatter-similarity",null,body);
-		//System.out.println("realtestestestest"+body);
+//		logQueries("scatter-similarity",null,body);
 		String res = zvMain.scatterSimilarity(body);
-		logQueries("scatter-similarity-result",null,res);
+
+//		logQueries("scatter-similarity-result",null,res);
 		return res;
 
 //		String bodyforlogging=removeSketchPoints(body);

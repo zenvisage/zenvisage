@@ -78,12 +78,15 @@ public class ScatterProcessNode extends ProcessNode {
 		} else if (process.getMethod().equals("Rank")) {
 			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 			List<Polygon> rectangles = vcNode.getVc().getSketch().getPolygons();
+			long startTime = System.currentTimeMillis();
 			List<String> values = scatterRankExecution(rectangles);
+			long endTime = System.currentTimeMillis();
+			logger.info("Computing Polygon took " + (endTime - startTime) + "ms");
 			double[] scores = new double[values.size()];
 			for (int i = 0; i < values.size(); i++) {
 				scores[i] = i;
 			}
-			System.out.println("polygon values test " + values);
+//			System.out.println("polygon values test " + values);
 			// z1
 			String axisName = process.getAxisList1().get(0);
 			AxisVariable axisVar = (AxisVariable) lookuptable.get(axisName);
@@ -97,20 +100,20 @@ public class ScatterProcessNode extends ProcessNode {
 			//List<String> values = scatterDragAndDropExecution(points);
 			VisualComponentList input = vcNode.getVcList();
 			VisualComponentQuery q = vcNode.getVc();
+			long startTime = System.currentTimeMillis();
 			preprocess(input, q);
+			long endTime = System.currentTimeMillis();
+			logger.info("Preprocessing before MLD took " + (endTime - startTime) + "ms");
 			output = new Result();
 
 
-			long startTime = System.currentTimeMillis();
+			startTime = System.currentTimeMillis();
             List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
-            long endTime = System.currentTimeMillis();
-
-            System.out.println("\n");
-            System.out.println("MLD Time: " + (endTime - startTime));
-            System.out.println("\n");
+             endTime = System.currentTimeMillis();
+			logger.info("Computing MLD took " + (endTime - startTime) + "ms");
 
 
-			System.out.println("dragndrop values test " + values);
+//			System.out.println("dragndrop values test " + values);
 //			List<String> values = EMDExecution(input, q);
 			double[] scores = new double[values.size()];
 			for (int i = 0; i < values.size(); i++) {
@@ -230,6 +233,12 @@ public class ScatterProcessNode extends ProcessNode {
             float[][] tmp1 = binning(normalize(sketch.getPolygons().get(0).getPoints()), l, l);
             sketch.insertToMultiLevelGrids(tmp1);
             sketch.insertToMultiLevelWeights((float)1.0/l);
+//			if(l == 32){
+//				sketch.insertToMultiLevelWeights((float)1.0);
+//			}
+//			else{
+//				sketch.insertToMultiLevelWeights((float)0.0);
+//			}
             for(VisualComponent vc : vcList) {
                 tmp1 = binning(normalize(vc.getPoints()), l, l);
                 vc.insertToMultiLevelGrids(tmp1);

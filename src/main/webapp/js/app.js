@@ -744,7 +744,7 @@ app.controller('options-controller', [
         $scope.scattertable = false;
         $scope.chartSettings = ChartSettings;
         $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
-        $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[0];
+        $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[2];
         // $scope.filter= '';
 
         var var_map = {
@@ -1930,7 +1930,7 @@ app.controller('datasetController', [
 
         // this init is just for tutorial purpose
         var init = function () {
-            $scope.onDatasetChange('initialize');
+            $scope.onDatasetChange();
         };
         // init();
         // and fire it after definition

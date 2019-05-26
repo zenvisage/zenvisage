@@ -427,7 +427,7 @@ public class ZvMain {
 		   startTime = System.currentTimeMillis();
 		   VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 		   endTime = System.currentTimeMillis();
-		   logger.info("Execution took " + (endTime - startTime) + "ms");		   
+		   logger.info("Polygon Execution took " + (endTime - startTime) + "ms");
 		   //convert it into front-end format.
 		   String result = new ObjectMapper().writeValueAsString(convertVCListtoScatterOutput(output));
 		   System.out.println("Done");
@@ -451,9 +451,11 @@ public class ZvMain {
 		QueryGraph graph;
 		try {
 			graph = parser.processZQLTable(zqlTable, null);
+			long startTime = System.currentTimeMillis();
 			VisualComponentList output = edu.uiuc.zenvisage.zql.QueryGraphExecutor.execute(graph);
 			String result = new ObjectMapper().writeValueAsString(convertVCListtoScatterOutput(output));
-			System.out.println("Drag and drop done");
+			long endTime = System.currentTimeMillis();
+			logger.info("Drag and Drop Execution took " + (endTime - startTime) + "ms");
 			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();

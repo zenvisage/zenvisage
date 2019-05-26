@@ -55,8 +55,11 @@ public class QueryGraphExecutor {
 						if (temp.getVc().getName().getOutput()) {
 							if (temp.getVc().getViz().getMap().containsKey(VizColumn.type) && temp.getVc().getViz().getMap().get(VizColumn.type).equals(VizColumn.scatter)) {
 								//Scatter plot case
+								long startTime = System.currentTimeMillis();
 								VisualComponentList toAdd = ((ScatterVCNode) currNode).getVcList();
 								outputList.getVisualComponentList().addAll(toAdd.getVisualComponentList());
+								long endTime = System.currentTimeMillis();
+								logger.info("Post processing after scatter query took " + (endTime - startTime) + "ms");
 							} else {
 								VisualComponentList toAdd = (VisualComponentList) (currNode).lookuptable.get(temp.getVc().getName().getName());
 								outputList.getVisualComponentList().addAll(toAdd.getVisualComponentList());
