@@ -1,7 +1,7 @@
 $( function() {
     $( "#binning-slider" ).slider({
-        range: "max",
-        min: 0,
+        range: true,
+        min: 1,
         max: 10,
         step:0.5,
         value: 1.0,

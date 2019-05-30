@@ -78,6 +78,7 @@ function createSketchpadScatterHelper(data) {
     //     .tickSize(6, -height);
 
     var xAxis = d3.axisBottom(xScale).tickSize(6, -height);
+    xAxis = d3.axisBottom(xScale).ticks(6,"s");
     // var yAxis = d3.axisLeft(yScale).tickSize(6, -width);
     var yAxis = d3.axisLeft(yScale).ticks(3,"s");
     // var yAxis = d3.svg.axis()

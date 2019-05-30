@@ -84,7 +84,8 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
     }
     var xlabel = userQueryResults[count]["xAttribute"]
     var ylabel = userQueryResults[count]["yAttribute"]
-    var zAttribute = userQueryResults[count]["zval"]
+    var zAttribute = userQueryResults[count]["zval"];
+    var score = userQueryResults[count]["score"]
 
     userQueryDygraphsNew["result-" + count.toString()] = {"data": data, "xType": xlabel, "yType": ylabel, "zType": zAttribute}
 
@@ -110,7 +111,12 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
         .attr("height", 85)
 
 
-    var trans = height-20
+    var trans = height-20;
+    var zAttributeText = zAttribute;
+    if (zAttribute.length>30){
+      zAttributeText = zAttributeText.slice(0,27) + "..."
+    }
+    zAttributeText = zAttributeText + "("+score.toString() + ")";
     d3.select("#undraggable-result-"+count.toString()).append("g")
     d3.select("#undraggable-result-"+count.toString()).append("text")
       .attr("transform",
@@ -121,13 +127,14 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
       .attr("id",'ztitle')
       .attr("type",'queryResult')
       .attr('label',zAttribute)
-      .text( zAttribute );
+      .text(zAttributeText );
 
     var hexbin = d3_hexbin.hexbin()
         //.size([width, height])
         .radius(getBinningCoefficient());
 
     var xAxis = d3.axisBottom(xScale).tickSize(3, -height);
+      xAxis = d3.axisBottom(xScale).ticks(4, "s");
     var yAxis = d3.axisLeft(yScale).ticks(3,"s");
     graph.append("g")
         .attr("class", "y axis")

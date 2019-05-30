@@ -586,9 +586,9 @@
             <option ng-repeat="table in tablelist">{{table}}</option>
           </select>
         </div>
-        <div class = 'side-info-text' data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">
-          <h5 style = 'width:130px'><b>Pattern</b><button type="button" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>
-        </div>
+        <!--<div class = 'side-info-text' data-intro= 'Alternatively, you can enter sample data patterns in JSON format for pattern matching.' data-step="8">-->
+          <!--<h5 style = 'width:130px'><b>Pattern</b><button type="button" class="textButton" data-toggle="modal"  data-target="#pattern-upload"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> </button></h5>-->
+        <!--</div>-->
 
         <div class = 'side-info-text' data-intro= 'The data attribute associated with loaded dataset is displayed on the left panel. You can select the x and y attributes of interest and the category (z-axis) that the visualization is generated from.' data-step="3" data-position = "right">
           <!-- <h5><b>Category</b>
@@ -638,15 +638,15 @@
 
         </div>
 
-        <div class="dropdown" id="error" >
-          <h5><b>Error Attribute</b></h5>
-          <!-- Button trigger modal -->
+        <!--<div class="dropdown" id="error" >-->
+          <!--<h5><b>Error Attribute</b></h5>-->
+          <!--&lt;!&ndash; Button trigger modal &ndash;&gt;-->
 
-          <select class="form-control" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="selectedErrorAxis">
-            <option>none</option>
-            <option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>
-          </select>
-        </div>
+          <!--<select class="form-control" ng-change="onErrorAttributeChange()" value={{yAxisItem}} ng-model="selectedErrorAxis">-->
+            <!--<option>none</option>-->
+            <!--<option ng-repeat="yAxisItem in yAxisItems">{{yAxisItem}}</option>-->
+          <!--</select>-->
+        <!--</div>-->
 
       </div> <!-- end side bar -->
     </div> <!-- end left bar -->
@@ -666,9 +666,9 @@
             <div class="btn-toolbar">
               <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
               </select>
-              <button type="button" name="options" ng-click="changeZQLTableState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>
+              <!--<button type="button" name="options" ng-click="changeZQLTableState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>-->
               <!--<button type="button" name="zql-script" ng-click="changeZQLScriptState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Script</button>-->
-              <button type="button" name="options" ng-click="scattertable = !scattertable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Scatter Table</button>
+              <!--<button type="button" name="options" ng-click="scattertable = !scattertable" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">Scatter Table</button>-->
               <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
               <!-- <button type="button" name="topk" ng-click="getTopK()" aria-pressed="false" class="btn btn-default btn-xs">Top K</button>
               <button type="button" aria-pressed="false" data-toggle="button" ng-click="zqlgraph = !zqlgraph" class="btn btn-default btn-xs">ZQLgraph</button> -->
@@ -807,21 +807,21 @@
 
 
 
-            <div ng-show="scattertable" ng-controller="zqlTableController">
-              <div class="col-md-3" style="width: 180px;">
-                <div>
-                  <div class="info-text">
-                    <p><nobr>
-                      <label for="amount">Binning Constant:</label>
-                      <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
-                    </nobr></p>
-                    <div id="binning-slider" align = "right" style="width:165px;"></div>
-                  </div>
-                </div>
-              </div>
-              <table id="scatter-table" class="table scatter-table">
-              </table>
-            </div>
+            <!--<div ng-show="scattertable" ng-controller="zqlTableController">-->
+              <!--<div class="col-md-3" style="width: 180px;">-->
+                <!--<div>-->
+                  <!--<div class="info-text">-->
+                    <!--<p><nobr>-->
+                      <!--<label for="amount">Binning Constant:</label>-->
+                      <!--<input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">-->
+                    <!--</nobr></p>-->
+                    <!--<div id="binning-slider" align = "right" style="width:165px;"></div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<table id="scatter-table" class="table scatter-table">-->
+              <!--</table>-->
+            <!--</div>-->
 
 
             <div ng-show="!zqltable && !scattertable" class="row" >
@@ -846,23 +846,40 @@
                     </div>
                   </div>
                 </div>
-                <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">
-                  <div class="info-text" style="margin-bottom: 0px;">
-                    <div ><b>Aggregate</b>
-                      <div class="qtooltip">
-                        <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                        <span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>
+
+                <div ng-show="!zqltable && !scattertable"  ng-controller="zqlTableController" class="row">
+                  <div class="col-md-3" style="width: 170px;">
+                    <div>
+                      <div class="info-text">
+                        <p><nobr>
+                          <label for="amount">Binning Constant:</label>
+                          <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
+                        </nobr></p>
+                        <div id="binning-slider" align = "right" style="width:165px;"></div>
                       </div>
                     </div>
-
-                    <div class="radio">
-                      <form>
-                        <input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>
-                        <input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label><br>
-                        <input ng-model="aggregation" id="none" type="radio" name="aggregation-method" value="" checked><label for="none">None</label>
-                      </form>
-                    </div>
                   </div>
+                  <table id="scatter-table" class="table scatter-table">
+                  </table>
+                </div>
+
+                <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">
+                  <!--<div class="info-text" style="margin-bottom: 0px;">-->
+                    <!--<div ><b>Aggregate</b>-->
+                      <!--<div class="qtooltip">-->
+                        <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>-->
+                        <!--<span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>-->
+                      <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class="radio">-->
+                      <!--<form>-->
+                        <!--<input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>-->
+                        <!--<input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label><br>-->
+                        <!--<input ng-model="aggregation" id="none" type="radio" name="aggregation-method" value="" checked><label for="none">None</label>-->
+                      <!--</form>-->
+                    <!--</div>-->
+                  <!--</div>-->
                   <!-- <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
                     <div ><b>Input equation</b></div>
                     <p></p>
@@ -877,18 +894,18 @@
               </div>
               <div class="col-md-3" style="width: 175px;">
 
-                <div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">
-                  <div><b>Cluster Size</b>
-                    <div class="qtooltip">
-                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">KMeans clustering is used for identifying represenatitive trends of the whole dataset. This option specifies the number of clusters to be displayed in the representative trends.</span>
-                    </div>
-                  </div>
-                  <p></p>
-                  <div>
-                    <input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">
-                  </div>
-                </div>
+                <!--<div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">-->
+                  <!--<div><b>Cluster Size</b>-->
+                    <!--<div class="qtooltip">-->
+                      <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>-->
+                      <!--<span class="qtooltiptext">KMeans clustering is used for identifying represenatitive trends of the whole dataset. This option specifies the number of clusters to be displayed in the representative trends.</span>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                  <!--<p></p>-->
+                  <!--<div>-->
+                    <!--<input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">-->
+                  <!--</div>-->
+                <!--</div>-->
                 <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
                   <div><b>Number of Results</b>
                   </div>
@@ -917,30 +934,45 @@
 
               <div class="col-md-3" style="width: 180px;">
                 <div style="width:165px;" data-intro = "This panel controls the amount of data smoothing that is applied to the data. You can select the smoothing algorithm as well as controlling the smoothing parameters interactively." data-step ="16" data-position = "left">
-                  <div class="info-text">
-                    <div><b>Data Smoothing</b>
+                  <!--<div class="info-text">-->
+                    <!--<div><b>Data Smoothing</b>-->
+                      <!--<div class="qtooltipright">-->
+                        <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>-->
+                        <!--<span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>-->
+                      <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<p></p>-->
+                    <!--<select class="form-control" id="smoothing-form-control" ng-model="selectedSmoothing">-->
+                      <!--<option value="none">None</option>-->
+                      <!--<option value="movingaverage">Moving Average</option>-->
+                      <!--<option value="exponentialmovingaverage">Exponential</option>-->
+                      <!--<option value="leossInterpolation">Loess</option>-->
+                      <!--<option value="gaussian">Gaussian</option>-->
+                    <!--</select>-->
+                  <!--</div>-->
+
+                  <!--<div class="info-text">-->
+                    <!--<p><nobr>-->
+                      <!--<label for="amount">Smoothing Constant:</label>-->
+                      <!--<input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">-->
+                    <!--</nobr></p>-->
+                    <!--<div id="slider-range-max" align = "right" style="width:165px;"></div>-->
+                  <!--</div>-->
+                  <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
+                    <div ><b>Input Equation</b>
                       <div class="qtooltipright">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                        <span class="qtooltiptextright">When your data is noisy, the visualization pattern can be overwhelmed by noise, which can lead to bad pattern matching. Smoothing tries to capture important features in the data while lessening the noise. Different methods of smoothing are available through the dropdown, and the magnitude of smoothing can be changed through the slider.</span>
+                        <span class="qtooltiptextright">Relationships in the form of mathematical equations can be used to query for patterns.</span>
                       </div>
                     </div>
-
                     <p></p>
-                    <select class="form-control" id="smoothing-form-control" ng-model="selectedSmoothing">
-                      <option value="none">None</option>
-                      <option value="movingaverage">Moving Average</option>
-                      <option value="exponentialmovingaverage">Exponential</option>
-                      <option value="leossInterpolation">Loess</option>
-                      <option value="gaussian">Gaussian</option>
-                    </select>
-                  </div>
-
-                  <div class="info-text">
-                    <p><nobr>
-                      <label for="amount">Smoothing Constant:</label>
-                      <input type="text" id="amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
-                    </nobr></p>
-                    <div id="slider-range-max" align = "right" style="width:165px;"></div>
+                    <div class="input-group">
+                      <input ng-model="equation" type="text" class="form-control" id="input_equation" placeholder="e.g. y=x^2">
+                      <div class="input-group-btn">
+                        <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
+                      </div>
+                    </div>
                   </div>
 
                 </div>
@@ -961,50 +993,36 @@
                 </div>
               </div>
 
-              <div class="col-md-3" style="width: 185px;">
-                <div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>
-                  <div class="qtooltipright">
-                    <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                    <span class="qtooltiptextright">1. Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, the location of the pattern along the x-axis will not affect pattern search.
-                    <br>2. Show original sketch: Shows the original query pattern as a pale green line on top of the visualization results, checked by default.
-                    <br>3. Show scatter plot: Showing the raw data points as a scatterplot.
-                    <br>4. Reverse Y axis: Flipping the y-axis of all visualizations.
-                    </span>
-                  </div>
-                  <div class="checkbox">
-                    <form data-intro = "If unchecked, then the similarity search ignores matches on the x axis and measure only shape-based (y axis) similarity." data-position = "left" data-step ="19" >
-                      <input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>
-                    </form>
-                    <form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" >
-                      <input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>
-                    </form>
-                    <form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">
-                      <input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>
-                    </form>
-                    <form>
-                      <input ng-model="showBar" id="showBar" type="checkbox" name="show-bar"><label for="showBar">Show Bar Chart</label><br>
-                    </form>
-                    <form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="22">
-                      <input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>
-                    </form>
-                  </div>
-                </div>
 
-                <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
-                  <div ><b>Input Equation</b>
-                    <div class="qtooltipright">
-                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptextright">Relationships in the form of mathematical equations can be used to query for patterns.</span>
-                    </div>
-                  </div>
-                  <p></p>
-                  <div class="input-group">
-                    <input ng-model="equation" type="text" class="form-control" id="input_equation" placeholder="e.g. y=x^2">
-                    <div class="input-group-btn">
-                      <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
-                    </div>
-                  </div>
-                </div>
+              <div class="col-md-3" style="width: 185px;">
+
+                <!--<div class="info-text" data-intro = "Here are other additional plotting options available in Zenvisage." data-step="18" data-position = "left"><b>Options</b>-->
+                  <!--<div class="qtooltipright">-->
+                    <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>-->
+                    <!--<span class="qtooltiptextright">1. Consider x-range: Queries will find patterns that happen at similar x ranges. When turned off, the location of the pattern along the x-axis will not affect pattern search.-->
+                    <!--<br>2. Show original sketch: Shows the original query pattern as a pale green line on top of the visualization results, checked by default.-->
+                    <!--<br>3. Show scatter plot: Showing the raw data points as a scatterplot.-->
+                    <!--<br>4. Reverse Y axis: Flipping the y-axis of all visualizations.-->
+                    <!--</span>-->
+                  <!--</div>-->
+                  <!--<div class="checkbox">-->
+                    <!--<form data-intro = "If unchecked, then the similarity search ignores matches on the x axis and measure only shape-based (y axis) similarity." data-position = "left" data-step ="19" >-->
+                      <!--<input ng-model="considerRange" id="considerRange" type="checkbox" name="consider-range"><label for="considerRange">Consider x-range</label><br>-->
+                    <!--</form>-->
+                    <!--<form data-intro = "If unchecked, then the query pattern will not be overlaid (in green) on the resulting visualizations." data-step ="20" >-->
+                      <!--<input ng-model="showOriginalSketch" id="showOriginalSketch" type="checkbox" name="show-original-sketch"><label for="showOriginalSketch">Show original sketch</label><br>-->
+                    <!--</form>-->
+                    <!--<form data-intro = "If checked, only the data points will be plotted rather than lines connecting the data points." data-step ="21">-->
+                      <!--<input ng-model="showScatterplot" id="showScatterplot" type="checkbox" name="show-scatterplot"><label for="showScatterplot">Show scatterplot</label><br>-->
+                    <!--</form>-->
+                    <!--<form>-->
+                      <!--<input ng-model="showBar" id="showBar" type="checkbox" name="show-bar"><label for="showBar">Show Bar Chart</label><br>-->
+                    <!--</form>-->
+                    <!--<form data-intro = "If checked, then the y axis reverses for display purposes." data-step ="22">-->
+                      <!--<input ng-model="flipY" ng-change="onflipYChange()" id="flipY" type="checkbox" name="flipY"><label for="flipY">Reverse y-axis</label><br>-->
+                    <!--</form>-->
+                  <!--</div>-->
+                <!--</div>-->
 
 
                 <!-- <div id="sidebar" class="interface" ng-controller="datasetController"  >
@@ -1034,7 +1052,7 @@
 
         <hr>
         <div id="bottom-middle-bar">
-          <div id="middle-left" class="col-md-6">
+          <div id="middle-left" class="col-md-7">
             <h5>
               <b>Results</b>
               <button type="button" class="textButton" data-toggle="modal" data-target="#download-info" data-intro = "The queried results can be downloaded here." data-step="7" ><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
@@ -1044,32 +1062,33 @@
             </div>
             <img src="js/lib/Eclipse.svg" id = 'loadingEclipse' style="display: none; position: relative; top: 8px; left: 45%; z-index: 10; width: 100px; height: 100px; ">
           </div>
-          <div id="middle-right" class="col-md-6">
-            <div>
-              <table id="representative-table">
-                <tr class="middle-right-headers">
-                  <td><h5><b>Representative patterns </b>
-                    <button type="button" class="textButton" data-toggle="modal" data-target="#cluster-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
-                    </b>
-                  </h5></td>
-                </tr>
-              </table>
-            </div>
-            <div>
-              <table id="outlier-table">
-                <tr class="middle-right-headers">
-                  <td><h5><b>Outliers </b>
-                    <button type="button" class="textButton" data-toggle="modal" data-target="#outlier-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>
-                    <!-- <div class="qtooltip">
-                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>
-                      <span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>
-                    </div> -->
-                  </h5></td>
-                </tr>
-              </table>
-            </div>
-            <img src="js/lib/Eclipse.svg" id = 'loadingEclipse2' style="display: none; position: relative; top: 8px; left: 35%; z-index: 10; width:  100px; height:  100px; ">
-          </div>
+          <!--<div id="middle-right" class="col-md-6">-->
+            <!--removed outlier and representative for poster-->
+            <!--<div>-->
+              <!--<table id="representative-table">-->
+                <!--<tr class="middle-right-headers">-->
+                  <!--<td><h5><b>Representative patterns </b>-->
+                    <!--<button type="button" class="textButton" data-toggle="modal" data-target="#cluster-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>-->
+                    <!--</b>-->
+                  <!--</h5></td>-->
+                <!--</tr>-->
+              <!--</table>-->
+            <!--</div>-->
+            <!--<div>-->
+              <!--<table id="outlier-table">-->
+                <!--<tr class="middle-right-headers">-->
+                  <!--<td><h5><b>Outliers </b>-->
+                    <!--<button type="button" class="textButton" data-toggle="modal" data-target="#outlier-download-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> </button>-->
+                    <!--&lt;!&ndash; <div class="qtooltip">-->
+                      <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign" onmouseover="log.info('outlier explaination')"></span>-->
+                      <!--<span class="qtooltiptext">Outlier results highlight anomalies that look different from most visualizations in the dataset.</span>-->
+                    <!--</div> &ndash;&gt;-->
+                  <!--</h5></td>-->
+                <!--</tr>-->
+              <!--</table>-->
+            <!--</div>-->
+            <!--<img src="js/lib/Eclipse.svg" id = 'loadingEclipse2' style="display: none; position: relative; top: 8px; left: 35%; z-index: 10; width:  100px; height:  100px; ">-->
+          <!--</div>-->
         </div>
       </div>
     </div>
@@ -1163,6 +1182,7 @@
     <script src="js/line/draw.js"></script>
     <script src="js/scatter/scatterDraw.js"></script>
     <script src="js/scatter/scatterQuery.js"></script>
+    <!--<script src="js/scatter/binningSlider.js.js"></script>-->
     <script src="js/sketchPad.js"></script>
     <script src="js/line/query.js"></script>
     <script src="js/line/slider.js"></script>

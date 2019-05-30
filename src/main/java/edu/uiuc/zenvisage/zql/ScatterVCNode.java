@@ -139,6 +139,7 @@ public class ScatterVCNode extends VisualComponentNode {
 		if (axisVar != null && axisVar.getScores() != null && axisVar.getScores().length > 0) {
 			double[] scores = axisVar.getScores();
 			List<String> values = axisVar.getValues();
+			System.out.println("sortvcreached");
 			sortVisualComponentList(vcList, scores, values, axisVar.getAttribute());
 		} else {
 			for (int i = 0; i < vcList.getVisualComponentList().size(); i++) {

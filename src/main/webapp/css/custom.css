@@ -103,7 +103,7 @@ svg#treesvg {
 #middle-left{
   height: 60vh; !important;
   min-width: 495px;
-  overflow-x: auto;
+  overflow-x: hidden;
   -webkit-flex: 1;
   flex:1;
   position:relative;
@@ -395,6 +395,7 @@ svg#treesvg {
 }
 .info-text {
   margin-bottom: 15px;
+    margin-left: 15px;
 }
 
 #mobilePopup{ display: none; }

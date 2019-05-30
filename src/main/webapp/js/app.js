@@ -1751,8 +1751,8 @@ app.controller('datasetController', [
 
         $scope.onDatasetChange = function (input) {
             console.log("on change,", getSelectedDataset());
-            showLoadingEclipse("loadingEclipse")
-            showLoadingEclipse("loadingEclipse2")
+            // showLoadingEclipse("loadingEclipse")
+            // showLoadingEclipse("loadingEclipse2")
             log.info("dataset selected", $('#dataset-form-control').val());
             // initSettingPanel();
             clearRepresentativeTable();
@@ -1865,8 +1865,8 @@ app.controller('datasetController', [
         }
 
         $scope.onDataAttributeChange = function () {
-            showLoadingEclipse("loadingEclipse")
-            showLoadingEclipse("loadingEclipse2")
+                // showLoadingEclipse("loadingEclipse")
+                // showLoadingEclipse("loadingEclipse2")
             var categoryData = datasetService.getCategoryData()[getSelectedCategory()]
             var xData = datasetService.getXAxisData()[getSelectedXAxis()]
             var yData = datasetService.getYAxisData()[getSelectedYAxis()]
@@ -1911,7 +1911,7 @@ app.controller('datasetController', [
         $(function () {
             $("#binning-slider").slider({
                 range: "max",
-                min: 0,
+                min: 1,
                 max: 10,
                 step: 0.5,
                 value: 1.0,

@@ -491,6 +491,7 @@ public class ZvMain {
 	    	ScatterChart outputChart = new ScatterChart();
 
 	    	outputChart.zval = viz.getZValue().toString();
+	    	outputChart.score = viz.getScore();
 	    	ArrayList<WrapperType> xList = viz.getPoints().getXList();
 	    	ArrayList<WrapperType> yList = viz.getPoints().getYList();
 	    	for(int i = 0; i < viz.getPoints().getXList().size(); i++) {
