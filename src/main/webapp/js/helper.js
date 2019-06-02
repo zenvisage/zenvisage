@@ -1694,7 +1694,7 @@ function clearScatterChart()
 }
 
 function showLoadingEclipse(eclipse){
-    document.getElementById(eclipse).style.display = "inline";
+    document.getElementById(eclipse).style.display = "none";
 }
 function hideLoadingEclipse(eclipse){
     document.getElementById(eclipse).style.display = "none";

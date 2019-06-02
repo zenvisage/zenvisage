@@ -906,12 +906,26 @@
                     <!--<input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">-->
                   <!--</div>-->
                 <!--</div>-->
-                <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
-                  <div><b>Number of Results</b>
+
+                <div class="info-text">
+                <div><b>Distance Metric</b>
+                <div class="qtooltipright">
+                </div>
+                </div>
+
+                <p></p>
+                <select class="form-control" id="scatter-distance-form-control" ng-model="selectedScatterDistance">
+                <option selected = "true" value="MLD">MLD</option>
+                <option value="Euclidean">Euclidean</option>
+                </select>
+                </div>
+
+                <div id="num-levels" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
+                  <div><b>Number of levels</b>
                   </div>
                   <p></p>
                   <div>
-                    <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
+                    <input ng-model="numLevels" class="form-control" type="text" id="num-levels" name="number-of-levels" value="5">
                   </div>
                 </div>
 
@@ -989,6 +1003,14 @@
                     <div class="input-group-btn">
                       <button id="filter-submit" class="btn btn-default btn-xs" type="submit" style="float: right;"  ng-click="onFilterChange()">Submit</button>
                     </div>
+                  </div>
+                </div>
+                <div id="num-results" class="info-text" data-intro = "The number of similarity search results displayed can be modified." data-step ="14" data-position = "left">
+                  <div><b>Number of Results</b>
+                  </div>
+                  <p></p>
+                  <div>
+                    <input ng-model="numResults" class="form-control" type="text" id="num-results" name="number-of-results" value="50">
                   </div>
                 </div>
               </div>

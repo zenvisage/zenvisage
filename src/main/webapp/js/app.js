@@ -745,6 +745,8 @@ app.controller('options-controller', [
         $scope.chartSettings = ChartSettings;
         $scope.chartSettings.chartOptions = ["Line", "Bar", "Scatter"];
         $scope.chartSettings.selectedChartOption = $scope.chartSettings.chartOptions[2];
+        $scope.selectedScatterDistance = "MLD"
+        $scope.numLevels= 5;
         // $scope.filter= '';
 
         var var_map = {
@@ -758,7 +760,9 @@ app.controller('options-controller', [
             "showScatterplot": $scope.showScatterplot,
             "showBar": $scope.showBar,
             "flipY": $scope.flipY,
-            "selectedSmoothing": $scope.selectedSmoothing
+            "selectedSmoothing": $scope.selectedSmoothing,
+            "selectedScatterDistance": $scope.selectedScatterDistance,
+            "numLevels": $scope.numLevels
         }
 
         var toggleWatch = function (watchExpr, fn) {

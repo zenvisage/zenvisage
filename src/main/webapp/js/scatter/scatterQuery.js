@@ -4,7 +4,6 @@ function getSimilarityQuery(zqlRows){
     var x = $(this).find(".x-val").val();
     var y = $(this).find(".y-val").val();
     var z = $(this).find(".z-val").val();
-    console.log("testhahaha",x,y,z)
     var constraints = $(this).find(".constraints").val();
 
     var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
