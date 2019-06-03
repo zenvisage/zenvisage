@@ -114,9 +114,9 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
     var trans = height-20;
     var zAttributeText = zAttribute;
     if (zAttribute.length>30){
-      zAttributeText = zAttributeText.slice(0,27) + "..."
+        zAttributeText = zAttributeText.slice(0,22) + "..."
     }
-    zAttributeText = zAttributeText + "("+score.toString() + ")";
+    zAttributeText = zAttributeText + "("+score.toString().slice(0,5) + ")";
     d3.select("#undraggable-result-"+count.toString()).append("g")
     d3.select("#undraggable-result-"+count.toString()).append("text")
       .attr("transform",

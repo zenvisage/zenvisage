@@ -78,13 +78,15 @@ public class ScatterProcessNode extends ProcessNode {
 		} else if (process.getMethod().equals("Rank")) {
 			ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 			List<Polygon> rectangles = vcNode.getVc().getSketch().getPolygons();
-			long startTime = System.currentTimeMillis();
-			List<String> values = scatterRankExecution(rectangles);
-			long endTime = System.currentTimeMillis();
-			logger.info("Computing Polygon took " + (endTime - startTime) + "ms");
-			double[] scores = new double[values.size()];
-			for (int i = 0; i < values.size(); i++) {
-				scores[i] = i;
+//			long startTime = System.currentTimeMillis();
+//			List<String> values = scatterRankExecution(rectangles);
+//			long endTime = System.currentTimeMillis();
+			ArrayList<Chart>  outputCharts = scatterRankExecution(rectangles).getOutputCharts();
+			double[] scores = new double[outputCharts.size()];
+			List<String> values = new ArrayList<String>();
+			for (int i = 0; i < outputCharts.size(); i++) {
+				scores[i] = outputCharts.get(i).getDistance();
+				values.add(outputCharts.get(i).getzType());
 			}
 //			System.out.println("polygon values test " + values);
 			// z1
@@ -105,20 +107,22 @@ public class ScatterProcessNode extends ProcessNode {
 			long endTime = System.currentTimeMillis();
 			logger.info("Preprocessing before MLD took " + (endTime - startTime) + "ms");
 			output = new Result();
-
-
 			startTime = System.currentTimeMillis();
-			List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
+//			List<String> values = computeScatterDragAndDropRankForGrids(input,q,output);
+			ArrayList<Chart>  outputCharts = computeScatterDragAndDropRankForGrids_v2(input,q,output).getOutputCharts();
+			double[] scores = new double[outputCharts.size()];
+			List<String> values = new ArrayList<String>();
+			for (int i = 0; i < outputCharts.size(); i++) {
+				scores[i] = outputCharts.get(i).getDistance();
+				values.add(outputCharts.get(i).getzType());
+			}
 			endTime = System.currentTimeMillis();
 			logger.info("Computing MLD took " + (endTime - startTime) + "ms");
 
-
-//			System.out.println("dragndrop values test " + values);
-//			List<String> values = EMDExecution(input, q);
-			double[] scores = new double[values.size()];
-			for (int i = 0; i < values.size(); i++) {
-				scores[i] = i;
-			}
+//			double[] scores = new double[values.size()];
+//			for (int i = 0; i < values.size(); i++) {
+//				scores[i] = i;
+//			}
 
 			// z1
 			String axisName = process.getAxisList1().get(0);
@@ -134,7 +138,7 @@ public class ScatterProcessNode extends ProcessNode {
 
 	private List<String> EMDExecution(VisualComponentList input, VisualComponentQuery q) {
 		List<VisualComponent> vcList = input.getVisualComponentList();
-		int len = Math.min(vcList.size(), q.getNumOfResults());
+		int len =  Math.min(vcList.size(), q.getNumOfResults());
 		if (q.getNumOfResults() == 0) {
 			len = vcList.size();
 		}
@@ -398,15 +402,51 @@ public class ScatterProcessNode extends ProcessNode {
 		}
 		return res;
 	}
+	public static Result computeScatterDragAndDropRankForGrids_v2(VisualComponentList input, VisualComponentQuery q, Result finalOutput) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		int len = Math.min(vcList.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
+			len = vcList.size();
+		}
+
+		PriorityQueue<Chart> pq = new PriorityQueue<Chart>((o1, o2) -> (o1.getDistance() > o2.getDistance() ? 1 : -1));
+		for (int vc_index = 0; vc_index < len; vc_index++) {
+			Chart chartOutput = new Chart();
+			VisualComponent vc = vcList.get(vc_index);
+
+			double d = chartSimilarity(q.getSketch().getMultiLevelGrids(), vc.getMultiLevelGrids(), q.getSketch().getMultiLevelWeights(), q.getSketch().getPower());
+			chartOutput.setDistance(d);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
+			chartOutput.setyType(vc.getyAttribute());
+			chartOutput.setzType(vc.getZValue().toString());
+			chartOutput.count = vc.getPoints().getXList().size();
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
+			}
+			pq.add(chartOutput);
+		}
+		//Sort
+		List<String> res = new ArrayList<>();
+		int rank = 0;
+		while(!pq.isEmpty()) {
+			Chart chartOutput = pq.poll();
+			chartOutput.setRank(++rank);
+			finalOutput.outputCharts.add(chartOutput);
+		}
+		return finalOutput;
+	}
 
 
-
-	private List<String> scatterRankExecution(List<Polygon> polygons) {
+	private Result scatterRankExecution(List<Polygon> polygons) {
 		// lookup table the VCNode we depend on
 		// task processor: (eg find the charts that match the scatter data in these rectangles)
 		ScatterVCNode vcNode = (ScatterVCNode) lookuptable.get(process.getArguments().get(0));
 		Result output = new Result();
-		return computeScatterRank(vcNode.getVcList(), vcNode.getVc(), output, polygons);
+		return computeScatterRank_v2(vcNode.getVcList(), vcNode.getVc(), output, polygons);
+//		return computeScatterRank(vcNode.getVcList(), vcNode.getVc(), output, polygons);
 	}
 
 	public static List<String> computeScatterRank(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Polygon> polygons) {
@@ -492,7 +532,42 @@ public class ScatterProcessNode extends ProcessNode {
 		}
 		return res;
 	}
+	public static Result computeScatterRank_v2(VisualComponentList input, VisualComponentQuery q, Result finalOutput, List<Polygon> polygons) {
+		List<VisualComponent> vcList = input.getVisualComponentList();
+		List<Double> ratioList =new ArrayList<Double>();
+		double maxRatio = 0.0;
+		int len = Math.min(vcList.size(), q.getNumOfResults());
+		if (q.getNumOfResults() == 0) {
+			len = vcList.size();
+		}
+		for (int vc_index = 0; vc_index < len; vc_index++) {
+			VisualComponent vc = vcList.get(vc_index);
+			double ratio = computeBoundingBoxRatio(vc,polygons);
+			ratioList.add(ratio);
+			maxRatio = Math.max(maxRatio,ratio);
+			String title = vc.getZValue().toString() + ":" + ratio;
+		}
 
+		for (int vc_index = 0; vc_index <  len; vc_index++) {
+			Chart chartOutput = new Chart();
+			VisualComponent vc = vcList.get(vc_index);
+			chartOutput.setxType((vc_index+1)+" : "+vc.getxAttribute());
+			chartOutput.setyType(vc.getyAttribute());
+			chartOutput.setzType(vc.getZValue().toString());
+			chartOutput.count = vc.getPoints().getXList().size();
+			chartOutput.setDistance(ratioList.get(vc_index)/maxRatio);
+			ArrayList<WrapperType> xList = vc.getPoints().getXList();
+			ArrayList<WrapperType> yList = vc.getPoints().getYList();
+
+			for (int i = 0; i < xList.size(); i++) {
+				chartOutput.xData.add(xList.get(i).toString());
+				chartOutput.yData.add(yList.get(i).toString());
+			}
+			finalOutput.outputCharts.add(chartOutput);
+		}
+		finalOutput.outputCharts.sort((o1, o2) -> ((Double)o2.getDistance()).compareTo((Double)o1.getDistance()));
+		return finalOutput;
+	}
 	/**
 	 * Given scatter plot charts, remove points from each that are not in the query rectangle
 	 * @param allDataCharts (side effect: modified)
