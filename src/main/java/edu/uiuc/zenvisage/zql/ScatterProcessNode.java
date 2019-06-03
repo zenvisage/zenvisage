@@ -611,8 +611,8 @@ public class ScatterProcessNode extends ProcessNode {
 			}
 		}
 
-//		return (numPointsInside/numPointsOutside);
-		return (numPointsInside);
+		return (numPointsInside/numPointsOutside);
+//		return (numPointsInside);
 	}
 
 	private static boolean inArea(Point point, List<Polygon> polygons) {
