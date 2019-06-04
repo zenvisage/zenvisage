@@ -637,6 +637,22 @@
           </select>
 
         </div>
+        <div ng-show="!zqltable && !scattertable"  ng-controller="zqlTableController" class = 'side-info-text'>
+
+            <div>
+
+                <p><nobr>
+                  <h5><b>Binning Constant</b></h5>
+                  <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
+                </nobr></p>
+                <div id="binning-slider" align = "right" style="width:145px;"></div>
+
+            </div>
+
+          <table id="scatter-table" class="table scatter-table">
+          </table>
+        </div>
+
 
         <!--<div class="dropdown" id="error" >-->
           <!--<h5><b>Error Attribute</b></h5>-->
@@ -648,6 +664,18 @@
           <!--</select>-->
         <!--</div>-->
 
+        <div class="dropdown" id="error" >
+        <h5><b>Range Type</b></h5>
+        <!-- Button trigger modal -->
+
+        <select class="form-control"  ng-change="onRangeChange()" ng-model="selectedRange">
+        <option value = "global"> global</option>
+        <option value = "individual"> individual</option>
+        </select>
+        </div>
+
+
+
       </div> <!-- end side bar -->
     </div> <!-- end left bar -->
 
@@ -658,7 +686,7 @@
       <div class="row" id="top-middle-bar" ng-controller="options-controller">
 
         <!-- drawing interface -->
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="input-group" id="graph-buttons">
 
             <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
@@ -824,74 +852,60 @@
             <!--</div>-->
 
 
-            <div ng-show="!zqltable && !scattertable" class="row" >
-              <div class="col-md-3" style="width: 170px;">
-                <div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">
-                  <div class="info-text">
-                    <b>Similarity</b>
-                    <div class="qtooltip">
-                      <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
-                      <span class="qtooltiptext">
-                    Euclidean distance compares the straight-line distance between two visualizations whereas the other algorithm tries to take into account shapes or temporal lags by transforming the visualization before calculating the distance, as shown here.
-                    <br><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Dynamic_time_warping.png"  style="text-align:center; width:225px">
-                  </span>
-                    </div>
-                    <div class="radio">
-                      <form>
-                        <input ng-model="similarity" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>
-                        <input ng-model="similarity" id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>
-                        <input ng-model="similarity" id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label><br>
-                        <input ng-model="similarity" id="MVIP" type="radio" name="distarnce-method" value="MVIP" ><label for="MVIP">MVIP</label>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <div ng-show="!zqltable && !scattertable"  ng-controller="zqlTableController" class="row">
-                  <div class="col-md-3" style="width: 170px;">
-                    <div>
-                      <div class="info-text">
-                        <p><nobr>
-                          <label for="amount">Binning Constant:</label>
-                          <input type="text" id="binning-amount" readonly style="border:0; color:black; font-weight:bold;font-size:13px;width: 20px; background-color:white;">
-                        </nobr></p>
-                        <div id="binning-slider" align = "right" style="width:165px;"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <table id="scatter-table" class="table scatter-table">
-                  </table>
-                </div>
-
-                <div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">
-                  <!--<div class="info-text" style="margin-bottom: 0px;">-->
-                    <!--<div ><b>Aggregate</b>-->
-                      <!--<div class="qtooltip">-->
-                        <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>-->
-                        <!--<span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>-->
-                      <!--</div>-->
+            <!--<div ng-show="!zqltable && !scattertable" class="row" >-->
+              <!--<div class="col-md-3" style="width: 170px;">-->
+                <!--<div  data-intro = "Different similarity metrics can be specified." data-step="9" data-position = "left">-->
+                  <!--<div class="info-text">-->
+                    <!--<b>Similarity</b>-->
+                    <!--<div class="qtooltip">-->
+                      <!--<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>-->
+                      <!--<span class="qtooltiptext">-->
+                    <!--Euclidean distance compares the straight-line distance between two visualizations whereas the other algorithm tries to take into account shapes or temporal lags by transforming the visualization before calculating the distance, as shown here.-->
+                    <!--<br><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Dynamic_time_warping.png"  style="text-align:center; width:225px">-->
+                  <!--</span>-->
                     <!--</div>-->
-
                     <!--<div class="radio">-->
                       <!--<form>-->
-                        <!--<input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>-->
-                        <!--<input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label><br>-->
-                        <!--<input ng-model="aggregation" id="none" type="radio" name="aggregation-method" value="" checked><label for="none">None</label>-->
+                        <!--<input ng-model="similarity" id="Euclidean" class="active" type="radio" name="distance-method" value="Euclidean" checked ><label for="Euclidean">Euclidean Distance</label><br>-->
+                        <!--<input ng-model="similarity" id="Segmentation" type="radio" name="distance-method" value="Segmentation"><label for="Segmentation">Segmentation</label><br>-->
+                        <!--<input ng-model="similarity" id="DTW" type="radio" name="distance-method" value="DTW" ><label for="DTW">DTW</label><br>-->
+                        <!--<input ng-model="similarity" id="MVIP" type="radio" name="distarnce-method" value="MVIP" ><label for="MVIP">MVIP</label>-->
                       <!--</form>-->
                     <!--</div>-->
                   <!--</div>-->
-                  <!-- <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >
-                    <div ><b>Input equation</b></div>
-                    <p></p>
-                    <div class="input-group">
-                      <input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">
-                      <div class="input-group-btn">
-                        <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
-                      </div>
-                    </div>
-                  </div> -->
-                </div>
-              </div>
+                <!--</div>-->
+
+
+
+                <!--<div  data-intro = "The aggregation method determines how the data values are aggregated along y." data-step ="10" data-position = "left">-->
+                  <!--&lt;!&ndash;<div class="info-text" style="margin-bottom: 0px;">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div ><b>Aggregate</b>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<div class="qtooltip">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="qtooltiptext">The aggregation function describes how data is aggregated along the y axis.</span>&ndash;&gt;-->
+                      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<div class="radio">&ndash;&gt;-->
+                      <!--&lt;!&ndash;<form>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<input ng-model="aggregation" id="sum" type="radio" name="aggregation-method" value="sum"><label for="sum">Sum</label><br>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<input ng-model="aggregation" id="avg" type="radio" name="aggregation-method" value="avg" checked><label for="avg">Average</label><br>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<input ng-model="aggregation" id="none" type="radio" name="aggregation-method" value="" checked><label for="none">None</label>&ndash;&gt;-->
+                      <!--&lt;!&ndash;</form>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                  <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                  <!--&lt;!&ndash; <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="9" data-position = "left" >-->
+                    <!--<div ><b>Input equation</b></div>-->
+                    <!--<p></p>-->
+                    <!--<div class="input-group">-->
+                      <!--<input ng-model="equation" type="text" class="form-control" placeholder="e.g. y=x^2">-->
+                      <!--<div class="input-group-btn">-->
+                        <!--<button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</div> &ndash;&gt;-->
+                <!--</div>-->
+              <!--</div>-->
               <div class="col-md-3" style="width: 175px;">
 
                 <!--<div class="info-text" data-intro = "Different cluster sizes can be specified for generating representative patterns." data-step ="12" data-position = "left">-->

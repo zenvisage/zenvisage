@@ -1932,6 +1932,12 @@ app.controller('datasetController', [
             })
         });
 
+        $scope.onRangeChange = function () {
+            log.info("range change",$scope.selectedRange);
+            $scope.getPolygonQueryResults("initialize")
+        };
+
+
         // this init is just for tutorial purpose
         var init = function () {
             $scope.onDatasetChange();

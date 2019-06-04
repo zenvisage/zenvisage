@@ -611,7 +611,10 @@ public class ScatterProcessNode extends ProcessNode {
 			}
 		}
 
-		return (numPointsInside/numPointsOutside);
+		if((numPointsInside+numPointsOutside) == 0){
+			return 0.0;
+		}
+		return (numPointsInside/(numPointsInside+numPointsOutside));
 //		return (numPointsInside);
 	}
 

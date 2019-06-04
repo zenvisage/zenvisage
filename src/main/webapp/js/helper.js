@@ -47,6 +47,10 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
   var m = [0, 0, 20, 20]; // margins
   var width = 200//200// - m[1] - m[3]; // width
   var height = 85//85// - m[0] - m[2]; // height
+  var ymax = 0;
+  var xmax = 0;
+  var ymin = Infinity;
+  var xmin = Infinity;
 
 
   for (var count = 0; count < userQueryResults.length; count++){
@@ -56,17 +60,22 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
     current = count;
   }
   $("#row-" + current.toString()).append("<td><div class=\"undraggable-user-query-results undraggable-graph\" data-graph-type=\"userQuery\" id=\"undraggable-result-" + count.toString() + "\"><div class=\"user-query-results draggable-graph\" data-graph-type=\"userQuery\" id=\"result-" + count.toString() + "\"></div></div></td>");
-}
+  var data = userQueryResults[count]['points'];
+  ymax = Math.max(d3.max(data, function(d) {return Math.max(d.yval); }),ymax)
+  xmax = Math.max(d3.max(data, function(d) {return Math.max(d.xval); }),xmax)
+  ymin = Math.min(d3.min(data, function(d) {return Math.min(d.yval); }),ymin)
+  xmin = Math.min(d3.min(data, function(d) {return Math.min(d.xval); }),xmin)
+  }
 
 
 
   for (var count = 0; count < userQueryResults.length; count++)
   {
-  var data = userQueryResults[count]['points'];
-  var ymax = d3.max(data, function(d) {return Math.max(d.yval); })
-  var xmax = d3.max(data, function(d) {return Math.max(d.xval); })
-  var ymin = d3.min(data, function(d) {return Math.min(d.yval); })
-  var xmin = d3.min(data, function(d) {return Math.min(d.xval); })
+  data = userQueryResults[count]['points'];
+  ymax = d3.max(data, function(d) {return Math.max(d.yval); })
+  xmax = d3.max(data, function(d) {return Math.max(d.xval); })
+  ymin = d3.min(data, function(d) {return Math.min(d.yval); })
+  xmin = d3.min(data, function(d) {return Math.min(d.xval); })
   var yScale = d3.scaleLinear()
       .domain([ymin, ymax])
       .range([height, 0]);
@@ -116,7 +125,14 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
     if (zAttribute.length>30){
         zAttributeText = zAttributeText.slice(0,22) + "..."
     }
-    zAttributeText = zAttributeText + "("+score.toString().slice(0,5) + ")";
+
+    if(userQueryResults[0]["score"]<userQueryResults[1]["score"]){
+        zAttributeText = zAttributeText + "("+(1-score).toString().slice(0,5) + ")";
+    }
+    else{
+        zAttributeText = zAttributeText + "("+score.toString().slice(0,5) + ")";
+    }
+
     d3.select("#undraggable-result-"+count.toString()).append("g")
     d3.select("#undraggable-result-"+count.toString()).append("text")
       .attr("transform",
@@ -1670,6 +1686,11 @@ function getBinningCoefficient()
     return $( "#binning-slider" ).slider( "value" );
 }
 
+function getRangeType()
+{
+    return $( "#range-toggle" ).slider( "value" );
+}
+
 function setScatterPoints(points)
 {
     scatterPoints = points
@@ -1698,4 +1719,11 @@ function showLoadingEclipse(eclipse){
 }
 function hideLoadingEclipse(eclipse){
     document.getElementById(eclipse).style.display = "none";
+}
+
+function getSelectedRange()
+{
+    var selectedRange = angular.element($("#sidebar")).scope().selectedRange;
+    console.log(selectedRange)
+    return selectedRange
 }
