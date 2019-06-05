@@ -762,7 +762,7 @@ app.controller('options-controller', [
             "flipY": $scope.flipY,
             "selectedSmoothing": $scope.selectedSmoothing,
             "selectedScatterDistance": $scope.selectedScatterDistance,
-            "numLevels": $scope.numLevels
+            "numLevels": $scope.numLevels,
         }
 
         var toggleWatch = function (watchExpr, fn) {
@@ -1329,7 +1329,8 @@ app.controller('datasetController', [
             $scope.tablelist = args;
         }
 
-        $scope.chartSettings = ChartSettings;
+        $scope.chartSettings = ChartSettings
+        $scope.selectedRange = "individual";
         function initializeSketchpadOnDataAttributeChange(xdata, ydata, zdata) {
             clearRepresentativeTable();
             clearOutlierTable();
@@ -1349,6 +1350,7 @@ app.controller('datasetController', [
                     break;
             }
         }
+
 
         $scope.callLoadAxisInfo = function () {
             $rootScope.$broadcast("loadAxisInfo");
@@ -1933,7 +1935,7 @@ app.controller('datasetController', [
         });
 
         $scope.onRangeChange = function () {
-            log.info("range change",$scope.selectedRange);
+                console.log("range change",$scope.selectedRange);
             $scope.getPolygonQueryResults("initialize")
         };
 
