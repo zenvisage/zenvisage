@@ -72,10 +72,12 @@ function displayUserQueryResultsScatterHelper(userQueryResults)
   for (var count = 0; count < userQueryResults.length; count++)
   {
   data = userQueryResults[count]['points'];
-  ymax = d3.max(data, function(d) {return Math.max(d.yval); })
-  xmax = d3.max(data, function(d) {return Math.max(d.xval); })
-  ymin = d3.min(data, function(d) {return Math.min(d.yval); })
-  xmin = d3.min(data, function(d) {return Math.min(d.xval); })
+  if(getSelectedRange() == "individual"){
+    ymax = d3.max(data, function(d) {return Math.max(d.yval); })
+    xmax = d3.max(data, function(d) {return Math.max(d.xval); })
+    ymin = d3.min(data, function(d) {return Math.min(d.yval); })
+    xmin = d3.min(data, function(d) {return Math.min(d.xval); })
+  }
   var yScale = d3.scaleLinear()
       .domain([ymin, ymax])
       .range([height, 0]);
@@ -1357,6 +1359,7 @@ function initSettingPanel()
   scope.flipYToggle();
   scope.flipY = false; 
   scope.flipYToggle();
+
   
   console.log("initSettingPanel");
 }
@@ -1724,6 +1727,6 @@ function hideLoadingEclipse(eclipse){
 function getSelectedRange()
 {
     var selectedRange = angular.element($("#sidebar")).scope().selectedRange;
-    console.log(selectedRange)
+    console.log("hihi",selectedRange)
     return selectedRange
 }
