@@ -611,11 +611,17 @@ public class ScatterProcessNode extends ProcessNode {
 			}
 		}
 
-		if((numPointsInside+numPointsOutside) == 0){
+		// if((numPointsInside+numPointsOutside) == 0){
+		// 	return 0.0;
+		// }
+		if(numPointsInside == 0){
 			return 0.0;
 		}
-		return (numPointsInside/(numPointsInside+numPointsOutside));
-//		return (numPointsInside);
+		// return (numPointsInside/(numPointsOutside));
+//		return (numPointsInside/(numPointsInside+numPointsOutside));
+		// If we normalize by total number of points, we end up getting many viz scored as 1 with only 1 or 2 datapoints.
+		// If we simply use numpointsinside, we bias towards viz with large number of datapoints.
+		return (numPointsInside);
 	}
 
 	private static boolean inArea(Point point, List<Polygon> polygons) {
