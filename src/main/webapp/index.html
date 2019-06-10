@@ -549,13 +549,13 @@
     <!-- this div contains the left-bar with the data information -->
     <div id="left-bar">
       <div id="sidebar" class="interface" ng-controller="datasetController"  >
-        <h4>
+<!--         <h4>
           <span><img data-intro='Welcome to Zenvisage. Zenvisage is a tool which recommends visualizations that match desired user patterns. Follow this tutorial to learn more!' data-step="1"  src="css/zenvisageLogo.png" style="width: 65%; height: 65%;"></span>
           <a href="https://github.com/zenvisage/zenvisage/wiki/Functionalities-and-Options"><i class="glyphicon glyphicon-info-sign" style="font-size: 20px;"></i></a>
-          <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 20px; "></i></a>
+          <a href="" onclick="javascript:starttutorial();"><i class="glyphicon glyphicon-play-circle" style="font-size: 20px; "></i></a> -->
           <!-- <button type="button" class="btn btn-circle" onclick="javascript:starttutorial();"><span class="glyphicon glyphicon-play" style="color: white;font-size: 10px;"></span></button> -->
           <!-- <button type="button" class="textButton" onclick="javascript:starttutorial();">Tutorial</button> -->
-        </h4>
+<!--         </h4> -->
 
 
         <div style="margin-right: 7%;margin-right: 7%;" class="btn-group-vertical" role="group" aria-label="...">
@@ -582,7 +582,7 @@
           <!-- Button trigger modal -->
 
           <!--<select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist()"  ng-model="selectedDataset" id="dataset-form-control">-->
-          <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset='cmu';onDatasetChange();"  ng-model="selectedDataset" id="dataset-form-control">
+          <select class="form-control" ng-change="onDatasetChange()" ng-init="inittablelist();selectedDataset='';onDatasetChange();"  ng-model="selectedDataset" id="dataset-form-control">
             <option ng-repeat="table in tablelist">{{table}}</option>
           </select>
         </div>
@@ -692,7 +692,7 @@
             <!-- Line/Bar/Scatter Selection, ZQL Table, TopK -->
 
             <div class="btn-toolbar">
-              <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type">
+              <!-- <select ng-model="chartSettings.selectedChartOption" ng-options="option for option in chartSettings.chartOptions" class="form-control" ng-change="changeChartType()" id="graph-type"> -->
               </select>
               <!--<button type="button" name="options" ng-click="changeZQLTableState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Table</button>-->
               <!--<button type="button" name="zql-script" ng-click="changeZQLScriptState()" data-toggle="button" aria-pressed="false" class="btn btn-default btn-xs">ZQL Script</button>-->
@@ -920,7 +920,7 @@
                     <!--<input ng-model="clusterSize" class="form-control" type="text" id="cluster-size" name="k-means-cluster-size" value="3">-->
                   <!--</div>-->
                 <!--</div>-->
-
+                <br>
                 <div class="info-text">
                 <div><b>Distance Metric</b>
                 <div class="qtooltipright">
@@ -987,7 +987,7 @@
                     <!--</nobr></p>-->
                     <!--<div id="slider-range-max" align = "right" style="width:165px;"></div>-->
                   <!--</div>-->
-                  <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
+                  <!-- <div class="info-text" data-intro = "You can also insert an equation to specify the shape of the query pattern." data-step ="23" data-position = "left" >
                     <div ><b>Input Equation</b>
                       <div class="qtooltipright">
                         <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
@@ -1001,10 +1001,11 @@
                         <button class="btn btn-default btn-xs" ng-click="drawFunction()" type="button">add</button>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
 
                 </div>
                 <div style="width: 170px;" class="info-text" data-intro = "You can specify the filter that can be applied globally to the dataset. Multiple conditions can be accepted using AND, OR." data-step ="17">
+                  <br>
                   <div><b>Filter Constraint</b>
                     <div class="qtooltipright">
                       <span data-toggle="modal" class="glyphicon glyphicon-question-sign"></span>
