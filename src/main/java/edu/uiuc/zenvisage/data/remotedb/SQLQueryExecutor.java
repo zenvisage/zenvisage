@@ -291,7 +291,7 @@ public class SQLQueryExecutor {
 	
 	public void ZQLQueryEnhanced(String z, String agg, int xLen, int yLen, List<String> xAttributes, List<String> yAttributes, String constraints, String databaseName) throws SQLException{
 		String sql = null;
-
+		System.out.println("reached here: "+constraints);
 		// Cleaning attributes
 		databaseName = databaseName.toLowerCase();
 		z = z.toLowerCase().replaceAll("'", "").replaceAll("\"", "");
@@ -334,9 +334,17 @@ public class SQLQueryExecutor {
 			}
 			// for scatter plot queries
 			if (agg.equals("")) {
-				sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
-				+ " FROM " + databaseName
-				+ " ORDER BY " + x;
+				if (constraints == null || constraints =="") {
+					sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + databaseName
+					+ " ORDER BY " + x;
+				}
+				else{
+					sql = "SELECT " + (hasZ ? (z + "," + x) : ("1 as column1," + x) ) + "," + build.toString() //zqlRow.getViz() should replace the avg() function
+					+ " FROM " + databaseName
+					+ " WHERE " + appendConstraints(constraints) //zqlRow.getConstraint() has replaced the whereCondiditon
+					+ " ORDER BY " + x;
+				}
 			}
 			
 			// Cache the query. If query equals the last one, then no need to create VisualComponents.

@@ -90,7 +90,8 @@ function scatterDatasetChangeQueryHelper(zqlRows){
     var x = $(this).find(".x-val").val()
     var y = $(this).find(".y-val").val()
     var z = $(this).find(".z-val").val()
-    var constraints = $(this).find(".constraints").val()
+    var constraints = "domestic=True"
+    console.log(constraints)
     var input = { "name": name, "x": x, "y": y, "z": z, "constraints": constraints, "viz": ""};
     input["name"] = {"output": true,"sketch": true,"name": "f1"};
     input["x"] = {"attributes": ["'"+ getSelectedXAxis() + "'"], "variable" : "x1"};

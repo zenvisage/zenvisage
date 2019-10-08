@@ -758,7 +758,6 @@ public class ZvBasicAPI {
 	public String scatterSimilarity(HttpServletRequest request, HttpServletResponse response) throws InterruptedException, IOException, SQLException {
 		String type="scatterSimilarity";
 
-//		zvMain = new ZvMain();
 		StringBuilder stringBuilder = new StringBuilder();
 		Scanner scanner = new Scanner(request.getInputStream());
 		while (scanner.hasNextLine()) {
@@ -766,15 +765,9 @@ public class ZvBasicAPI {
 		}
 
 		String body = stringBuilder.toString();
-//		logQueries("scatter-similarity",null,body);
 		String res = zvMain.scatterSimilarity(body);
 
-//		logQueries("scatter-similarity-result",null,res);
 		return res;
-
-//		String bodyforlogging=removeSketchPoints(body);
-//		logQueries(type,request,bodyforlogging);
-//		return zvMain.runDragnDropInterfaceQuerySeparated(body, "SimilaritySearch");
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)

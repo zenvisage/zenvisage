@@ -31,7 +31,8 @@ public class ZvServer {
 		
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setContextPath("/");
-		webAppContext.setWar("zenvisage.war");
+		webAppContext.setWar("file:/Users/jaewookim/Research/zenvisage_scatter/target/zenvisage.war");
+		System.out.println(webAppContext.getContextPath());
 		webAppContext.setParentLoaderPriority(true);
 		webAppContext.setServer(server);
 		webAppContext.setClassLoader(ClassLoader.getSystemClassLoader());

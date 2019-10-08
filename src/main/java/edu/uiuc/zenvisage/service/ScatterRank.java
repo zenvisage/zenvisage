@@ -18,7 +18,7 @@ import edu.uiuc.zenvisage.model.*;
  *
  */
 @Deprecated
-public class ScatterRank {
+public class  ScatterRank {
 	
 	public static void compute(Map<String, ScatterResult> output, ScatterPlotQuery q, Result finalOutput) {
 		List<ScatterResult> datas = new ArrayList<ScatterResult>(output.values());

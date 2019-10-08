@@ -538,29 +538,28 @@ app.controller('zqlTableController', ['$scope' ,'$http', 'plotResultsService', '
             $compile($el)($scope);
         }});
 
-    // $scope.filterZQL = function () {
-    //   console.log("Filter working!")
-    //   // var xAxis = getSelectedXAxis();
-    //   // var yAxis = getSelectedYAxis();
-    //   // var zAxis = getSelectedCategory();
-    //   // var constraint = $("#filter.form-control").val();
-    //   // //Populate ZQL table
-    //   // // $( ".tabler" ).each(function( index ) {
-    //   // //   $(this).find(".name").val("*f1")
-    //   // //   $(this).find(".x-val").val("x<-{'"+xAxis+"'}")
-    //   // //   $(this).find(".y-val").val("y<-{'"+yAxis+"'}")
-    //   // //   $(this).find(".z-val").val("z<-'"+zAxis+"'.*")
-    //   // //   $(this).find(".constraints").val(constraint)
-    //   // // })
-    //   // // $scope.submitZQL();
-    //   // $scope.getUserQueryResultsWithCallBack();
-    //   // getRepresentativeTrendsWithoutCallback();
-    //   // constructUserQuery();
-    //   // constructRepresentativeTrendQuery();
-    //   // constructOutlierTrendQuery();
-    //   log.info("filter constraint: ",constraint)
+    $scope.filterZQL = function () {
+      console.log("Filter working!")
+      var xAxis = getSelectedXAxis();
+      var yAxis = getSelectedYAxis();
+      var zAxis = getSelectedCategory();
+      var constraint = $("#filter.form-control").val();
+      // Populate ZQL table
+      $( ".tabler" ).each(function( index ) {
+        $(this).find(".name").val("*f1")
+        $(this).find(".x-val").val("x<-{'"+xAxis+"'}")
+        $(this).find(".y-val").val("y<-{'"+yAxis+"'}")
+        $(this).find(".z-val").val("z<-'"+zAxis+"'.*")
+        $(this).find(".constraints").val(constraint)
+      })
+      $scope.submitZQL();
+      $scope.getUserQueryResultsWithCallBack();
+      constructUserQuery();
+      constructRepresentativeTrendQuery();
+      constructOutlierTrendQuery();
+      log.info("filter constraint: ",constraint)
 
-    // }
+    }
     $scope.submitZQL = function () {
         $("#graph-div").empty();
         createZQLGraph( submitNodeZQL );
@@ -839,7 +838,9 @@ app.controller('options-controller', [
 
         $scope.onFilterChange = function () {
             log.info("filter change", $("#filter.form-control").val());
-            $scope.callGetUserQueryResultsWithCallBack();
+            console.log("filter change", $("#filter.form-control").val());
+            // $scope.callGetUserQueryResultsWithCallBack();
+            $scope.getPolygonQueryResults("initialize")
         };
 
         $scope.onflipYChange = function () {
@@ -967,11 +968,12 @@ app.controller('options-controller', [
             $scope.callgetRepresentativeTrends();
         };
 
-        $scope.onFilterChange = function () {
-            log.info("filter change", $("#filter.form-control").val());
-            $scope.callGetUserQueryResultsWithCallBack();
-            $scope.callgetRepresentativeTrends();
-        };
+        // $scope.onFilterChange = function () {
+        //     log.info("filter change", $("#filter.form-control").val());
+        //     console.log("filter change", $("#filter.form-control").val());
+        //     // $scope.callGetUserQueryResultsWithCallBack();
+        //     $rootScope.$broadcast('callGetPolygonQueryResults');
+        // };
 
         $scope.clearQuery = function () {
             $scope.removeAndInsertRows(1);
@@ -1912,6 +1914,14 @@ app.controller('datasetController', [
         $scope.$on("callgetRepresentativeTrends", function () {
             $scope.getRepresentativeTrendsWithoutCallback();
         });
+
+        $scope.$on("callGetPolygonQueryResults", function () {
+            console.log("reached here")
+            $scope.getPolygonQueryResults("initialize");
+        });
+
+
+
 
 
         $(function () {
