@@ -12,7 +12,7 @@
 		<spring.version>3.0.5.RELEASE</spring.version>
 		<jetty.version>9.0.5.v20130815</jetty.version>
 		<jackson.version>1.9.13</jackson.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<jdk.version>1.8</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
