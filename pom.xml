@@ -9,7 +9,7 @@
 	<name>zenvisage</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>3.2.18.RELEASE</spring.version>
 		<jetty.version>9.0.5.v20130815</jetty.version>
 		<jackson.version>1.9.13</jackson.version>
 		<junit.version>4.11</junit.version>
